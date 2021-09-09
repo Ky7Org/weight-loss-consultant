@@ -12,9 +12,10 @@
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "accessToken": "NTU5MzZkNTgtMGY0MC00YjVjLWIwZDMtMTg4ZTBmM2Y0MzRjfHJlYWQtd3JpdGU="
       }
     }
   },
@@ -27,7 +28,23 @@
     ]
   },
   "projects": {
-    "weight-loss-consultant": {
+    "weight-loss-consultant-gateway": {
+      "tags": []
+    },
+    "weight-loss-consultant-health-mgnt-api": {
+      "tags": []
+    },
+    "weight-loss-consultant-scheduling-api": {
+      "tags": []
+    },
+    "weight-loss-consultant-ui": {
+      "tags": []
+    },
+    "weight-loss-consultant-ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["weight-loss-consultant-ui"]
+    },
+    "weight-loss-consultant-users-mgnt-api": {
       "tags": []
     }
   }
