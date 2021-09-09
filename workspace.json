@@ -1,0 +1,60 @@
+{
+  "version": 2,
+  "projects": {
+    "weight-loss-consultant": {
+      "root": "apps/weight-loss-consultant",
+      "sourceRoot": "apps/weight-loss-consultant/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/weight-loss-consultant",
+            "main": "apps/weight-loss-consultant/src/main.ts",
+            "tsConfig": "apps/weight-loss-consultant/tsconfig.app.json",
+            "assets": ["apps/weight-loss-consultant/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/weight-loss-consultant/src/environments/environment.ts",
+                  "with": "apps/weight-loss-consultant/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "weight-loss-consultant:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/weight-loss-consultant/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/weight-loss-consultant"],
+          "options": {
+            "jestConfig": "apps/weight-loss-consultant/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/nest"
+  },
+  "defaultProject": "weight-loss-consultant"
+}
