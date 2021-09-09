@@ -14,10 +14,10 @@ describe('AppController', () => {
   });
 
   describe('getData', () => {
-    it('should return "Welcome to weight-loss-consultant!"', () => {
+    it('should return "Welcome to weight-loss-consultant-scheduling-api!"', () => {
       const appController = app.get<AppController>(AppController);
       expect(appController.getData()).toEqual({
-        message: 'Welcome to weight-loss-consultant!',
+        message: 'Welcome to weight-loss-consultant-scheduling-api!',
       });
     });
   });
