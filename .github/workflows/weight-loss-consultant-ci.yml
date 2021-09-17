@@ -26,10 +26,10 @@ jobs:
         run: npm ci
         
       - name: Lint ReactJS UI code
-        run: lint:ui
+        run: npm run lint:ui
       
       - name: Lint NestJS Gateway code
-        run: lint:gateway
+        run: npm run lint:gateway
         
       - name: Lint NestJS Users Management code
         run: npm run lint:users-mgnt-api
@@ -56,4 +56,4 @@ jobs:
         run: npm run test:health-mgnt-api
         
       - name: Test NestJS Scheduling Management code
-        run: test:scheduling-api
+        run: npm run test:scheduling-api
