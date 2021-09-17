@@ -1,5 +1,4 @@
 name: weight-loss-consultant-ci
-
 on:
   push:
     branches: [ master ]
@@ -7,7 +6,7 @@ on:
     branches: [ master ]
     
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
