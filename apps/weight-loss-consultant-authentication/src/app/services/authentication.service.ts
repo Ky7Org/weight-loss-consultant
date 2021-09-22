@@ -3,42 +3,40 @@ import { CustomerService } from './customer.service';
 import { JwtService } from '@nestjs/jwt';
 import { TrainerService } from './trainer.service';
 import { Role } from '../../constant';
-import { CustomerEntity } from '../entities/customer.entity';
-import { TrainerEntity } from '../entities/trainer.entity';
-import { JwtRequestPayload } from '../models/jwt-request-payload';
+import { CustomerDTO } from '../dtos/customer.dto';
+import { TrainerDTO } from '../dtos/trainer.dto';
 
 @Injectable()
-export class AuthenticationService{
+export class AuthenticationService {
   private readonly logger = new Logger(AuthenticationService.name);
-  constructor(private readonly customerService : CustomerService,
-    private readonly trainerService: TrainerService,
-    private readonly jwtService: JwtService) {
+
+  constructor(private readonly customerService: CustomerService,
+              private readonly trainerService: TrainerService,
+              private readonly jwtService: JwtService) {
   }
 
-  async validateAccount(email: string, password: string): Promise<any>{
-    const customer = await this.customerService.findByEmail(email);
-    if (customer && customer.password === password){
-      const {password,  ...rest} = customer;
-      rest["role"] = Role.customer;
-      return rest;
+  async validateAccount(email: string, password: string): Promise<CustomerDTO | TrainerDTO | null> {
+    const customerDTO: CustomerDTO = await this.customerService.findByEmail(email);
+    if (customerDTO && customerDTO.password === password) {
+      customerDTO['role'] = Role.customer;
+      return customerDTO;
     }
-    const trainer = await this.trainerService.findByEmail(email);
-    if (trainer && trainer.password === password){
-      const {password, ...rest} = trainer;
-      rest["role"] = Role.trainer;
-      return rest;
+    const trainerDTO: TrainerDTO = await this.trainerService.findByEmail(email);
+    if (trainerDTO && trainerDTO.password === password) {
+      trainerDTO['role'] = Role.trainer;
+      return trainerDTO;
     }
     return null;
   }
 
-  async login(user: any){
+  async login(user: TrainerDTO | CustomerDTO) {
     const payload = {
       fullname: user.fullname,
       email: user.email,
       role: user.role
-    }
+    };
     return {
       accessToken: this.jwtService.sign(payload)
-    }
+    };
   }
 }

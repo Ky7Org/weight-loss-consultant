@@ -3,6 +3,8 @@ import { AuthenticationService } from '../services/authentication.service';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { CustomerService } from '../services/customer.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { CustomerDTO } from '../dtos/customer.dto';
+import { TrainerDTO } from '../dtos/trainer.dto';
 
 @Controller()
 export class AppController{
@@ -14,7 +16,8 @@ export class AppController{
   @Post('login')
   @UseGuards(LocalAuthGuard)
   login(@Request() req): any{
-    return this.authenticationService.login(req.user);
+    const dto : CustomerDTO | TrainerDTO = req.user;
+    return this.authenticationService.login(dto);
   }
 
   @UseGuards(JwtAuthGuard)

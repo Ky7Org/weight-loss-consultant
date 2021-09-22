@@ -7,11 +7,15 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/modules/app.module';
-import { apiEnpoint } from './constant';
+import * as fs from 'fs';
+import * as dotenv from 'dotenv';
+
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = apiEnpoint;
+  const settings = dotenv.parse(fs.readFileSync("./apps/weight-loss-consultant-authentication/src/.env"));
+  console.log(settings)
+  const app = await NestFactory.create(AppModule.forRoot(settings));
+  const globalPrefix = settings.API_ENDPOINT;
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3333;
   await app.listen(port, () => {
