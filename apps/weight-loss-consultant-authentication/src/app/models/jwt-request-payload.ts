@@ -1,7 +1,7 @@
 export interface JwtRequestPayload{
-  fullname: string,
-  email: string,
-  role: string,
+  fullname?: string,
+  email?: string,
+  role?: string,
 }
 
 
