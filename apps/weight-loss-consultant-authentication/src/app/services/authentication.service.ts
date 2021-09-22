@@ -3,6 +3,9 @@ import { CustomerService } from './customer.service';
 import { JwtService } from '@nestjs/jwt';
 import { TrainerService } from './trainer.service';
 import { Role } from '../../constant';
+import { CustomerEntity } from '../entities/customer.entity';
+import { TrainerEntity } from '../entities/trainer.entity';
+import { JwtRequestPayload } from '../models/jwt-request-payload';
 
 @Injectable()
 export class AuthenticationService{

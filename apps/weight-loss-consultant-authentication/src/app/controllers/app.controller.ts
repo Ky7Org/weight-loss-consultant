@@ -19,7 +19,7 @@ export class AppController{
 
   @UseGuards(JwtAuthGuard)
   @Get("test/jwt")
-  getAll():any {
+  getAll(@Request() req ):any {
     return this.customerService.index();
   }
 }
