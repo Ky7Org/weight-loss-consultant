@@ -1,6 +1,59 @@
 {
   "version": 2,
   "projects": {
+    "weight-loss-consultant-authentication": {
+      "root": "apps/weight-loss-consultant-authentication",
+      "sourceRoot": "apps/weight-loss-consultant-authentication/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/weight-loss-consultant-authentication",
+            "main": "apps/weight-loss-consultant-authentication/src/main.ts",
+            "tsConfig": "apps/weight-loss-consultant-authentication/tsconfig.app.json",
+            "assets": ["apps/weight-loss-consultant-authentication/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/weight-loss-consultant-authentication/src/environments/environment.ts",
+                  "with": "apps/weight-loss-consultant-authentication/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "weight-loss-consultant-authentication:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": [
+              "apps/weight-loss-consultant-authentication/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/weight-loss-consultant-authentication"],
+          "options": {
+            "jestConfig": "apps/weight-loss-consultant-authentication/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "weight-loss-consultant-gateway": {
       "root": "apps/weight-loss-consultant-gateway",
       "sourceRoot": "apps/weight-loss-consultant-gateway/src",

@@ -28,6 +28,9 @@
     ]
   },
   "projects": {
+    "weight-loss-consultant-authentication": {
+      "tags": []
+    },
     "weight-loss-consultant-gateway": {
       "tags": []
     },
