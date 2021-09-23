@@ -11,8 +11,8 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     super(repository);
   }
 
-  async findByEmail(email: string): Promise<CustomerDTO | null> {
-    const entity = await this.repository.findOne({ email: email });
+  async findByEmail(email: string): Promise<CustomerDTO> {
+    const entity = await this.repository.findOneOrFail({ email: email });
     const dto = await this.customerMapper.mapEntityToDTO(entity);
     return dto;
   }

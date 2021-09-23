@@ -1,9 +1,6 @@
-import { Role } from '../../constant';
+import { AccountDTO } from './acount.dto';
 
-export class TrainerDTO {
-  email?: string;
-  password?: string;
-  fullname?: string;
+export class TrainerDTO extends AccountDTO {
   address?: string;
   phone?: string;
   gender?: string;
@@ -11,5 +8,4 @@ export class TrainerDTO {
   dob?: number;
   yearOfExp?: number;
   rating?: number;
-  role?: Role;
 }

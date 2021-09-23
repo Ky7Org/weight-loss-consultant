@@ -11,8 +11,8 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     super(repository);
   }
 
-  async findByEmail(email: string): Promise<TrainerDTO | null> {
-    const entity = await this.repository.findOne({ email: email });
+  async findByEmail(email: string): Promise<TrainerDTO> {
+    const entity = await this.repository.findOneOrFail({ email: email });
     const dto = await this.trainerMapper.mapEntityToDTO(entity);
     return dto;
   }

@@ -5,6 +5,7 @@ import { TrainerService } from './trainer.service';
 import { Role } from '../../constant';
 import { CustomerDTO } from '../dtos/customer.dto';
 import { TrainerDTO } from '../dtos/trainer.dto';
+import { AccountDTO } from '../dtos/acount.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -29,7 +30,7 @@ export class AuthenticationService {
     return null;
   }
 
-  async login(user: TrainerDTO | CustomerDTO) {
+  async login(user: AccountDTO) {
     const payload = {
       fullname: user.fullname,
       email: user.email,

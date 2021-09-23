@@ -1,13 +1,9 @@
-import { Role } from '../../constant';
+import { AccountDTO } from './acount.dto';
 
-export class CustomerDTO {
-  email?: string;
-  password?: string;
-  fullname?: string;
+export class CustomerDTO extends AccountDTO{
   address?: string;
   phone?: string;
   gender?: string;
   status?: number;
   dob?: number;
-  role?: Role
 }
