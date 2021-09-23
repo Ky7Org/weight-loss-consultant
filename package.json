@@ -15,6 +15,7 @@
     "lint:users-mgnt-api": "nx run weight-loss-consultant-users-mgnt-api:lint",
     "lint:health-mgnt-api": "nx run weight-loss-consultant-health-mgnt-api:lint",
     "lint:scheduling-api": "nx run weight-loss-consultant-scheduling-api:lint",
+    "lint:authentication": "nx run weight-loss-consultant-authentication:lint",
     "build:ui": "nx run weight-loss-consultant-ui:build",
     "build:gateway": "nx run weight-loss-consultant-gateway:build",
     "build:users-mgnt-api": "nx run weight-loss-consultant-users-mgnt-api:build",
