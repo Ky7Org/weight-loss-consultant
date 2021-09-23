@@ -8,11 +8,15 @@ import { JwtStrategy } from '../strategy/jwt.strategy';
 import { TrainerModule } from './trainer.module';
 import { jwtConfig } from '../../constant';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AdminModule } from './admin.module';
+import { AccountModule } from './account.module';
 
 @Module({
   imports: [
     CustomerModule,
     TrainerModule,
+    AdminModule,
+    AccountModule,
     PassportModule,
     JwtModule.registerAsync({
       imports:[ConfigModule],

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { CustomerDTO } from '../dtos/customer.dto';
-import { CustomerEntity } from '../entities/customer.entity';
+import { AdminEntity } from '../entities/admin.entity';
+import { AdminDTO } from '../dtos/admin.dto';
 
 @Injectable()
-export class CustomerMapper {
-  async mapDTOToEntity(dto: CustomerDTO): Promise<CustomerEntity | null> {
+export class AdminMapper {
+  async mapDTOToEntity(dto: AdminDTO): Promise<AdminEntity | null> {
     if (dto === null || dto === undefined) {
       return null;
     }
-    const entity = new CustomerEntity();
+    const entity = new AdminEntity();
     entity.email = dto.email;
     entity.password = dto.password;
     entity.fullname = dto.fullname;
@@ -22,11 +22,11 @@ export class CustomerMapper {
 
   }
 
-  async mapEntityToDTO(entity: CustomerEntity): Promise<CustomerDTO | null> {
+  async mapEntityToDTO(entity: AdminEntity): Promise<AdminDTO | null> {
     if (entity === null || entity === undefined) {
       return null;
     }
-    const dto = new CustomerDTO();
+    const dto = new AdminDTO();
     dto.email = entity.email;
     dto.password = entity.password;
     dto.fullname = entity.fullname;

@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity('Customer')
-export class CustomerEntity extends BaseEntity {
+@Entity('Admin')
+export class AdminEntity extends BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 320 })
   email: string;
   @Column({ type: 'varchar', length: 60 })

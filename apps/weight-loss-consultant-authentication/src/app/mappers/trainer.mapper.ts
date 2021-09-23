@@ -11,14 +11,15 @@ export class TrainerMapper {
     const entity = new TrainerEntity();
     entity.email = trainerDTO.email;
     entity.password = trainerDTO.password;
-    entity.dob = trainerDTO.dob;
-    entity.address = trainerDTO.address;
-    entity.gender = trainerDTO.gender;
     entity.fullname = trainerDTO.fullname;
+    entity.address = trainerDTO.address;
     entity.phone = trainerDTO.phone;
-    entity.rating = trainerDTO.rating;
+    entity.gender = trainerDTO.gender;
     entity.status = trainerDTO.status;
+    entity.profileImage = trainerDTO.profileImage;
+    entity.dob = trainerDTO.dob;
     entity.yearOfExp = trainerDTO.yearOfExp;
+    entity.rating = trainerDTO.rating;
     return entity;
   }
 
@@ -34,7 +35,10 @@ export class TrainerMapper {
     dto.phone = entity.phone;
     dto.gender = entity.gender;
     dto.status = entity.status;
+    dto.profileImage = entity.profileImage;
     dto.dob = entity.dob;
+    dto.yearOfExp = entity.yearOfExp;
+    dto.rating = entity.rating;
     return dto;
   }
 }
