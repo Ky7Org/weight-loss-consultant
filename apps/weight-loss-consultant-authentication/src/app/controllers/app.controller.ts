@@ -15,9 +15,11 @@ import { ResetPasswordConfirmRequestModel } from '../models/reset-password-confi
 import { ErrorResponseModel } from '../models/error-response-model';
 import { AccountDTO } from '../dtos/acount.dto';
 import { AccountService } from '../services/account.service';
-import { Role } from '../../constant';
+import { RESET_PASSWORD_TOKEN_EXPIRED_TIME, Role } from '../../constant';
 import { TrainerService } from '../services/trainer.service';
-
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger';
+import { LoginRequestModel } from '../models/login-request-model';
+import { LoginResponseModel } from '../models/login-response-model';
 
 @Controller()
 export class AppController {
@@ -31,20 +33,39 @@ export class AppController {
               private readonly accountService: AccountService) {
   }
 
+
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  login(@Request() req): any {
+  @ApiOperation({ summary: 'Authentication account' })
+  @ApiBody({
+    type: LoginRequestModel,
+    required: true,
+    isArray: false,
+  })
+  @ApiResponse({
+    status: 200,
+    type: LoginResponseModel
+  })
+  async login(@Request() req): Promise<LoginResponseModel> {
     const dto: CustomerDTO | TrainerDTO = req.user;
-    return this.authenticationService.login(dto);
+    const result = await this.authenticationService.login(dto);
+    return new LoginResponseModel(result.accessToken);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('test/jwt')
-  getAll(@Request() req): any {
-    return this.customerService.index();
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Test jwt' })
+  @ApiResponse({
+    status: 200,
+    type: String
+  })
+  getAll(@Request() req): string {
+    return "123";
   }
 
   @Post("reset-password")
+  @ApiOperation({ summary: 'Reset password' })
   async resetPassword(@Body() requestModel: ResetPasswordRequestModel, @Res() response): Promise<void> {
     const email = requestModel.email;
     try {
@@ -52,7 +73,7 @@ export class AppController {
       if (tokenDTO.expiredTime > new Date().getTime()) {
         return response.status(400).json(
           new ErrorResponseModel(400,
-            'Cannot request OTP for this email 2 times in 5 minutes',
+            `Cannot request OTP for this email 2 times in ${RESET_PASSWORD_TOKEN_EXPIRED_TIME.MINUTE} minutes`,
             'Bad request'));
       }
     } catch (e) {
@@ -64,13 +85,14 @@ export class AppController {
     tokenEntity.email = requestModel.email;
     tokenEntity.otp = otp;
     tokenEntity.createdTime = new Date().getTime();
-    tokenEntity.expiredTime = tokenEntity.createdTime + 5 * 60 * 1000;
+    tokenEntity.expiredTime = tokenEntity.createdTime + RESET_PASSWORD_TOKEN_EXPIRED_TIME.MILLISECOND;
     await this.resetPasswordTokenService.store(tokenEntity);
     await this.mailService.sendOTPEmail(requestModel.email, otp);
     return response.status(200).json();
   }
 
   @Post('reset-password/confirm')
+  @ApiOperation({ summary: 'Confirm reset password' })
   async confirmChangePassword(@Body() requestModel: ResetPasswordConfirmRequestModel, @Res() response): Promise<void> {
     try {
       const { email, otp, newPassword } = requestModel;
