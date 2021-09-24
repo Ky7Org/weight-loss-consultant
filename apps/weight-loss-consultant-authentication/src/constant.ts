@@ -4,5 +4,6 @@ export const jwtConfig = {
 
 export enum Role {
   trainer = 0,
-  customer = 1
+  customer = 1,
+  admin = 2
 }

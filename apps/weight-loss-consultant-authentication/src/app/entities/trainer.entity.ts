@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity("Trainer")
-export class TrainerEntity extends BaseEntity{
+@Entity('Trainer')
+export class TrainerEntity extends BaseEntity {
   @PrimaryColumn()
   email: string;
   @Column({ type: 'char', length: 60 })
@@ -16,6 +16,8 @@ export class TrainerEntity extends BaseEntity{
   gender: string;
   @Column('int')
   status: number;
+  @Column({ type: 'varchar', length: 200 })
+  profileImage: string;
   @Column('bigint')
   dob: number;
   @Column('float')
