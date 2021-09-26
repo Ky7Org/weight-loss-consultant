@@ -1,18 +1,12 @@
-import {AdminService} from "../services/impl/admin.service.impl";
 import {
   Body, Controller,
   Delete,
   Get,
-  HttpCode,
-  NotFoundException,
   Param,
   Post,
   Put,
-  UsePipes,
-  ValidationPipe,
   Res
 } from "@nestjs/common";
-import {AdminEntity} from "../entities/admin.entity";
 import {TrainerService} from "../services/impl/trainer.service.impl";
 import {CreateTrainerDto} from "../dtos/trainer/create-trainer";
 import {UpdateTrainerDto} from "../dtos/trainer/update-trainer";
@@ -29,7 +23,7 @@ export class TrainerController {
   @Get()
   async index(@Res() res): Promise<any> {
     try {
-      const result = this.trainerService.findAll();
+      const result = await this.trainerService.findAll();
       res.status(200).send(result);
     } catch (e) {
       console.error(e);

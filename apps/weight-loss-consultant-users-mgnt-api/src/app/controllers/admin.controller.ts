@@ -1,11 +1,10 @@
 import {
   Body,
   Controller, Delete,
-  Get, HttpStatus, NotFoundException, Param, Post, Put, Res, UsePipes, ValidationPipe
+  Get, Param, Post, Put, Res
 }
   from "@nestjs/common";
 import {AdminService} from "../services/impl/admin.service.impl"
-import {AdminEntity} from "../entities/admin.entity";
 import {CreateAdminDto} from "../dtos/admin/create-admin.dto";
 import {UpdateAdminDto} from "../dtos/admin/update-admin.dto";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";

@@ -2,21 +2,15 @@ import {
   Body,
   Controller, Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
   Put,
   Res,
-  UsePipes,
-  ValidationPipe
 } from "@nestjs/common";
 import {CustomerService} from "../services/impl/customer.service.impl";
-import {AdminEntity} from "../entities/admin.entity";
-import {CustomerEntity} from "../entities/customer.entity";
 import {CreateCustDto} from "../dtos/customer/create-customer.dto";
 import {UpdateCustDto} from "../dtos/customer/update-customer-dto";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {CreateAdminDto} from "../dtos/admin/create-admin.dto";
 
 @ApiTags('Customer')
 @ApiBearerAuth()
@@ -29,7 +23,7 @@ export class CustomerController {
   @Get()
   async index(@Res() res): Promise<any> {
     try {
-      const result = this.customerService.findAll();
+      const result = await this.customerService.findAll();
       res.status(200).send(result);
     } catch (e) {
       console.error(e);

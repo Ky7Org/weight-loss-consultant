@@ -18,7 +18,7 @@ export class CustomerEntity extends BaseEntity{
   status: number;
   @Column({type: 'varchar', length: 200})
   profileImage: string;
-  @Column('bigint')
+  @Column({type: 'bigint'})
   dob: number;
 
 }
