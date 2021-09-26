@@ -1,12 +1,12 @@
 import {PartialType} from '@nestjs/mapped-types';
 import {CreateAdminDto} from './create-admin.dto';
-import {isNumber, IsString, MaxLength, MinLength} from "class-validator";
+import {IsEmail, isNumber, IsString, MaxLength, MinLength} from "class-validator";
 import * as LIMIT_LENGTH from "../../constants/properties-length-limit";
 import * as ERR_MSG from "../../constants/validation-err-message";
 import {ApiProperty} from "@nestjs/swagger";
 
 export class UpdateAdminDto {
-  @IsString()
+  @IsEmail()
   @MinLength(LIMIT_LENGTH.EMAIL_MIN_LENGTH, {message: ERR_MSG.EMAIL_FORMAT_ERR})
   @MaxLength(LIMIT_LENGTH.EMAIL_MAX_LENGTH, {message: ERR_MSG.EMAIL_MAX_LENGTH_ERR})
   @ApiProperty({
@@ -16,6 +16,7 @@ export class UpdateAdminDto {
 
   })
   email?: string;
+
   @IsString()
   @MinLength(LIMIT_LENGTH.PASSWORD_MIN_LENGTH, {message: ERR_MSG.PASSWORD_MIN_LENGTH_ERR})
   @MaxLength(LIMIT_LENGTH.PASSWORD_MAX_LENGTH, {message: ERR_MSG.PASSWORD_MAX_LENGTH_ERR})

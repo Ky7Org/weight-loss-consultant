@@ -19,7 +19,7 @@ export class CustomerMapper {
     entity.gender = "";
     entity.status = 1;
     entity.profileImage = "";
-    entity.dob = 1;
+    entity.dob = 946659600000;
 
     return entity;
   }

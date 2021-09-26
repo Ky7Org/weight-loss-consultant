@@ -20,9 +20,9 @@ export class TrainerMapper {
     entity.phone = "";
     entity.gender = "";
     entity.profileImage = "";
-    entity.dob = 1;
-    entity.yearOfExp = 1;
-    entity.rating = 1;
+    entity.dob = 946659600000;
+    entity.yearOfExp = 0;
+    entity.rating = 0;
     return entity;
   }
 

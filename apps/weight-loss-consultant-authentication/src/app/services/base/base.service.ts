@@ -1,4 +1,4 @@
-import { BaseEntity, DeleteResult, Repository } from 'typeorm';
+import { BaseEntity, DeepPartial, DeleteResult, Repository } from 'typeorm';
 import { IBaseService } from './i.base.service';
 import { EntityId } from 'typeorm/repository/EntityId';
 

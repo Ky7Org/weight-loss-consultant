@@ -17,7 +17,7 @@ static async mapCreateAdminDTOToEntity(dto: CreateAdminDto): Promise<AdminEntity
     entity.phone = "";
     entity.gender = "";
     entity.profileImage = "";
-    entity.dob = 1;
+    entity.dob = 946659600000;
     return entity;
   }
 

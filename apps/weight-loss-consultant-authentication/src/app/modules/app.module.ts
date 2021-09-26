@@ -5,10 +5,15 @@ import { CustomerModule } from './customer.module';
 import { AppController } from '../controllers/app.controller';
 import { AuthenticationModule } from './authentication.module';
 import { TrainerModule } from './trainer.module';
-import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { TrainerEntity } from '../entities/trainer.entity';
 import { CustomerEntity } from '../entities/customer.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailModule } from './mail.module';
+import { ResetPasswordTokenEntity } from '../entities/reset-password-token.entity';
+import { ResetPasswordTokenModule } from './reset-password-token.module';
+import { AccountModule } from './account.module';
+import { AdminModule } from './admin.module';
+import { AdminEntity } from '../entities/admin.entity';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -23,18 +28,23 @@ export class AppModule {
           imports: [ConfigModule],
           useFactory: (configService: ConfigService) => ({
             type: 'mysql',
+            //logging: ["query"],
             host: configService.get('DATABASE_HOST'),
             port: configService.get<number>('DATABASE_PORT'),
             username: configService.get('DATABASE_USER'),
             password: configService.get('DATABASE_PASSWORD'),
             database: configService.get('DATABASE_NAME'),
-            entities: [CustomerEntity, TrainerEntity,],
+            entities: [CustomerEntity, TrainerEntity, ResetPasswordTokenEntity, AdminEntity],
           }),
           inject: [ConfigService],
         }),
         CustomerModule,
         AuthenticationModule,
-        TrainerModule
+        TrainerModule,
+        AdminModule,
+        MailModule,
+        ResetPasswordTokenModule,
+        AccountModule
       ],
       controllers: [AppController]
     };

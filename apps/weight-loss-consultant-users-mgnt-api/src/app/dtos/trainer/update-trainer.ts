@@ -1,10 +1,10 @@
-import {IsString, MaxLength, MinLength} from "class-validator";
+import {IsEmail, IsNumber, IsString, MaxLength, MinLength} from "class-validator";
 import * as LIMIT_LENGTH from "../../constants/properties-length-limit";
 import * as ERR_MSG from "../../constants/validation-err-message";
 import {ApiProperty} from "@nestjs/swagger";
 
 export class UpdateTrainerDto {
-  @IsString()
+  @IsEmail()
   @MinLength(LIMIT_LENGTH.EMAIL_MIN_LENGTH, {message: ERR_MSG.EMAIL_FORMAT_ERR})
   @MaxLength(LIMIT_LENGTH.EMAIL_MAX_LENGTH, {message: ERR_MSG.EMAIL_MAX_LENGTH_ERR})
   @ApiProperty({
@@ -13,15 +13,16 @@ export class UpdateTrainerDto {
     type: String,
   })
   email: string;
+
   @IsString()
   @MinLength(LIMIT_LENGTH.PASSWORD_MIN_LENGTH, {message: ERR_MSG.PASSWORD_MIN_LENGTH_ERR})
-  @MaxLength(LIMIT_LENGTH.PASSWORD_MAX_LENGTH, {message: ERR_MSG.PASSWORD_MAX_LENGTH_ERR})
   @ApiProperty({
     description: 'Pasword of trainer',
     minimum: 1,
     type: String,
   })
   password: string;
+
   @IsString()
   @MinLength(LIMIT_LENGTH.FULLNAME_MIN_LENGTH, {message: ERR_MSG.FULLNAME_EMPTY_ERR})
   @MaxLength(LIMIT_LENGTH.FULLNAME_MAX_LENGTH, {message: ERR_MSG.FULLNAME_MAX_LENGTH_ERR})
@@ -31,6 +32,7 @@ export class UpdateTrainerDto {
     type: String,
   })
   fullname: string;
+
   @IsString()
   @MinLength(LIMIT_LENGTH.ADDRESS_MIN_LENGTH, {message: ERR_MSG.ADDRESS_EMPTY_ERR})
   @MaxLength(LIMIT_LENGTH.ADDRESS_MAX_LENGTH, {message: ERR_MSG.ADDRESS_MAX_LENGTH_ERR})
@@ -41,6 +43,7 @@ export class UpdateTrainerDto {
     type: String,
   })
   address: string;
+
   @IsString()
   @MinLength(LIMIT_LENGTH.PHONE_MIN_LENGTH, {message: ERR_MSG.PHONE_MIN_LENGTH_ERR})
   @MaxLength(LIMIT_LENGTH.PHONE_MAX_LENGTH, {message: ERR_MSG.PHONE_MAX_LENGTH_ERR})
@@ -50,6 +53,7 @@ export class UpdateTrainerDto {
     type: String,
   })
   phone: string;
+
   @IsString()
   @MinLength(LIMIT_LENGTH.GENDER_MIN_LENGTH, {message: ERR_MSG.GENDER_EMPTY_ERR})
   @MaxLength(LIMIT_LENGTH.GENDER_MAX_LENGTH, {message: ERR_MSG.GENDER_VALIDATION_ERR})
@@ -59,6 +63,7 @@ export class UpdateTrainerDto {
     type: String,
   })
   gender: string;
+
   @IsString()
   @MinLength(LIMIT_LENGTH.PROFILE_MIN_LENGTH, {message: ERR_MSG.PROFILE_IMAGE_EMPTY_ERR})
   @MaxLength(LIMIT_LENGTH.PROFILE_IMAGE_MAX_LENGTH, {message: ERR_MSG.PROFILE_IMAGE_VALIDATION_ERR})
@@ -70,6 +75,7 @@ export class UpdateTrainerDto {
   })
   profileImage: string;
 
+  @IsNumber()
   @ApiProperty({
     description: 'Status of trainer',
     minimum: 1,
@@ -77,21 +83,27 @@ export class UpdateTrainerDto {
     type: Number,
   })
   status: number;
+
   @ApiProperty({
     description: 'Date of birth of trainer',
     minimum: 1,
     default: 1,
     type: Number,
   })
+  @IsNumber()
   dob: number;
+
   @ApiProperty({
     description: 'Experience years of trainer',
     type: Number,
   })
+  @IsNumber()
   yearOfExp: number;
+
   @ApiProperty({
     description: 'Ratings of trainer',
     type: Number,
   })
+  @IsNumber()
   rating: number;
 }

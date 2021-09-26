@@ -18,3 +18,5 @@ export const PASSWORD_EMPTY_ERR = "Password must not be empty";
 
 export const EMAIL_EXISTED_ERR =  "Email already exists!";
 export const NOT_FOUND_ERR_MSG = "Not found result with email: "
+
+export const NOT_EMAIL_FORMAT_ERR_MSG = "Email should be in email format";

@@ -1,16 +1,14 @@
-import {IsString, MaxLength, MinLength} from "class-validator";
+import {IsEmail, IsEmpty, IsString, MaxLength, MinLength} from "class-validator";
 import * as ERR_MSG from "../../constants/validation-err-message";
 import * as LIMIT_LENGTH from "../../constants/properties-length-limit";
-import * as Validator from "class-validator";
-import {PASSWORD_PATTERN} from "../../constants/regex.pattern";
 import {Match} from "../match.decorator";
 import {ApiProperty} from "@nestjs/swagger";
 
 
 export class CreateTrainerDto{
-  @Validator.IsString({message: ERR_MSG.EMAIL_FORMAT_ERR})
-  @Validator.MinLength(LIMIT_LENGTH.EMAIL_MIN_LENGTH)
-  @Validator.MaxLength(LIMIT_LENGTH.EMAIL_MAX_LENGTH, {message: ERR_MSG.EMAIL_MAX_LENGTH_ERR})
+  @IsEmail()
+  @MinLength(LIMIT_LENGTH.EMAIL_MIN_LENGTH)
+  @MaxLength(LIMIT_LENGTH.EMAIL_MAX_LENGTH, {message: ERR_MSG.EMAIL_MAX_LENGTH_ERR})
   @ApiProperty({
     description: 'Email of trainer, unique',
     minimum: 1,
@@ -18,8 +16,8 @@ export class CreateTrainerDto{
   })
   email: string;
 
-  @Validator.IsString()
-  @Validator.IsEmpty({message: ERR_MSG.PASSWORD_EMPTY_ERR})
+  @IsString()
+  @IsEmpty({message: ERR_MSG.PASSWORD_EMPTY_ERR})
   @ApiProperty({
     description: 'Password of trainer',
     minimum: 1,
@@ -28,7 +26,7 @@ export class CreateTrainerDto{
   })
   password: string;
 
-  @Validator.IsString()
+  @IsString()
   @Match('password', {message: ERR_MSG.RETYPE_PASSWORD_VALIDATION_ERR}) //if not match => return status code :400
   @ApiProperty({
     description: 'Retype password of trainer. must match with password',
