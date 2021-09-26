@@ -1,14 +1,14 @@
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CustomerModule } from './customer.module';
-import { AppController } from '../controllers/app.controller';
-import { AuthenticationModule } from './authentication.module';
-import { TrainerModule } from './trainer.module';
-import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
-import { TrainerEntity } from '../entities/trainer.entity';
-import { CustomerEntity } from '../entities/customer.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import {AdminEntity} from "../entities/admin.entity";
+import {AdminModule} from "./admin.module";
+import {AdminController} from "../controllers/admin.controller";
+import { TrainerEntity } from '../entities/trainer.entity';
+import {TrainerModule} from "./trainer.module";
+import {CustomerModule} from "./customer.module";
+import {CustomerEntity} from "../entities/customer.entity";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -17,7 +17,7 @@ export class AppModule {
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
-          envFilePath: "apps/weight-loss-consultant-authentication/src/.env"
+          envFilePath: "apps/weight-loss-consultant-users-mgnt-api/src/.env"
         }),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
@@ -28,15 +28,16 @@ export class AppModule {
             username: configService.get('DATABASE_USER'),
             password: configService.get('DATABASE_PASSWORD'),
             database: configService.get('DATABASE_NAME'),
-            entities: [CustomerEntity, TrainerEntity,],
+            entities: [
+              AdminEntity,
+              TrainerEntity,
+              CustomerEntity
+            ],
           }),
           inject: [ConfigService],
         }),
-        CustomerModule,
-        AuthenticationModule,
-        TrainerModule
+        AdminModule, TrainerModule, CustomerModule
       ],
-      controllers: [AppController]
     };
   }
 }
