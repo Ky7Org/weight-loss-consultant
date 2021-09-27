@@ -15,9 +15,9 @@ import { ResetPasswordConfirmRequestModel } from '../models/reset-password-confi
 import { ErrorResponseModel } from '../models/error-response-model';
 import { AccountDTO } from '../dtos/acount.dto';
 import { AccountService } from '../services/account.service';
-import { RESET_PASSWORD_TOKEN_EXPIRED_TIME, Role } from '../../constant';
+import { RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status } from '../../constant';
 import { TrainerService } from '../services/trainer.service';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginRequestModel } from '../models/login-request-model';
 import { LoginResponseModel } from '../models/login-response-model';
 
@@ -108,6 +108,9 @@ export class AppController {
           .json(new ErrorResponseModel(400, 'OTP is expired', 'Bad request'));
       }
       const account: AccountDTO = await this.accountService.findAccountByEmail(email);
+      if (account.status !== Status.ACTIVE){
+        return response.status(400).json(new ErrorResponseModel(400, "This account is inactive", 'Bad request'));
+      }
       this.accountService.updatePassword(account, newPassword);
       this.resetPasswordTokenService.update(tokenDTO.id, {isInvalidated: true})
       return response.status(200).json();
