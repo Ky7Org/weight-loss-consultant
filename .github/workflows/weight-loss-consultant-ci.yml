@@ -43,9 +43,6 @@ jobs:
       - name: Test ReactJS UI code
         run: npm run test:ui
 
-      - name: Test ReactJS UI e2e code
-        run: npm run test-e2e:ui
-
       - name: Test NestJS Gateway code
         run: npm run test:gateway
 
