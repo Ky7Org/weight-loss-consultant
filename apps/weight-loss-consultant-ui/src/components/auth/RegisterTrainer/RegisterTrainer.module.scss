@@ -1,0 +1,43 @@
+.RegisterContainer {
+  display: flex;
+  justify-content: center;
+  .formContainer {
+    .formFillContainer {
+      .hello {
+        text-align: start;
+        color: white;
+        > a {
+          font-weight: bold;
+          color: #ff3939;
+        }
+      }
+      .button {
+        position: relative;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.1);
+        font-size: 20px;
+        text-transform: uppercase;
+        margin-top: 10px;
+        text-align: center;
+        height: 50px;
+        width: 300px;
+        border-color: white;
+      }
+      .haveAAccount {
+        margin-top: 60px;
+        > p {
+          text-align: end;
+          color: white;
+        }
+      }
+    }
+    .footerText {
+      margin-top: 80px;
+      color: white;
+      > a {
+        font-weight: bold;
+        color: #ff3939;
+      }
+    }
+  }
+}
