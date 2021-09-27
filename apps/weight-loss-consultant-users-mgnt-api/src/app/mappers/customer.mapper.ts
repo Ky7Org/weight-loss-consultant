@@ -2,6 +2,7 @@ import {CreateCustDto} from "../dtos/customer/create-customer.dto";
 import {CustomerEntity} from "../entities/customer.entity";
 import {UpdateCustDto} from "../dtos/customer/update-customer-dto";
 import {Injectable} from "@nestjs/common";
+import {Status} from "../constants/enums";
 
 @Injectable()
 export class CustomerMapper {
@@ -13,13 +14,13 @@ export class CustomerMapper {
 
     entity.email = dto.email;
     entity.password = dto.password;
-    entity.fullname = "";
-    entity.address = "";
-    entity.phone = "";
-    entity.gender = "";
-    entity.status = 1;
-    entity.profileImage = "";
-    entity.dob = 946659600000;
+    entity.fullname = undefined;
+    entity.address = undefined;
+    entity.phone = undefined;
+    entity.gender = undefined;
+    entity.status = Status.ACTIVE;
+    entity.profileImage = undefined;
+    entity.dob = undefined;
 
     return entity;
   }

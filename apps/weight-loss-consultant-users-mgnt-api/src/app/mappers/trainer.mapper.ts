@@ -1,8 +1,8 @@
 import {Injectable} from "@nestjs/common";
 import {CreateTrainerDto} from "../dtos/trainer/create-trainer";
-import {UpdateAdminDto} from "../dtos/admin/update-admin.dto";
 import {TrainerEntity} from "../entities/trainer.entity";
 import {UpdateTrainerDto} from "../dtos/trainer/update-trainer";
+import {Status} from "../constants/enums";
 
 
 @Injectable()
@@ -14,15 +14,15 @@ export class TrainerMapper {
     const entity = new TrainerEntity();
     entity.email = dto.email;
     entity.password = dto.password;
-    entity.status = 1;
-    entity.fullname = "";
-    entity.address = "";
-    entity.phone = "";
-    entity.gender = "";
-    entity.profileImage = "";
-    entity.dob = 946659600000;
-    entity.yearOfExp = 0;
-    entity.rating = 0;
+    entity.status = Status.PENDING;
+    entity.fullname = undefined;
+    entity.address = undefined;
+    entity.phone = undefined;
+    entity.gender = undefined;
+    entity.profileImage = undefined;
+    entity.dob = undefined;
+    entity.yearOfExp = undefined;
+    entity.rating = undefined;
     return entity;
   }
 
@@ -33,7 +33,7 @@ export class TrainerMapper {
     const entity = new TrainerEntity();
     entity.email = dto.email;
     entity.password = dto.password;
-    entity.status = 1;
+    entity.status = dto.status;
     entity.fullname = dto.fullname;
     entity.address = dto.address;
     entity.phone = dto.phone;
