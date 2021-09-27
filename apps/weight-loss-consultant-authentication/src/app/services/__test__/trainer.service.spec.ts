@@ -2,17 +2,19 @@ import {TrainerService} from '../trainer.service';
 import {TrainerRepository} from "../../repositories/trainer.repository";
 import { TrainerMapper } from '../../mappers/trainer.mapper';
 import {TrainerDTO} from "../../dtos/trainer.dto";
+import { RedisCacheService } from '../redis-cache.service';
 
 describe('The TrainerService', () => {
   let trainerService: TrainerService;
   let trainerRepository: TrainerRepository;
   let trainerMapper: TrainerMapper;
-
+  let redisCacheService: RedisCacheService;
   beforeEach(() => {
     trainerRepository = new TrainerRepository();
     trainerMapper = new TrainerMapper();
+    redisCacheService = new RedisCacheService(null);
 
-    trainerService = new TrainerService(trainerRepository, trainerMapper);
+    trainerService = new TrainerService(trainerRepository, trainerMapper, redisCacheService);
   });
 
   describe('findByEmail', () => {
