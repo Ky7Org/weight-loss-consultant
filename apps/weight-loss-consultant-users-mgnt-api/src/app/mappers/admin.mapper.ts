@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAdminDto } from "../dtos/admin/create-admin.dto";
 import {AdminEntity} from "../entities/admin.entity";
 import {UpdateAdminDto} from "../dtos/admin/update-admin.dto";
+import {Status} from "../constants/enums";
 @Injectable()
 export class AdminMapper {
 static async mapCreateAdminDTOToEntity(dto: CreateAdminDto): Promise<AdminEntity | null> {
@@ -11,13 +12,13 @@ static async mapCreateAdminDTOToEntity(dto: CreateAdminDto): Promise<AdminEntity
     const entity = new AdminEntity();
     entity.email = dto.email;
     entity.password = dto.password;
-    entity.status = 1;
-    entity.fullname = "";
-    entity.address = "";
-    entity.phone = "";
-    entity.gender = "";
-    entity.profileImage = "";
-    entity.dob = 946659600000;
+    entity.status = Status.ACTIVE;
+    entity.fullname = undefined;
+    entity.address = undefined;
+    entity.phone = undefined;
+    entity.gender = undefined;
+    entity.profileImage = undefined;
+    entity.dob = undefined;
     return entity;
   }
 
