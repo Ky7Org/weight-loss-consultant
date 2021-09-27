@@ -1,4 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import { Status } from '../../constant'
+
 
 @Entity('Trainer')
 export class TrainerEntity extends BaseEntity {
@@ -15,7 +17,7 @@ export class TrainerEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 20 })
   gender: string;
   @Column('int')
-  status: number;
+  status: Status;
   @Column({ type: 'varchar', length: 200 })
   profileImage: string;
   @Column('bigint')

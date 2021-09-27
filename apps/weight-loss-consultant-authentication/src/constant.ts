@@ -13,3 +13,9 @@ export const RESET_PASSWORD_TOKEN_EXPIRED_TIME = {
   SECOND: 5 * 60,
   MINUTE: 5,
 }
+
+export enum Status {
+  INACTIVE = 0,
+  ACTIVE = 1,
+  PENDING = 2,
+}

@@ -1,13 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CustomerService } from './customer.service';
 import { JwtService } from '@nestjs/jwt';
-import { TrainerService } from './trainer.service';
-import { Role } from '../../constant';
-import { CustomerDTO } from '../dtos/customer.dto';
-import { TrainerDTO } from '../dtos/trainer.dto';
+import { Status } from '../../constant';
 import { AccountDTO } from '../dtos/acount.dto';
-import { AdminDTO } from '../dtos/admin.dto';
-import { AdminService } from './admin.service';
 import { AccountService } from './account.service';
 
 @Injectable()
@@ -21,7 +15,7 @@ export class AuthenticationService {
   async validateAccount(email: string, password: string): Promise<AccountDTO | null> {
 
     const accountDTO = await this.accountService.findAccountByEmail(email);
-    if (accountDTO && accountDTO.password === password) {
+    if (accountDTO && accountDTO.password === password && accountDTO.status === Status.ACTIVE) {
       return accountDTO;
     }
     return null;
