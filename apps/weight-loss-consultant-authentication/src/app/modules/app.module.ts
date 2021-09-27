@@ -14,6 +14,8 @@ import { ResetPasswordTokenModule } from './reset-password-token.module';
 import { AccountModule } from './account.module';
 import { AdminModule } from './admin.module';
 import { AdminEntity } from '../entities/admin.entity';
+import * as Joi from 'joi';
+
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -22,7 +24,11 @@ export class AppModule {
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
-          envFilePath: "apps/weight-loss-consultant-authentication/src/.env"
+          envFilePath: "apps/weight-loss-consultant-authentication/src/.env",
+          validationSchema: Joi.object({
+            REDIS_HOST: Joi.string().required(),
+            REDIS_PORT: Joi.number().required(),
+          })
         }),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],

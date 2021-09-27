@@ -11,6 +11,7 @@ describe('The TrainerService', () => {
   beforeEach(() => {
     trainerRepository = new TrainerRepository();
     trainerMapper = new TrainerMapper();
+
     trainerService = new TrainerService(trainerRepository, trainerMapper);
   });
 
