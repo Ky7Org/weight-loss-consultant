@@ -5,7 +5,6 @@ import { Injectable } from '@nestjs/common';
 import { TrainerMapper } from '../mappers/trainer.mapper';
 import { TrainerDTO } from '../dtos/trainer.dto';
 import { RedisCacheService } from './redis-cache.service';
-import { CustomerDTO } from '../dtos/customer.dto';
 
 @Injectable()
 export class TrainerService extends BaseService<TrainerEntity, TrainerRepository> {
@@ -21,7 +20,6 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
       const entity = await this.repository.findOneOrFail({ email: email });
       dto = await this.trainerMapper.mapEntityToDTO(entity);
       await this.redisCacheService.set<TrainerDTO>(email, dto);
-
     }
     return dto;
   }
