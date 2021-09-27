@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: --font-size-normal;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+.ant-input {
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 30px;
+  width: 700px;
+  font-size: 20px;
+  padding: 10px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-color: white;
+}
+.ant-form-item-explain-error {
+  list-style-type: none !important;
+  text-align: center;
+  color: #ff3939;
+}
+.ant-btn-loading-icon {
+  color: #ff3939;
+}

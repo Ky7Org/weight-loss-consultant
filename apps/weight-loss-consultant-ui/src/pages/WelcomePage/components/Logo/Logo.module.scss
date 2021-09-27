@@ -1,0 +1,15 @@
+.Container {
+  display: flex;
+  justify-content: center;
+  .Centered {
+    .logo {
+      width: 720px;
+    }
+    .text {
+      text-align: center;
+      color: white;
+      opacity: 0.5;
+      font-size: 20px;
+    }
+  }
+}

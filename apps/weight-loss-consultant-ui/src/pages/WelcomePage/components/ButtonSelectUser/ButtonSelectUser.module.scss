@@ -1,0 +1,22 @@
+.Container {
+  .Text {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .Trainer {
+    .LinkTrainer {
+      display: inline-block;
+      width: 30%;
+    }
+  }
+  .Customer {
+    .LinkCustomer {
+      margin-top: 50px;
+      size: 100px;
+      display: inline-block;
+      width: 30%;
+    }
+  }
+}
