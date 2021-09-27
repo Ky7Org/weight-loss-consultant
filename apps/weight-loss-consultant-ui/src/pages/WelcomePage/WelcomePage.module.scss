@@ -1,0 +1,21 @@
+.Container {
+  background: url(../../assets/images/background.png);
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: absolute;
+  .SignInButton {
+    text-align: end;
+    margin-top: 50px;
+    margin-right: 50px;
+  }
+  .Logo {
+    margin-top: 50px;
+  }
+  .Button {
+    margin-top: 50px;
+    text-align: center;
+  }
+}
