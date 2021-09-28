@@ -10,10 +10,12 @@ import { AppModule } from './app/modules/app.module';
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ENV_FILE_PATH } from './constant';
 
 
 async function bootstrap() {
-  const settings = dotenv.parse(fs.readFileSync("./apps/weight-loss-consultant-authentication/src/.env"));
+  const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
+  console.log(settings)
   const app = await NestFactory.create(AppModule.forRoot(settings));
   const globalPrefix = settings.API_ENDPOINT;
   app.setGlobalPrefix(globalPrefix);

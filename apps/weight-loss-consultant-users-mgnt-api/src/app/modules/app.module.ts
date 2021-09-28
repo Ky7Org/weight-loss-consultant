@@ -9,6 +9,7 @@ import { TrainerEntity } from '../entities/trainer.entity';
 import {TrainerModule} from "./trainer.module";
 import {CustomerModule} from "./customer.module";
 import {CustomerEntity} from "../entities/customer.entity";
+import { ENV_FILE_PATH } from '../constants/env-file-path';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -17,7 +18,7 @@ export class AppModule {
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
-          envFilePath: "apps/weight-loss-consultant-users-mgnt-api/src/.env"
+          envFilePath: ENV_FILE_PATH
         }),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
