@@ -113,4 +113,17 @@ export class CustomerController {
       res.status(e.status).end();
     }
   }
+
+  @Get("/test/thune")
+  async test(@Res() res) : Promise<any> {
+    try{
+      const result1 = await this.customerService.getAllCustomerWithCampaignDetail();
+      res.status(200).send(result1);
+    }
+    catch (e) {
+      console.error(e);
+      res.status(e.status).end();
+    }
+  }
+
 }
