@@ -8,12 +8,16 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/weight-loss-consultant-authentication",
             "main": "apps/weight-loss-consultant-authentication/src/main.ts",
             "tsConfig": "apps/weight-loss-consultant-authentication/tsconfig.app.json",
-            "assets": ["apps/weight-loss-consultant-authentication/src/assets"]
+            "assets": [
+              "apps/weight-loss-consultant-authentication/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -37,7 +41,9 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
             "lintFilePatterns": [
               "apps/weight-loss-consultant-authentication/**/*.ts"
@@ -46,7 +52,9 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/weight-loss-consultant-authentication"],
+          "outputs": [
+            "coverage/apps/weight-loss-consultant-authentication"
+          ],
           "options": {
             "jestConfig": "apps/weight-loss-consultant-authentication/jest.config.js",
             "passWithNoTests": true
@@ -61,12 +69,16 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/weight-loss-consultant-gateway",
             "main": "apps/weight-loss-consultant-gateway/src/main.ts",
             "tsConfig": "apps/weight-loss-consultant-gateway/tsconfig.app.json",
-            "assets": ["apps/weight-loss-consultant-gateway/src/assets"]
+            "assets": [
+              "apps/weight-loss-consultant-gateway/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -90,14 +102,20 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["apps/weight-loss-consultant-gateway/**/*.ts"]
+            "lintFilePatterns": [
+              "apps/weight-loss-consultant-gateway/**/*.ts"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/weight-loss-consultant-gateway"],
+          "outputs": [
+            "coverage/apps/weight-loss-consultant-gateway"
+          ],
           "options": {
             "jestConfig": "apps/weight-loss-consultant-gateway/jest.config.js",
             "passWithNoTests": true
@@ -112,12 +130,16 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/weight-loss-consultant-health-mgnt-api",
             "main": "apps/weight-loss-consultant-health-mgnt-api/src/main.ts",
             "tsConfig": "apps/weight-loss-consultant-health-mgnt-api/tsconfig.app.json",
-            "assets": ["apps/weight-loss-consultant-health-mgnt-api/src/assets"]
+            "assets": [
+              "apps/weight-loss-consultant-health-mgnt-api/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -141,7 +163,9 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
             "lintFilePatterns": [
               "apps/weight-loss-consultant-health-mgnt-api/**/*.ts"
@@ -150,7 +174,9 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/weight-loss-consultant-health-mgnt-api"],
+          "outputs": [
+            "coverage/apps/weight-loss-consultant-health-mgnt-api"
+          ],
           "options": {
             "jestConfig": "apps/weight-loss-consultant-health-mgnt-api/jest.config.js",
             "passWithNoTests": true
@@ -220,12 +246,16 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/weight-loss-consultant-scheduling-api",
             "main": "apps/weight-loss-consultant-scheduling-api/src/main.ts",
             "tsConfig": "apps/weight-loss-consultant-scheduling-api/tsconfig.app.json",
-            "assets": ["apps/weight-loss-consultant-scheduling-api/src/assets"]
+            "assets": [
+              "apps/weight-loss-consultant-scheduling-api/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -249,7 +279,9 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
             "lintFilePatterns": [
               "apps/weight-loss-consultant-scheduling-api/**/*.ts"
@@ -258,7 +290,9 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/weight-loss-consultant-scheduling-api"],
+          "outputs": [
+            "coverage/apps/weight-loss-consultant-scheduling-api"
+          ],
           "options": {
             "jestConfig": "apps/weight-loss-consultant-scheduling-api/jest.config.js",
             "passWithNoTests": true
@@ -273,7 +307,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/web:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/weight-loss-consultant-ui",
             "index": "apps/weight-loss-consultant-ui/src/index.html",
@@ -284,7 +320,9 @@
               "apps/weight-loss-consultant-ui/src/favicon.ico",
               "apps/weight-loss-consultant-ui/src/assets"
             ],
-            "styles": ["apps/weight-loss-consultant-ui/src/styles.scss"],
+            "styles": [
+              "apps/weight-loss-consultant-ui/src/styles.scss"
+            ],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"
           },
@@ -328,7 +366,9 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
             "lintFilePatterns": [
               "apps/weight-loss-consultant-ui/**/*.{ts,tsx,js,jsx}"
@@ -337,39 +377,12 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/weight-loss-consultant-ui"],
+          "outputs": [
+            "coverage/apps/weight-loss-consultant-ui"
+          ],
           "options": {
             "jestConfig": "apps/weight-loss-consultant-ui/jest.config.js",
             "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "weight-loss-consultant-ui-e2e": {
-      "root": "apps/weight-loss-consultant-ui-e2e",
-      "sourceRoot": "apps/weight-loss-consultant-ui-e2e/src",
-      "projectType": "application",
-      "targets": {
-        "e2e": {
-          "executor": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/weight-loss-consultant-ui-e2e/cypress.json",
-            "devServerTarget": "weight-loss-consultant-ui:serve",
-            "tsConfig": "apps/weight-loss-consultant-ui-e2e/tsconfig.json"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "weight-loss-consultant-ui:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": [
-              "apps/weight-loss-consultant-ui-e2e/**/*.{js,ts}"
-            ]
           }
         }
       }
@@ -381,12 +394,16 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/weight-loss-consultant-users-mgnt-api",
             "main": "apps/weight-loss-consultant-users-mgnt-api/src/main.ts",
             "tsConfig": "apps/weight-loss-consultant-users-mgnt-api/tsconfig.app.json",
-            "assets": ["apps/weight-loss-consultant-users-mgnt-api/src/assets"]
+            "assets": [
+              "apps/weight-loss-consultant-users-mgnt-api/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -410,7 +427,9 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
             "lintFilePatterns": [
               "apps/weight-loss-consultant-users-mgnt-api/**/*.ts"
@@ -419,10 +438,138 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/weight-loss-consultant-users-mgnt-api"],
+          "outputs": [
+            "coverage/apps/weight-loss-consultant-users-mgnt-api"
+          ],
           "options": {
             "jestConfig": "apps/weight-loss-consultant-users-mgnt-api/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "weight-loss-consultant-mobile": {
+      "root": "apps/weight-loss-consultant-mobile",
+      "sourceRoot": "apps/weight-loss-consultant-mobile/src",
+      "projectType": "application",
+      "targets": {
+        "analyze": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter analyze",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "clean": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter clean",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "format": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter format apps/weight-loss-consultant-mobile/*",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "test": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter test",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "assemble": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter assemble",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "attach": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter attach",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "drive": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter drive",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "genL10n": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter gen-l10n",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "install": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter install",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "run": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter run",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "buildAar": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build aar",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "buildApk": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build apk",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "buildAppbundle": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build appbundle",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "buildBundle": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build bundle",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "buildIos": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build ios",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "buildIosFramework": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build ios-framework",
+            "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        },
+        "buildIpa": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build ipa",
+            "cwd": "apps/weight-loss-consultant-mobile"
           }
         }
       }
