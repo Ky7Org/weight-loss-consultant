@@ -15,6 +15,7 @@ import { AccountModule } from './account.module';
 import { AdminModule } from './admin.module';
 import { AdminEntity } from '../entities/admin.entity';
 import * as Joi from 'joi';
+import { ENV_FILE_PATH } from '../../constant';
 
 
 export class AppModule {
@@ -24,7 +25,7 @@ export class AppModule {
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
-          envFilePath: "apps/weight-loss-consultant-authentication/src/.env",
+          envFilePath: ENV_FILE_PATH,
           validationSchema: Joi.object({
             REDIS_HOST: Joi.string().required(),
             REDIS_PORT: Joi.number().required(),
