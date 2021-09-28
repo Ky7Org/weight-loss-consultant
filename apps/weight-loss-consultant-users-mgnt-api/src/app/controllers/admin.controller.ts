@@ -1,13 +1,14 @@
 import {
   Body,
   Controller, Delete,
-  Get, Param, Post, Put, Res
+  Get, Param, Post, Put, Res, UseGuards
 }
   from "@nestjs/common";
 import {AdminService} from "../services/impl/admin.service.impl"
 import {CreateAdminDto} from "../dtos/admin/create-admin.dto";
 import {UpdateAdminDto} from "../dtos/admin/update-admin.dto";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -17,6 +18,7 @@ export class AdminController {
   constructor(private readonly userService: AdminService) {
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async index(@Res() res): Promise<any> {
     try {
