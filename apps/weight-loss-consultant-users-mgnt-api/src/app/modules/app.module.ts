@@ -10,6 +10,9 @@ import {TrainerModule} from "./trainer.module";
 import {CustomerModule} from "./customer.module";
 import {CustomerEntity} from "../entities/customer.entity";
 import { ENV_FILE_PATH } from '../constants/env-file-path';
+import {CampaignEntity} from "../entities/campaign.entity";
+import {AuthModule} from "../auth/auth.module";
+import {CampaignModule} from "./campaign.module";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -32,12 +35,17 @@ export class AppModule {
             entities: [
               AdminEntity,
               TrainerEntity,
-              CustomerEntity
+              CustomerEntity,
+              CampaignEntity,
             ],
           }),
           inject: [ConfigService],
         }),
-        AdminModule, TrainerModule, CustomerModule
+        AdminModule,
+        TrainerModule,
+        CustomerModule,
+        AuthModule,
+        CampaignModule
       ],
     };
   }

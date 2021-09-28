@@ -2,7 +2,7 @@ import {CreateCustDto} from "../dtos/customer/create-customer.dto";
 import {CustomerEntity} from "../entities/customer.entity";
 import {UpdateCustDto} from "../dtos/customer/update-customer-dto";
 import {Injectable} from "@nestjs/common";
-import {Status} from "../constants/enums";
+import {AccountStatus} from "../constants/enums";
 
 @Injectable()
 export class CustomerMapper {
@@ -18,7 +18,7 @@ export class CustomerMapper {
     entity.address = undefined;
     entity.phone = undefined;
     entity.gender = undefined;
-    entity.status = Status.ACTIVE;
+    entity.status = AccountStatus.ACTIVE;
     entity.profileImage = undefined;
     entity.dob = undefined;
 
