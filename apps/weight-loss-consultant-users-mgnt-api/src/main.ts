@@ -6,32 +6,26 @@
 import {Logger} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 
-import {SwaggerModule, DocumentBuilder} from '@nestjs/swagger';
-
 import {AppModule} from './app/modules/app.module';
 import * as dotenv from "dotenv";
 import * as fs from "fs";
-import { ENV_FILE_PATH } from './app/constants/env-file-path';
+import {ENV_FILE_PATH} from './app/constants/env-file-path';
+import {MicroserviceOptions, Transport} from "@nestjs/microservices";
+import {HOST, USERS_MANAGEMENT_SERVICE_PORT} from "../../../constant";
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
-  const app = await NestFactory.create(AppModule.forRoot(settings));
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 8081;
-  const config = new DocumentBuilder()
-    .setTitle('Loss weigth consultant')
-    .setDescription('The user management API description')
-    .setVersion('1.0')
-    .addTag('Admin')
-    .addTag('Trainer')
-    .addTag('Customer')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swagger-ui', app, document);
-  await app.listen(port, () => {
-    Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule.forRoot(settings), {
+    transport: Transport.TCP,
+    options: {
+      host: HOST,
+      port: USERS_MANAGEMENT_SERVICE_PORT,
+    }
+  });
+ // const globalPrefix = 'api';
+  //app.setGlobalPrefix(globalPrefix);
+  await app.listen(() => {
+    Logger.log('Listening at http://localhost:' + '/');
   });
 }
 

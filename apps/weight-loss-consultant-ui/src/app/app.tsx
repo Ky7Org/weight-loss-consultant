@@ -2,9 +2,22 @@ import styles from './app.module.scss';
 
 import { ReactComponent as Logo } from './logo.svg';
 import star from './star.svg';
-
+import { initializeApp } from 'firebase/app';
+import {getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { Route, Link } from 'react-router-dom';
 
+const firebaseConfig = {
+  apiKey: 'AIzaSyDGeSvCLi54bDoGazqiMQuJVpHFZC0TsHE',
+  authDomain: 'weight-loss-consultant.firebaseapp.com',
+  projectId: 'weight-loss-consultant',
+  storageBucket: 'weight-loss-consultant.appspot.com',
+  messagingSenderId: '947521046623',
+  appId: '1:947521046623:web:ea5704559d7d91a9af73ea',
+  measurementId: 'G-83PJ9NPVY8',
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
 export function App() {
   return (
     <div className={styles.app}>
@@ -45,6 +58,27 @@ export function App() {
               href="https://nx.dev/latest/react/tutorial/01-create-application"
             >
               Interactive tutorial
+            </a>
+          </li>
+          <li className="col-span-2">
+            <a
+              className="resource flex"
+              href="#"
+              onClick={() => {
+                signInWithPopup(auth, provider).then(({user}) => {
+                  return user.getIdToken().then(token => {
+                    return fetch('http://localhost:3000/resources', {
+                      headers: {
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                      }
+                    })
+                  })
+                }).then(res => res.json())
+                  .then(console.log);
+              }}
+            >
+              Sign-in with Google
             </a>
           </li>
           <li className="col-span-2">

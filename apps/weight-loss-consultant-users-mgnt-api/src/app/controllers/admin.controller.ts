@@ -1,115 +1,70 @@
-import {
-  Body,
-  Controller, Delete,
-  Get, Param, Post, Put, Res, UseGuards
-}
-  from "@nestjs/common";
+import { Controller, UseGuards } from '@nestjs/common';
 import {AdminService} from "../services/impl/admin.service.impl"
 import {CreateAdminDto} from "../dtos/admin/create-admin.dto";
 import {UpdateAdminDto} from "../dtos/admin/update-admin.dto";
-import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {MessagePattern, Payload} from "@nestjs/microservices";
+import {GET_ALL_ADMINS, GET_ADMIN_BY_EMAIL, CREATE_ADMIN, UPDATE_ADMIN, DELETE_ADMIN} from "../../../../users-management-service-routes";
+import {AdminEntity} from "../entities/admin.entity";
+import {DeleteResult, UpdateResult} from "typeorm";
+import { FirebaseAuthGuard } from '../guards/firebase-auth.guard';
 
-@ApiTags('Admin')
-@ApiBearerAuth()
-@Controller('/v1/admins')
+type UpdateAdminType = {
+  email: string;
+  dto: UpdateAdminDto;
+};
+
+@Controller()
 export class AdminController {
 
-  constructor(private readonly userService: AdminService) {
-  }
+  constructor(private readonly userService: AdminService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  async index(@Res() res): Promise<any> {
+  @MessagePattern({cmd: GET_ALL_ADMINS})
+  @UseGuards(FirebaseAuthGuard)
+  async index(): Promise<AdminEntity[]> {
     try {
-      const result = await this.userService.findAll();
-      res.status(200).send(result);
+      return this.userService.findAll();
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      return Promise.reject(e);
     }
   }
 
-  @Get(':email')
-  @ApiResponse({status: 200, description: 'Admin details has shown below:'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Email not found'})
-  @ApiParam({
-      name: "email",
-      type: String,
-      example: "email@gmail.com",
-      required: true
-    }
-  )
-  async getByEmail(@Param('email') email: string, @Res() res): Promise<any> {
+  @MessagePattern({cmd: GET_ADMIN_BY_EMAIL})
+  async getByEmail(@Payload() email: string): Promise<AdminEntity> {
     try {
-      const admin = await this.userService.viewDetail(email);
-      res.status(200).send(admin);
+      return this.userService.viewDetail(email);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
+  @MessagePattern({cmd: CREATE_ADMIN})
+  async create(@Payload() dto: CreateAdminDto): Promise<AdminEntity> {
+    try {
+      return this.userService.create(dto);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      return Promise.reject(e);
     }
   }
 
-
-  @Post()
-  @ApiBody({
-    type: CreateAdminDto
-  })
-  @ApiResponse({status: 201, description: 'The new admin has been successfully created.'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 409, description: 'Email has already existed.'})
-  async create(@Body() dto: CreateAdminDto, @Res() res): Promise<any> {
+  @MessagePattern({cmd: UPDATE_ADMIN})
+  async update(@Payload() payload: UpdateAdminType): Promise<UpdateResult> {
     try {
-      const result = await this.userService.create(dto);
-      res.status(200).send(result);
-    } catch (e) {
-      console.error(e)
-      res.status(e.status).end();
-    }
-  }
-
-  @Put(':email')
-  @ApiBody({
-    type: UpdateAdminDto
-  })
-  @ApiResponse({status: 200, description: 'The admin information has been successfully updated.'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Email not found.'})
-  @ApiParam({
-    name: "email",
-    type: String,
-    example: "email@gmail.com",
-    required: true
-  })
-  async update(@Param('email') email, @Body() dto: UpdateAdminDto, @Res() res): Promise<any> {
-    try {
-      const result = await this.userService.edit(dto);
-      res.status(200).send(result);
+      return this.userService.edit(payload.dto);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      return Promise.reject(e);
     }
-
   }
 
-  @Delete(':email')
-  @ApiResponse({status: 200, description: 'The admin information has been successfully deleted.'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Email not found.'})
-  @ApiParam({
-    name: "email",
-    type: String,
-    example: "email@gmail.com",
-    required: true
-  })
-  async delete(@Param('email') email, @Res() res): Promise<any> {
+  @MessagePattern({cmd: DELETE_ADMIN})
+  async delete(@Payload() email): Promise<DeleteResult> {
     try {
-      const result = await this.userService.delete(email);
-      res.status(200).send(result);
+      return this.userService.delete(email);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      return Promise.reject(e);
     }
   }
 
