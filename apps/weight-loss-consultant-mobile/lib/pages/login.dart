@@ -106,7 +106,7 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
                           validator: (password){
-                            if (password!.isEmpty)
+                            if (!password!.isEmpty)
                               return null;
                             else
                               return 'Password cannot null';
@@ -158,9 +158,11 @@ class _LoginState extends State<Login> {
                                 email: _email.text,
                                 password: _password.text,
                               );
-                              bool result = await service.login();
-                              if (result) {
-                                //TODO: navigate to main space
+                              dynamic result = await service.login();
+                              if (result != null) {
+                                Navigator.pushReplacementNamed(context, "/customerMain", arguments: {
+                                  "fullname": result["fullname"] as String
+                                });
                               }
                             }
                           },

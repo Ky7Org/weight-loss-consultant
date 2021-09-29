@@ -4,8 +4,11 @@ class LoginService{
 
   LoginService({this.email = "", this.password = ""});
 
-  Future<bool> login() async {
+  Future<dynamic> login() async {
     //TODO: register API
-    return true;
+    Map a = {
+      "fullname": "BanhsBao"
+    };
+    return a;
   }
 }
