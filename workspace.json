@@ -355,6 +355,7 @@
           "executor": "@nrwl/web:dev-server",
           "options": {
             "buildTarget": "weight-loss-consultant-ui:build",
+            "proxyConfig": "proxy.conf.json",
             "hmr": true
           },
           "configurations": {
