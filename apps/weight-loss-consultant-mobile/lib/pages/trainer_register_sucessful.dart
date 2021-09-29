@@ -12,22 +12,19 @@ class TrainerRegisterSuccessful extends StatefulWidget {
 
 class _TrainerRegisterSuccessfulState extends State<TrainerRegisterSuccessful> {
 
-  Map data = {
-    "name": "Huỳnh Châu Bảo"
-  };
+  Map data = {};
 
   @override
   Widget build(BuildContext context) {
-    data = {
-      "name": "Huỳnh Châu Bảo"
-    };
-    if (data.isEmpty){
-      if (ModalRoute.of(context)!.settings.arguments != null){
-        data = ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
-      }
-    } else {
 
+    if (ModalRoute.of(context)!.settings.arguments != null){
+      data = ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
+    } else {
+      data = {
+        "fullname": ""
+      };
     }
+
 
 
     return Scaffold(
@@ -52,7 +49,7 @@ class _TrainerRegisterSuccessfulState extends State<TrainerRegisterSuccessful> {
             Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  data["name"],
+                  data["fullname"],
                   style: TextStyle(
                     fontSize: 36,
                     color: AppColors.PRIMARY_WORD_COLOR,

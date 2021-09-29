@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_register_service.dart';
+import 'package:weight_loss_consultant_mobile/utils.dart';
 
 class TrainerRegister extends StatefulWidget {
   const TrainerRegister({Key? key}) : super(key: key);
@@ -13,13 +15,11 @@ class TrainerRegister extends StatefulWidget {
 
 class _TrainerRegisterState extends State<TrainerRegister> {
   final _formKey = GlobalKey<FormState>();
+  late String email;
+  late String fullname;
+  late String phone;
 
-  bool isEmailValid(String email) {
-    String pattern =
-        r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))\$';
-    RegExp regex = RegExp(pattern);
-    return regex.hasMatch(email);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +66,7 @@ class _TrainerRegisterState extends State<TrainerRegister> {
                             color: AppColors.INPUT_COLOR,
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          onSaved: (String? value){this.fullname=value as String;},
                           style: TextStyle(fontSize: 20),
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -87,8 +88,9 @@ class _TrainerRegisterState extends State<TrainerRegister> {
                             color: AppColors.INPUT_COLOR,
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          onSaved: (String? value){this.email=value as String;},
                           validator: (email) {
-                            if (isEmailValid(email as String))
+                            if (Utils.isEmailValid(email as String))
                               return null;
                             else
                               return 'Enter a valid email address';
@@ -116,6 +118,7 @@ class _TrainerRegisterState extends State<TrainerRegister> {
                             color: AppColors.INPUT_COLOR,
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          onSaved: (String? value){this.phone=value as String;},
                           keyboardType: TextInputType.number,
                           style: TextStyle(fontSize: 20),
                           decoration: InputDecoration(
@@ -139,9 +142,20 @@ class _TrainerRegisterState extends State<TrainerRegister> {
                           ),
                           textColor: Colors.white,
                           color: AppColors.PRIMARY_COLOR,
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              // use the information provided
+                              _formKey.currentState?.save();
+                              TrainerRegisterService service = TrainerRegisterService(
+                                email: this.email,
+                                fullname: this.fullname,
+                                phone: this.phone
+                              );
+                              bool result = await service.registerTrainer();
+                              if (result) {
+                                Navigator.pushNamed(context, "/trainerRegisterSuccessful", arguments: {
+                                  "fullname": this.fullname,
+                                });
+                              }
                             }
                           },
                           child: Text(

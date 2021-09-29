@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_register_service.dart';
+import 'package:weight_loss_consultant_mobile/utils.dart';
 
 class CustomerRegister extends StatefulWidget {
   const CustomerRegister({Key? key}) : super(key: key);
@@ -15,18 +17,17 @@ class _CustomerRegisterState extends State<CustomerRegister> {
   final _formKey = GlobalKey<FormState>();
 
   bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
 
   @override
   void initState() {
     _passwordVisible = false;
+    _confirmPasswordVisible = false;
   }
 
-  bool isEmailValid(String email) {
-    String pattern =
-        r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))\$';
-    RegExp regex = RegExp(pattern);
-    return regex.hasMatch(email);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +73,9 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          controller: _email,
                           validator: (email) {
-                            if (isEmailValid(email as String))
+                            if (Utils.isEmailValid(email as String))
                               return null;
                             else
                               return 'Enter a valid email address';
@@ -102,6 +104,12 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          validator: (val){
+                            if (val!.isEmpty)
+                              return 'Empty password';
+                            return null;
+                          },
+                          controller: _pass,
                           obscureText: !_passwordVisible,
                           enableSuggestions: false,
                           autocorrect: false,
@@ -142,7 +150,15 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
-                          obscureText: !_passwordVisible,
+                          validator: (val){
+                            if(val!.isEmpty)
+                              return 'Empty';
+                            if(val != _pass.text)
+                              return 'Not Match';
+                            return null;
+                          },
+                          controller: _confirmPass,
+                          obscureText: !_confirmPasswordVisible,
                           enableSuggestions: false,
                           autocorrect: false,
                           style: TextStyle(fontSize: 30),
@@ -150,7 +166,7 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                             suffixIcon: IconButton(
                               icon: Icon(
                                 // Based on passwordVisible state choose the icon
-                                _passwordVisible
+                                _confirmPasswordVisible
                                     ? Icons.visibility
                                     : Icons.visibility_off,
                                 color: Theme.of(context).primaryColorDark,
@@ -158,7 +174,7 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                               onPressed: () {
                                 // Update the state i.e. toogle the state of passwordVisible variable
                                 setState(() {
-                                  _passwordVisible = !_passwordVisible;
+                                  _confirmPasswordVisible = !_confirmPasswordVisible;
                                 });
                               },
                             ),
@@ -182,9 +198,17 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                           ),
                           textColor: Colors.white,
                           color: AppColors.PRIMARY_COLOR,
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              // use the information provided
+                              _formKey.currentState?.save();
+                              CustomerRegisterService service = CustomerRegisterService(
+                                email: _email.text,
+                                password: _pass.text,
+                              );
+                              bool result = await service.registerCustomer();
+                              if (result) {
+                                Navigator.pushNamed(context, "/login");
+                              }
                             }
                           },
                           child: Text(

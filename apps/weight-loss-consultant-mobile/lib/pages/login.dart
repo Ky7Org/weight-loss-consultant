@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/services/login_service.dart';
+import 'package:weight_loss_consultant_mobile/utils.dart';
 
 
 class Login extends StatefulWidget {
@@ -15,6 +17,9 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
+
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
 
   @override
   void initState() {
@@ -69,8 +74,12 @@ class _LoginState extends State<Login> {
                             color: AppColors.INPUT_COLOR,
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          controller: _email,
                           validator: (email) {
-
+                            if (Utils.isEmailValid(email as String))
+                              return null;
+                            else
+                              return 'Enter a valid email address';
                           },
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(fontSize: 30),
@@ -96,6 +105,12 @@ class _LoginState extends State<Login> {
                             color: AppColors.INPUT_COLOR,
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          validator: (password){
+                            if (password!.isEmpty)
+                              return null;
+                            else
+                              return 'Password cannot null';
+                          },
                           obscureText: !_passwordVisible,
                           enableSuggestions: false,
                           autocorrect: false,
@@ -136,9 +151,17 @@ class _LoginState extends State<Login> {
                           ),
                           textColor: Colors.white,
                           color: AppColors.PRIMARY_COLOR,
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              // use the information provided
+                              _formKey.currentState?.save();
+                              LoginService service = LoginService(
+                                email: _email.text,
+                                password: _password.text,
+                              );
+                              bool result = await service.login();
+                              if (result) {
+                                //TODO: navigate to main space
+                              }
                             }
                           },
                           child: Text(
