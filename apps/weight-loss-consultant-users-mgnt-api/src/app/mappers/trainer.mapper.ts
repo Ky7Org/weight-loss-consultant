@@ -2,7 +2,7 @@ import {Injectable} from "@nestjs/common";
 import {CreateTrainerDto} from "../dtos/trainer/create-trainer";
 import {TrainerEntity} from "../entities/trainer.entity";
 import {UpdateTrainerDto} from "../dtos/trainer/update-trainer";
-import {Status} from "../constants/enums";
+import {AccountStatus} from "../constants/enums";
 
 
 @Injectable()
@@ -14,7 +14,7 @@ export class TrainerMapper {
     const entity = new TrainerEntity();
     entity.email = dto.email;
     entity.password = dto.password;
-    entity.status = Status.PENDING;
+    entity.status = AccountStatus.PENDING;
     entity.fullname = undefined;
     entity.address = undefined;
     entity.phone = undefined;
