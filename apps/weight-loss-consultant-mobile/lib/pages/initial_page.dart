@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
-class Onboarding1 extends StatelessWidget {
-  const Onboarding1({Key? key}) : super(key: key);
+class InitialPage extends StatelessWidget {
+  const InitialPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class Onboarding1 extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset('assets/onboarding-image.svg'),
+            SvgPicture.asset('assets/get-started-panel.svg'),
             Container(
               margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
               child: Text(
@@ -49,7 +50,7 @@ class Onboarding1 extends StatelessWidget {
                 textColor: Colors.white,
                 color: AppColors.PRIMARY_COLOR,
                 onPressed: () {
-                  Navigator.pushNamed(context, "/onboarding2");
+                  Navigator.pushNamed(context, RoutePath.getStartedPage);
                 },
                 child: Text(
                   "Get started",
@@ -70,7 +71,7 @@ class Onboarding1 extends StatelessWidget {
                 color: Colors.white,
                 textColor: AppColors.PRIMARY_COLOR,
                 onPressed: () {
-                  Navigator.pushNamed(context, "/login");
+                  Navigator.pushNamed(context, RoutePath.loginPage);
                 },
                 child: Text("Sign in",
                     style: TextStyle(

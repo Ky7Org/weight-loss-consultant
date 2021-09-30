@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
-class Onboarding2 extends StatelessWidget {
-  const Onboarding2({Key? key}) : super(key: key);
+class GetStartedPage extends StatelessWidget {
+  const GetStartedPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class Onboarding2 extends StatelessWidget {
           children: [
             SizedBox(width : double.infinity),
             Image(
-              image: AssetImage("assets/logo-with-title.png"),
+              image: AssetImage("assets/app-logo-with-title.png"),
             ),
             Spacer(),
             Container(
@@ -41,7 +42,7 @@ class Onboarding2 extends StatelessWidget {
                 color: Colors.white,
                 textColor: AppColors.PRIMARY_COLOR,
                 onPressed: () {
-                  Navigator.pushNamed(context, "/trainerRegister");
+                  Navigator.pushNamed(context, RoutePath.trainerRegisterPage);
                 },
                 child: Text("Trainer",
                     style: TextStyle(
@@ -60,7 +61,7 @@ class Onboarding2 extends StatelessWidget {
                 color: Colors.white,
                 textColor: AppColors.PRIMARY_COLOR,
                 onPressed: () {
-                  Navigator.pushNamed(context, "/customerRegister");
+                  Navigator.pushNamed(context, RoutePath.customerRegisterPage);
                 },
                 child: Text("Customer",
                     style: TextStyle(

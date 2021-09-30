@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/constants/form_error_messages.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/utils/validator.dart';
 
-class RecoverPassword extends StatefulWidget {
-  const RecoverPassword({Key? key}) : super(key: key);
+class RecoverPasswordPage extends StatefulWidget {
+  const RecoverPasswordPage({Key? key}) : super(key: key);
 
   @override
-  _RecoverPasswordState createState() => _RecoverPasswordState();
+  _RecoverPasswordPageState createState() => _RecoverPasswordPageState();
 }
 
-class _RecoverPasswordState extends State<RecoverPassword> {
+class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
   final _formKey = GlobalKey<FormState>();
 
-  bool isEmailValid(String email) {
-    String pattern =
-        r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))\$';
-    RegExp regex = RegExp(pattern);
-    return regex.hasMatch(email);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Successful"),
+      appBar: GenericAppBar.builder("Recover password"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
@@ -73,10 +69,10 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
                           validator: (email) {
-                            if (isEmailValid(email as String))
+                            if (Validator.isEmailValid(email as String))
                               return null;
                             else
-                              return 'Enter a valid email address';
+                              return FormErrorMessage.emailInvalid;
                           },
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(fontSize: 20),
@@ -104,7 +100,7 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                           color: AppColors.PRIMARY_COLOR,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              // use the information provided
+                              Navigator.pushNamed(context, RoutePath.resetPasswordPage);
                             }
                           },
                           child: Text(
