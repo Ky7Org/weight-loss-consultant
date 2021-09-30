@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/utils.dart';
 
 class RecoverPasswordFirst extends StatefulWidget {
   const RecoverPasswordFirst({Key? key}) : super(key: key);
@@ -14,13 +15,8 @@ class RecoverPasswordFirst extends StatefulWidget {
 class _RecoverPasswordFirstState extends State<RecoverPasswordFirst> {
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
 
-  bool isEmailValid(String email) {
-    String pattern =
-        r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))\$';
-    RegExp regex = RegExp(pattern);
-    return regex.hasMatch(email);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +80,8 @@ class _RecoverPasswordFirstState extends State<RecoverPasswordFirst> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
-                          validator: (email) {
-                            if (isEmailValid(email as String))
-                              return null;
-                            else
-                              return 'Enter a valid email address';
+                          validator: (validationCode) {
+                            return null;
                           },
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(fontSize: 20),
@@ -160,7 +153,7 @@ class _RecoverPasswordFirstState extends State<RecoverPasswordFirst> {
                             color: AppColors.INPUT_COLOR,
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
-                          obscureText: !_passwordVisible,
+                          obscureText: !_confirmPasswordVisible,
                           enableSuggestions: false,
                           autocorrect: false,
                           style: TextStyle(fontSize: 20),
@@ -168,7 +161,7 @@ class _RecoverPasswordFirstState extends State<RecoverPasswordFirst> {
                             suffixIcon: IconButton(
                               icon: Icon(
                                 // Based on passwordVisible state choose the icon
-                                _passwordVisible
+                                _confirmPasswordVisible
                                     ? Icons.visibility
                                     : Icons.visibility_off,
                                 color: Theme.of(context).primaryColorDark,
@@ -177,7 +170,7 @@ class _RecoverPasswordFirstState extends State<RecoverPasswordFirst> {
                               onPressed: () {
                                 // Update the state i.e. toogle the state of passwordVisible variable
                                 setState(() {
-                                  _passwordVisible = !_passwordVisible;
+                                  _confirmPasswordVisible = !_confirmPasswordVisible;
                                 });
                               },
                             ),
@@ -203,7 +196,7 @@ class _RecoverPasswordFirstState extends State<RecoverPasswordFirst> {
                           color: AppColors.PRIMARY_COLOR,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              // use the information provided
+                              Navigator.pushNamed(context, "/login");
                             }
                           },
                           child: const Text(

@@ -15,21 +15,6 @@ import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.d
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
 
-void main() {
-  initializeDateFormatting().then((_) => runApp(const MyApp()));
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: ChatPage(),
-    );
-  }
-}
-
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
 

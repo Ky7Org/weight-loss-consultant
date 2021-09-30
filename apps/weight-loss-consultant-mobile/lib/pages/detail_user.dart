@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 
 import '../constants.dart';
@@ -16,7 +17,9 @@ class _DetailUserState extends State<DetailUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder('My Profile'),
+      appBar: GenericAppBar.builder("My profile"),
+      drawer: CustomerDrawer.builder(
+          "Banhs bao", Image.asset("assets/Miku.png"), "Customer"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -26,8 +29,7 @@ class _DetailUserState extends State<DetailUser> {
               Container(
                 margin: const EdgeInsets.only(bottom: 10),
                 child: const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://cdnimg.vietnamplus.vn/t620/uploaded/mzdic/2014_04_18/hatsune_miku.jpg'),
+                  backgroundImage: AssetImage("assets/Miku.png"),
                   radius: 50,
                 ),
               ),

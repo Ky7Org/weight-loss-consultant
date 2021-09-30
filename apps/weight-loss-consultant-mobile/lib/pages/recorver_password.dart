@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/utils.dart';
 
 class RecoverPassword extends StatefulWidget {
   const RecoverPassword({Key? key}) : super(key: key);
@@ -13,17 +14,11 @@ class RecoverPassword extends StatefulWidget {
 class _RecoverPasswordState extends State<RecoverPassword> {
   final _formKey = GlobalKey<FormState>();
 
-  bool isEmailValid(String email) {
-    String pattern =
-        r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))\$';
-    RegExp regex = RegExp(pattern);
-    return regex.hasMatch(email);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Successful"),
+      appBar: GenericAppBar.builder("Recover password"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
@@ -73,7 +68,7 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
                           validator: (email) {
-                            if (isEmailValid(email as String))
+                            if (Utils.isEmailValid(email as String))
                               return null;
                             else
                               return 'Enter a valid email address';
@@ -104,7 +99,7 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                           color: AppColors.PRIMARY_COLOR,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              // use the information provided
+                              Navigator.pushNamed(context, "/recoverPasswordAfter");
                             }
                           },
                           child: Text(

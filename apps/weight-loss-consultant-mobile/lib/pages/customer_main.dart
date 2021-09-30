@@ -54,6 +54,7 @@ class _CustomerMainState extends State<CustomerMain> {
     {
       "text": "Profile",
       "imageName": "profile-icon.svg",
+      "route": "/customerDetail",
     },
   ];
   @override
@@ -68,7 +69,7 @@ class _CustomerMainState extends State<CustomerMain> {
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: CustomerDrawer.builder(data["fullname"], Image.asset("assets/Miku.png"), "Customer"),
-      appBar: MainAppBar.builder(data["fullname"]),
+      appBar: MainAppBar.builder(data["fullname"], context),
       body: SlidingUpPanel(
         controller: _pc,
         panel: Center(
