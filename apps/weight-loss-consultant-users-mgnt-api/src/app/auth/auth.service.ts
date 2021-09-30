@@ -19,26 +19,35 @@ export class AuthService {
     try {
       const admin = await this.adminService.viewDetail(username); //or email is fine
       if (admin && admin.password === password) {
-        return admin;
+        return {
+          ...admin,
+          role: "ADMIN"
+        };
       }
     } catch (e) {
-      console.error(e)
+      //
     }
     try {
       const customer = await this.customerService.findOneCustomer(username);
       if (customer && customer.password === password) {
-        return customer;
+        return {
+          ...customer,
+          role: "CUSTOMER"
+        };
       }
     } catch (e) {
-      console.error(e)
+      //
     }
     try {
       const trainer = await this.trainerService.findOneTrainer(username);
       if (trainer && trainer.password === password) {
-        return trainer;
+        return {
+          ...trainer,
+          role: "TRAINER"
+        };
       }
     } catch (e) {
-      console.error(e);
+      //
     }
     return null;
   }
@@ -46,10 +55,15 @@ export class AuthService {
   async login(user: any): Promise<LoginResponse> {
     const payload = {
       email: user.email,
-      fullname: user.fullname
+      fullname: user.fullname,
+      role: user.role
     };
     const res = new LoginResponse();
     res.accessToken = this.jwtService.sign(payload);
+    res.email = user.email;
+    res.fullname = user.fullname;
+    res.avartar = user.profileImage;
+    res.role = user.role;
     return res;
   }
 

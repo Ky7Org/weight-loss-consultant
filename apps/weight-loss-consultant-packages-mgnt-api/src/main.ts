@@ -20,7 +20,7 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 5001;
   const config = new DocumentBuilder()
-    .setTitle('Loss weigth consultant')
+    .setTitle('Loss weight consultant')
     .setDescription('The packages management API description')
     .setVersion('1.0')
     .addBearerAuth()

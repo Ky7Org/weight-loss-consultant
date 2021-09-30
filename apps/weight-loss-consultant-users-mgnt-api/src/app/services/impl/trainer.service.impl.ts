@@ -64,7 +64,7 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     });
   }
 
-  async findOneTrainer(id) : Promise<any> {
+  async findOneTrainer(id) : Promise<TrainerEntity> {
     return await this.repository.findOne(id);
   }
 

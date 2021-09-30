@@ -1,7 +1,7 @@
 import {
   Body, Controller,
   Delete,
-  Get,
+  Get, Logger,
   Param,
   Post,
   Put,
@@ -18,17 +18,21 @@ import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 @Controller('/v1/trainers')
 export class TrainerController {
 
+  private readonly logger = new Logger(TrainerController.name);
+
   constructor(private readonly trainerService: TrainerService) {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiResponse({status: 200, description: 'Trainers have shown below:'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
   @Get()
-  async index(@Res() res): Promise<any> {
+  async index(@Res() res): Promise<void> {
     try {
       const result = await this.trainerService.findAll();
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({error:e.message});
     }
   }
@@ -45,12 +49,12 @@ export class TrainerController {
       required: true
     }
   )
-  async getByEmail(@Param('email') email: string, @Res() res): Promise<any> {
+  async getByEmail(@Param('email') email: string, @Res() res): Promise<void> {
     try {
       const trainer = await this.trainerService.viewDetail(email);
       res.status(200).send(trainer);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({error:e.message});
     }
   }
@@ -63,12 +67,12 @@ export class TrainerController {
   @ApiResponse({status: 201, description: 'The new trainer has been successfully created.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 409, description: 'Email has already existed.'})
-  async create(@Body() dto: CreateTrainerDto, @Res() res): Promise<any> {
+  async create(@Body() dto: CreateTrainerDto, @Res() res): Promise<void> {
     try {
       const result = await this.trainerService.create(dto);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e.status)
+      this.logger.error(e)
       res.status(e.status).send({error:e.message});
     }
   }
@@ -88,12 +92,12 @@ export class TrainerController {
       required: true
     }
   )
-  async update(@Param('email') email, @Body() dto: UpdateTrainerDto, @Res() res): Promise<any> {
+  async update(@Param('email') email, @Body() dto: UpdateTrainerDto, @Res() res): Promise<void> {
     try {
       const result = await this.trainerService.edit(dto, email);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(res.status).send({error:e.message});
     }
   }
@@ -110,12 +114,12 @@ export class TrainerController {
       required: true
     }
   )
-  async delete(@Param('email') email, @Res() res): Promise<any> {
+  async delete(@Param('email') email, @Res() res): Promise<void> {
     try {
       const result = await this.trainerService.delete(email);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({error:e.message});
     }
   }

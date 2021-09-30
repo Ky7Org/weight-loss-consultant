@@ -1,7 +1,7 @@
 import {
   Body,
   Controller, Delete,
-  Get,
+  Get, Logger,
   Param,
   Post,
   Put,
@@ -18,17 +18,20 @@ import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 @Controller('/v1/customers')
 export class CustomerController {
 
+  private readonly logger = new Logger(CustomerController.name)
   constructor(private readonly customerService: CustomerService) {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiResponse({status: 200, description: 'Customers have shown below:'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
   @Get()
-  async index(@Res() res): Promise<any> {
+  async index(@Res() res): Promise<void> {
     try {
       const result = await this.customerService.findAll();
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({send: e.message});
     }
   }
@@ -45,12 +48,12 @@ export class CustomerController {
       required: true
     }
   )
-  async getByEmail(@Param('email') email: string, @Res() res): Promise<any> {
+  async getByEmail(@Param('email') email: string, @Res() res): Promise<void> {
     try {
       const customer = await this.customerService.viewDetail(email);
       res.status(200).send(customer);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).end();
     }
   }
@@ -63,12 +66,12 @@ export class CustomerController {
   @ApiResponse({status: 201, description: 'The new customer has been successfully created.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 409, description: 'Email has already existed.'})
-  async create(@Body() dto: CreateCustDto, @Res() res): Promise<any> {
+  async create(@Body() dto: CreateCustDto, @Res() res): Promise<void> {
     try {
       const result = await this.customerService.create(dto);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e.status)
+      this.logger.error(e)
       res.status(e.status).send({error:e.message});
     }
   }
@@ -88,12 +91,12 @@ export class CustomerController {
       required: true
     }
   )
-  async update(@Param('email') email, @Body() dto: UpdateCustDto, @Res() res): Promise<any> {
+  async update(@Param('email') email, @Body() dto: UpdateCustDto, @Res() res): Promise<void> {
     try {
       const result = await this.customerService.edit(dto, email);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({error:e.message});
     }
   }
@@ -110,12 +113,12 @@ export class CustomerController {
       required: true
     }
   )
-  async delete(@Param('email') email, @Res() res): Promise<any> {
+  async delete(@Param('email') email, @Res() res): Promise<void> {
     try {
       const reusult = await this.customerService.delete(email);
       res.status(200).send(reusult);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({error:e.message});
     }
   }
@@ -127,7 +130,7 @@ export class CustomerController {
       res.status(200).send(result1);
     }
     catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({error:e.message});
     }
   }

@@ -1,7 +1,7 @@
 import {
   Body,
   Controller, Delete,
-  Get,
+  Get, Logger,
   Param,
   Post,
   Put,
@@ -17,18 +17,21 @@ import {JwtAuthGuard} from "../../../../weight-loss-consultant-users-mgnt-api/sr
 @ApiBearerAuth()
 @Controller('/v1/campaigns')
 export class CampaignController {
+  private readonly logger = new Logger(CampaignController.name);
 
   constructor(private readonly campaignService: CampaignService) {
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async index(@Res() res): Promise<any> {
+  @ApiResponse({status: 200, description: 'The campaigns has shown below.'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  async index(@Res() res): Promise<void> {
     try {
       const result = await this.campaignService.getCampaignDetailsWithCustomer();
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).end();
     }
   }
@@ -45,12 +48,12 @@ export class CampaignController {
       required: true
     }
   )
-  async getByID(@Param('id') id: string, @Res() res): Promise<any> {
+  async getByID(@Param('id') id: string, @Res() res): Promise<void> {
     try {
       const campaign = await this.campaignService.viewDetail(id);
       res.status(200).send(campaign);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).end();
     }
   }
@@ -62,12 +65,12 @@ export class CampaignController {
   })
   @ApiResponse({status: 201, description: 'The new campaign has been successfully created.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
-  async create(@Body() dto: CreateCampaignDto, @Res() res): Promise<any> {
+  async create(@Body() dto: CreateCampaignDto, @Res() res): Promise<void> {
     try {
       const result = await this.campaignService.create(dto);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e.status)
+      this.logger.error(e)
       res.status(e.status).send({error: e.message});
     }
   }
@@ -87,12 +90,12 @@ export class CampaignController {
       required: true
     }
   )
-  async update(@Param('id') id : number, @Body() dto: UpdateCampaignDto, @Res() res): Promise<any> {
+  async update(@Param('id') id : number, @Body() dto: UpdateCampaignDto, @Res() res): Promise<void> {
     try {
       const result = await this.campaignService.edit(dto, id);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({error: e.message});
     }
   }
@@ -109,12 +112,12 @@ export class CampaignController {
       required: true
     }
   )
-  async delete(@Param('id') id, @Res() res): Promise<any> {
+  async delete(@Param('id') id, @Res() res): Promise<void> {
     try {
       const reusult = await this.campaignService.delete(id);
       res.status(200).send(reusult);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({error: e.message});
     }
   }

@@ -1,7 +1,7 @@
 import {
   Body,
   Controller, Delete,
-  Get,
+  Get, Logger,
   Param,
   Post,
   Put,
@@ -17,6 +17,7 @@ import {JwtAuthGuard} from "../../../../weight-loss-consultant-users-mgnt-api/sr
 @ApiBearerAuth()
 @Controller('/v1/packages')
 export class PackageController {
+  private readonly logger = new Logger(PackageController.name);
 
   constructor(private readonly packageService: PackageService) {
   }
@@ -24,12 +25,12 @@ export class PackageController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async index(@Res() res): Promise<any> {
+  async index(@Res() res): Promise<void> {
     try {
       const result = await this.packageService.getPackageDetailsWithTrainer();
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).end();
     }
   }
@@ -46,12 +47,12 @@ export class PackageController {
       required: true
     }
   )
-  async getByID(@Param('id') id: string, @Res() res): Promise<any> {
+  async getByID(@Param('id') id: string, @Res() res): Promise<void> {
     try {
       const result = await this.packageService.viewDetail(id);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).end();
     }
   }
@@ -63,12 +64,12 @@ export class PackageController {
   })
   @ApiResponse({status: 201, description: 'The new package has been successfully created.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
-  async create(@Body() dto: CreatePackageDto, @Res() res): Promise<any> {
+  async create(@Body() dto: CreatePackageDto, @Res() res): Promise<void> {
     try {
       const result = await this.packageService.create(dto);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e.status)
+      this.logger.error(e)
       res.status(e.status).send({error:e.message});
     }
   }
@@ -88,12 +89,12 @@ export class PackageController {
       required: true
     }
   )
-  async update(@Param('id') id : number, @Body() dto: UpdatePackageDto, @Res() res): Promise<any> {
+  async update(@Param('id') id : number, @Body() dto: UpdatePackageDto, @Res() res): Promise<void> {
     try {
       const result = await this.packageService.edit(dto, id);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({error: e.message});
     }
   }
@@ -110,12 +111,12 @@ export class PackageController {
       required: true
     }
   )
-  async delete(@Param('id') id, @Res() res): Promise<any> {
+  async delete(@Param('id') id, @Res() res): Promise<void> {
     try {
       const reusult = await this.packageService.delete(id);
       res.status(200).send(reusult);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).send({error: e.message});
     }
   }

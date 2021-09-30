@@ -9,3 +9,9 @@ export enum PackageStatus {
   INACTIVE = 0,
   PENDING = 2
 }
+
+export enum CampaignStatus {
+  ACTIVE = 1,
+  INACTIVE = 0,
+  PENDING = 2
+}

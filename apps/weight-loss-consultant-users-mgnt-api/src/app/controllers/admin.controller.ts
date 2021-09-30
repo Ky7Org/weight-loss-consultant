@@ -1,7 +1,7 @@
 import {
   Body,
   Controller, Delete,
-  Get, Param, Post, Put, Res, UseGuards
+  Get, Logger, Param, Post, Put, Res, UseGuards
 }
   from "@nestjs/common";
 import {AdminService} from "../services/impl/admin.service.impl"
@@ -15,17 +15,19 @@ import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 @Controller('/v1/admins')
 export class AdminController {
 
+  private readonly logger = new Logger(AdminController.name);
+
   constructor(private readonly userService: AdminService) {
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async index(@Res() res): Promise<any> {
+  async index(@Res() res): Promise<void> {
     try {
       const result = await this.userService.findAll();
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).end();
     }
   }
@@ -42,12 +44,12 @@ export class AdminController {
       required: true
     }
   )
-  async getByEmail(@Param('email') email: string, @Res() res): Promise<any> {
+  async getByEmail(@Param('email') email: string, @Res() res): Promise<void> {
     try {
       const admin = await this.userService.viewDetail(email);
       res.status(200).send(admin);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).end();
     }
   }
@@ -60,12 +62,12 @@ export class AdminController {
   @ApiResponse({status: 201, description: 'The new admin has been successfully created.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 409, description: 'Email has already existed.'})
-  async create(@Body() dto: CreateAdminDto, @Res() res): Promise<any> {
+  async create(@Body() dto: CreateAdminDto, @Res() res): Promise<void> {
     try {
       const result = await this.userService.create(dto);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e)
+      this.logger.error(e)
       res.status(e.status).end();
     }
   }
@@ -84,12 +86,12 @@ export class AdminController {
     example: "email@gmail.com",
     required: true
   })
-  async update(@Param('email') email, @Body() dto: UpdateAdminDto, @Res() res): Promise<any> {
+  async update(@Param('email') email, @Body() dto: UpdateAdminDto, @Res() res): Promise<void> {
     try {
       const result = await this.userService.edit(dto, email);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).end();
     }
 
@@ -106,12 +108,12 @@ export class AdminController {
     example: "email@gmail.com",
     required: true
   })
-  async delete(@Param('email') email, @Res() res): Promise<any> {
+  async delete(@Param('email') email, @Res() res): Promise<void> {
     try {
       const result = await this.userService.delete(email);
       res.status(200).send(result);
     } catch (e) {
-      console.error(e);
+      this.logger.error(e)
       res.status(e.status).end();
     }
   }

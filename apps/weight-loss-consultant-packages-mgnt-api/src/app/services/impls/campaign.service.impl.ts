@@ -18,7 +18,7 @@ export class CampaignService extends BaseService<CampaignEntity, CampaignReposit
     return await this.repository.find();
   }
 
-  async create(dto: CreateCampaignDto): Promise<any> {
+  async create(dto: CreateCampaignDto): Promise<CampaignEntity> {
     const custEmail = dto.customerEmail;
     const findCust = await this.customerService.findById(custEmail);
     if (findCust === undefined) {
@@ -28,7 +28,7 @@ export class CampaignService extends BaseService<CampaignEntity, CampaignReposit
     return await this.repository.save(entity);
   }
 
-  async edit(dto: UpdateCampaignDto, id: number): Promise<any> {
+  async edit(dto: UpdateCampaignDto, id: number): Promise<UpdateResult> {
 
     if (id != dto.id) {
       throw new ConflictException(`Param id: ${id} must match with id in request body: ${dto.id}`)
@@ -55,7 +55,7 @@ export class CampaignService extends BaseService<CampaignEntity, CampaignReposit
     return await this.repository.delete(id);
   }
 
-  async viewDetail(id): Promise<any> {
+  async viewDetail(id): Promise<CampaignEntity[]> {
     return await this.repository.find({
       relations: ["customer"],
       where: [{

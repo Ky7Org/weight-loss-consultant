@@ -53,7 +53,7 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     return await this.repository.findOne(id);
   }
 
-  async viewDetail(id): Promise<any> {
+  async viewDetail(id): Promise<CustomerEntity[]> {
     return await this.repository.find({
       relations: ["campaigns"],
       where: [{
@@ -63,7 +63,7 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
   }
 
   //testing
-  async getAllCustomerWithCampaignDetail(): Promise<any> {
+  async getAllCustomerWithCampaignDetail(): Promise<CustomerEntity[]> {
     const value = "c";
     const result = await this.repository.find(
       {
