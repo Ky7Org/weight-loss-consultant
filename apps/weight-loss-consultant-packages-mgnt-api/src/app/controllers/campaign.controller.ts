@@ -5,15 +5,13 @@ import {
   Param,
   Post,
   Put,
-  Res,
+  Res, UseGuards,
 } from "@nestjs/common";
-import {CustomerService} from "../services/impl/customer.service.impl";
-import {CreateCustDto} from "../dtos/customer/create-customer.dto";
-import {UpdateCustDto} from "../dtos/customer/update-customer-dto";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {CampaignService} from "../services/impl/campaign.service.impl";
+import {CampaignService} from "../services/impls/campaign.service.impl";
 import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
 import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
+import {JwtAuthGuard} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/auth/jwt-auth.guard";
 
 @ApiTags('Campaign')
 @ApiBearerAuth()
@@ -23,6 +21,7 @@ export class CampaignController {
   constructor(private readonly campaignService: CampaignService) {
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async index(@Res() res): Promise<any> {
     try {
@@ -34,6 +33,7 @@ export class CampaignController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiResponse({status: 200, description: 'Campaign details has shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -55,6 +55,7 @@ export class CampaignController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBody({
     type: CreateCampaignDto
@@ -67,17 +68,18 @@ export class CampaignController {
       res.status(200).send(result);
     } catch (e) {
       console.error(e.status)
-      res.status(e.status).json(e.message);
+      res.status(e.status).send({error: e.message});
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   @ApiBody({
-    type: UpdateCustDto
+    type: UpdateCampaignDto
   })
-  @ApiResponse({status: 200, description: 'The customer information has been successfully updated.'})
+  @ApiResponse({status: 200, description: 'The campaign information has been successfully updated.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Email not found.'})
+  @ApiResponse({status: 404, description: 'Campaign Id not found.'})
   @ApiParam({
       name: "id",
       type: Number,
@@ -85,24 +87,25 @@ export class CampaignController {
       required: true
     }
   )
-  async update(@Param('id') id, @Body() dto: UpdateCampaignDto, @Res() res): Promise<any> {
+  async update(@Param('id') id : number, @Body() dto: UpdateCampaignDto, @Res() res): Promise<any> {
     try {
-      const result = await this.campaignService.edit(dto);
+      const result = await this.campaignService.edit(dto, id);
       res.status(200).send(result);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      res.status(e.status).send({error: e.message});
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiResponse({status: 200, description: 'The campaign information has been successfully deleted.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Campaign ID not found.'})
   @ApiParam({
-      name: "email",
-      type: String,
-      example: "email@gmail.com",
+      name: "id",
+      type: Number,
+      example: "1",
       required: true
     }
   )
@@ -112,7 +115,7 @@ export class CampaignController {
       res.status(200).send(reusult);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      res.status(e.status).send({error: e.message});
     }
   }
 }

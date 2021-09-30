@@ -1,4 +1,4 @@
-import {ConflictException, Injectable, LoggerService} from "@nestjs/common";
+import {ConflictException, Injectable, LoggerService, NotFoundException} from "@nestjs/common";
 import {BaseService} from "../base.service";
 import {
   DeleteResult,
@@ -21,7 +21,9 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   }
 
   async findAll() : Promise<TrainerEntity[] | null>{
-    return await this.repository.find();
+    return await this.repository.find({
+      relations: ["packages"]
+    });
   }
 
   async create(dto: CreateTrainerDto) : Promise<TrainerEntity | null> {
@@ -33,16 +35,36 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     return await this.repository.save(entity);
   }
 
-  async edit(dto : UpdateTrainerDto) : Promise<UpdateResult> {
+  async edit(dto : UpdateTrainerDto, email: string) : Promise<UpdateResult> {
     const entity : TrainerEntity = await TrainerMapper.mapUpdateTrainerDTOToEntity(dto);
+    if (email !== entity.email) {
+      throw new ConflictException(`Param: ${email} must match with ${entity.email} in request body`)
+    }
+    const foundTrainer = await this.repository.findOne(entity.email);
+    if (foundTrainer === undefined) {
+      throw new NotFoundException(`Not found trainer with email : ${entity.email}`)
+    }
     return await this.repository.update(entity.email, entity );
   }
 
   async delete(id) : Promise<DeleteResult>{
+    const foundTrainer = await this.repository.findOne(id);
+    if (foundTrainer === undefined) {
+      throw new NotFoundException(`Not found trainer with email : ${foundTrainer.email}`)
+    }
     return await this.repository.delete(id);
   }
 
-  async viewDetail(id) : Promise<TrainerEntity | null>{
+  async viewDetail(id) : Promise<TrainerEntity[]>{
+    return await this.repository.find({
+      relations: ["packages"],
+      where: [{
+        email: `${id}`
+      }]
+    });
+  }
+
+  async findOneTrainer(id) : Promise<any> {
     return await this.repository.findOne(id);
   }
 

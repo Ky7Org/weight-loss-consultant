@@ -1,4 +1,5 @@
-import {BaseEntity, Column, Entity, PrimaryColumn} from "typeorm";
+import {BaseEntity, Column, Entity, OneToMany, PrimaryColumn} from "typeorm";
+import {PackageEntity} from "../../../../weight-loss-consultant-packages-mgnt-api/src/app/entities/package.enttiy";
 
 
 @Entity("Trainer")
@@ -37,5 +38,7 @@ export class TrainerEntity extends BaseEntity {
   @Column({type: 'float'})
   rating: number;
 
+  @OneToMany(() => PackageEntity, packaged => packaged.trainer)
+  packages: PackageEntity[];
 
 }

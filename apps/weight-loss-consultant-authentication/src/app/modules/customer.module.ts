@@ -6,7 +6,9 @@ import { CustomerMapper } from '../mappers/customer.mapper';
 import { RedisCacheModule } from './redis-cache.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CustomerRepository]), RedisCacheModule],
+  imports: [TypeOrmModule.forFeature([CustomerRepository])
+    , RedisCacheModule
+  ],
   providers: [CustomerService, CustomerMapper],
   exports: [CustomerService, CustomerMapper],
 })
