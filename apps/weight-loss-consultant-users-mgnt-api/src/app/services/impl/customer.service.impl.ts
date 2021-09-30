@@ -62,7 +62,7 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     });
   }
 
-  //testing
+  //bullshit test
   async getAllCustomerWithCampaignDetail(): Promise<any> {
     const value = "c";
     const result = await this.repository.find(
@@ -80,6 +80,4 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     );
     return result;
   }
-
-
 }

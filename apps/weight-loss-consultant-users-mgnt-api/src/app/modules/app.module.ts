@@ -16,6 +16,7 @@ import {CampaignModule} from "../../../../weight-loss-consultant-packages-mgnt-a
 import {PackageEntity} from "../../../../weight-loss-consultant-packages-mgnt-api/src/app/entities/package.enttiy";
 import {PackageModule} from "../../../../weight-loss-consultant-packages-mgnt-api/src/app/modules/package.module";
 
+
 export class AppModule {
   static forRoot(settings): DynamicModule {
     return {

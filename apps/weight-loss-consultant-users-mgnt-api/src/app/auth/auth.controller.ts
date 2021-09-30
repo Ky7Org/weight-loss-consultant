@@ -5,6 +5,7 @@ import {LoginRequest} from "./login.req";
 import {LoginResponse} from "./login.res";
 import {ApiBody, ApiResponse, ApiTags} from "@nestjs/swagger";
 
+
 @ApiTags('Authentication')
 @Controller('/v1/auth')
 export class AuthController {

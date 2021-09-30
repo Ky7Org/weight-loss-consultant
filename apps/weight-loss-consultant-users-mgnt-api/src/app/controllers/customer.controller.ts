@@ -119,7 +119,7 @@ export class CustomerController {
       res.status(e.status).send({error:e.message});
     }
   }
-//===============================
+
   @Get("/test/thune")
   async test(@Res() res) : Promise<any> {
     try{
