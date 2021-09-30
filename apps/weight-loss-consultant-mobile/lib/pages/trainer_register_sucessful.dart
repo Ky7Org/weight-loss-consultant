@@ -82,7 +82,7 @@ class _TrainerRegisterSuccessfulState extends State<TrainerRegisterSuccessful> {
                 textColor: Colors.white,
                 color: HexColor("#B6C5D1"),
                 onPressed: () {
-
+                  Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
                 },
                 child: Text(
                   "Done",

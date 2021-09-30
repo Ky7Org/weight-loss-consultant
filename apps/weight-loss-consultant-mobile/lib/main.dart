@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weight_loss_consultant_mobile/pages/chat.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer_main.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer_register.dart';
 import 'package:weight_loss_consultant_mobile/pages/login.dart';
@@ -20,6 +21,7 @@ void main() {
       "/login": (context) => Login(),
       "/recoverPassword": (context) => RecoverPassword(),
       "/customerMain": (context) => CustomerMain(),
+      "/chat": (context) => ChatPage()
     },
   ));
 }

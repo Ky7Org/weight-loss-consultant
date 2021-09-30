@@ -5,10 +5,12 @@ class CustomerDrawer {
     {
       "text": "Home",
       "icon": Icons.home_outlined,
+      "route": "/customerMain"
     },
     {
       "text": "Message",
       "icon": Icons.mail_outline,
+      "route": "/chat"
     },
     {
       "text": "My calendar",
@@ -21,6 +23,11 @@ class CustomerDrawer {
     {
       "text": "My packages",
       "icon": Icons.assignment_outlined,
+    },
+    {
+      "text": "Logout",
+      "icon": Icons.logout_outlined,
+      "route": "/login"
     },
   ];
   static Drawer builder(String customerName, Image avatar, String customerRole){
@@ -86,7 +93,11 @@ class CustomerDrawer {
                   ),
                 ),
                 onTap: () {
-
+                  if (navigation[index-1]["text"] == "Logout"){
+                    Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+                  } else {
+                    Navigator.pushNamed(context, navigation[index-1]["route"]);
+                  }
                 },
                 hoverColor: AppColors.PRIMARY_COLOR,
               );

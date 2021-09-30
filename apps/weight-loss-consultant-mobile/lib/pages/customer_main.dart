@@ -25,6 +25,7 @@ class _CustomerMainState extends State<CustomerMain> {
     {
       "text": "Message",
       "imageName": "message-icon.svg",
+      "route": "/chat"
     },
     {
       "text": "Campaign",
@@ -75,34 +76,39 @@ class _CustomerMainState extends State<CustomerMain> {
             spacing: 10,
             children: [
               for (var items in categories)
-                SizedBox(
-                  height: 118,
-                  width: 105,
-                  child: Card(
-                    elevation: 15,
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset("assets/${items["imageName"]}"),
-                          Expanded(
-                            flex: 1,
-                            child: Center(
-                                child: Text(
-                                  "${items["text"]}",
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.PRIMARY_WORD_COLOR
-                                  ),
-                                )
+                GestureDetector(
+                  onTap: (){
+                    Navigator.pushNamed(context, items["route"]);
+                  },
+                  child: SizedBox(
+                    height: 118,
+                    width: 105,
+                    child: Card(
+                      elevation: 15,
+                      child: Container(
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset("assets/${items["imageName"]}"),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                  child: Text(
+                                    "${items["text"]}",
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.PRIMARY_WORD_COLOR
+                                    ),
+                                  )
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
                     ),
                   ),
                 )
@@ -111,103 +117,104 @@ class _CustomerMainState extends State<CustomerMain> {
         ),
         minHeight: 0,
         maxHeight: 400,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(width: double.infinity,),
-                SvgPicture.asset("assets/customer-main-panel.svg"),
-                SvgPicture.asset("assets/fake-chart.svg"),
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
-                  child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text("Upcoming Training",
-                        style: TextStyle(
-                          color: AppColors.PRIMARY_WORD_COLOR,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                  ),
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          child: ListView(
+            //mainAxisAlignment: MainAxisAlignment.start,
+            //crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(width: double.infinity,),
+              SvgPicture.asset("assets/customer-main-panel.svg"),
+              SvgPicture.asset("assets/fake-chart.svg"),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text("Upcoming Training",
+                      style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
                 ),
-                Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.all(20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                margin: EdgeInsets.only(bottom: 10),
-                                child: Text(
-                                  "16:00 Nov 30, 2021",
-                                  style: TextStyle(
-                                      color: HexColor("#6B48FF"),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w900
-                                  ),
-                                ),
-                                decoration: BoxDecoration(
-                                    color: HexColor("#F0F3F6"),
-                                    borderRadius: BorderRadius.all(Radius.circular(5))
+              ),
+              Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                              margin: EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                "16:00 Nov 30, 2021",
+                                style: TextStyle(
+                                    color: HexColor("#6B48FF"),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w900
                                 ),
                               ),
-                              Container(
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  child: Text(
-                                    "Cardio Training",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.PRIMARY_WORD_COLOR,
-                                        fontSize: 20
-                                    ),
-                                  )),
-                              Text("Dr. Bang Ngo", style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w800,
-                                  color: HexColor("#B6C5D1")
-                              ),)
-                            ],
-                          ),
+                              decoration: BoxDecoration(
+                                  color: HexColor("#F0F3F6"),
+                                  borderRadius: BorderRadius.all(Radius.circular(5))
+                              ),
+                            ),
+                            Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                child: Text(
+                                  "Cardio Training",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.PRIMARY_WORD_COLOR,
+                                      fontSize: 20
+                                  ),
+                                )),
+                            Text("Dr. Bang Ngo", style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w800,
+                                color: HexColor("#B6C5D1")
+                            ),)
+                          ],
                         ),
-                        IconButton(
-                          iconSize: 48,
-                          onPressed: (){},
-                          icon: SvgPicture.asset("assets/call-icon.svg"),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
-                  child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text("Top category",
-                        style: TextStyle(
-                          color: AppColors.PRIMARY_WORD_COLOR,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      ),
+                      IconButton(
+                        iconSize: 48,
+                        onPressed: (){},
+                        icon: SvgPicture.asset("assets/call-icon.svg"),
                       )
+                    ],
                   ),
                 ),
-                Wrap(
-                  spacing: 10,
-                  children: [
-                    SizedBox(
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text("Top category",
+                      style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                ),
+              ),
+              Wrap(
+                spacing: 10,
+                children: [
+                  GestureDetector(
+                    onTap: (){},
+                    child: SizedBox(
                       height: 118,
                       width: 105,
                       child: Card(
@@ -238,7 +245,12 @@ class _CustomerMainState extends State<CustomerMain> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushNamed(context, "/chat");
+                    },
+                    child: SizedBox(
                       height: 118,
                       width: 105,
                       child: Card(
@@ -269,47 +281,46 @@ class _CustomerMainState extends State<CustomerMain> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 118,
-                      width: 105,
-                      child: Card(
-                        elevation: 15,
-                        child: Container(
-                          padding: EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              SvgPicture.asset("assets/campaign-icon.svg"),
-                              Expanded(
-                                flex: 1,
-                                child: Center(
-                                    child: Text(
-                                      "Campaign",
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.PRIMARY_WORD_COLOR
-                                      ),
-                                    )
-                                ),
+                  ),
+                  SizedBox(
+                    height: 118,
+                    width: 105,
+                    child: Card(
+                      elevation: 15,
+                      child: Container(
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset("assets/campaign-icon.svg"),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                  child: Text(
+                                    "Campaign",
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.PRIMARY_WORD_COLOR
+                                    ),
+                                  )
                               ),
-                            ],
-                          ),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ],
                         ),
                       ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
                     ),
-                  ],
-                )
-
-
-              ],
-            ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 250,),
+            ],
           ),
         ),
       ),
-      bottomNavigationBar: bottom_navigator(pc: _pc,),
+      bottomNavigationBar: bottom_navigator(pc: _pc,)
     );
   }
 
@@ -345,6 +356,9 @@ class _bottom_navigatorState extends State<bottom_navigator> {
               widget.pc?.close();
             }
           } else {
+            if (index == 3){
+              Navigator.pushNamed(context, "/chat");
+            }
             this.selectedIndex = index;
           }
         });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 
 class Onboarding2 extends StatelessWidget {
   const Onboarding2({Key? key}) : super(key: key);
@@ -7,6 +8,7 @@ class Onboarding2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: GenericAppBar.builder("Register"),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
