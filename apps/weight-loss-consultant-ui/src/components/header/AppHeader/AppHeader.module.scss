@@ -1,0 +1,17 @@
+.header {
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 10px 30px 0px;
+  padding: 15px 0;
+  .search-box {
+    width: 300px;
+  }
+  .logo {
+    width: 20%;
+  }
+}
+
+.header h1.ant-typography,
+.header .ant-typography h1 {
+  font-weight: normal;
+  margin-bottom: 10px;
+  font-size: var(--font-size-extra-large);
+}
