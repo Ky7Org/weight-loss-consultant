@@ -1,0 +1,13 @@
+:root {
+    --primary-btn-bg-color: #ff3333;
+    --primary-btn-text-color: #fff;
+    --primary-text-color: white;
+    --placeholder-text-color: #737373;
+    --error-text-color: #eb1d19;
+    --link-text-color: #147de5;
+    --font-size-extra-large: 24px;
+    --font-size-large: 18px;
+    --font-size-normal: 14px;
+    --font-size-small: 12px;
+    --sider-bg-color: #19253b;
+}

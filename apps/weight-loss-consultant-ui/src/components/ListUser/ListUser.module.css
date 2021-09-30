@@ -1,0 +1,25 @@
+.title {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.search {
+  width: 50%;
+  float: right;
+  padding-bottom: 10px;
+}
+
+#components-layout-demo-fixed .logo {
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  background: rgba(255, 255, 255, 0.2);
+}
+.site-layout .site-layout-background {
+  background: #fff;
+}
+.download-button {
+  border-color: #147de5;
+  color: #147de5;
+}

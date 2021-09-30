@@ -1,0 +1,232 @@
+.sider-ant {
+  height: 100%;
+}
+
+#a{
+ color:white;
+}
+.sider {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--sider-bg-color);
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.sider__logo {
+  padding-top: 30px;
+  cursor: pointer;
+}
+
+.sider__logo-img {
+  display: block;
+  margin: 0 auto;
+  width: 10rem;
+}
+
+.sider__logo-imgRound {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  border: 1px solid white;
+  display: block;
+  margin: 0 auto;
+}
+
+.sider__menu {
+  flex: 1;
+}
+ a{
+  color: white;
+}
+.sider__menu .ant-menu, .ant-menu-submenu {
+  min-height: 35%;
+  background: none;
+}
+
+/* header */
+
+.sider__header {
+  background-color: var(--primary-btn-text-color);
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+}
+
+/* divider */
+
+.sider__lineDivider {
+  margin: 30px 28px 10px;
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: white;
+}
+
+.site-layout-sub-header-background {
+  background: var(--primary-btn-text-color);
+}
+
+.site-layout-background {
+  background: var(--primary-btn-text-color);
+}
+
+/* menu antd */
+
+.ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left {
+  border-right: none;
+}
+
+.ant-menu-inline, .ant-menu-submenu, .ant-menu>.ant-menu-item, .ant-menu-submenu .ant-menu-submenu-inline:hover {
+  background-color: #19253b;
+  color: var(--primary-btn-text-color);
+}
+
+/* bg color menu item selected */
+
+.sider__menu .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: rgba(255, 255, 255, 0.103);
+}
+
+.ant-menu>.ant-menu-item:hover, .ant-menu>.ant-menu-submenu:hover, .ant-menu>.ant-menu-item-active, .ant-menu>.ant-menu-submenu-active, .ant-menu>.ant-menu-item-open, .ant-menu>.ant-menu-submenu-open, .ant-menu>.ant-menu-item-selected, .ant-menu>.ant-menu-submenu-selected {
+  color: var(--primary-btn-text-color);
+  background-color: rgba(255, 255, 255, 0.103);
+}
+
+/* border right menu item*/
+
+.sider__menu .ant-menu-inline .ant-menu-item::after {
+  border-right: var(--primary-btn-bg-color) 5px solid;
+}
+
+/* hover menu a */
+
+.ant-menu-item a, .ant-menu-item a:hover {
+  color: var(--primary-btn-text-color);
+}
+
+/* sub menu */
+
+.ant-menu-submenu-popup>.ant-menu {
+  background-color: var(--sider-bg-color);
+}
+
+.ant-menu-title-content {
+  color: var(--primary-btn-text-color);
+}
+
+.ant-menu-sub.ant-menu-inline {
+  background-color: var(--sider-bg-color);
+}
+
+/* hover icon menu */
+
+.sider__menu .ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open, .sider__menu .ant-menu-light .ant-menu-submenu-active, .ant-menu-light .ant-menu-submenu-title:hover {
+  color: var(--primary-btn-text-color);
+}
+
+/* arrow icon */
+
+.sider__menu .ant-menu-submenu-arrow::before, .sider__menu .ant-menu-submenu-arrow::after {
+  background-color: var(--primary-btn-text-color);
+}
+
+[data-theme="dark"] .site-layout-sub-header-background {
+  background: #ff0000;
+}
+
+/* icon */
+
+.sider__menu .anticon {
+  margin: -10px;
+  padding-right: 10px;
+}
+
+/* footer */
+
+.footerSider {
+  margin: 0 30px 0 30px;
+  width: 140px;
+}
+
+.displayNone {
+  display: none;
+}
+
+.footerSider__copyRight {
+  color: var(--primary-btn-text-color);
+  font-size: 11px;
+  text-align: center;
+  padding: 15px;
+}
+
+
+.social__img {
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
+}
+
+/* trigger btn sider when collapsed width = 0*/
+
+.ant-layout-sider-zero-width-trigger {
+  top: 110px;
+  background-color: var(--sider-bg-color);
+}
+
+/* arrow bottom sider */
+
+.ant-layout-sider-trigger {
+  background-color: var(--sider-bg-color);
+}
+
+/* responsive */
+
+@media screen and (max-width: 550px) {
+  .triggerSider{
+      display: block;
+  }
+}
+
+/* NEW LAYOUT */
+
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+.wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.menu, .footer {
+  height: 100%;
+  background: red;
+}
+
+.headerFixed {
+  width: 100%;
+  height: auto;
+  position: fixed;
+  top: 0;
+  z-index: 1;
+}
+
+.container {
+  /*  height: calc(100% - 100px); */
+  overflow: auto;
+  margin-top: 60px;
+  width: 100%;
+}
+@media screen and (max-width: 420px){
+  .container{
+      margin-top: 100px;
+  }
+}
+
+/* .content {
+    margin-top: 50px;
+  } */
