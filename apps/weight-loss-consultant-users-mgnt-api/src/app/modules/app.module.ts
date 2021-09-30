@@ -10,6 +10,11 @@ import {TrainerModule} from "./trainer.module";
 import {CustomerModule} from "./customer.module";
 import {CustomerEntity} from "../entities/customer.entity";
 import { ENV_FILE_PATH } from '../constants/env-file-path';
+import {CampaignEntity} from "../../../../weight-loss-consultant-packages-mgnt-api/src/app/entities/campaign.entity";
+import {AuthModule} from "../auth/auth.module";
+import {CampaignModule} from "../../../../weight-loss-consultant-packages-mgnt-api/src/app/modules/campaign.module";
+import {PackageEntity} from "../../../../weight-loss-consultant-packages-mgnt-api/src/app/entities/package.enttiy";
+import {PackageModule} from "../../../../weight-loss-consultant-packages-mgnt-api/src/app/modules/package.module";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -32,12 +37,19 @@ export class AppModule {
             entities: [
               AdminEntity,
               TrainerEntity,
-              CustomerEntity
+              CustomerEntity,
+              CampaignEntity,
+              PackageEntity
             ],
           }),
           inject: [ConfigService],
         }),
-        AdminModule, TrainerModule, CustomerModule
+        AdminModule,
+        TrainerModule,
+        CustomerModule,
+        AuthModule,
+        CampaignModule,
+        PackageModule
       ],
     };
   }

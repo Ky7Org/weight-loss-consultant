@@ -1,4 +1,5 @@
-import {BaseEntity, Column, Entity, PrimaryColumn} from "typeorm";
+import {BaseEntity, Column, Entity, OneToMany, PrimaryColumn} from "typeorm";
+import {CampaignEntity} from "../../../../weight-loss-consultant-packages-mgnt-api/src/app/entities/campaign.entity";
 
 @Entity('Customer')
 export class CustomerEntity extends BaseEntity{
@@ -20,5 +21,8 @@ export class CustomerEntity extends BaseEntity{
   profileImage: string;
   @Column({type: 'bigint'})
   dob: number;
+
+  @OneToMany(() => CampaignEntity, campaign => campaign.customer )
+  campaigns: CampaignEntity[];
 
 }
