@@ -25,7 +25,7 @@ export class AuthService {
       console.error(e)
     }
     try {
-      const customer = await this.customerService.viewDetail(username);
+      const customer = await this.customerService.findOneCustomer(username);
       if (customer && customer.password === password) {
         return customer;
       }
@@ -33,7 +33,7 @@ export class AuthService {
       console.error(e)
     }
     try {
-      const trainer = await this.trainerService.viewDetail(username);
+      const trainer = await this.trainerService.findOneTrainer(username);
       if (trainer && trainer.password === password) {
         return trainer;
       }

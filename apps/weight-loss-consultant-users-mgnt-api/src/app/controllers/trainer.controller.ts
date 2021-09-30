@@ -5,12 +5,13 @@ import {
   Param,
   Post,
   Put,
-  Res
+  Res, UseGuards
 } from "@nestjs/common";
 import {TrainerService} from "../services/impl/trainer.service.impl";
 import {CreateTrainerDto} from "../dtos/trainer/create-trainer";
 import {UpdateTrainerDto} from "../dtos/trainer/update-trainer";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
@@ -20,6 +21,7 @@ export class TrainerController {
   constructor(private readonly trainerService: TrainerService) {
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async index(@Res() res): Promise<any> {
     try {
@@ -27,10 +29,11 @@ export class TrainerController {
       res.status(200).send(result);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      res.status(e.status).send({error:e.message});
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':email')
   @ApiResponse({status: 200, description: 'Trainer details has shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -48,10 +51,11 @@ export class TrainerController {
       res.status(200).send(trainer);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      res.status(e.status).send({error:e.message});
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBody({
     type: CreateTrainerDto
@@ -65,10 +69,11 @@ export class TrainerController {
       res.status(200).send(result);
     } catch (e) {
       console.error(e.status)
-      res.status(e.status).end();
+      res.status(e.status).send({error:e.message});
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':email')
   @ApiBody({
     type: UpdateTrainerDto
@@ -85,14 +90,15 @@ export class TrainerController {
   )
   async update(@Param('email') email, @Body() dto: UpdateTrainerDto, @Res() res): Promise<any> {
     try {
-      const result = await this.trainerService.edit(dto);
+      const result = await this.trainerService.edit(dto, email);
       res.status(200).send(result);
     } catch (e) {
       console.error(e);
-      res.status(res.status).end();
+      res.status(res.status).send({error:e.message});
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':email')
   @ApiResponse({status: 200, description: 'The trainer information has been successfully deleted.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -110,7 +116,7 @@ export class TrainerController {
       res.status(200).send(result);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      res.status(e.status).send({error:e.message});
     }
   }
 }

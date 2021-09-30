@@ -30,6 +30,7 @@ export class AdminController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':email')
   @ApiResponse({status: 200, description: 'Admin details has shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -51,7 +52,7 @@ export class AdminController {
     }
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBody({
     type: CreateAdminDto
@@ -69,6 +70,7 @@ export class AdminController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':email')
   @ApiBody({
     type: UpdateAdminDto
@@ -84,7 +86,7 @@ export class AdminController {
   })
   async update(@Param('email') email, @Body() dto: UpdateAdminDto, @Res() res): Promise<any> {
     try {
-      const result = await this.userService.edit(dto);
+      const result = await this.userService.edit(dto, email);
       res.status(200).send(result);
     } catch (e) {
       console.error(e);
@@ -93,6 +95,7 @@ export class AdminController {
 
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':email')
   @ApiResponse({status: 200, description: 'The admin information has been successfully deleted.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})

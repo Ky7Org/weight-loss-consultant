@@ -10,9 +10,6 @@ import {AdminMapper} from "../../mappers/admin.mapper";
 import {CreateAdminDto} from "../../dtos/admin/create-admin.dto";
 import {UpdateAdminDto} from "../../dtos/admin/update-admin.dto";
 import {EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG} from "../../constants/validation-err-message";
-import {CreateTrainerDto} from "../../dtos/trainer/create-trainer";
-import {TrainerEntity} from "../../entities/trainer.entity";
-import {TrainerMapper} from "../../mappers/trainer.mapper";
 
 
 
@@ -37,12 +34,23 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository>{
     return await this.repository.save(entity);
   }
 
-  async edit(dto : UpdateAdminDto) : Promise<UpdateResult> {
+  async edit(dto : UpdateAdminDto, email: string) : Promise<UpdateResult> {
     const entity : AdminEntity = await AdminMapper.mapUpdateAdminDTOToEntity(dto);
+    if (email !== entity.email) {
+      throw new ConflictException(`Param: ${email} must match with request body email : ${entity.email} `)
+    }
+    const exitsedEmail = await this.repository.findOne(entity.email);
+    if (exitsedEmail === undefined) {
+      throw new NotFoundException(`Not found admin with email: ${entity.email}`)
+    }
     return await this.repository.update(entity.email, entity);
   }
 
   async delete(id) : Promise<DeleteResult>{
+    const foundAdmin = await this.repository.findOne(id);
+    if (foundAdmin === undefined) {
+      throw new NotFoundException(`Not found admin with email: ${foundAdmin.email}`)
+    }
     return await this.repository.delete(id);
   }
 
