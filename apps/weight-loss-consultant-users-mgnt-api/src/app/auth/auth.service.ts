@@ -27,7 +27,7 @@ export class AuthService {
       //move on
     }
     try {
-      const customer = await this.customerService.viewDetail(username);
+      const customer = await this.customerService.findOneCustomer(username);
       if (customer && customer.password === password) {
         return {
           role: 'CUSTOMER',
@@ -38,7 +38,7 @@ export class AuthService {
       //
     }
     try {
-      const trainer = await this.trainerService.viewDetail(username);
+      const trainer = await this.trainerService.findOneTrainer(username);
       if (trainer && trainer.password === password) {
         return {
           role: 'TRAINER',

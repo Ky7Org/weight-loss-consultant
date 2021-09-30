@@ -48,8 +48,8 @@ export class AppController {
   })
   async login(@Request() req): Promise<any> {
     const dto: CustomerDTO | TrainerDTO = req.user;
-    return await this.authenticationService.login(dto);
-    // return new LoginResponseModel(result.accessToken);
+    const result =  await this.authenticationService.login(dto);
+    return result;
   }
 
   @UseGuards(JwtAuthGuard)

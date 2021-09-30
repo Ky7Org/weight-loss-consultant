@@ -5,12 +5,13 @@ import {
   Param,
   Post,
   Put,
-  Res,
+  Res, UseGuards,
 } from "@nestjs/common";
 import {CustomerService} from "../services/impl/customer.service.impl";
 import {CreateCustDto} from "../dtos/customer/create-customer.dto";
 import {UpdateCustDto} from "../dtos/customer/update-customer-dto";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 @ApiTags('Customer')
 @ApiBearerAuth()
@@ -20,6 +21,7 @@ export class CustomerController {
   constructor(private readonly customerService: CustomerService) {
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async index(@Res() res): Promise<any> {
     try {
@@ -27,10 +29,11 @@ export class CustomerController {
       res.status(200).send(result);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      res.status(e.status).send({send: e.message});
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':email')
   @ApiResponse({status: 200, description: 'Customer details has shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -52,6 +55,7 @@ export class CustomerController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBody({
     type: CreateCustDto
@@ -65,10 +69,11 @@ export class CustomerController {
       res.status(200).send(result);
     } catch (e) {
       console.error(e.status)
-      res.status(e.status).json(e.message);
+      res.status(e.status).send({error:e.message});
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':email')
   @ApiBody({
     type: UpdateCustDto
@@ -85,14 +90,15 @@ export class CustomerController {
   )
   async update(@Param('email') email, @Body() dto: UpdateCustDto, @Res() res): Promise<any> {
     try {
-      const result = await this.customerService.edit(dto);
+      const result = await this.customerService.edit(dto, email);
       res.status(200).send(result);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      res.status(e.status).send({error:e.message});
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':email')
   @ApiResponse({status: 200, description: 'The customer information has been successfully deleted.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -110,10 +116,10 @@ export class CustomerController {
       res.status(200).send(reusult);
     } catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      res.status(e.status).send({error:e.message});
     }
   }
-
+//===============================
   @Get("/test/thune")
   async test(@Res() res) : Promise<any> {
     try{
@@ -122,7 +128,7 @@ export class CustomerController {
     }
     catch (e) {
       console.error(e);
-      res.status(e.status).end();
+      res.status(e.status).send({error:e.message});
     }
   }
 
