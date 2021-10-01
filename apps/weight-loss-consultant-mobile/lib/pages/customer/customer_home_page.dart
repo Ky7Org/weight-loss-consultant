@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
-class CustomerMain extends StatefulWidget {
-  Map data;
+class CustomerHomePage extends StatefulWidget {
+  final Map data;
 
-  CustomerMain({Key? key, this.data = const {"fullname": ""}}) : super(key: key);
+  CustomerHomePage({Key? key, this.data = const {"fullname": ""}}) : super(key: key);
 
   @override
-  _CustomerMainState createState() => _CustomerMainState();
+  _CustomerHomePageState createState() => _CustomerHomePageState();
 }
 
-class _CustomerMainState extends State<CustomerMain> {
+class _CustomerHomePageState extends State<CustomerHomePage> {
   int selectedIndex = 0;
   PanelController _pc = new PanelController();
   List<Map> categories = [

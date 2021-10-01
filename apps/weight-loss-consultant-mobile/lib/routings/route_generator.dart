@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:weight_loss_consultant_mobile/pages/chat.dart';
+import 'package:weight_loss_consultant_mobile/pages/chat_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
-import 'package:weight_loss_consultant_mobile/pages/customer_main.dart';
-import 'package:weight_loss_consultant_mobile/pages/customer_register.dart';
-import 'package:weight_loss_consultant_mobile/pages/detail_user.dart';
-import 'package:weight_loss_consultant_mobile/pages/login.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_home_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/register/customer_register_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_detail_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/authentication/login_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/initial_page.dart';
-import 'package:weight_loss_consultant_mobile/pages/onboarding_2.dart';
-import 'package:weight_loss_consultant_mobile/pages/recorver_password.dart';
-import 'package:weight_loss_consultant_mobile/pages/recover_password_first.dart';
-import 'package:weight_loss_consultant_mobile/pages/trainer_register.dart';
-import 'package:weight_loss_consultant_mobile/pages/trainer_register_sucessful.dart';
+import 'package:weight_loss_consultant_mobile/pages/get_started_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/authentication/recorver_password_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/authentication/reset_password_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/register/trainer_register_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/register/trainer_register_sucessful_page.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 
@@ -24,36 +24,36 @@ class RouteGenerator{
         });
       case RoutePath.getStartedPage:
         return MaterialPageRoute(builder: (_){
-          return Onboarding2();
+          return GetStartedPage();
         });
       case RoutePath.trainerRegisterPage:
         return MaterialPageRoute(builder: (_){
-          return TrainerRegister();
+          return TrainerRegisterPage();
         });
       case RoutePath.trainerRegisterSuccessfullyPage :
         if (args is Map<dynamic, dynamic>){
           return MaterialPageRoute(builder: (_){
-            return TrainerRegisterSuccessful(data: args,);
+            return TrainerRegisterSuccessfulPage(data: args,);
           });
         }
         return _errorRoute();
       case RoutePath.loginPage:
         return MaterialPageRoute(builder: (_){
-          return Login();
+          return LoginPage();
         });
       case RoutePath.recoverPasswordPage:
         return MaterialPageRoute(builder: (_){
-          return RecoverPassword();
+          return RecoverPasswordPage();
         });
       case RoutePath.customerHomePage:
         if (args is Map<dynamic, dynamic>){
           return MaterialPageRoute(builder: (_){
-            return CustomerMain(data: args,);
+            return CustomerHomePage(data: args,);
           });
         }
         if (args == null){
           return MaterialPageRoute(builder: (_){
-            return CustomerMain();
+            return CustomerHomePage();
           });
         }
         return _errorRoute();
@@ -63,15 +63,15 @@ class RouteGenerator{
         });
       case RoutePath.customerDetailPage:
         return MaterialPageRoute(builder: (_){
-          return DetailUser();
+          return CustomerDetailPage();
         });
       case RoutePath.resetPasswordPage:
         return MaterialPageRoute(builder: (_){
-          return RecoverPasswordFirst();
+          return ResetPasswordPage();
         });
       case RoutePath.customerRegisterPage:
         return MaterialPageRoute(builder: (_){
-          return CustomerRegister();
+          return CustomerRegisterPage();
         });
       default:
         return _errorRoute();

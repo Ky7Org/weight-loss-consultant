@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 
-import '../constants.dart';
+import '../../constants/app_colors.dart';
 
-class DetailUser extends StatefulWidget {
-  const DetailUser({Key? key}) : super(key: key);
+class CustomerDetailPage extends StatefulWidget {
+  const CustomerDetailPage({Key? key}) : super(key: key);
 
   @override
-  _DetailUserState createState() => _DetailUserState();
+  _CustomerDetailPageState createState() => _CustomerDetailPageState();
 }
 
-class _DetailUserState extends State<DetailUser> {
+class _CustomerDetailPageState extends State<CustomerDetailPage> {
   final _formKey = GlobalKey<FormState>();
 
   @override

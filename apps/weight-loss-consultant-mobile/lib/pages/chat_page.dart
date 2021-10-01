@@ -7,13 +7,11 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:uuid/uuid.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
-import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);

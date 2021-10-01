@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
-import 'package:weight_loss_consultant_mobile/utils.dart';
+import 'package:weight_loss_consultant_mobile/utils/validator.dart';
 
-class RecoverPasswordFirst extends StatefulWidget {
-  const RecoverPasswordFirst({Key? key}) : super(key: key);
+class ResetPasswordPage extends StatefulWidget {
+  const ResetPasswordPage({Key? key}) : super(key: key);
 
   @override
-  _RecoverPasswordFirstState createState() => _RecoverPasswordFirstState();
+  _ResetPasswordPageState createState() => _ResetPasswordPageState();
 }
 
-class _RecoverPasswordFirstState extends State<RecoverPasswordFirst> {
+class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
   bool _confirmPasswordVisible = false;

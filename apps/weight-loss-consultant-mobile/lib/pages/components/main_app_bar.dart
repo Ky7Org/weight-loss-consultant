@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 class MainAppBar{

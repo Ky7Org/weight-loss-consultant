@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
-class TrainerRegisterSuccessful extends StatefulWidget {
+class TrainerRegisterSuccessfulPage extends StatefulWidget {
   Map<dynamic, dynamic> data;
 
-  TrainerRegisterSuccessful({Key? key, this.data = const {"fullname": ""}})
+  TrainerRegisterSuccessfulPage({Key? key, this.data = const {"fullname": ""}})
       : super(key: key);
 
   @override
-  _TrainerRegisterSuccessfulState createState() =>
-      _TrainerRegisterSuccessfulState();
+  _TrainerRegisterSuccessfulPageState createState() =>
+      _TrainerRegisterSuccessfulPageState();
 }
 
-class _TrainerRegisterSuccessfulState extends State<TrainerRegisterSuccessful> {
+class _TrainerRegisterSuccessfulPageState extends State<TrainerRegisterSuccessfulPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

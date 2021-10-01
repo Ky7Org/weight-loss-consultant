@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_register_service.dart';
-import 'package:weight_loss_consultant_mobile/utils.dart';
+import 'package:weight_loss_consultant_mobile/utils/validator.dart';
 
-class TrainerRegister extends StatefulWidget {
-  const TrainerRegister({Key? key}) : super(key: key);
+class TrainerRegisterPage extends StatefulWidget {
+  const TrainerRegisterPage({Key? key}) : super(key: key);
 
   @override
-  _TrainerRegisterState createState() => _TrainerRegisterState();
+  _TrainerRegisterPageState createState() => _TrainerRegisterPageState();
 }
 
-class _TrainerRegisterState extends State<TrainerRegister> {
+class _TrainerRegisterPageState extends State<TrainerRegisterPage> {
   final _formKey = GlobalKey<FormState>();
   late String email;
   late String fullname;
@@ -91,7 +91,7 @@ class _TrainerRegisterState extends State<TrainerRegister> {
                         child: TextFormField(
                           onSaved: (String? value){this.email=value as String;},
                           validator: (email) {
-                            if (Utils.isEmailValid(email as String))
+                            if (Validator.isEmailValid(email as String))
                               return null;
                             else
                               return 'Enter a valid email address';

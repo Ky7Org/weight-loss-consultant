@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
-import 'package:weight_loss_consultant_mobile/utils.dart';
+import 'package:weight_loss_consultant_mobile/utils/validator.dart';
 
-class RecoverPassword extends StatefulWidget {
-  const RecoverPassword({Key? key}) : super(key: key);
+class RecoverPasswordPage extends StatefulWidget {
+  const RecoverPasswordPage({Key? key}) : super(key: key);
 
   @override
-  _RecoverPasswordState createState() => _RecoverPasswordState();
+  _RecoverPasswordPageState createState() => _RecoverPasswordPageState();
 }
 
-class _RecoverPasswordState extends State<RecoverPassword> {
+class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
   final _formKey = GlobalKey<FormState>();
 
 
@@ -68,7 +68,7 @@ class _RecoverPasswordState extends State<RecoverPassword> {
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
                           validator: (email) {
-                            if (Utils.isEmailValid(email as String))
+                            if (Validator.isEmailValid(email as String))
                               return null;
                             else
                               return 'Enter a valid email address';

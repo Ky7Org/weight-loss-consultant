@@ -1,39 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
-import 'package:weight_loss_consultant_mobile/services/customer_register_service.dart';
-import 'package:weight_loss_consultant_mobile/utils.dart';
+import 'package:weight_loss_consultant_mobile/services/login_service.dart';
+import 'package:weight_loss_consultant_mobile/utils/validator.dart';
 
-class CustomerRegister extends StatefulWidget {
-  const CustomerRegister({Key? key}) : super(key: key);
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _CustomerRegisterState createState() => _CustomerRegisterState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _CustomerRegisterState extends State<CustomerRegister> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-
   bool _passwordVisible = false;
-  bool _confirmPasswordVisible = false;
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _pass = TextEditingController();
-  final TextEditingController _confirmPass = TextEditingController();
 
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  
   @override
   void initState() {
     _passwordVisible = false;
-    _confirmPasswordVisible = false;
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Create Account"),
+      appBar: GenericAppBar.builder("Sign in"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 30, 20, 30),
@@ -52,13 +49,18 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
                 child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text(
-                      "Join our Trainer community",
-                      style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.PRIMARY_WORD_COLOR),
-                    )),
+                    child: Container(
+                      width: 200,
+                      child: Text(
+                        "Welcome back!",
+                        style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.PRIMARY_WORD_COLOR
+                        ),
+                      ),
+                    )
+                ),
               ),
               Form(
                   key: _formKey,
@@ -66,23 +68,22 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                     children: [
                       Container(
                         padding:
-                            EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                        EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                         margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 0),
                         decoration: BoxDecoration(
                             color: AppColors.INPUT_COLOR,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+                            borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
                           controller: _email,
                           validator: (email) {
-                            if (Utils.isEmailValid(email as String))
+                            if (Validator.isEmailValid(email as String))
                               return null;
                             else
                               return 'Enter a valid email address';
                           },
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: 30),
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             border: InputBorder.none,
@@ -97,20 +98,20 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                       ),
                       Container(
                         padding:
-                            EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                        EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                         margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+
                         decoration: BoxDecoration(
                             color: AppColors.INPUT_COLOR,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+                            borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
-                          validator: (val){
-                            if (val!.isEmpty)
-                              return 'Empty password';
-                            return null;
+                          validator: (password){
+                            if (!password!.isEmpty)
+                              return null;
+                            else
+                              return 'Password cannot null';
                           },
-                          controller: _pass,
                           obscureText: !_passwordVisible,
                           enableSuggestions: false,
                           autocorrect: false,
@@ -142,54 +143,6 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                         ),
                       ),
                       Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                        decoration: BoxDecoration(
-                            color: AppColors.INPUT_COLOR,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        child: TextFormField(
-                          validator: (val){
-                            if(val!.isEmpty)
-                              return 'Empty';
-                            if(val != _pass.text)
-                              return 'Not Match';
-                            return null;
-                          },
-                          controller: _confirmPass,
-                          obscureText: !_confirmPasswordVisible,
-                          enableSuggestions: false,
-                          autocorrect: false,
-                          style: TextStyle(fontSize: 30),
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                // Based on passwordVisible state choose the icon
-                                _confirmPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Theme.of(context).primaryColorDark,
-                              ),
-                              onPressed: () {
-                                // Update the state i.e. toogle the state of passwordVisible variable
-                                setState(() {
-                                  _confirmPasswordVisible = !_confirmPasswordVisible;
-                                });
-                              },
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            border: InputBorder.none,
-                            labelText: 'Password',
-                            labelStyle: TextStyle(
-                                fontSize: 15,
-                                color: AppColors.PRIMARY_WORD_COLOR,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                      Container(
                         height: 64,
                         width: double.infinity,
                         margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
@@ -202,18 +155,20 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState?.save();
-                              CustomerRegisterService service = CustomerRegisterService(
+                              LoginService service = LoginService(
                                 email: _email.text,
-                                password: _pass.text,
+                                password: _password.text,
                               );
-                              bool result = await service.registerCustomer();
-                              if (result) {
-                                Navigator.pushNamed(context, RoutePath.loginPage);
+                              dynamic result = await service.login();
+                              if (result != null) {
+                                Navigator.pushReplacementNamed(context, RoutePath.customerHomePage, arguments: {
+                                  "fullname": result["fullname"] as String
+                                });
                               }
                             }
                           },
                           child: Text(
-                            "Sign Up",
+                            "Sign in",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -222,10 +177,28 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                       ),
                     ],
                   )),
-              Text("Connect with your social account",
+              InkWell(
+                  child: new Text(
+                      "Forget password?",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: AppColors.PRIMARY_WORD_COLOR,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(context, RoutePath.recoverPasswordPage);
+                  }
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Text(
+                  "Connect with your social account",
                   style: TextStyle(
-                    color: HexColor("#B6C5D1"),
-                  )),
+                      color: HexColor("#B6C5D1"),
+                  )
+              ),
               SizedBox(
                 height: 20,
               ),
