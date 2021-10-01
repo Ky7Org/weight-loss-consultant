@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/constants/form_error_messages.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_register_service.dart';
@@ -94,7 +95,7 @@ class _TrainerRegisterPageState extends State<TrainerRegisterPage> {
                             if (Validator.isEmailValid(email as String))
                               return null;
                             else
-                              return 'Enter a valid email address';
+                              return FormErrorMessage.emailInvalid;
                           },
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(fontSize: 20),

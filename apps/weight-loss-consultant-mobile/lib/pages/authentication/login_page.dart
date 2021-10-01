@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/constants/form_error_messages.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/login_service.dart';
@@ -21,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  
+
   @override
   void initState() {
     _passwordVisible = false;
@@ -80,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                             if (Validator.isEmailValid(email as String))
                               return null;
                             else
-                              return 'Enter a valid email address';
+                              return FormErrorMessage.emailInvalid;
                           },
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(fontSize: 30),
@@ -110,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                             if (!password!.isEmpty)
                               return null;
                             else
-                              return 'Password cannot null';
+                              return FormErrorMessage.passwordInvalid;
                           },
                           obscureText: !_passwordVisible,
                           enableSuggestions: false,
