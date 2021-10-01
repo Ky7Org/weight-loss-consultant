@@ -63,7 +63,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: CustomerDrawer.builder(widget.data["fullname"], Image.asset("assets/miku-avatar.png"), "Customer"),
+      drawer: CustomerDrawer.builder(widget.data["fullname"], Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
       appBar: MainAppBar.builder(widget.data["fullname"], context),
       body: SlidingUpPanel(
         controller: _pc,
@@ -85,7 +85,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                         padding: EdgeInsets.all(15),
                         child: Column(
                           children: [
-                            SvgPicture.asset("assets/${items["imageName"]}"),
+                            SvgPicture.asset("assets/panel-image/category/${items["imageName"]}"),
                             Expanded(
                               flex: 1,
                               child: Center(
@@ -118,8 +118,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
           child: ListView(
             children: [
               SizedBox(width: double.infinity,),
-              SvgPicture.asset("assets/customer-home-panel.svg"),
-              SvgPicture.asset("assets/fake-chart.svg"),
+              SvgPicture.asset("assets/panel-image/customer-home-panel.svg"),
+              SvgPicture.asset("assets/fake-image/fake-chart.svg"),
               Container(
                 margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
                 child: Align(
@@ -184,7 +184,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                       IconButton(
                         iconSize: 48,
                         onPressed: (){},
-                        icon: SvgPicture.asset("assets/call-icon.svg"),
+                        icon: SvgPicture.asset("assets/icon/call-icon.svg"),
                       )
                     ],
                   ),
@@ -217,7 +217,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                           padding: EdgeInsets.all(15),
                           child: Column(
                             children: [
-                              SvgPicture.asset("assets/todo-icon.svg"),
+                              SvgPicture.asset("assets/panel-image/category/todo-icon.svg"),
                               Expanded(
                                 flex: 1,
                                 child: Center(
@@ -253,7 +253,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                           padding: EdgeInsets.all(15),
                           child: Column(
                             children: [
-                              SvgPicture.asset("assets/message-icon.svg"),
+                              SvgPicture.asset("assets/panel-image/category/message-icon.svg"),
                               Expanded(
                                 flex: 1,
                                 child: Center(
@@ -285,7 +285,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                         padding: EdgeInsets.all(15),
                         child: Column(
                           children: [
-                            SvgPicture.asset("assets/campaign-icon.svg"),
+                            SvgPicture.asset("assets/panel-image/category/campaign-icon.svg"),
                             Expanded(
                               flex: 1,
                               child: Center(
@@ -378,7 +378,7 @@ class _bottom_navigatorState extends State<bottom_navigator> {
               shape: BoxShape.circle,
               color: AppColors.PRIMARY_COLOR,
             ),
-            child: SvgPicture.asset("assets/9-dots-icon.svg"),
+            child: SvgPicture.asset("assets/logo/9-dots-icon.svg"),
           ),
         ),
         BottomNavigationBarItem(

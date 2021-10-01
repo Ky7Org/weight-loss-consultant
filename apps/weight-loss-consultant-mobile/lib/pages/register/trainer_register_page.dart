@@ -37,7 +37,7 @@ class _TrainerRegisterPageState extends State<TrainerRegisterPage> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Image(
-                  image: AssetImage("assets/app-logo.png"),
+                  image: AssetImage("assets/logo/app-logo.png"),
                   width: 120,
                 ),
               ),
@@ -182,11 +182,11 @@ class _TrainerRegisterPageState extends State<TrainerRegisterPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset('assets/google-logo.svg'),
+                  SvgPicture.asset('assets/logo/google-logo.svg'),
                   SizedBox(
                     width: 40,
                   ),
-                  SvgPicture.asset('assets/facebook-logo.svg'),
+                  SvgPicture.asset('assets/logo/facebook-logo.svg'),
                 ],
               )
             ],

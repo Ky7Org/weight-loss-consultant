@@ -19,7 +19,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
     return Scaffold(
       appBar: GenericAppBar.builder("My profile"),
       drawer: CustomerDrawer.builder(
-          "Banhs bao", Image.asset("assets/miku-avatar.png"), "Customer"),
+          "Banhs bao", Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -29,7 +29,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
               Container(
                 margin: const EdgeInsets.only(bottom: 10),
                 child: const CircleAvatar(
-                  backgroundImage: AssetImage("assets/miku-avatar.png"),
+                  backgroundImage: AssetImage("assets/fake-image/miku-avatar.png"),
                   radius: 50,
                 ),
               ),

@@ -17,7 +17,7 @@ class GetStartedPage extends StatelessWidget {
           children: [
             SizedBox(width : double.infinity),
             Image(
-              image: AssetImage("assets/app-logo-with-title.png"),
+              image: AssetImage("assets/logo/app-logo-with-title.png"),
             ),
             Spacer(),
             Container(
