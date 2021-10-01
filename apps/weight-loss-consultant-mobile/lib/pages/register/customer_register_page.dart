@@ -45,7 +45,7 @@ class _CustomerRegisterPageState extends State<CustomerRegisterPage> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Image(
-                  image: AssetImage("assets/logo.png"),
+                  image: AssetImage("assets/app-logo.png"),
                   width: 120,
                 ),
               ),
@@ -233,11 +233,11 @@ class _CustomerRegisterPageState extends State<CustomerRegisterPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset('assets/Google.svg'),
+                  SvgPicture.asset('assets/google-logo.svg'),
                   SizedBox(
                     width: 40,
                   ),
-                  SvgPicture.asset('assets/Facebook.svg'),
+                  SvgPicture.asset('assets/facebook-logo.svg'),
                 ],
               )
             ],

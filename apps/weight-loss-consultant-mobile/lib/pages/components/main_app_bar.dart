@@ -23,7 +23,7 @@ class MainAppBar{
           margin: EdgeInsets.only(right: 20),
           child: IconButton(
             padding: new EdgeInsets.all(0.0),
-            icon: Image.asset("assets/Miku.png", width: 50, height: 50,),
+            icon: Image.asset("assets/miku-avatar.png", width: 50, height: 50,),
             onPressed: () {
               Navigator.pushNamed(context, RoutePath.customerDetailPage);
             },

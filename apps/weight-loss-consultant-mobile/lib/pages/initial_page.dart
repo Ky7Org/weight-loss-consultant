@@ -14,7 +14,7 @@ class InitialPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset('assets/onboarding-image.svg'),
+            SvgPicture.asset('assets/get-started-panel.svg'),
             Container(
               margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
               child: Text(

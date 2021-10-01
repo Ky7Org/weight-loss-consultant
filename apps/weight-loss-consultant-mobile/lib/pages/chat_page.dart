@@ -188,7 +188,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: GenericAppBar.builder("Trainer Message"),
       drawer: CustomerDrawer.builder(
-          "Banhs bao", Image.asset("assets/Miku.png"), "Customer"),
+          "Banhs bao", Image.asset("assets/miku-avatar.png"), "Customer"),
       body: SafeArea(
         bottom: false,
         child: Chat(

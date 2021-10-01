@@ -63,7 +63,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: CustomerDrawer.builder(widget.data["fullname"], Image.asset("assets/Miku.png"), "Customer"),
+      drawer: CustomerDrawer.builder(widget.data["fullname"], Image.asset("assets/miku-avatar.png"), "Customer"),
       appBar: MainAppBar.builder(widget.data["fullname"], context),
       body: SlidingUpPanel(
         controller: _pc,
@@ -118,7 +118,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
           child: ListView(
             children: [
               SizedBox(width: double.infinity,),
-              SvgPicture.asset("assets/customer-main-panel.svg"),
+              SvgPicture.asset("assets/customer-home-panel.svg"),
               SvgPicture.asset("assets/fake-chart.svg"),
               Container(
                 margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
