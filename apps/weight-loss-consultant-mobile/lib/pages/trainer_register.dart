@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_register_service.dart';
 import 'package:weight_loss_consultant_mobile/utils.dart';
 
@@ -152,7 +153,7 @@ class _TrainerRegisterState extends State<TrainerRegister> {
                               );
                               bool result = await service.registerTrainer();
                               if (result) {
-                                Navigator.pushNamed(context, "/trainerRegisterSuccessful", arguments: {
+                                Navigator.pushNamed(context, RoutePath.trainerRegisterSuccessfullyPage, arguments: {
                                   "fullname": this.fullname,
                                 });
                               }

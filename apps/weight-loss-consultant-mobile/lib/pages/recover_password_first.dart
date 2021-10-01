@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/utils.dart';
 
 class RecoverPasswordFirst extends StatefulWidget {
@@ -196,7 +197,7 @@ class _RecoverPasswordFirstState extends State<RecoverPasswordFirst> {
                           color: AppColors.PRIMARY_COLOR,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              Navigator.pushNamed(context, "/login");
+                              Navigator.pushNamed(context, RoutePath.loginPage);
                             }
                           },
                           child: const Text(

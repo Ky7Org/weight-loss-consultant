@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 class MainAppBar{
   static PreferredSizeWidget builder(String fullname, BuildContext context) {
@@ -24,7 +25,7 @@ class MainAppBar{
             padding: new EdgeInsets.all(0.0),
             icon: Image.asset("assets/Miku.png", width: 50, height: 50,),
             onPressed: () {
-              Navigator.pushNamed(context, "/customerDetail");
+              Navigator.pushNamed(context, RoutePath.customerDetailPage);
             },
           ),
         )

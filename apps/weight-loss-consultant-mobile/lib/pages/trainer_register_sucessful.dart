@@ -2,31 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 class TrainerRegisterSuccessful extends StatefulWidget {
-  const TrainerRegisterSuccessful({Key? key}) : super(key: key);
+  Map<dynamic, dynamic> data;
+
+  TrainerRegisterSuccessful({Key? key, this.data = const {"fullname": ""}})
+      : super(key: key);
 
   @override
-  _TrainerRegisterSuccessfulState createState() => _TrainerRegisterSuccessfulState();
+  _TrainerRegisterSuccessfulState createState() =>
+      _TrainerRegisterSuccessfulState();
 }
 
 class _TrainerRegisterSuccessfulState extends State<TrainerRegisterSuccessful> {
-
-  Map data = {};
-
   @override
   Widget build(BuildContext context) {
-
-    if (ModalRoute.of(context)!.settings.arguments != null){
-      data = ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
-    } else {
-      data = {
-        "fullname": ""
-      };
-    }
-
-
-
     return Scaffold(
       appBar: GenericAppBar.builder("Successful"),
       body: Padding(
@@ -36,27 +27,25 @@ class _TrainerRegisterSuccessfulState extends State<TrainerRegisterSuccessful> {
           children: [
             SizedBox(width: double.infinity),
             Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                  "Hi",
-                style: TextStyle(
-                  fontSize: 36,
-                  color: AppColors.PRIMARY_WORD_COLOR,
-                  fontWeight: FontWeight.w900,
-                ),
-              )
-            ),
-            Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  data["fullname"],
+                  "Hi",
                   style: TextStyle(
                     fontSize: 36,
                     color: AppColors.PRIMARY_WORD_COLOR,
                     fontWeight: FontWeight.w900,
                   ),
-                )
-            ),
+                )),
+            Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  widget.data["fullname"],
+                  style: TextStyle(
+                    fontSize: 36,
+                    color: AppColors.PRIMARY_WORD_COLOR,
+                    fontWeight: FontWeight.w900,
+                  ),
+                )),
             Align(
                 alignment: Alignment.topLeft,
                 child: Container(
@@ -69,8 +58,7 @@ class _TrainerRegisterSuccessfulState extends State<TrainerRegisterSuccessful> {
                       color: AppColors.PRIMARY_WORD_COLOR,
                     ),
                   ),
-                )
-            ),
+                )),
             Container(
               height: 64,
               width: double.infinity,
@@ -82,7 +70,8 @@ class _TrainerRegisterSuccessfulState extends State<TrainerRegisterSuccessful> {
                 textColor: Colors.white,
                 color: HexColor("#B6C5D1"),
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, RoutePath.initialPage, (route) => false);
                 },
                 child: Text(
                   "Done",

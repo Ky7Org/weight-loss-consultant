@@ -5,9 +5,12 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 class CustomerMain extends StatefulWidget {
-  const CustomerMain({Key? key}) : super(key: key);
+  Map data;
+
+  CustomerMain({Key? key, this.data = const {"fullname": ""}}) : super(key: key);
 
   @override
   _CustomerMainState createState() => _CustomerMainState();
@@ -15,7 +18,6 @@ class CustomerMain extends StatefulWidget {
 
 class _CustomerMainState extends State<CustomerMain> {
   int selectedIndex = 0;
-  Map data = {};
   PanelController _pc = new PanelController();
   List<Map> categories = [
     {
@@ -25,7 +27,7 @@ class _CustomerMainState extends State<CustomerMain> {
     {
       "text": "Message",
       "imageName": "message-icon.svg",
-      "route": "/chat"
+      "route": RoutePath.chatPage,
     },
     {
       "text": "Campaign",
@@ -54,22 +56,15 @@ class _CustomerMainState extends State<CustomerMain> {
     {
       "text": "Profile",
       "imageName": "profile-icon.svg",
-      "route": "/customerDetail",
+      "route": RoutePath.customerDetailPage,
     },
   ];
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)!.settings.arguments != null){
-      data = ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
-    } else {
-      data = {
-        "fullname": ""
-      };
-    }
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: CustomerDrawer.builder(data["fullname"], Image.asset("assets/Miku.png"), "Customer"),
-      appBar: MainAppBar.builder(data["fullname"], context),
+      drawer: CustomerDrawer.builder(widget.data["fullname"], Image.asset("assets/Miku.png"), "Customer"),
+      appBar: MainAppBar.builder(widget.data["fullname"], context),
       body: SlidingUpPanel(
         controller: _pc,
         panel: Center(
@@ -121,8 +116,6 @@ class _CustomerMainState extends State<CustomerMain> {
         body: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: ListView(
-            //mainAxisAlignment: MainAxisAlignment.start,
-            //crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(width: double.infinity,),
               SvgPicture.asset("assets/customer-main-panel.svg"),
@@ -249,7 +242,7 @@ class _CustomerMainState extends State<CustomerMain> {
                   ),
                   GestureDetector(
                     onTap: (){
-                      Navigator.pushNamed(context, "/chat");
+                      Navigator.pushNamed(context, RoutePath.chatPage);
                     },
                     child: SizedBox(
                       height: 118,
@@ -358,7 +351,7 @@ class _bottom_navigatorState extends State<bottom_navigator> {
             }
           } else {
             if (index == 3){
-              Navigator.pushNamed(context, "/chat");
+              Navigator.pushNamed(context, RoutePath.chatPage);
             }
             this.selectedIndex = index;
           }
