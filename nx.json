@@ -56,6 +56,9 @@
     },
     "weight-loss-consultant-mobile": {
       "tags": []
+    },
+    "weight-loss-consultant-mobile-hci-version": {
+      "tags": []
     }
   },
   "plugins": [

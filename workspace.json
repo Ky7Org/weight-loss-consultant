@@ -191,7 +191,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/weight-loss-consultant-packages-mgnt-api",
             "main": "apps/weight-loss-consultant-packages-mgnt-api/src/main.ts",
@@ -222,7 +224,9 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
             "lintFilePatterns": [
               "apps/weight-loss-consultant-packages-mgnt-api/**/*.ts"
@@ -231,7 +235,9 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/weight-loss-consultant-packages-mgnt-api"],
+          "outputs": [
+            "coverage/apps/weight-loss-consultant-packages-mgnt-api"
+          ],
           "options": {
             "jestConfig": "apps/weight-loss-consultant-packages-mgnt-api/jest.config.js",
             "passWithNoTests": true
@@ -570,6 +576,132 @@
           "options": {
             "command": "flutter build ipa",
             "cwd": "apps/weight-loss-consultant-mobile"
+          }
+        }
+      }
+    },
+    "weight-loss-consultant-mobile-hci-version": {
+      "root": "apps/weight-loss-consultant-mobile-hci-version",
+      "sourceRoot": "apps/weight-loss-consultant-mobile-hci-version/src",
+      "projectType": "application",
+      "targets": {
+        "analyze": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter analyze",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "clean": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter clean",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "format": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter format apps/weight-loss-consultant-mobile-hci-version/*",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "test": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter test",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "assemble": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter assemble",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "attach": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter attach",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "drive": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter drive",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "genL10n": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter gen-l10n",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "install": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter install",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "run": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter run",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "buildAar": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build aar",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "buildApk": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build apk",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "buildAppbundle": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build appbundle",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "buildBundle": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build bundle",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "buildIos": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build ios",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "buildIosFramework": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build ios-framework",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
+          }
+        },
+        "buildIpa": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "flutter build ipa",
+            "cwd": "apps/weight-loss-consultant-mobile-hci-version"
           }
         }
       }
