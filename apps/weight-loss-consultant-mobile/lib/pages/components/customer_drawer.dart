@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+
 class CustomerDrawer {
   static List<Map> navigation = [
     {
@@ -12,6 +14,7 @@ class CustomerDrawer {
       "text": "Message",
       "icon": Icons.mail_outline,
       "route": RoutePath.chatPage,
+
     },
     {
       "text": "My calendar",
@@ -29,6 +32,7 @@ class CustomerDrawer {
       "text": "Logout",
       "icon": Icons.logout_outlined,
       "route": RoutePath.loginPage,
+
     },
   ];
   static Drawer builder(String customerName, Image avatar, String customerRole){

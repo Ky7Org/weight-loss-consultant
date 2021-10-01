@@ -46,10 +46,10 @@ export class AppController {
     status: 200,
     type: LoginResponseModel
   })
-  async login(@Request() req): Promise<LoginResponseModel> {
+  async login(@Request() req): Promise<any> {
     const dto: CustomerDTO | TrainerDTO = req.user;
-    const result = await this.authenticationService.login(dto);
-    return new LoginResponseModel(result.accessToken);
+    return await this.authenticationService.login(dto);
+    // return new LoginResponseModel(result.accessToken);
   }
 
   @UseGuards(JwtAuthGuard)

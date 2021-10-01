@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 
+
 class GenericAppBar{
   static PreferredSizeWidget builder(String title) {
     return AppBar(

@@ -1,0 +1,10 @@
+{
+  "/api/v1/auth": {
+    "target": "http://localhost:8081/",
+    "secure": false
+  },
+  "/api/v1/admins": {
+    "target": "http://localhost:8081/",
+    "secure": false
+  }
+}

@@ -5,6 +5,7 @@ void main() {
   runApp(const MaterialApp(
     initialRoute: "/",
     onGenerateRoute: RouteGenerator.generateRoute,
+
   ));
 }
 
