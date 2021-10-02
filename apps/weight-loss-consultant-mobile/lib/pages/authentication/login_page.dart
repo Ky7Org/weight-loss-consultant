@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/constants/form_error_messages.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/login_service.dart';
-import 'package:weight_loss_consultant_mobile/utils.dart';
+import 'package:weight_loss_consultant_mobile/utils/validator.dart';
 
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
 
@@ -40,7 +42,7 @@ class _LoginState extends State<Login> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Image(
-                  image: AssetImage("assets/logo.png"),
+                  image: AssetImage("assets/logo/app-logo.png"),
                   width: 120,
                 ),
               ),
@@ -76,10 +78,10 @@ class _LoginState extends State<Login> {
                         child: TextFormField(
                           controller: _email,
                           validator: (email) {
-                            if (Utils.isEmailValid(email as String))
+                            if (Validator.isEmailValid(email as String))
                               return null;
                             else
-                              return 'Enter a valid email address';
+                              return FormErrorMessage.emailInvalid;
                           },
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(fontSize: 30),
@@ -109,7 +111,7 @@ class _LoginState extends State<Login> {
                             if (!password!.isEmpty)
                               return null;
                             else
-                              return 'Password cannot null';
+                              return FormErrorMessage.passwordInvalid;
                           },
                           obscureText: !_passwordVisible,
                           enableSuggestions: false,
@@ -160,7 +162,7 @@ class _LoginState extends State<Login> {
                               );
                               dynamic result = await service.login();
                               if (result != null) {
-                                Navigator.pushReplacementNamed(context, "/customerMain", arguments: {
+                                Navigator.pushReplacementNamed(context, RoutePath.customerHomePage, arguments: {
                                   "fullname": result["fullname"] as String
                                 });
                               }
@@ -186,7 +188,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, "/recoverPassword");
+                    Navigator.pushNamed(context, RoutePath.recoverPasswordPage);
                   }
               ),
               SizedBox(
@@ -204,11 +206,11 @@ class _LoginState extends State<Login> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset('assets/Google.svg'),
+                  SvgPicture.asset('assets/logo/google-logo.svg'),
                   SizedBox(
                     width: 40,
                   ),
-                  SvgPicture.asset('assets/Facebook.svg'),
+                  SvgPicture.asset('assets/logo/facebook-logo.svg'),
                 ],
               )
             ],

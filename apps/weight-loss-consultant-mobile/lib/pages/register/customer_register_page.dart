@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/constants/form_error_messages.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_register_service.dart';
-import 'package:weight_loss_consultant_mobile/utils.dart';
+import 'package:weight_loss_consultant_mobile/utils/validator.dart';
 
-class CustomerRegister extends StatefulWidget {
-  const CustomerRegister({Key? key}) : super(key: key);
+class CustomerRegisterPage extends StatefulWidget {
+  const CustomerRegisterPage({Key? key}) : super(key: key);
 
   @override
-  _CustomerRegisterState createState() => _CustomerRegisterState();
+  _CustomerRegisterPageState createState() => _CustomerRegisterPageState();
 }
 
-class _CustomerRegisterState extends State<CustomerRegister> {
+class _CustomerRegisterPageState extends State<CustomerRegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
   bool _passwordVisible = false;
@@ -43,7 +45,7 @@ class _CustomerRegisterState extends State<CustomerRegister> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Image(
-                  image: AssetImage("assets/logo.png"),
+                  image: AssetImage("assets/logo/app-logo.png"),
                   width: 120,
                 ),
               ),
@@ -75,10 +77,10 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                         child: TextFormField(
                           controller: _email,
                           validator: (email) {
-                            if (Utils.isEmailValid(email as String))
+                            if (Validator.isEmailValid(email as String))
                               return null;
                             else
-                              return 'Enter a valid email address';
+                              return FormErrorMessage.emailInvalid;
                           },
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(fontSize: 20),
@@ -106,7 +108,7 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                         child: TextFormField(
                           validator: (val){
                             if (val!.isEmpty)
-                              return 'Empty password';
+                              return FormErrorMessage.passwordInvalid;
                             return null;
                           },
                           controller: _pass,
@@ -152,9 +154,9 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                         child: TextFormField(
                           validator: (val){
                             if(val!.isEmpty)
-                              return 'Empty';
+                              return FormErrorMessage.confirmPasswordInvalid;
                             if(val != _pass.text)
-                              return 'Not Match';
+                              return FormErrorMessage.confirmPasswordMissMatch;
                             return null;
                           },
                           controller: _confirmPass,
@@ -207,7 +209,7 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                               );
                               bool result = await service.registerCustomer();
                               if (result) {
-                                Navigator.pushNamed(context, "/login");
+                                Navigator.pushNamed(context, RoutePath.loginPage);
                               }
                             }
                           },
@@ -231,11 +233,11 @@ class _CustomerRegisterState extends State<CustomerRegister> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset('assets/Google.svg'),
+                  SvgPicture.asset('assets/logo/google-logo.svg'),
                   SizedBox(
                     width: 40,
                   ),
-                  SvgPicture.asset('assets/Facebook.svg'),
+                  SvgPicture.asset('assets/logo/facebook-logo.svg'),
                 ],
               )
             ],

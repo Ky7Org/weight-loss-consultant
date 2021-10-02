@@ -7,13 +7,11 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:uuid/uuid.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
-import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -190,7 +188,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: GenericAppBar.builder("Trainer Message"),
       drawer: CustomerDrawer.builder(
-          "Banhs bao", Image.asset("assets/Miku.png"), "Customer"),
+          "Banhs bao", Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
       body: SafeArea(
         bottom: false,
         child: Chat(
@@ -210,7 +208,7 @@ class _ChatPageState extends State<ChatPage> {
               height: 48,
                 width: 48,
                 child: SvgPicture.asset(
-              "assets/send-icon.svg",
+              "assets/icon/send-icon.svg",
               height: 48,
               width: 48,
             )),

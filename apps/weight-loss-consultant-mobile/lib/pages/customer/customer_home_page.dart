@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
-class CustomerMain extends StatefulWidget {
-  const CustomerMain({Key? key}) : super(key: key);
+class CustomerHomePage extends StatefulWidget {
+  final Map data;
+
+  CustomerHomePage({Key? key, this.data = const {"fullname": ""}}) : super(key: key);
 
   @override
-  _CustomerMainState createState() => _CustomerMainState();
+  _CustomerHomePageState createState() => _CustomerHomePageState();
 }
 
-class _CustomerMainState extends State<CustomerMain> {
+class _CustomerHomePageState extends State<CustomerHomePage> {
   int selectedIndex = 0;
-  Map data = {};
   PanelController _pc = new PanelController();
   List<Map> categories = [
     {
@@ -25,7 +27,7 @@ class _CustomerMainState extends State<CustomerMain> {
     {
       "text": "Message",
       "imageName": "message-icon.svg",
-      "route": "/chat"
+      "route": RoutePath.chatPage,
     },
     {
       "text": "Campaign",
@@ -54,22 +56,15 @@ class _CustomerMainState extends State<CustomerMain> {
     {
       "text": "Profile",
       "imageName": "profile-icon.svg",
-      "route": "/customerDetail",
+      "route": RoutePath.customerDetailPage,
     },
   ];
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)!.settings.arguments != null){
-      data = ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
-    } else {
-      data = {
-        "fullname": ""
-      };
-    }
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: CustomerDrawer.builder(data["fullname"], Image.asset("assets/Miku.png"), "Customer"),
-      appBar: MainAppBar.builder(data["fullname"], context),
+      drawer: CustomerDrawer.builder(widget.data["fullname"], Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
+      appBar: MainAppBar.builder(widget.data["fullname"], context),
       body: SlidingUpPanel(
         controller: _pc,
         panel: Center(
@@ -90,7 +85,7 @@ class _CustomerMainState extends State<CustomerMain> {
                         padding: EdgeInsets.all(15),
                         child: Column(
                           children: [
-                            SvgPicture.asset("assets/${items["imageName"]}"),
+                            SvgPicture.asset("assets/panel-image/category/${items["imageName"]}"),
                             Expanded(
                               flex: 1,
                               child: Center(
@@ -121,12 +116,10 @@ class _CustomerMainState extends State<CustomerMain> {
         body: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: ListView(
-            //mainAxisAlignment: MainAxisAlignment.start,
-            //crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(width: double.infinity,),
-              SvgPicture.asset("assets/customer-main-panel.svg"),
-              SvgPicture.asset("assets/fake-chart.svg"),
+              SvgPicture.asset("assets/panel-image/customer-home-panel.svg"),
+              SvgPicture.asset("assets/fake-image/fake-chart.svg"),
               Container(
                 margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
                 child: Align(
@@ -191,7 +184,7 @@ class _CustomerMainState extends State<CustomerMain> {
                       IconButton(
                         iconSize: 48,
                         onPressed: (){},
-                        icon: SvgPicture.asset("assets/call-icon.svg"),
+                        icon: SvgPicture.asset("assets/icon/call-icon.svg"),
                       )
                     ],
                   ),
@@ -224,7 +217,7 @@ class _CustomerMainState extends State<CustomerMain> {
                           padding: EdgeInsets.all(15),
                           child: Column(
                             children: [
-                              SvgPicture.asset("assets/todo-icon.svg"),
+                              SvgPicture.asset("assets/panel-image/category/todo-icon.svg"),
                               Expanded(
                                 flex: 1,
                                 child: Center(
@@ -249,7 +242,7 @@ class _CustomerMainState extends State<CustomerMain> {
                   ),
                   GestureDetector(
                     onTap: (){
-                      Navigator.pushNamed(context, "/chat");
+                      Navigator.pushNamed(context, RoutePath.chatPage);
                     },
                     child: SizedBox(
                       height: 118,
@@ -260,7 +253,7 @@ class _CustomerMainState extends State<CustomerMain> {
                           padding: EdgeInsets.all(15),
                           child: Column(
                             children: [
-                              SvgPicture.asset("assets/message-icon.svg"),
+                              SvgPicture.asset("assets/panel-image/category/message-icon.svg"),
                               Expanded(
                                 flex: 1,
                                 child: Center(
@@ -292,7 +285,7 @@ class _CustomerMainState extends State<CustomerMain> {
                         padding: EdgeInsets.all(15),
                         child: Column(
                           children: [
-                            SvgPicture.asset("assets/campaign-icon.svg"),
+                            SvgPicture.asset("assets/panel-image/category/campaign-icon.svg"),
                             Expanded(
                               flex: 1,
                               child: Center(
@@ -358,7 +351,7 @@ class _bottom_navigatorState extends State<bottom_navigator> {
             }
           } else {
             if (index == 3){
-              Navigator.pushNamed(context, "/chat");
+              Navigator.pushNamed(context, RoutePath.chatPage);
             }
             this.selectedIndex = index;
           }
@@ -385,7 +378,7 @@ class _bottom_navigatorState extends State<bottom_navigator> {
               shape: BoxShape.circle,
               color: AppColors.PRIMARY_COLOR,
             ),
-            child: SvgPicture.asset("assets/9-dots-icon.svg"),
+            child: SvgPicture.asset("assets/logo/9-dots-icon.svg"),
           ),
         ),
         BottomNavigationBarItem(

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 
-import '../constants.dart';
+import '../../constants/app_colors.dart';
 
-class DetailUser extends StatefulWidget {
-  const DetailUser({Key? key}) : super(key: key);
+class CustomerDetailPage extends StatefulWidget {
+  const CustomerDetailPage({Key? key}) : super(key: key);
 
   @override
-  _DetailUserState createState() => _DetailUserState();
+  _CustomerDetailPageState createState() => _CustomerDetailPageState();
 }
 
-class _DetailUserState extends State<DetailUser> {
+class _CustomerDetailPageState extends State<CustomerDetailPage> {
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -19,7 +19,7 @@ class _DetailUserState extends State<DetailUser> {
     return Scaffold(
       appBar: GenericAppBar.builder("My profile"),
       drawer: CustomerDrawer.builder(
-          "Banhs bao", Image.asset("assets/Miku.png"), "Customer"),
+          "Banhs bao", Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -29,7 +29,7 @@ class _DetailUserState extends State<DetailUser> {
               Container(
                 margin: const EdgeInsets.only(bottom: 10),
                 child: const CircleAvatar(
-                  backgroundImage: AssetImage("assets/Miku.png"),
+                  backgroundImage: AssetImage("assets/fake-image/miku-avatar.png"),
                   radius: 50,
                 ),
               ),
