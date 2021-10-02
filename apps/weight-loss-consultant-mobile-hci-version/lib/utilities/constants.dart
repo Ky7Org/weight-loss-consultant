@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/utilities/app_color.dart';
+import 'package:flutter/material.dart';
+
 
 const kHintTextStyle = TextStyle(
   color: Colors.white54,

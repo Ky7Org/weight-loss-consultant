@@ -68,8 +68,8 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
-    - assets/logos/facebook.jpg
-    - assets/logos/google.jpg
+    - assets/logos/
+    - assets/images/
 
   fonts:
     - family: OpenSans

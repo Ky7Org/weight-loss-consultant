@@ -1,10 +1,11 @@
-class CustomerRegisterService {
+class RegisterService {
   String email;
   String password;
+  String confirmPassword;
 
-  CustomerRegisterService({this.email = "", this.password = ""});
+  RegisterService({this.email = "", this.password = "", this.confirmPassword = ""});
 
-  Future<bool> registerCustomer() async {
+  Future<bool> register() async {
     //TODO: register API
     return true;
   }

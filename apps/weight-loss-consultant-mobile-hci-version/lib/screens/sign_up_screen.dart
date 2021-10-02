@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/components/generic_appbar.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/services/register_service.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/utilities/form_error_message.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/utilities/validator.dart';
 import '../utilities/constants.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -8,6 +13,14 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final _formKey = GlobalKey<FormState>();
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
+
+  final TextEditingController _emailController = new TextEditingController();
+  final TextEditingController _passwordController = new TextEditingController();
+  final TextEditingController _confirmPasswordController = new TextEditingController();
+
 
   Widget _buildEmailTF() {
     return Column(
@@ -22,7 +35,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: const TextField(
+          child: TextFormField(
+            controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
@@ -33,11 +47,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.email,
-                color: Colors.blueGrey,
+                color: Colors.white,
               ),
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
             ),
+            validator: (email){
+              if (Validator.isEmailValid(email as String))
+                return null;
+              else
+                return FormErrorMessage.emailInvalid;
+            },
           ),
         ),
       ],
@@ -57,22 +77,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: const TextField(
-            obscureText: true,
+          child: TextFormField(
+            controller: _passwordController,
+            obscureText: !_passwordVisible,
+            enableSuggestions: false,
+            autocorrect: false,
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 14),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Colors.blueGrey,
+                color: Colors.white,
               ),
               hintText: 'Enter your Password',
               hintStyle: kHintTextStyle,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Theme.of(context).primaryColorDark,
+                ),
+                onPressed: (){
+                  setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  });
+                },
+              ),
             ),
+            validator: (val){
+              if (val!.isEmpty)
+                return FormErrorMessage.passwordInvalid;
+              return null;
+            },
           ),
         ),
       ],
@@ -84,7 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const Text(
-          'Retype Password',
+          'Confirm password',
           style: kLabelStyle,
         ),
         const SizedBox(height: 10.0),
@@ -92,22 +131,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: const TextField(
-            obscureText: true,
+          child: TextFormField(
+            controller: _confirmPasswordController,
+            obscureText: !_confirmPasswordVisible,
+            enableSuggestions: false,
+            autocorrect: false,
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 14),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Colors.blueGrey,
+                color: Colors.white,
               ),
-              hintText: 'Please retype your Password',
+              hintText: 'Enter your Password',
               hintStyle: kHintTextStyle,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _confirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Theme.of(context).primaryColorDark,
+                ),
+                onPressed: (){
+                  setState(() {
+                    _confirmPasswordVisible = !_confirmPasswordVisible;
+                  });
+                },
+              ),
             ),
+            validator: (val){
+              if(val!.isEmpty)
+                return FormErrorMessage.confirmPasswordInvalid;
+              if(val != _passwordController.text)
+                return FormErrorMessage.confirmPasswordMissMatch;
+              return null;
+            },
           ),
         ),
       ],
@@ -120,7 +180,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('SignUp Button Pressed'),
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState?.save();
+            RegisterService service = RegisterService(
+              email: _emailController.text,
+              password: _passwordController.text,
+            );
+            dynamic result = await service.register();
+            if (result != null) {
+              Navigator.pushNamedAndRemoveUntil(context, RoutePath.loginScreen, (route) => false);
+            }
+          }
+        },
         padding: const EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -143,6 +215,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: GenericAppBar.builder("Sign up"),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -172,7 +245,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 40.0,
-                    vertical: 120.0,
+                    vertical: 50.0,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -186,20 +259,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 30.0),
-                      _buildEmailTF(),
-                      const SizedBox(
-                        height: 30.0,
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 30.0),
+                            _buildEmailTF(),
+                            const SizedBox(height: 30.0,),
+                            _buildPasswordTF(),
+                            const SizedBox(height: 30.0,),
+                            _buildRetypePasswordTF(),
+                            const SizedBox(height: 20.0,),
+                            _buildSignUpBtn(),
+                          ],
+                        )
                       ),
-                      _buildPasswordTF(),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildRetypePasswordTF(),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      _buildSignUpBtn(),
                     ],
                   ),
                 ),

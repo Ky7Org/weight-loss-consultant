@@ -104,6 +104,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
             ),
+            validator: (val){
+              if (val!.isEmpty)
+                return FormErrorMessage.passwordInvalid;
+              return null;
+            },
           ),
         ),
       ],
@@ -126,7 +131,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-
   Widget _buildLoginBtn() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 25.0),
@@ -140,10 +144,9 @@ class _LoginScreenState extends State<LoginScreen> {
               email: _emailController.text,
               password: _passwordController.text,
             );
-            bool result = await service.login();
-            if (result) {
-              //TODO: map main screen
-              //Navigator.pushNamed(context, RoutePath.maz);
+            dynamic result = await service.login();
+            if (result != null) {
+              Navigator.pushNamedAndRemoveUntil(context, RoutePath.customerMainScreen, (route) => false);
             }
           }
         },
@@ -234,7 +237,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildSignupBtn() {
     return GestureDetector(
-      onTap: () => print('Sign Up Button Pressed'),
+      onTap: () {
+        Navigator.pushNamed(context, RoutePath.signUpScreen);
+      },
       child: RichText(
         text: const TextSpan(
           children: [

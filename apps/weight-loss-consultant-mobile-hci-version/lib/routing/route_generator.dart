@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_main_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/login_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/recover_password.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/reset_password.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/sign_up_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/today_diet_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/today_exercise_screen.dart';
 
 class RouteGenerator{
   static Route<dynamic> generateRoute(RouteSettings settings){
@@ -28,6 +31,18 @@ class RouteGenerator{
           });
         }
         return _errorRoute();
+      case RoutePath.customerMainScreen:
+        return MaterialPageRoute(builder: (_){
+          return CustomerMainScreen();
+        });
+      case RoutePath.todayExerciseScreen:
+        return MaterialPageRoute(builder: (_){
+          return TodayExerciseScreen();
+        });
+      case RoutePath.todayDietScreen:
+        return MaterialPageRoute(builder: (_){
+          return TodayDietScreen();
+        });
       default:
        return _errorRoute();
     }
