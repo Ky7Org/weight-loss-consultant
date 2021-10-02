@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/components/generic_appbar.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/utilities/form_error_message.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/utilities/validator.dart';
 import '../utilities/constants.dart';
 
 class RecoverScreen extends StatefulWidget {
@@ -10,6 +14,9 @@ class RecoverScreen extends StatefulWidget {
 }
 
 class _RecoverScreenState extends State<RecoverScreen> {
+
+  final TextEditingController _emailController = new TextEditingController();
+
   Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,7 +30,14 @@ class _RecoverScreenState extends State<RecoverScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: const TextField(
+          child: TextFormField(
+            controller: _emailController,
+            validator: (email) {
+              if (Validator.isEmailValid(email as String))
+                return null;
+              else
+                return FormErrorMessage.emailInvalid;
+            },
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
@@ -51,7 +65,9 @@ class _RecoverScreenState extends State<RecoverScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () {
+          Navigator.pushNamed(context, RoutePath.resetPasswordScreen, arguments: _emailController.text);
+        },
         padding: const EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -74,6 +90,7 @@ class _RecoverScreenState extends State<RecoverScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: GenericAppBar.builder("Forgot password"),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(

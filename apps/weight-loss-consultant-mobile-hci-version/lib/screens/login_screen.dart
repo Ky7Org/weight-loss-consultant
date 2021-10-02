@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/services/login_service.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/utilities/form_error_message.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/utilities/validator.dart';
 import '../utilities/constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -8,7 +12,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
   bool _rememberMe = false;
+  bool _passwordVisible = false;
+
+  final TextEditingController _passwordController = new TextEditingController();
+  final TextEditingController _emailController = new TextEditingController();
 
   Widget _buildEmailTF() {
     return Column(
@@ -23,7 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: const TextField(
+          child: TextFormField(
+            controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
@@ -39,6 +49,12 @@ class _LoginScreenState extends State<LoginScreen> {
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
             ),
+            validator: (email){
+              if (Validator.isEmailValid(email as String))
+                return null;
+              else
+                return FormErrorMessage.emailInvalid;
+            },
           ),
         ),
       ],
@@ -58,21 +74,35 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: const TextField(
-            obscureText: true,
+          child: TextFormField(
+            controller: _passwordController,
+            obscureText: !_passwordVisible,
+            enableSuggestions: false,
+            autocorrect: false,
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 14),
               prefixIcon: Icon(
                 Icons.lock,
                 color: Colors.white,
               ),
               hintText: 'Enter your Password',
               hintStyle: kHintTextStyle,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Theme.of(context).primaryColorDark,
+                ),
+                onPressed: (){
+                  setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  });
+                },
+              ),
             ),
           ),
         ),
@@ -82,9 +112,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildForgotPasswordBtn() {
     return Container(
-      alignment: Alignment.centerRight,
+      alignment: Alignment.center,
       child: FlatButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
+        onPressed: (){
+          Navigator.pushNamed(context, RoutePath.recoverPasswordScreen);
+        },
         padding: const EdgeInsets.only(right: 0.0),
         child: const Text(
           'Forgot Password?',
@@ -94,32 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildRememberMeCheckbox() {
-    return SizedBox(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value!;
-                });
-              },
-            ),
-          ),
-          const Text(
-            'Remember me',
-            style: kLabelStyle,
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildLoginBtn() {
     return Container(
@@ -127,7 +133,20 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState?.save();
+            LoginService service = LoginService(
+              email: _emailController.text,
+              password: _passwordController.text,
+            );
+            bool result = await service.login();
+            if (result) {
+              //TODO: map main screen
+              //Navigator.pushNamed(context, RoutePath.maz);
+            }
+          }
+        },
         padding: const EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -157,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
             fontWeight: FontWeight.w400,
           ),
         ),
-        SizedBox(height: 20.0),
+        SizedBox(height: 10.0),
         Text(
           'Sign in with',
           style: kLabelStyle,
@@ -287,15 +306,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 30.0),
-                      _buildEmailTF(),
-                      const SizedBox(
-                        height: 30.0,
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 30.0),
+                            _buildEmailTF(),
+                            const SizedBox(height: 30.0,),
+                            _buildPasswordTF(),
+                            _buildLoginBtn(),
+                          ],
+                        ),
                       ),
-                      _buildPasswordTF(),
                       _buildForgotPasswordBtn(),
-                      _buildRememberMeCheckbox(),
-                      _buildLoginBtn(),
                       _buildSignInWithText(),
                       _buildSocialBtnRow(),
                       _buildSignupBtn(),

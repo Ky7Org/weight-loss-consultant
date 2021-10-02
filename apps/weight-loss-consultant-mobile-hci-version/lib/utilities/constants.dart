@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/utilities/app_color.dart';
 
 const kHintTextStyle = TextStyle(
   color: Colors.white54,
@@ -12,7 +13,7 @@ const kLabelStyle = TextStyle(
 );
 
 final kBoxDecorationStyle = BoxDecoration(
-  color: const Color(0xFF6CA8F1),
+  color: AppColor.appPrimaryColor,
   borderRadius: BorderRadius.circular(15.0),
   boxShadow: const [
     BoxShadow(
@@ -22,3 +23,5 @@ final kBoxDecorationStyle = BoxDecoration(
     ),
   ],
 );
+
+
