@@ -11,8 +11,9 @@ import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/sw
 import {PackageService} from "../services/impls/package.service.impl";
 import {CreatePackageDto} from "../dtos/package/create-package";
 import {UpdatePackageDto} from "../dtos/package/update-package";
-import {Roles} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/author/roles.decorator";
-import {Role} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/constants/enums";
+import {Roles} from "../author/roles.decorator";
+import {Role} from "../constants/enums";
+
 
 @ApiTags('Package')
 @ApiBearerAuth()

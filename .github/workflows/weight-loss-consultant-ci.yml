@@ -40,6 +40,9 @@ jobs:
       - name: Lint NestJS Authentication code
         run: npm run lint:authentication
 
+      - name: Lint NestJS Packages Mgnt code
+        run: npm run lint:packages-mgnt-api
+
       - name: Test ReactJS UI code
         run: npm run test:ui
 
@@ -57,3 +60,6 @@ jobs:
 
       - name: Test NestJS Authentication code
         run: npm run test:authentication
+
+      - name: Test NestJS Packages Management code
+        run: npm run test:packages-mgnt-api
