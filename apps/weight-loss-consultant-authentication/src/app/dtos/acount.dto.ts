@@ -5,5 +5,6 @@ export class AccountDTO{
   password: string;
   fullname?: string;
   role: Role;
-  status?: Status
+  status?: Status;
+  profileImage?: string;
 }

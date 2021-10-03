@@ -25,10 +25,14 @@ export class AuthenticationService {
     const payload = {
       fullname: user.fullname,
       email: user.email,
-      role: user.role
+      role: user.role,
+      profileImage : user.profileImage,
     };
+    const token = this.jwtService.sign(payload);
+    const decodeInfo = this.jwtService.decode(this.jwtService.sign(payload));
     return {
-      accessToken: this.jwtService.sign(payload)
+      accessToken: token,
+      decodeInfo
     };
   }
 }

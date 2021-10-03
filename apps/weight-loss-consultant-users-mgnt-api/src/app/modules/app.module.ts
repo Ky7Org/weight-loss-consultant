@@ -1,18 +1,19 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {AdminEntity} from "../entities/admin.entity";
 import {AdminModule} from "./admin.module";
-import {AdminController} from "../controllers/admin.controller";
 import { TrainerEntity } from '../entities/trainer.entity';
 import {TrainerModule} from "./trainer.module";
 import {CustomerModule} from "./customer.module";
 import {CustomerEntity} from "../entities/customer.entity";
 import { ENV_FILE_PATH } from '../constants/env-file-path';
-import {CampaignEntity} from "../entities/campaign.entity";
 import {AuthModule} from "../auth/auth.module";
+import {CampaignEntity} from "../entities/campaign.entity";
+import {PackageEntity} from "../entities/package.enttiy";
 import {CampaignModule} from "./campaign.module";
+import {PackageModule} from "./package.module";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -37,6 +38,7 @@ export class AppModule {
               TrainerEntity,
               CustomerEntity,
               CampaignEntity,
+              PackageEntity
             ],
           }),
           inject: [ConfigService],
@@ -45,7 +47,8 @@ export class AppModule {
         TrainerModule,
         CustomerModule,
         AuthModule,
-        CampaignModule
+        CampaignModule,
+        PackageModule
       ],
     };
   }

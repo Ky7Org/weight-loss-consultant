@@ -6,7 +6,9 @@ import { TrainerMapper } from '../mappers/trainer.mapper';
 import { RedisCacheModule } from './redis-cache.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TrainerRepository]), RedisCacheModule],
+  imports: [TypeOrmModule.forFeature([TrainerRepository])
+    , RedisCacheModule
+  ],
   providers: [TrainerService, TrainerMapper],
   exports: [TrainerService, TrainerMapper]
 })
