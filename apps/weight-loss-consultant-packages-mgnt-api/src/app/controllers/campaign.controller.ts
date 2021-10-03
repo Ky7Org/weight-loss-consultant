@@ -5,13 +5,14 @@ import {
   Param,
   Post,
   Put,
-  Res, UseGuards,
+  Res,
 } from "@nestjs/common";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {CampaignService} from "../services/impls/campaign.service.impl";
 import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
 import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
-import {JwtAuthGuard} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/auth/jwt-auth.guard";
+import {Roles} from "../author/roles.decorator";
+import {Role} from "../constants/enums";
 
 @ApiTags('Campaign')
 @ApiBearerAuth()
@@ -22,7 +23,7 @@ export class CampaignController {
   constructor(private readonly campaignService: CampaignService) {
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Customer, Role.Trainer)
   @Get()
   @ApiResponse({status: 200, description: 'The campaigns has shown below.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -36,7 +37,7 @@ export class CampaignController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Customer, Role.Trainer)
   @Get(':id')
   @ApiResponse({status: 200, description: 'Campaign details has shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -58,7 +59,7 @@ export class CampaignController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Customer)
   @Post()
   @ApiBody({
     type: CreateCampaignDto
@@ -75,7 +76,7 @@ export class CampaignController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Customer)
   @Put(':id')
   @ApiBody({
     type: UpdateCampaignDto
@@ -100,7 +101,7 @@ export class CampaignController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Customer)
   @Delete(':id')
   @ApiResponse({status: 200, description: 'The campaign information has been successfully deleted.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})

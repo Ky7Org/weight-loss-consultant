@@ -1,12 +1,12 @@
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
-import {BaseService} from "../../../../../weight-loss-consultant-users-mgnt-api/src/app/services/base.service";
-import {DeleteResult, getConnection, UpdateResult} from "typeorm";
+import {DeleteResult, UpdateResult} from "typeorm";
 import {CampaignEntity} from "../../entities/campaign.entity";
 import {CampaignRepository} from "../../repositories/campaign.repository";
 import {CampaignMapper} from "../../mappers/campaign.mapper";
 import {CreateCampaignDto} from "../../dtos/campaign/create-campaign";
 import {UpdateCampaignDto} from "../../dtos/campaign/update-campaign";
-import {CustomerService} from "../../../../../weight-loss-consultant-users-mgnt-api/src/app/services/impl/customer.service.impl";
+import {BaseService} from "../base.service";
+import {CustomerService} from "./customer.service.impl";
 
 @Injectable()
 export class CampaignService extends BaseService<CampaignEntity, CampaignRepository> {

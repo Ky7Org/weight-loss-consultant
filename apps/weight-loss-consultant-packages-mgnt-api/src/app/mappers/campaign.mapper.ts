@@ -1,9 +1,9 @@
 import {Injectable} from "@nestjs/common";
-import {CampaignStatus} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/constants/enums";
 import {CampaignEntity} from "../entities/campaign.entity";
 import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
 import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
-import {CustomerEntity} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/customer.entity";
+import {CustomerEntity} from "../entities/customer.entity";
+import {CampaignStatus} from "../constants/enums";
 
 @Injectable()
 export class CampaignMapper {

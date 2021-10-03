@@ -1,6 +1,5 @@
-import {BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
-import {CustomerEntity} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/customer.entity";
-import {TrainerEntity} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/trainer.entity";
+import {BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {TrainerEntity} from "./trainer.entity";
 
 @Entity('Package')
 export class PackageEntity extends BaseEntity{

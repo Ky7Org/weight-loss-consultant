@@ -5,13 +5,15 @@ import {
   Param,
   Post,
   Put,
-  Res, UseGuards,
+  Res,
 } from "@nestjs/common";
 import {CustomerService} from "../services/impl/customer.service.impl";
 import {CreateCustDto} from "../dtos/customer/create-customer.dto";
 import {UpdateCustDto} from "../dtos/customer/update-customer-dto";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {Roles} from "../author/roles.decorator";
+import {Role} from "../constants/enums";
+import {Public} from "../auth/public-decorator";
 
 @ApiTags('Customer')
 @ApiBearerAuth()
@@ -22,7 +24,7 @@ export class CustomerController {
   constructor(private readonly customerService: CustomerService) {
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @ApiResponse({status: 200, description: 'Customers have shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @Get()
@@ -36,7 +38,7 @@ export class CustomerController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin, Role.Customer, Role.Trainer)
   @Get(':email')
   @ApiResponse({status: 200, description: 'Customer details has shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -58,7 +60,7 @@ export class CustomerController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Public()
   @Post()
   @ApiBody({
     type: CreateCustDto
@@ -76,7 +78,7 @@ export class CustomerController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin, Role.Customer)
   @Put(':email')
   @ApiBody({
     type: UpdateCustDto
@@ -101,7 +103,7 @@ export class CustomerController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin, Role.Customer)
   @Delete(':email')
   @ApiResponse({status: 200, description: 'The customer information has been successfully deleted.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})

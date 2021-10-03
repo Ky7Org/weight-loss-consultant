@@ -3,16 +3,16 @@ import { DynamicModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_FILE_PATH } from '../constants/env-file-path';
-import {CustomerEntity} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/customer.entity";
 import {CampaignEntity} from "../entities/campaign.entity";
-import {CustomerModule} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/modules/customer.module";
 import {CampaignModule} from "./campaign.module";
 import {PackageEntity} from "../entities/package.enttiy";
 import {PackageModule} from "./package.module";
-import {TrainerEntity} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/trainer.entity";
-import {TrainerModule} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/modules/trainer.module";
-import {AuthModule} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/auth/auth.module";
-import {AdminEntity} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/admin.entity";
+import {CustomerEntity} from "../entities/customer.entity";
+import {TrainerEntity} from "../entities/trainer.entity";
+import {AdminEntity} from "../entities/admin.entity";
+import {CustomerModule} from "./customer.module";
+import {TrainerModule} from "./trainer.module";
+import {AuthModule} from "../auth/auth.module";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {

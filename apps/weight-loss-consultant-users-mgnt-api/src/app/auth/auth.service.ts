@@ -4,6 +4,7 @@ import {CustomerService} from "../services/impl/customer.service.impl";
 import {TrainerService} from "../services/impl/trainer.service.impl";
 import {JwtService} from "@nestjs/jwt";
 import {LoginResponse} from "./login.res";
+import {Role} from "../constants/enums";
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
       if (admin && admin.password === password) {
         return {
           ...admin,
-          role: "ADMIN"
+          roles: [Role.Admin]
         };
       }
     } catch (e) {
@@ -32,7 +33,7 @@ export class AuthService {
       if (customer && customer.password === password) {
         return {
           ...customer,
-          role: "CUSTOMER"
+          roles: [Role.Customer]
         };
       }
     } catch (e) {
@@ -43,7 +44,7 @@ export class AuthService {
       if (trainer && trainer.password === password) {
         return {
           ...trainer,
-          role: "TRAINER"
+          roles: [Role.Trainer]
         };
       }
     } catch (e) {
@@ -56,14 +57,14 @@ export class AuthService {
     const payload = {
       email: user.email,
       fullname: user.fullname,
-      role: user.role
+      roles: user.roles
     };
     const res = new LoginResponse();
     res.accessToken = this.jwtService.sign(payload);
     res.email = user.email;
     res.fullname = user.fullname;
     res.avartar = user.profileImage;
-    res.role = user.role;
+    res.role = user.roles;
     return res;
   }
 

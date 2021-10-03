@@ -12,6 +12,8 @@ import {AppModule} from './app/modules/app.module';
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import { ENV_FILE_PATH } from './app/constants/env-file-path';
+import {CampaignModule} from "./app/modules/campaign.module";
+import {PackageModule} from "./app/modules/package.module";
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
@@ -25,7 +27,8 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config,
+    { include:[ CampaignModule, PackageModule] });
   SwaggerModule.setup('swagger-ui', app, document);
   await app.listen(port, () => {
     Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);

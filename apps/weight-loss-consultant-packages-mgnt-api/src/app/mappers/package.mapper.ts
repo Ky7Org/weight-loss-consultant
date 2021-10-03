@@ -1,12 +1,9 @@
 import {Injectable} from "@nestjs/common";
-import {CampaignStatus, PackageStatus} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/constants/enums";
-import {CampaignEntity} from "../entities/campaign.entity";
-import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
-import {CustomerEntity} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/customer.entity";
 import {CreatePackageDto} from "../dtos/package/create-package";
-import {TrainerEntity} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/trainer.entity";
 import {PackageEntity} from "../entities/package.enttiy";
 import {UpdatePackageDto} from "../dtos/package/update-package";
+import {TrainerEntity} from "../entities/trainer.entity";
+import {PackageStatus} from "../constants/enums";
 
 @Injectable()
 export class PackageMapper {

@@ -1,14 +1,10 @@
-import {
-  Body,
-  Controller, Delete,
-  Get, Logger, Param, Post, Put, Res, UseGuards
-}
-  from "@nestjs/common";
+import {Body, Controller, Delete, Get, Logger, Param, Post, Put, Res} from "@nestjs/common";
 import {AdminService} from "../services/impl/admin.service.impl"
 import {CreateAdminDto} from "../dtos/admin/create-admin.dto";
 import {UpdateAdminDto} from "../dtos/admin/update-admin.dto";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {Roles} from "../author/roles.decorator";
+import {Role} from "../constants/enums";
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -20,7 +16,7 @@ export class AdminController {
   constructor(private readonly userService: AdminService) {
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Get()
   async index(@Res() res): Promise<void> {
     try {
@@ -32,7 +28,7 @@ export class AdminController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Get(':email')
   @ApiResponse({status: 200, description: 'Admin details has shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -54,7 +50,7 @@ export class AdminController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Post()
   @ApiBody({
     type: CreateAdminDto
@@ -72,7 +68,7 @@ export class AdminController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Put(':email')
   @ApiBody({
     type: UpdateAdminDto
@@ -97,7 +93,7 @@ export class AdminController {
 
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Delete(':email')
   @ApiResponse({status: 200, description: 'The admin information has been successfully deleted.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})

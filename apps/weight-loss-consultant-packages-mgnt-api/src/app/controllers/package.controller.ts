@@ -5,13 +5,14 @@ import {
   Param,
   Post,
   Put,
-  Res, UseGuards,
+  Res,
 } from "@nestjs/common";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {PackageService} from "../services/impls/package.service.impl";
 import {CreatePackageDto} from "../dtos/package/create-package";
 import {UpdatePackageDto} from "../dtos/package/update-package";
-import {JwtAuthGuard} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/auth/jwt-auth.guard";
+import {Roles} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/author/roles.decorator";
+import {Role} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/constants/enums";
 
 @ApiTags('Package')
 @ApiBearerAuth()
@@ -22,8 +23,7 @@ export class PackageController {
   constructor(private readonly packageService: PackageService) {
   }
 
-
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Trainer)
   @Get()
   async index(@Res() res): Promise<void> {
     try {
@@ -35,7 +35,7 @@ export class PackageController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Trainer, Role.Customer)
   @Get(':id')
   @ApiResponse({status: 200, description: 'Package details has shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -57,7 +57,7 @@ export class PackageController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Trainer)
   @Post()
   @ApiBody({
     type: CreatePackageDto
@@ -74,7 +74,7 @@ export class PackageController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Trainer)
   @Put(':id')
   @ApiBody({
     type: UpdatePackageDto
@@ -99,7 +99,7 @@ export class PackageController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Trainer)
   @Delete(':id')
   @ApiResponse({status: 200, description: 'The package information has been successfully deleted.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})

@@ -1,18 +1,12 @@
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
-import {BaseService} from "../../../../../weight-loss-consultant-users-mgnt-api/src/app/services/base.service";
-import {DeleteResult, getConnection, UpdateResult} from "typeorm";
-import {CampaignEntity} from "../../entities/campaign.entity";
-import {CampaignRepository} from "../../repositories/campaign.repository";
-import {CampaignMapper} from "../../mappers/campaign.mapper";
-import {CreateCampaignDto} from "../../dtos/campaign/create-campaign";
-import {UpdateCampaignDto} from "../../dtos/campaign/update-campaign";
-import {CustomerService} from "../../../../../weight-loss-consultant-users-mgnt-api/src/app/services/impl/customer.service.impl";
+import {DeleteResult, UpdateResult} from "typeorm";
 import {PackageEntity} from "../../entities/package.enttiy";
 import {PackageRepository} from "../../repositories/package.repository";
 import {PackageMapper} from "../../mappers/package.mapper";
-import {TrainerService} from "../../../../../weight-loss-consultant-users-mgnt-api/src/app/services/impl/trainer.service.impl";
 import {CreatePackageDto} from "../../dtos/package/create-package";
 import {UpdatePackageDto} from "../../dtos/package/update-package";
+import {BaseService} from "../base.service";
+import {TrainerService} from "./trainer.service.impl";
 
 @Injectable()
 export class PackageService extends BaseService<PackageEntity, PackageRepository> {
@@ -24,7 +18,7 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
     return await this.repository.find();
   }
 
-  async create(dto: CreatePackageDto): Promise<any> {
+  async create(dto: CreatePackageDto): Promise<PackageEntity> {
     const trainerEmail = dto.trainerEmail;
     const findTrainer = await this.trainerService.findById(trainerEmail);
     if (findTrainer === undefined) {
@@ -34,7 +28,7 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
     return await this.repository.save(entity);
   }
 
-  async edit(dto: UpdatePackageDto, id: number): Promise<any> {
+  async edit(dto: UpdatePackageDto, id: number): Promise<UpdateResult> {
 
     if (id != dto.id) {
       throw new ConflictException(`Param id: ${id} must match with id in request body: ${dto.id}`)
@@ -61,7 +55,7 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
     return await this.repository.delete(id);
   }
 
-  async viewDetail(id): Promise<any> {
+  async viewDetail(id): Promise<PackageEntity[]> {
     return await this.repository.find({
       relations: ["trainer"],
       where: [{

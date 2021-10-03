@@ -1,5 +1,5 @@
 import {BaseEntity, Column, Entity, OneToMany, PrimaryColumn} from "typeorm";
-import {CampaignEntity} from "../../../../weight-loss-consultant-packages-mgnt-api/src/app/entities/campaign.entity";
+import {CampaignEntity} from "./campaign.entity";
 
 @Entity('Customer')
 export class CustomerEntity extends BaseEntity{

@@ -5,13 +5,15 @@ import {
   Param,
   Post,
   Put,
-  Res, UseGuards
+  Res,
 } from "@nestjs/common";
 import {TrainerService} from "../services/impl/trainer.service.impl";
 import {CreateTrainerDto} from "../dtos/trainer/create-trainer";
 import {UpdateTrainerDto} from "../dtos/trainer/update-trainer";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {Roles} from "../author/roles.decorator";
+import {Role} from "../constants/enums";
+import {Public} from "../auth/public-decorator";
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
@@ -23,7 +25,7 @@ export class TrainerController {
   constructor(private readonly trainerService: TrainerService) {
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @ApiResponse({status: 200, description: 'Trainers have shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @Get()
@@ -37,7 +39,7 @@ export class TrainerController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin, Role.Trainer)
   @Get(':email')
   @ApiResponse({status: 200, description: 'Trainer details has shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -59,7 +61,7 @@ export class TrainerController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Public()
   @Post()
   @ApiBody({
     type: CreateTrainerDto
@@ -77,7 +79,7 @@ export class TrainerController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin, Role.Trainer)
   @Put(':email')
   @ApiBody({
     type: UpdateTrainerDto
@@ -102,7 +104,7 @@ export class TrainerController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin, Role.Trainer)
   @Delete(':email')
   @ApiResponse({status: 200, description: 'The trainer information has been successfully deleted.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
