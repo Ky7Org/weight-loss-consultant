@@ -1,4 +1,4 @@
-class LoginService{
+class LoginService {
   String email;
   String password;
 
@@ -6,8 +6,16 @@ class LoginService{
 
   Future<dynamic> login() async {
     //TODO: register API
+    if (email == "banhsbao@gmail.com") {
+      Map result = {
+        "fullname": "BanhsBao",
+        "isFirstTime": true,
+      };
+      return result;
+    }
     Map result = {
-      "fullname": "BanhsBao"
+      "fullname": "BanhsBao",
+      "isFirstTime": false,
     };
     return result;
   }

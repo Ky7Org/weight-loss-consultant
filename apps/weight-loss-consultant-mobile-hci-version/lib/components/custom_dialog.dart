@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/utilities/constants.dart';
 
 class CustomDialogBox extends StatefulWidget {
   final String title, descriptions;
@@ -20,7 +19,6 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: contentBox(context),

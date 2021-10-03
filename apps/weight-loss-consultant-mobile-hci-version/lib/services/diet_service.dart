@@ -23,14 +23,14 @@ class DietService{
     diets["breakfast"] = breakfastDiets;
     //initialize lunch
     List<DietModel> lunchDiets = List.empty(growable: true);
-    breakfastDiets.add(
+    lunchDiets.add(
         DietModel(name: "BANANA",
             unit: "00:30",
             videoPath: "",
             thumbnailPath: "",
             details: "Nice")
     );
-    breakfastDiets.add(
+    lunchDiets.add(
         DietModel(name: "BANANA",
             unit: "00:30",
             videoPath: "",
@@ -40,14 +40,14 @@ class DietService{
     diets["lunch"] = lunchDiets;
     //initialize dinner
     List<DietModel> dinnerDiets = List.empty(growable: true);
-    breakfastDiets.add(
+    dinnerDiets.add(
         DietModel(name: "BANANA",
             unit: "00:30",
             videoPath: "",
             thumbnailPath: "",
             details: "Nice")
     );
-    breakfastDiets.add(
+    dinnerDiets.add(
         DietModel(name: "BANANA",
             unit: "00:30",
             videoPath: "",
