@@ -7,6 +7,7 @@ import {DeleteResult, Like, UpdateResult} from "typeorm";
 import {CustomerMapper} from "../../mappers/customer.mapper";
 import {CreateCustDto} from "../../dtos/customer/create-customer.dto";
 import {UpdateCustDto} from "../../dtos/customer/update-customer-dto";
+import {IPaginationOptions, paginate, Pagination} from "nestjs-typeorm-paginate";
 
 @Injectable()
 export class CustomerService extends BaseService<CustomerEntity, CustomerRepository> {
@@ -44,7 +45,7 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
   async delete(id): Promise<DeleteResult> {
     const existedCustomer = await this.repository.findOne(id);
     if (existedCustomer === undefined) {
-      throw new NotFoundException(`Not found customer with email : ${existedCustomer.email}`)
+      throw new NotFoundException(`Not found customer with email : ${id}`)
     }
     return await this.repository.delete(id);
   }
@@ -80,6 +81,45 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     );
     return result;
   }
+  //SORT by EMAIL
+  async orderByEmailAscAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
+    //providing alias
+    const queryBuilder = this.repository.createQueryBuilder('c');
+    queryBuilder.orderBy('c.email', 'ASC');
+    return paginate<CustomerEntity>(queryBuilder, options);
+  }
 
+  async orderByEmailDescAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
+    const queryBuilder = this.repository.createQueryBuilder('c');
+    queryBuilder.orderBy('c.email', 'DESC');
+    return paginate<CustomerEntity>(queryBuilder, options);
+  }
+  //
+  //SORT by FULLNAME
+  async orderByFullNameAscAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
+    const queryBuilder = this.repository.createQueryBuilder('c');
+    queryBuilder.orderBy('c.fullname', 'ASC');
+    return paginate<CustomerEntity>(queryBuilder, options);
+  }
+
+  async orderByFullNameDescAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
+    const queryBuilder = this.repository.createQueryBuilder('c');
+    queryBuilder.orderBy('c.fullname', 'DESC');
+    return paginate<CustomerEntity>(queryBuilder, options);
+  }
+  //
+  //SORT by DOB
+  async orderByDOBAscAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
+    const queryBuilder = this.repository.createQueryBuilder('c');
+    queryBuilder.orderBy('c.dob', 'ASC');
+    return paginate<CustomerEntity>(queryBuilder, options);
+  }
+
+  async orderByDOBDescAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
+    const queryBuilder = this.repository.createQueryBuilder('c');
+    queryBuilder.orderBy('c.dob', 'DESC');
+    return paginate<CustomerEntity>(queryBuilder, options);
+  }
+  //
 
 }

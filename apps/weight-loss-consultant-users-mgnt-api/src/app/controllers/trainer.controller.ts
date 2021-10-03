@@ -1,19 +1,22 @@
 import {
-  Body, Controller,
+  Body, Controller, DefaultValuePipe,
   Delete,
   Get, Logger,
-  Param,
+  Param, ParseIntPipe,
   Post,
-  Put,
+  Put, Query,
   Res,
 } from "@nestjs/common";
 import {TrainerService} from "../services/impl/trainer.service.impl";
 import {CreateTrainerDto} from "../dtos/trainer/create-trainer";
 import {UpdateTrainerDto} from "../dtos/trainer/update-trainer";
-import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {Roles} from "../author/roles.decorator";
 import {Role} from "../constants/enums";
 import {Public} from "../auth/public-decorator";
+import {Pagination} from "nestjs-typeorm-paginate";
+import {AdminEntity} from "../entities/admin.entity";
+import {MissingParamsException} from "../exceptions/missing.params";
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
@@ -27,7 +30,7 @@ export class TrainerController {
 
   @Roles(Role.Admin)
   @ApiResponse({status: 200, description: 'Trainers have shown below:'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 403, description: 'Forbidden: Only available for admin role'})
   @Get()
   async index(@Res() res): Promise<void> {
     try {
@@ -123,6 +126,166 @@ export class TrainerController {
     } catch (e) {
       this.logger.error(e)
       res.status(e.status).send({error:e.message});
+    }
+  }
+
+  //sort by email endpoint
+  @Roles(Role.Trainer, Role.Admin)
+  @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
+  @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
+  @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
+  @ApiResponse({status: 200, description: 'The trainer list was sorted by email'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 412, description: 'Missing some params in URL path.'})
+  @Get('/sort/byEmail')
+  async sortByEmail(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('order') order?: string
+  ): Promise<Pagination<AdminEntity>> {
+    //set max record of a page is less than 100
+    limit = limit > 100 ? 100 : limit;
+    if (!order) {
+      throw new MissingParamsException();
+    }
+    if (order === 'ASC') {
+      return await this.trainerService.orderByEmailAscAndPaginate({
+        page,
+        limit,
+      })
+    } else {
+      return await this.trainerService.orderByEmailDescAndPaginate({
+        page,
+        limit,
+      })
+    }
+  }
+
+  //Sort by fullname endpoint
+  @Roles(Role.Trainer, Role.Admin)
+  @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
+  @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
+  @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
+  @ApiResponse({status: 200, description: 'The trainer list was sorted by fullname'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 412, description: 'Missing some params in URL path.'})
+  @Get('/sort/byFullname')
+  async sortByFullname(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('order') order?: string
+  ): Promise<Pagination<AdminEntity>> {
+    //set max record of a page is less than 100
+    limit = limit > 100 ? 100 : limit;
+    if (!order) {
+      throw new MissingParamsException();
+    }
+    if (order === 'ASC') {
+      return await this.trainerService.orderByFullNameAscAndPaginate({
+        page,
+        limit,
+      })
+    } else {
+      return await this.trainerService.orderByFullNameDescAndPaginate({
+        page,
+        limit,
+      })
+    }
+  }
+
+  //sort by DOB endpoint
+  @Roles(Role.Admin)
+  @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
+  @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
+  @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
+  @ApiResponse({status: 200, description: 'The trainer list was sorted by DOB'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 412, description: 'Missing some params in URL path.'})
+  @Get('/sort/byDOB')
+  async sortByDOB(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('order') order?: string
+  ): Promise<Pagination<AdminEntity>> {
+    //set max record of a page is less than 100
+    limit = limit > 100 ? 100 : limit;
+    if (!order) {
+      throw new MissingParamsException();
+    }
+    if (order === 'ASC') {
+      return await this.trainerService.orderByDOBAscAndPaginate({
+        page,
+        limit,
+      })
+    } else {
+      return await this.trainerService.orderByDOBDescAndPaginate({
+        page,
+        limit,
+      })
+    }
+  }
+
+  //sort by year of exp endpoint
+  @Roles(Role.Trainer, Role.Admin)
+  @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
+  @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
+  @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
+  @ApiResponse({status: 200, description: 'The trainer list was sorted by year of exp'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 412, description: 'Missing some params in URL path.'})
+  @Get('/sort/byYearOfExp')
+  async sortByYearOfExp(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('order') order?: string
+  ): Promise<Pagination<AdminEntity>> {
+    //set max record of a page is less than 100
+    limit = limit > 100 ? 100 : limit;
+    if (!order) {
+      throw new MissingParamsException();
+    }
+    if (order === 'ASC') {
+      return await this.trainerService.orderByYearOfExpAscAndPaginate({
+        page,
+        limit,
+      })
+    } else {
+      return await this.trainerService.orderByYearOfExpDescAndPaginate({
+        page,
+        limit,
+      })
+    }
+  }
+
+  //sort by rating endpoint
+  @Roles(Role.Trainer, Role.Admin)
+  @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
+  @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
+  @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
+  @ApiResponse({status: 200, description: 'The trainer list was sorted by rating'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 412, description: 'Missing some params in URL path.'})
+  @Get('/sort/byRating')
+  async sortByRating(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('order') order?: string
+  ): Promise<Pagination<AdminEntity>> {
+    //set max record of a page is less than 100
+    limit = limit > 100 ? 100 : limit;
+    if (!order) {
+      throw new MissingParamsException();
+    }
+    if (order === 'ASC') {
+      return await this.trainerService.orderByRatingAscAndPaginate({
+        page,
+        limit,
+      })
+    } else {
+      return await this.trainerService.orderByRatingDescAndPaginate({
+        page,
+        limit,
+      })
     }
   }
 }
