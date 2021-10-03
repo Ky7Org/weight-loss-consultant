@@ -7,10 +7,12 @@ class CustomerDrawer {
     {
       "text": "Training plans",
       "icon": Icons.lock_clock,
+      "route": RoutePath.customerMainScreen,
     },
     {
       "text": "Report",
       "icon": Icons.bar_chart,
+      "route": RoutePath.customerReportScreen,
     },
     {
       "text": "Settings",
@@ -19,6 +21,7 @@ class CustomerDrawer {
     {
       "text": "Logout",
       "icon": Icons.logout_outlined,
+      "route": RoutePath.loginScreen,
     },
   ];
 

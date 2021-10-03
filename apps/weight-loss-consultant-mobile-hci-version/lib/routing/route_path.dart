@@ -6,4 +6,5 @@ class RoutePath{
   static const String customerMainScreen = "/customerMain";
   static const String todayExerciseScreen = "/todayExercise";
   static const String todayDietScreen = "/todayDiet";
+  static const String customerReportScreen = "/report";
 }

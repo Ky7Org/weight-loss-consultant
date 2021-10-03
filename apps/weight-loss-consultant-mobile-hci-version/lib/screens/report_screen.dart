@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import "package:charcode/html_entity.dart";
+import 'package:weight_loss_consultant_mobile_hci_version/components/customer_appbar.dart';
 
 
 class ReportScreen extends StatefulWidget {
@@ -14,6 +14,7 @@ class _ReportScreenState extends State<ReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomerAppbar.builder("Your report"),
         body: SingleChildScrollView(
           child: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -574,7 +575,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             Text(
                               'EDIT',
                               style: TextStyle(
-                                color: 
+                                color:
                                 Color(0xFF2D5BC7),
                               ),
                             )

@@ -3,6 +3,7 @@ import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dar
 import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_main_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/login_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/recover_password.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/report_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/reset_password.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/sign_up_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/today_diet_screen.dart';
@@ -42,6 +43,10 @@ class RouteGenerator{
       case RoutePath.todayDietScreen:
         return MaterialPageRoute(builder: (_){
           return TodayDietScreen();
+        });
+      case RoutePath.customerReportScreen:
+        return MaterialPageRoute(builder: (_){
+          return ReportScreen();
         });
       default:
        return _errorRoute();

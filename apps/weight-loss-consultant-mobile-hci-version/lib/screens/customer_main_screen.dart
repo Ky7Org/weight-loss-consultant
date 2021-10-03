@@ -131,28 +131,33 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
   }
 
   Widget _buildYourReportCard(){
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      elevation: 10,
-      child: Container(
-        height: 150,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(1), BlendMode.dstATop),
-              image: NetworkImage("https://images.unsplash.com/photo-1510936111840-65e151ad71bb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1780&q=80"),
-            )
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, RoutePath.customerReportScreen);
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
         ),
-        child: Center(
-          child: Text('Your report',
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w900,
-                fontSize: 25
+        elevation: 10,
+        child: Container(
+          height: 150,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(1), BlendMode.dstATop),
+                image: NetworkImage("https://images.unsplash.com/photo-1510936111840-65e151ad71bb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1780&q=80"),
+              )
+          ),
+          child: Center(
+            child: Text('Your report',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 25
+              ),
             ),
           ),
         ),
