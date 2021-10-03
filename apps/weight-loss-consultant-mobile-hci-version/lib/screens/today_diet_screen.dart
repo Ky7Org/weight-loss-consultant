@@ -1,69 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/components/customer_appbar.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/custom_dialog.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/services/diet_service.dart';
 
 
 class TodayDietScreen extends StatefulWidget {
-  final Map<String, List<Map>> todayDiet = {
-    "Breakfast": [
-      {
-        "name": "JUMPING JACKS",
-        "unit": "00:30",
-        "videoPath": "",
-        "thumbnailPath": "",
-        "details": "This is bullshit",
-      },
-      {
-        "name": "JUMPING JACKS",
-        "unit": "00:30",
-        "videoPath": "",
-        "thumbnailPath": "",
-        "details": "This is bullshit",
-      },
-    ],
-    "Lunch": [
-      {
-        "name": "JUMPING JACKS",
-        "unit": "00:30",
-        "videoPath": "",
-        "thumbnailPath": "",
-        "details": "This is bullshit",
-      },
-      {
-        "name": "JUMPING JACKS",
-        "unit": "00:30",
-        "videoPath": "",
-        "thumbnailPath": "",
-        "details": "This is bullshit",
-      },
-    ],
-    "Dinner": [
-      {
-        "name": "JUMPING JACKS",
-        "unit": "00:30",
-        "videoPath": "",
-        "thumbnailPath": "",
-        "details": "This is bullshit",
-      },
-      {
-        "name": "JUMPING JACKS",
-        "unit": "00:30",
-        "videoPath": "",
-        "thumbnailPath": "",
-        "details": "This is bullshit",
-      },
-    ],
-  };
-
-
-  TodayDietScreen({Key? key}) : super(key: key);
+  const TodayDietScreen({Key? key}) : super(key: key);
 
   @override
   _TodayDietScreenState createState() => _TodayDietScreenState();
 }
 
 class _TodayDietScreenState extends State<TodayDietScreen> {
+
+  Map<String, List<DietModel>> _todayDiets = {};
+  static final DietService _dietService = DietService();
+
+  @override
+  void initState() {
+    super.initState();
+    _todayDiets = _dietService.getTodayDiet();
+  }
 
   PreferredSize _buildAppBar(){
     return PreferredSize(
@@ -74,14 +31,14 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
             decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
-                  image: NetworkImage("https://images.unsplash.com/photo-1542866789-bb9c9d086a5d?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Njl8fGZvb2R8ZW58MHwwfDB8YmxhY2t8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
+                  colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
+                  image: const NetworkImage("https://images.unsplash.com/photo-1542866789-bb9c9d086a5d?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Njl8fGZvb2R8ZW58MHwwfDB8YmxhY2t8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
                 )
             ),
           ),
           centerTitle: false,
           titleSpacing: 0,
-          titleTextStyle: TextStyle(
+          titleTextStyle: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600
           ),
@@ -90,20 +47,20 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
     );
   }
 
-  List<Widget> _buildListDiet(List<Map>? dietList){
-    if (dietList == null){
-      return List.empty();
-    }
+  List<Widget> _buildListDiet(List<DietModel>? dietList){
     List<Widget> list = List.empty(growable: true);
+    if (dietList == null){
+      return list;
+    }
     for (int i=0; i< dietList.length; i++){
       Widget widget = GestureDetector(
         onTap: (){
           showDialog(context: context,
               builder: (BuildContext context){
                 return CustomDialogBox(
-                  title: dietList[i]['name'],
-                  descriptions: dietList[i]['name'],
-                  img: Image(
+                  title: dietList[i].name,
+                  descriptions: dietList[i].details,
+                  img: const Image(
                     image: NetworkImage("https://images.unsplash.com/photo-1493690283958-32df2c86326e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8d2VpZ2h0c3xlbnwwfDB8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
                   ),
                 );
@@ -111,40 +68,42 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
           );
         },
         child: Container(
-            padding: EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 5),
             child: Row(
                 children: [
-                  Icon(Icons.menu),
-                  SizedBox(width: 20,),
-                  Image(
+                  const Icon(Icons.menu),
+                  const SizedBox(width: 20,),
+                  const Image(
                     image: NetworkImage("https://images.unsplash.com/photo-1493690283958-32df2c86326e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8d2VpZ2h0c3xlbnwwfDB8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
                     height: 100,
                     width: 100,
                   ),
-                  SizedBox(width: 20,),
+                  const SizedBox(width: 20,),
                   Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(dietList[i]["name"],
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w900,
-                            )
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        dietList[i].name,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w900,
                         ),
-                        SizedBox(height: 10,),
-                        Text(dietList[i]["unit"],
-                            style: TextStyle(
-                                color: Colors.grey
-                            )
+                      ),
+                      const SizedBox(height: 10,),
+                      Text(
+                        dietList[i].unit,
+                        style: const TextStyle(
+                            color: Colors.grey
                         ),
-                      ]
+                      ),
+                    ]
                   )
                 ]
             )
         ),
       );
       list.add(widget);
-      list.add(Divider(thickness: 1,));
+      list.add(const Divider(thickness: 1,));
     }
     return list;
   }
@@ -152,22 +111,20 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
 
   List<Widget> _buildListTodayDiet(){
     List<Widget> periodDiets = List.empty(growable: true);
-    for (String period in this.widget.todayDiet.keys){
-      Widget periodWidget = Container(
-        child: Column(
-          children: [
-            SizedBox(height: 10,),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(period,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),),
-            ),
-            ..._buildListDiet(this.widget.todayDiet[period]),
-          ],
-        ),
+    for (String period in _todayDiets.keys){
+      Widget periodWidget = Column(
+        children: [
+          const SizedBox(height: 10,),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(period,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),),
+          ),
+          ..._buildListDiet(_todayDiets[period]),
+        ],
       );
       periodDiets.add(periodWidget);
     }
@@ -185,31 +142,32 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
           child: Column(
             children: [
               Row(
-                children: [
+                children:const [
                   Icon(
                     Icons.label_outline,
                     color: Colors.blueAccent,
                   ),
                   SizedBox(width: 5,),
                   Text(
-                      "20 mins",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15
-                      )
+                    "20 mins",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15
+                    )
                   ),
                   Icon(
                       Icons.remove
                   ),
-                  Text("16 workouts",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15
-                      )
+                  Text(
+                    "16 workouts",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15
+                    )
                   ),
                 ],
               ),
-              Divider(thickness: 1,),
+              const Divider(thickness: 1,),
               Column(
                 children: _buildListTodayDiet(),
               )
@@ -219,4 +177,6 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
       ),
     );
   }
+
+
 }

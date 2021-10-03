@@ -1,112 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/components/customer_appbar.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/custom_dialog.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/exercise_model.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/services/exercise_service.dart';
 
 
 class TodayExerciseScreen extends StatefulWidget {
-  final List<Map> todayExercise = [
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-    {
-      "name": "JUMPING JACKS",
-      "unit": "00:30",
-      "videoPath": "",
-      "thumbnailPath": "",
-      "details": "This is bullshit",
-    },
-  ];
 
-
-  TodayExerciseScreen({Key? key}) : super(key: key);
+  const TodayExerciseScreen({Key? key}) : super(key: key);
 
   @override
   _TodayExerciseScreenState createState() => _TodayExerciseScreenState();
 }
 
 class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
+
+  List<ExerciseModel> _exercises = List.empty(growable: true);
+  static final ExerciseService _exerciseService = new ExerciseService();
+
+
+  @override
+  void initState() {
+    super.initState();
+    _exercises = _exerciseService.getTodayExercise();
+  }
 
   PreferredSize _buildAppBar(){
     return PreferredSize(
@@ -135,15 +51,15 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
 
   List<Widget> _buildListExercise(){
     List<Widget> list = List.empty(growable: true);
-    for (int i=0; i< widget.todayExercise.length; i++){
+    for (int i=0; i< _exercises.length; i++){
       Widget widget = GestureDetector(
         onTap: (){
           showDialog(context: context,
               builder: (BuildContext context){
                 return CustomDialogBox(
-                  title: this.widget.todayExercise[i]['name'],
-                  descriptions: this.widget.todayExercise[i]['details'],
-                  img: Image(
+                  title: _exercises[i].name,
+                  descriptions: _exercises[i].details,
+                  img: const Image(
                     image: NetworkImage("https://images.unsplash.com/photo-1493690283958-32df2c86326e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8d2VpZ2h0c3xlbnwwfDB8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
                   ),
                 );
@@ -151,31 +67,33 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
           );
         },
         child: Container(
-            padding: EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 5),
             child: Row(
                 children: [
-                  Icon(Icons.menu),
-                  SizedBox(width: 20,),
-                  Image(
+                  const Icon(Icons.menu),
+                  const SizedBox(width: 20,),
+                  const Image(
                     image: NetworkImage("https://images.unsplash.com/photo-1493690283958-32df2c86326e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8d2VpZ2h0c3xlbnwwfDB8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
                     height: 100,
                     width: 100,
                   ),
-                  SizedBox(width: 20,),
+                  const SizedBox(width: 20,),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(this.widget.todayExercise[i]["name"],
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w900,
-                            )
+                        Text(
+                          _exercises[i].name,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w900,
+                          )
                         ),
-                        SizedBox(height: 10,),
-                        Text(this.widget.todayExercise[i]["unit"],
-                            style: TextStyle(
-                                color: Colors.grey
-                            )
+                        const SizedBox(height: 10,),
+                        Text(
+                          _exercises[i].unit,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          )
                         ),
                       ]
                   )
@@ -184,11 +102,10 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
         ),
       );
       list.add(widget);
-      list.add(Divider(thickness: 1,));
+      list.add(const Divider(thickness: 1,));
     }
     return list;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +117,7 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
           child: Column(
             children: [
               Row(
-                children: [
+                children: const [
                   Icon(
                     Icons.label_outline,
                     color: Colors.blueAccent,
@@ -224,7 +141,7 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
                   ),
                 ],
               ),
-              Divider(thickness: 1,),
+              const Divider(thickness: 1,),
               Column(
                 children: _buildListExercise(),
               )

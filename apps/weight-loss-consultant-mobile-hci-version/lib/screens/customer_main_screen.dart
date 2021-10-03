@@ -2,17 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/customer_appbar.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/components/custom_dialog.dart';
 
 class CustomerMainScreen extends StatefulWidget {
   const CustomerMainScreen({Key? key}) : super(key: key);
+
+
 
   @override
   _CustomerMainScreenState createState() => _CustomerMainScreenState();
 }
 
 class _CustomerMainScreenState extends State<CustomerMainScreen> {
+  int workoutNum = 0, kcalNum = 0, minute = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    workoutNum = 0;
+    kcalNum = 0;
+    minute = 0;
+  }
 
 
   Widget _buildWorkoutInformationRow(){
@@ -31,19 +40,19 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
       children: [
         Column(
           children: [
-            Text("0", style: numStyle),
+            Text(workoutNum.toString(), style: numStyle),
             Text("WORKOUT", style: typeStyle),
           ],
         ),
         Column(
           children: [
-            Text("0", style: numStyle,),
+            Text(kcalNum.toString(), style: numStyle,),
             Text("KCAL", style: typeStyle),
           ],
         ),
         Column(
           children: [
-            Text("0", style: numStyle),
+            Text(minute.toString(), style: numStyle),
             Text("MINUTE", style: typeStyle),
           ],
         ),
@@ -185,4 +194,6 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
       ),
     );
   }
+
+
 }
