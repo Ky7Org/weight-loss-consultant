@@ -21,3 +21,8 @@ export enum Role {
   Trainer = 'trainer',
   Admin = 'admin'
 }
+
+export enum Order {
+  Ascending = "ASC",
+  Descending = "DESC"
+}
