@@ -58,7 +58,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     {
       "text": "Message",
       "imageName": "message-icon.svg",
-      "route": RoutePath.chatPage,
+      "route": RoutePath.myMessagePage,
     },
     {
       "text": "Campaign",

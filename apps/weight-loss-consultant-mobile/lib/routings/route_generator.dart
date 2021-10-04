@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/pages/chat_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_home_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/my_message_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/register/register_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_detail_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/authentication/login_page.dart';
@@ -67,6 +68,10 @@ class RouteGenerator{
       case RoutePath.registerPage:
         return MaterialPageRoute(builder: (_){
           return RegisterPage();
+        });
+      case RoutePath.myMessagePage:
+        return MaterialPageRoute(builder: (_){
+          return MyMessagesPage();
         });
       default:
         return _errorRoute();

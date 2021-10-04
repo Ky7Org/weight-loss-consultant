@@ -11,7 +11,7 @@ class CustomerDrawer {
     {
       "text": "Message",
       "icon": Icons.mail_outline,
-      "route": RoutePath.chatPage,
+      "route": RoutePath.myMessagePage,
     },
     {
       "text": "My calendar",
