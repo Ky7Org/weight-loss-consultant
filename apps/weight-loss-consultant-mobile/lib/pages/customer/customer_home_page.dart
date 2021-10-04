@@ -1,22 +1,53 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/constants/role_enum.dart';
+import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 class CustomerHomePage extends StatefulWidget {
-  final Map data;
 
-  CustomerHomePage({Key? key, this.data = const {"fullname": ""}}) : super(key: key);
+  CustomerHomePage({Key? key}) : super(key: key);
 
   @override
   _CustomerHomePageState createState() => _CustomerHomePageState();
 }
 
 class _CustomerHomePageState extends State<CustomerHomePage> {
+
+  AccountModel user = AccountModel(email: "", fullname: "", role: Role.undecided);
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount();
+      setState(() {});
+    });
+  }
+
   int selectedIndex = 0;
   PanelController _pc = new PanelController();
   List<Map> categories = [
@@ -27,7 +58,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     {
       "text": "Message",
       "imageName": "message-icon.svg",
-      "route": RoutePath.chatPage,
+      "route": RoutePath.myMessagePage,
     },
     {
       "text": "Campaign",
@@ -63,8 +94,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: CustomerDrawer.builder(widget.data["fullname"], Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
-      appBar: MainAppBar.builder(widget.data["fullname"], context),
+      drawer: CustomerDrawer.builder(user.fullname, Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
+      appBar: MainAppBar.builder(user.fullname, context),
       body: SlidingUpPanel(
         controller: _pc,
         panel: Center(

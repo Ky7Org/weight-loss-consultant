@@ -11,7 +11,7 @@ class CustomerDrawer {
     {
       "text": "Message",
       "icon": Icons.mail_outline,
-      "route": RoutePath.chatPage,
+      "route": RoutePath.myMessagePage,
     },
     {
       "text": "My calendar",
@@ -60,12 +60,15 @@ class CustomerDrawer {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      customerName,
-                                      style: TextStyle(
-                                        color: AppColors.PRIMARY_WORD_COLOR,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
+                                    Container(
+                                      width: 150,
+                                      child: Text(
+                                        customerName,
+                                        style: TextStyle(
+                                          color: AppColors.PRIMARY_WORD_COLOR,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                     Text(customerRole),

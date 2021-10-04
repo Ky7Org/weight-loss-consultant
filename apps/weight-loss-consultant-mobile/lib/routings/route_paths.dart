@@ -9,5 +9,6 @@ class RoutePath{
   static const String chatPage = "/chat";
   static const String customerDetailPage = "/customerDetail";
   static const String resetPasswordPage = "/resetPassword";
-  static const String customerRegisterPage = "/customerRegister";
+  static const String registerPage = "/register";
+  static const String myMessagePage = "/myMessage";
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/pages/chat_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_home_page.dart';
-import 'package:weight_loss_consultant_mobile/pages/register/customer_register_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/my_message_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/register/register_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_detail_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/authentication/login_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/initial_page.dart';
@@ -10,7 +11,7 @@ import 'package:weight_loss_consultant_mobile/pages/get_started_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/authentication/recorver_password_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/authentication/reset_password_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/register/trainer_register_page.dart';
-import 'package:weight_loss_consultant_mobile/pages/register/trainer_register_sucessful_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/register/register_sucessful_page.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 
@@ -33,7 +34,7 @@ class RouteGenerator{
       case RoutePath.trainerRegisterSuccessfullyPage :
         if (args is Map<dynamic, dynamic>){
           return MaterialPageRoute(builder: (_){
-            return TrainerRegisterSuccessfulPage(data: args,);
+            return RegisterSuccessfulPage(data: args,);
           });
         }
         return _errorRoute();
@@ -46,17 +47,9 @@ class RouteGenerator{
           return RecoverPasswordPage();
         });
       case RoutePath.customerHomePage:
-        if (args is Map<dynamic, dynamic>){
-          return MaterialPageRoute(builder: (_){
-            return CustomerHomePage(data: args,);
-          });
-        }
-        if (args == null){
           return MaterialPageRoute(builder: (_){
             return CustomerHomePage();
-          });
-        }
-        return _errorRoute();
+        });
       case RoutePath.chatPage:
         return MaterialPageRoute(builder: (_){
           return ChatPage();
@@ -66,12 +59,19 @@ class RouteGenerator{
           return CustomerDetailPage();
         });
       case RoutePath.resetPasswordPage:
+        if (args is Map<dynamic, dynamic>){
+          return MaterialPageRoute(builder: (_){
+            return ResetPasswordPage(data: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.registerPage:
         return MaterialPageRoute(builder: (_){
-          return ResetPasswordPage();
+          return RegisterPage();
         });
-      case RoutePath.customerRegisterPage:
+      case RoutePath.myMessagePage:
         return MaterialPageRoute(builder: (_){
-          return CustomerRegisterPage();
+          return MyMessagesPage();
         });
       default:
         return _errorRoute();

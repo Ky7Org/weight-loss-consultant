@@ -3,6 +3,8 @@ import {AdminService} from "../services/impl/admin.service.impl";
 import {CustomerService} from "../services/impl/customer.service.impl";
 import {TrainerService} from "../services/impl/trainer.service.impl";
 import {JwtService} from "@nestjs/jwt";
+import {LoginResponse} from "./login.res";
+import {Role} from "../constants/enums";
 
 @Injectable()
 export class AuthService {
@@ -19,31 +21,31 @@ export class AuthService {
       const admin = await this.adminService.viewDetail(username); //or email is fine
       if (admin && admin.password === password) {
         return {
-          role: 'ADMIN',
-          ...admin
+          ...admin,
+          roles: [Role.Admin]
         };
-      }
-    } catch (e) {
-      //move on
-    }
-    try {
-      const customer = await this.customerService.viewDetail(username);
-      if (customer && customer.password === password) {
-        return {
-          role: 'CUSTOMER',
-          ...customer
-        }
       }
     } catch (e) {
       //
     }
     try {
-      const trainer = await this.trainerService.viewDetail(username);
+      const customer = await this.customerService.findOneCustomer(username);
+      if (customer && customer.password === password) {
+        return {
+          ...customer,
+          roles: [Role.Customer]
+        };
+      }
+    } catch (e) {
+      //
+    }
+    try {
+      const trainer = await this.trainerService.findOneTrainer(username);
       if (trainer && trainer.password === password) {
         return {
-          role: 'TRAINER',
-          ...trainer
-        }
+          ...trainer,
+          roles: [Role.Trainer]
+        };
       }
     } catch (e) {
       //
@@ -51,20 +53,19 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any): Promise<any> {
+  async login(user: any): Promise<LoginResponse> {
     const payload = {
       email: user.email,
       fullname: user.fullname,
-      role: user.role,
-      avartar: user.profileImage
+      roles: user.roles
     };
-    const token = this.jwtService.sign(payload);
-    const decodeInfo = this.jwtService.decode(token)
-
-    return {
-      accessToken : token,
-      decodeInfo
-    };
+    const res = new LoginResponse();
+    res.accessToken = this.jwtService.sign(payload);
+    res.email = user.email;
+    res.fullname = user.fullname;
+    res.avartar = user.profileImage;
+    res.role = user.roles;
+    return res;
   }
 
 }

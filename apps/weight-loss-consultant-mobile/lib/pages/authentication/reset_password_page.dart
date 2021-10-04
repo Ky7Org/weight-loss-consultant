@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/constants/form_error_messages.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
-import 'package:weight_loss_consultant_mobile/utils/validator.dart';
+import 'package:weight_loss_consultant_mobile/services/reset_password_service.dart';
 
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({Key? key}) : super(key: key);
+  late Map<dynamic, dynamic> data;
+
+  ResetPasswordPage({Key? key, required this.data}) : super(key: key);
 
   @override
   _ResetPasswordPageState createState() => _ResetPasswordPageState();
@@ -18,6 +20,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   bool _passwordVisible = false;
   bool _confirmPasswordVisible = false;
 
+  final TextEditingController _verifyCodeController =
+      new TextEditingController();
+  final TextEditingController _passwordController = new TextEditingController();
+  final TextEditingController _confirmController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +64,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           ),
                           children: <TextSpan>[
                             TextSpan(
-                                text: 'huynhbaofaker@gmail.com',
+                                text: widget.data["email"],
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
@@ -81,8 +87,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          controller: _verifyCodeController,
                           validator: (validationCode) {
-                            return null;
+                            if (!validationCode!.isEmpty){
+                              return null;
+                            }
+                            return FormErrorMessage.otpCodeInvalid;
                           },
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(fontSize: 20),
@@ -105,14 +115,22 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       ),
                       Container(
                         padding:
-                        EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                            EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                         height: 75,
                         margin:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 0),
                         decoration: BoxDecoration(
                             color: AppColors.INPUT_COLOR,
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          controller: _passwordController,
+                          validator: (password) {
+                            if (!password!.isEmpty)
+                              return null;
+                            else
+                              return FormErrorMessage.passwordInvalid;
+                          },
                           obscureText: !_passwordVisible,
                           enableSuggestions: false,
                           autocorrect: false,
@@ -125,7 +143,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                     ? Icons.visibility
                                     : Icons.visibility_off,
                                 color: Theme.of(context).primaryColorDark,
-
                               ),
                               onPressed: () {
                                 // Update the state i.e. toogle the state of passwordVisible variable
@@ -146,14 +163,23 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       ),
                       Container(
                         padding:
-                        EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                            EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                         height: 75,
                         margin:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 0),
                         decoration: BoxDecoration(
                             color: AppColors.INPUT_COLOR,
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          validator: (val) {
+                            if (val!.isEmpty)
+                              return FormErrorMessage.confirmPasswordInvalid;
+                            if (val != _passwordController.text)
+                              return FormErrorMessage.confirmPasswordMissMatch;
+                            return null;
+                          },
+                          controller: _confirmController,
                           obscureText: !_confirmPasswordVisible,
                           enableSuggestions: false,
                           autocorrect: false,
@@ -166,12 +192,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                     ? Icons.visibility
                                     : Icons.visibility_off,
                                 color: Theme.of(context).primaryColorDark,
-
                               ),
                               onPressed: () {
                                 // Update the state i.e. toogle the state of passwordVisible variable
                                 setState(() {
-                                  _confirmPasswordVisible = !_confirmPasswordVisible;
+                                  _confirmPasswordVisible =
+                                      !_confirmPasswordVisible;
                                 });
                               },
                             ),
@@ -195,9 +221,17 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           ),
                           textColor: Colors.white,
                           color: AppColors.PRIMARY_COLOR,
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              Navigator.pushNamed(context, RoutePath.loginPage);
+                              ResetPasswordService service =
+                                  ResetPasswordService(
+                                      otp: _verifyCodeController.text,
+                                      password: _passwordController.text);
+                              bool result = await service.resetPassword();
+                              if (result) {
+                                Navigator.pushNamed(
+                                    context, RoutePath.loginPage);
+                              }
                             }
                           },
                           child: const Text(
