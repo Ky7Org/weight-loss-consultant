@@ -3,34 +3,28 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import {Logger} from '@nestjs/common';
+import {NestFactory} from '@nestjs/core';
 
-import { AppModule } from './app/modules/app.module';
+import {AppModule} from './app/modules/app.module';
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ENV_FILE_PATH } from './constant';
+import {ENV_FILE_PATH} from './constant';
+import {MicroserviceOptions, Transport} from "@nestjs/microservices";
+import {AUTHENTICATION_SERVICE_NAME, AUTHENTICATION_SERVICE_PORT, HOST} from "../../../constant";
 
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
-  console.log(settings)
-  const app = await NestFactory.create(AppModule.forRoot(settings));
-  const globalPrefix = settings.API_ENDPOINT;
-  app.setGlobalPrefix(globalPrefix);
-  app.useGlobalPipes(new ValidationPipe());
-  const config = new DocumentBuilder()
-    .setTitle('Authentication API')
-    .setDescription('This is the endpoints for authentication service')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swagger-ui', app, document);
-  const port = process.env.PORT || 3333;
-  await app.listen(port, () => {
-    Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule.forRoot(settings), {
+    transport: Transport.TCP,
+    options: {
+      host: HOST,
+      port: AUTHENTICATION_SERVICE_PORT
+    }
+  });
+  await app.listen(() => {
+    Logger.log(`Microservice ${AUTHENTICATION_SERVICE_NAME} is listening on http://${HOST}/${AUTHENTICATION_SERVICE_PORT}`);
   });
 }
 
