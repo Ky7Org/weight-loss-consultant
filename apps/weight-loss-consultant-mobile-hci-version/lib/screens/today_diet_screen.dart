@@ -19,7 +19,7 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
   @override
   void initState() {
     super.initState();
-    _todayDiets = _dietService.getTodayDiet();
+    _todayDiets = _dietService.getTodayDiet(1);
   }
 
   PreferredSize _buildAppBar(){
@@ -60,8 +60,8 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
                 return CustomDialogBox(
                   title: dietList[i].name,
                   descriptions: dietList[i].details,
-                  img: const Image(
-                    image: NetworkImage("https://images.unsplash.com/photo-1493690283958-32df2c86326e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8d2VpZ2h0c3xlbnwwfDB8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
+                  img: Image(
+                    image: NetworkImage(dietList[i].thumbnailPath),
                   ),
                 );
               }
@@ -73,8 +73,8 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
                 children: [
                   const Icon(Icons.menu),
                   const SizedBox(width: 20,),
-                  const Image(
-                    image: NetworkImage("https://images.unsplash.com/photo-1493690283958-32df2c86326e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8d2VpZ2h0c3xlbnwwfDB8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
+                  Image(
+                    image: NetworkImage(dietList[i].thumbnailPath),
                     height: 100,
                     width: 100,
                   ),
@@ -82,11 +82,14 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        dietList[i].name,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w900,
+                      Container(
+                        width: 150,
+                        child: Text(
+                          dietList[i].name,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10,),
@@ -141,7 +144,7 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              Row(
+              /*Row(
                 children:const [
                   Icon(
                     Icons.label_outline,
@@ -167,7 +170,7 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
                   ),
                 ],
               ),
-              const Divider(thickness: 1,),
+              const Divider(thickness: 1,),*/
               Column(
                 children: _buildListTodayDiet(),
               )

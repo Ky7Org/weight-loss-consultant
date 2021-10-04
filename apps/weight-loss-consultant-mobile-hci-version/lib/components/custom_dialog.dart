@@ -46,7 +46,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     image: DecorationImage(
-                      image: NetworkImage("https://images.unsplash.com/photo-1493690283958-32df2c86326e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8d2VpZ2h0c3xlbnwwfDB8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
+                      image: this.widget.img.image,
                       fit: BoxFit.cover,
                     )
                 ),

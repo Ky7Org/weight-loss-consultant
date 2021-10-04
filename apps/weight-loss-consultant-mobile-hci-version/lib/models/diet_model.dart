@@ -1,14 +1,12 @@
-class DietModel{
+class DietModel {
   String name;
   String unit;
   String videoPath;
   String thumbnailPath;
   String details;
 
-  DietModel({required this.name,
-    required this.unit,
-    required this.videoPath,
-    required this.thumbnailPath, required this.details});
+  DietModel(
+      this.name, this.unit, this.videoPath, this.thumbnailPath, this.details);
 
   @override
   String toString() {
