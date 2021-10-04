@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/custom_dialog.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/exercise_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/services/exercise_service.dart';
 
@@ -15,13 +19,33 @@ class TodayExerciseScreen extends StatefulWidget {
 class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
 
   List<ExerciseModel> _exercises = List.empty(growable: true);
+  AccountModel user = AccountModel(email: "", fullname: "");
   static final ExerciseService _exerciseService = new ExerciseService();
 
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
 
   @override
   void initState() {
     super.initState();
-    _exercises = _exerciseService.getTodayExercise(1);
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount().then((value) {
+        _exercises = _exerciseService.getTodayExercise(user.level);
+      });
+      setState(() {});
+    });
+
   }
 
   PreferredSize _buildAppBar(){
@@ -120,7 +144,7 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
           child: Column(
             children: [
               Row(
-                children: const [
+                children: [
                   Icon(
                     Icons.label_outline,
                     color: Colors.blueAccent,
@@ -136,7 +160,7 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
                   Icon(
                     Icons.remove
                   ),
-                  Text("16 workouts",
+                  Text("${_exercises.length} workouts",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15
