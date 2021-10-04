@@ -12,6 +12,9 @@ import {AppModule} from './app/modules/app.module';
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import { ENV_FILE_PATH } from './app/constants/env-file-path';
+import {AdminModule} from "./app/modules/admin.module";
+import {CustomerModule} from "./app/modules/customer.module";
+import {TrainerModule} from "./app/modules/trainer.module";
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
@@ -28,7 +31,8 @@ async function bootstrap() {
     .addTag('Customer')
     .addBearerAuth()
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config,
+    {include: [AdminModule,CustomerModule, TrainerModule]});
   SwaggerModule.setup('swagger-ui', app, document);
   await app.listen(port, () => {
     Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
