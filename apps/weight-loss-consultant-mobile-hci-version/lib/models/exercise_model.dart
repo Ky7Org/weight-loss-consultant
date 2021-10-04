@@ -5,10 +5,9 @@ class ExerciseModel{
   String thumbnailPath;
   String details;
 
-  ExerciseModel({required this.name,
-    required this.unit,
-    required this.videoPath,
-    required this.thumbnailPath, required this.details});
+
+  ExerciseModel(
+      this.name, this.unit, this.videoPath, this.thumbnailPath, this.details);
 
   @override
   String toString() {

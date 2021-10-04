@@ -21,7 +21,7 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
   @override
   void initState() {
     super.initState();
-    _exercises = _exerciseService.getTodayExercise();
+    _exercises = _exerciseService.getTodayExercise(1);
   }
 
   PreferredSize _buildAppBar(){
@@ -59,8 +59,8 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
                 return CustomDialogBox(
                   title: _exercises[i].name,
                   descriptions: _exercises[i].details,
-                  img: const Image(
-                    image: NetworkImage("https://images.unsplash.com/photo-1493690283958-32df2c86326e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8d2VpZ2h0c3xlbnwwfDB8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
+                  img: Image(
+                    image: NetworkImage(_exercises[i].thumbnailPath),
                   ),
                 );
               }
@@ -72,8 +72,8 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
                 children: [
                   const Icon(Icons.menu),
                   const SizedBox(width: 20,),
-                  const Image(
-                    image: NetworkImage("https://images.unsplash.com/photo-1493690283958-32df2c86326e?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8d2VpZ2h0c3xlbnwwfDB8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
+                  Image(
+                    image: NetworkImage(_exercises[i].thumbnailPath),
                     height: 100,
                     width: 100,
                   ),
@@ -81,12 +81,15 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          _exercises[i].name,
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w900,
-                          )
+                        Container(
+                          width: 150,
+                          child: Text(
+                            _exercises[i].name,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w900,
+                            )
+                          ),
                         ),
                         const SizedBox(height: 10,),
                         Text(

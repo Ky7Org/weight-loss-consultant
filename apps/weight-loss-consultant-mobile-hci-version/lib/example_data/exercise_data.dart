@@ -1,80 +1,71 @@
-class Exercise {
-  String name;
-  String unit;
-  String videoPath;
-  String thumbnailPath;
-  String details;
-
-  Exercise(
-      this.name, this.unit, this.videoPath, this.thumbnailPath, this.details);
-}
+import 'package:weight_loss_consultant_mobile_hci_version/models/exercise_model.dart';
 
 class ExerciseList {
   //Abs exercise
-  static var jumpingJacks = Exercise(
+  static var jumpingJacks = ExerciseModel(
       'JUMPING JACKS',
       '20s',
       'https://www.youtube.com/watch?v=2W4ZNSwoW_4',
       'https://thumbs.dreamstime.com/z/woman-doing-jumping-jacks-exercise-flat-vector-woman-doing-jumping-jacks-exercise-flat-vector-illustration-isolated-white-223249502.jpg',
       'Start with your feet together before and your arms by your sides, then jump up with your feet apart and your hand overhead'
           './nReturn to the start position then do the next rep.This exercise provides a full-body workout and works all your large muscle groups.');
-  static var abdominalCrunches = Exercise(
+  static var abdominalCrunches = ExerciseModel(
       'ABDOMINAL CRUNCHES',
       "x16",
       "https://www.youtube.com/watch?v=RUNrHkbP4Pc",
       "https://st4.depositphotos.com/7755898/25181/v/1600/depositphotos_251817744-stock-illustration-man-doing-crunches-in-the.jpg",
       "Lie on your back with your knees bent and your arms stretched forward."
           "/nThen lift your upper body off the floor.Hold for a few seconds and slowly return./nIt primarily works the rectus abdominal muscle and the obliques.");
-  static var russianTwist = Exercise(
+  static var russianTwist = ExerciseModel(
       "RUSSIAN TWIST",
       "x20",
       "https://www.youtube.com/watch?v=DJQGX2J4IVw",
       "https://image.shutterstock.com/shutterstock/photos/795671356/display_1500/stock-vector-girl-doing-russian-twist-and-crunches-exercises-vector-illustration-795671356.jpg",
       "Sit on the floor with your knees bent, feet lifted a little bit and back tilted backwards."
           "/nThen hold your hands together and twist from side to side.");
-  static var mountainClimper = Exercise(
+  static var mountainClimper = ExerciseModel(
       "MOUNTAIN CLIMBER",
       "x20",
       "https://www.youtube.com/watch?v=wQq3ybaLZeA",
       "https://media.istockphoto.com/vectors/step-of-doing-the-mountain-climber-exercise-by-healthy-woman-vector-id957699448?k=20&m=957699448&s=612x612&w=0&h=kxdGeANir4ASYaCyuXkeHkoL-VZTPQ9eOIRKjuhuCWc=",
       "Start in the push-up position. Bend your right knee towards your chest and keep your left leg straight,"
           " then quickly switch from one leg to the other./n This exercise strengthens multiple muscle groups.");
-  static var heelTouch = Exercise(
+  static var heelTouch = ExerciseModel(
       "HEEL TOUCH",
       "x20",
       "https://www.youtube.com/watch?v=9bR-elyolBQ",
       "https://thumbs.dreamstime.com/z/basic-rgb-223180663.jpg",
       "Lie on the ground with your legs bent and your arms by your sides."
           "/n Slightly lift your upper body off the floor and make your hands alternately reach your heels.");
-  static var legPraises = Exercise(
+  static var legPraises = ExerciseModel(
       "LEG RAISES",
       "x16",
       "https://www.youtube.com/watch?v=dGKbTKLnym4",
       "https://thumbs.dreamstime.com/z/art-illustration-201076249.jpg",
       "Lie down on your back, and put your hands beneath your hips for support."
           "/nThen lift your legs up until they form a right angle with the floor./nSlowly bring your legs back down and repeat the exercise.");
-  static var plank = Exercise(
+  static var plank = ExerciseModel(
       "PLANK",
       "20s",
       "https://www.youtube.com/watch?v=Fcbw82ykBvY",
       "https://thumbs.dreamstime.com/b/art-illustration-201075973.jpg",
       "Lie on the floor with your toes and forearms on the ground."
           " Keep your body straight and hold this position as long as you can./nThis Exercise strengthens the abdomen, back and shoulders");
-  static var cobraStretch = Exercise(
+  static var cobraStretch = ExerciseModel(
       "COBRA STRETCH",
       "30s",
       "https://www.youtube.com/watch?v=z21McHHOpAg",
       "https://thumbs.dreamstime.com/z/art-illustration-200250748.jpg",
       "Lie down on your stomach and bend your elbows with your hands beneath your shoulders."
           "/nThen push your chest up off the ground as far as possible. Hold this position for seconds.");
-  static var spineLumbarTwistStretchLeft = Exercise(
+  static var spineLumbarTwistStretchLeft = ExerciseModel(
       "SPINE LUMBAR TWISTS STRETCH LEFT",
       "30s",
       "https://www.youtube.com/watch?v=ryNlb_0GmAw",
       "https://thumbs.dreamstime.com/b/basic-rgb-220571869.jpg",
       "Lie on your back with your legs extended. Lift your left up and use your right hand to pull your left knee to the right,"
           " but keep your other arm extended to the side on the floor./nHold this position for a few seconds.");
-  static var spineLumbarTwistStretchRight = Exercise(
+  static var spineLumbarTwistStretchRight = ExerciseModel(
       "SPINE LUMBAR TWIST STRETCH RIGHT",
       "30s",
       "https://www.youtube.com/watch?v=ryNlb_0GmAw",
@@ -83,28 +74,28 @@ class ExerciseList {
           " but keep your other arm extend to side on the floor./nHold This position for a few seconds.");
 
   //Chest exercise
-  static var inclinePushups = Exercise(
+  static var inclinePushups = ExerciseModel(
       "INCLINE PUSH-UP",
       "30s",
       "https://www.youtube.com/watch?v=3WUUeM07i_Q",
       "https://thumbs.dreamstime.com/z/art-illustration-198574282.jpg",
       "Start in the regular push-up position but with your hand elevated on a chair or bench."
           "/nThen push your body up down using your arm strength./nRemember to keep your body straight.");
-  static var kneePushUps = Exercise(
+  static var kneePushUps = ExerciseModel(
       "KNEE PUSH-UP",
       "x12",
       "https://www.youtube.com/watch?v=jWxvty2KROs",
       "https://previews.123rf.com/images/lioputra/lioputra2011/lioputra201100082/158979264-modified-knee-push-ups-exercise-flat-vector-illustration-isolated-on-white-background-workout-charac.jpg",
       "Start in the regular push-up position, then let your knees touch the floor and the raise your feet up off the floor."
           "/n Next push your body up and down.");
-  static var pushUps = Exercise(
+  static var pushUps = ExerciseModel(
       "PUSH-UPS",
       "x10",
       "https://www.youtube.com/watch?v=R08gYyypGto",
       "https://us.123rf.com/450wm/lioputra/lioputra2010/lioputra201000171/157886721-man-character-doing-push-ups-flat-vector-illustration-isolated-on-different-layers.jpg?ver=6",
       "Lay prone on the ground with arms supporting your body./nKeep your body straight while raising and lowering your body with your arms"
           "./nThis exercise works the chest, shoulders, triceps, back, and legs.");
-  static var wideArmPushUps = Exercise(
+  static var wideArmPushUps = ExerciseModel(
       "WIDE ARM PUSH-UPS",
       "x10",
       "https://www.youtube.com/watch?v=pQUsUHvyoI0",
@@ -112,21 +103,21 @@ class ExerciseList {
       "Start i="
           "Start in the regular push-up position but with your hands spread wider than you shoulders."
           "/nThen push your body up and down.Remember to keep your body straight.");
-  static var boxPushUps = Exercise(
+  static var boxPushUps = ExerciseModel(
       "BOX PUSH-UPS",
       "x12",
       "https://www.youtube.com/watch?v=dcJVA2sBPqw",
       "https://us.123rf.com/450wm/lioputra/lioputra2010/lioputra201000171/157886721-man-character-doing-push-ups-flat-vector-illustration-isolated-on-different-layers.jpg?ver=6",
       "Start on all fours with your knees under your butt and your hands directly under your shoulders."
           "/nBend your elbows and do a push-up. Return to the start position and repeat.");
-  static var hinduPushUps = Exercise(
+  static var hinduPushUps = ExerciseModel(
       "HINDU PUSH-UPS",
       "x10",
       "https://www.youtube.com/watch?v=HE0ijmUc6Og",
       "https://www.wikihow.com/images/thumb/a/a4/Do-Hindu-Pushups-Step-5-Version-2.jpg/v4-460px-Do-Hindu-Pushups-Step-5-Version-2.jpg.webp",
       "Start with your hands and feet touching the floor, body bent and butt up in upside down V shape."
           "/nThen bend your elbows to bring your body towards the floor./nWhen your body is close to the floor, raise your upper body as far as possible. Then return to the original position and repeat.");
-  static var chestStretch = Exercise(
+  static var chestStretch = ExerciseModel(
       "CHEST STRETCH",
       "20s",
       "https://www.youtube.com/watch?v=NS64IgKUyeY",
@@ -135,91 +126,91 @@ class ExerciseList {
           " then slowly bring your chest forward./nHold this position for 30-40 seconds. Then slowly come out of it, bring your arms down and do a couple of shoulders rolls./nDon't pull your head forward, and keep your neck relaxed.");
 
   //Arm exercise
-  static var armRaises = Exercise(
+  static var armRaises = ExerciseModel(
       "ARM RAISES",
       "30s",
       "https://www.youtube.com/watch?v=Bqvmyni_sKQ",
       "https://thumbs.dreamstime.com/z/arm-raise-exercise-man-sport-clothes-doing-warm-up-arm-raise-exercise-man-sport-clothes-doing-warm-up-workout-idea-155128603.jpg",
       "Stand on the floor with your arms extended straight forward at shoulder height."
           "/nRaise your arms above your head. Return to the start position and repeat.");
-  static var sideArmRaise = Exercise(
+  static var sideArmRaise = ExerciseModel(
       "SIDE ARM RAISE",
       "30s",
       "https://www.youtube.com/watch?v=YslHgg2E-Ro",
       "https://thumbs.dreamstime.com/z/arm-raise-exercise-man-sport-clothes-doing-warm-up-arm-raise-exercise-man-sport-clothes-doing-warm-up-workout-idea-155128603.jpg",
       "Stand with your feet shoulder width apart./n Raise your arms to the sides at shoulder height,"
           " then put them down./n Repeat the exercise. Keep your arms straight during the exercise.");
-  static var tricepsDips = Exercise(
+  static var tricepsDips = ExerciseModel(
       "TRICEPS DIPS",
       "x10",
       "https://www.youtube.com/watch?v=JhX1nBnirNw",
       "https://thumbs.dreamstime.com/z/man-doing-bench-tricep-dips-flat-vector-man-doing-bench-tricep-dips-flat-vector-illustration-isolated-white-background-215404254.jpg ",
       "For the start position, sit on the chair."
           " Then move your hip off the chair with your hands holding the edge of the chair./nSlowly bend and stretch your arms to make your body go up and down. This is a great exercise for the triceps.");
-  static var armCirclesClockwise = Exercise(
+  static var armCirclesClockwise = ExerciseModel(
       "ARM CIRCLES CLOCKWISE",
       "30s",
       "https://www.youtube.com/watch?v=Lha66p0ZXUc",
       "https://thumbs.dreamstime.com/z/arm-circles-exercise-man-sport-clothes-doing-warm-up-arm-circles-exercise-man-sport-clothes-doing-warm-up-workout-154498822.jpg",
       "Stand on the floor with your arms extended straight to the sides at shoulder height."
           "/nMove your arm clockwise in circles fast./nTry to do it as fast as you can./nIt's a great exercise for the deltoid muscle");
-  static var armCirclesCounterClockwise = Exercise(
+  static var armCirclesCounterClockwise = ExerciseModel(
       "ARM CIRCLES COUNTERCLOCKWISE",
       "30s",
       "https://www.youtube.com/watch?v=Lha66p0ZXUc",
       "https://thumbs.dreamstime.com/z/arm-circles-exercise-man-sport-clothes-doing-warm-up-arm-circles-exercise-man-sport-clothes-doing-warm-up-workout-154498822.jpg",
       "Stand on the floor with your arms extend straight out to the sides at shoulder height."
           "/nMove your arms counterclockwise in circles fast./nTry to do it as fast as you can./nIt's a great exercise for the deltoid muscle.");
-  static var diamondPushUps = Exercise(
+  static var diamondPushUps = ExerciseModel(
       "DIAMOND PUSH-UPS",
       "x6",
       "https://www.youtube.com/watch?v=UCmqw3kKZ38",
       "https://image.shutterstock.com/image-vector/woman-doing-diamond-pyramid-push-260nw-1964669092.jpg",
       "Start in the push-up position. Make a diamond shape with your forefingers and thumbs together under your chest."
           "/nThen push your body up and down.Remember to keep your body straight.");
-  static var chestPressPulse = Exercise(
+  static var chestPressPulse = ExerciseModel(
       "CHEST PRESS PULSE",
       "16s",
       "https://www.youtube.com/watch?v=Fz4oo1vFo9M",
       "https://image.shutterstock.com/image-vector/resistance-band-chest-press-exercise-260nw-1854189535.jpg",
       "Hold your forearms together at shoulder height and bend your elbows with your hands together to make an L shape."
           "/nThen lift your forearms up and down.");
-  static var legBarbellCurlRight = Exercise(
+  static var legBarbellCurlRight = ExerciseModel(
       "LEG BARBELL CURL RIGHT",
       "x8",
       "https://www.youtube.com/watch?v=3kZS8HVFquk",
       "https://images.assetsdelivery.com/compings_v2/jameschipper/jameschipper1609/jameschipper160900023.jpg",
       "Stand against a wall. Lift your left leg up, lean forward and grab underneath your left angle with your right hand."
           "/nBring the ankle up towards the shoulder as mush as you can, then lower it and repeat the exercise.");
-  static var legBarbellCurlLeft = Exercise(
+  static var legBarbellCurlLeft = ExerciseModel(
       "LEG BARBELL CURL LEFT",
       "x8",
       "https://www.youtube.com/watch?v=3kZS8HVFquk",
       "https://images.assetsdelivery.com/compings_v2/jameschipper/jameschipper1609/jameschipper160900023.jpg",
       "Stand against a wall. Lift your right leg up, lean forward and grab underneath your right angle with your left hand."
           "/nBring the ankle up towards the shoulder as mush as you can, then lower it and repeat the exercise.");
-  static var diagonalPlank = Exercise(
+  static var diagonalPlank = ExerciseModel(
       "DIAGONAL PLANK",
       "x10",
       "https://www.youtube.com/watch?v=OGfFtF-dhrk",
       "https://thumbs.dreamstime.com/z/diagonal-plank-exercise-white-background-vector-illustration-diagonal-plank-exercise-149606761.jpg",
       "Start in the straight arm plank position./nLift your right arm and left leg until they are parallel with the ground."
           "/nReturn to the start position and repeat with the other side.");
-  static var punches = Exercise(
+  static var punches = ExerciseModel(
       "PUNCHES",
       "30s",
       "https://www.youtube.com/watch?v=reeBHtZJ1ts",
       "https://thumbs.dreamstime.com/z/man-throwing-punch-vector-illustration-decorative-design-man-throwing-punch-vector-illustration-decorative-design-188379248.jpg",
       "Stand with on of your leg forward and your knees bent slightly. Bend your elbows and clench your fists in front of your face."
           "/nExtend one arm forward with the palm facing the floor. Take the arm back and repeat with the other arm.");
-  static var inchworms = Exercise(
+  static var inchworms = ExerciseModel(
       "INCHWORMS",
       "x8",
       "https://www.youtube.com/watch?v=ZY2ji_Ho0dA",
       "https://previews.123rf.com/images/lioputra/lioputra2106/lioputra210600062/170642817-man-doing-inchworms-walkouts-exercise-flat-vector-illustration-isolated-on-white-background.jpg",
       "Start with your geet shoulder width apart./nBend your body and walk your hands in front of you as far as you can,"
           " then walk your hands back. Repeat the exercise.");
-  static var wallPushUps = Exercise(
+  static var wallPushUps = ExerciseModel(
       "WALL PUSH-UPS",
       "x12",
       "https://www.youtube.com/watch?v=EOf3cGIQpA4",
@@ -227,25 +218,25 @@ class ExerciseList {
       "Stand in front of a wall one big step away from it. Then put your hands out straight towards the wall and lean against it."
           " Lift your heels./nSlowly bend your elbows and press your upper body towards the wall. Push back and repeat the exercise."
           " Remember to keep your body straight.");
-  static var tricpesStretchLeft = Exercise(
+  static var tricpesStretchLeft = ExerciseModel(
       "TRICEPS STRETCH LEFT",
       "30s",
       "https://www.youtube.com/watch?v=L9IGOcrdcFk",
       "https://image.shutterstock.com/image-vector/man-doing-overhead-triceps-stretch-260nw-2011131950.jpg",
       "Put your left hand on your back, use your right hand to grab your left elbow and gently pull it. Hold this position for a few seconds");
-  static var tricpesStretchRight = Exercise(
+  static var tricpesStretchRight = ExerciseModel(
       "TRICEPS STRETCH LEFT",
       "30s",
       "https://www.youtube.com/watch?v=L9IGOcrdcFk",
       "https://image.shutterstock.com/image-vector/man-doing-overhead-triceps-stretch-260nw-2011131950.jpg",
       "Put your right hand on your back, use your left hand to grab your left elbow and gently pull it. Hold this position for a few seconds");
-  static var standingBicepsStretchLeft = Exercise(
+  static var standingBicepsStretchLeft = ExerciseModel(
       "STANDING BICEPS STRETCH LEFT",
       "30s",
       "https://www.youtube.com/watch?v=jw8EXo5h0ec",
       "https://2.bp.blogspot.com/-KZ8QGWJ718c/WzeMxDMXg-I/AAAAAAAAGKs/HJXiOTgbTMEGzqeos86tT55fIxmtQWoTwCEwYBhgL/s1600/Screenshot_20180630-175023__01.jpg",
       "Stand with your left arm close to the wall./nExtend your left arm and put your left hand on the wall, then gently turn your body to the right.");
-  static var standingBicepsStretchRight = Exercise(
+  static var standingBicepsStretchRight = ExerciseModel(
       "STANDING BICEPS STRETCH LEFT",
       "30s",
       "https://www.youtube.com/watch?v=jw8EXo5h0ec",
@@ -253,13 +244,13 @@ class ExerciseList {
       "Stand with your right arm close to the wall./nExtend your right arm and put your right hand on the wall, then gently turn your body to the left.");
 
   //Leg Exercise
-  static var sideHop = Exercise(
+  static var sideHop = ExerciseModel(
       "SIDE HOP",
       "30s",
       "https://www.youtube.com/watch?v=nYmUEJIBj3c",
       "https://www.spotebi.com/wp-content/uploads/2016/08/side-to-side-hops-exercise-illustration-spotebi.jpg",
       "Stand on the floor, put your hands in front of you from side to side.");
-  static var squats = Exercise(
+  static var squats = ExerciseModel(
       "SQUATS",
       "x12",
       "https://www.youtube.com/watch?v=42bFodPahBU",
@@ -267,21 +258,21 @@ class ExerciseList {
       "Stand with your feet shoulder width apart and your arms stretched forward, then lower your body until your things are parallel with the floor."
           "/n Your knees should be extends in the same direction as your toes. Return to the start position and do the next rep./nThis work the thighs,"
           " hips buttocks, quads, hamstring and lower body.");
-  static var sideLyingLegLiftLeft = Exercise(
+  static var sideLyingLegLiftLeft = ExerciseModel(
       "SIDE-LYING LEG LIFT LEFT",
       'x12',
       "https://www.youtube.com/watch?v=VlwBJE1WtOQ",
       "https://media.istockphoto.com/vectors/woman-doing-side-leg-raise-exercise-with-lying-in-2-step-on-blue-mat-vector-id1147313549?k=20&m=1147313549&s=170667a&w=0&h=tnwtjZ4z_UG2v3fvh4GDcj69SuAOU8vQ3KWlWk6r-K4=",
       "Lie down on your side with your head rested on your right arm. Lift your upper leg up and return to the start position."
           "/nMake sure your left leg goes straight up and down during the exercise./nIt's a great exercise for the gluteus.");
-  static var sideLyingLegLiftRight = Exercise(
+  static var sideLyingLegLiftRight = ExerciseModel(
       "SIDE-LYING LEG LIFT RIGHT",
       'x12',
       "https://www.youtube.com/watch?v=VlwBJE1WtOQ",
       "https://media.istockphoto.com/vectors/woman-doing-side-leg-raise-exercise-with-lying-in-2-step-on-blue-mat-vector-id1147313549?k=20&m=1147313549&s=170667a&w=0&h=tnwtjZ4z_UG2v3fvh4GDcj69SuAOU8vQ3KWlWk6r-K4=",
       "Lie down on your side with your head rested on your left arm. Lift your upper leg up and return to the start position."
           "/nMake sure your right leg goes straight up and down during the exercise./nIt's a great exercise for the gluteus.");
-  static var backwardLunge = Exercise(
+  static var backwardLunge = ExerciseModel(
       "BACKWARD LUNGE",
       "x14",
       "https://www.youtube.com/watch?v=_LGpDtENZ5U",
@@ -289,35 +280,35 @@ class ExerciseList {
       "Stand with your feet shoulder width apart and your hands on your hips."
           "/nStep a big step backward with your right leg and lower your body until your left thigh is parallel to the floor."
           "Return and repeat with the other side");
-  static var donkeyKicksLeft = Exercise(
+  static var donkeyKicksLeft = ExerciseModel(
       "DONKEY KICKS LEFT",
       "x16",
       "https://www.youtube.com/watch?v=4ranVQDqlaU",
       "https://thumbs.dreamstime.com/b/fitness-exercises-your-better-workout-donkey-kicks-motivation-163529823.jpg",
       "Start on all fours with your knees under your butt and your hands under your shoulders./n"
           "Then lift your left leg and squeeze your butt as much as you can. Go back to the start position and repeat the exercise.");
-  static var donkeyKicksRight = Exercise(
+  static var donkeyKicksRight = ExerciseModel(
       "DONKEY KICKS RIGHT",
       "x16",
       "https://www.youtube.com/watch?v=4ranVQDqlaU",
       "https://thumbs.dreamstime.com/b/fitness-exercises-your-better-workout-donkey-kicks-motivation-163529823.jpg",
       "Start on all fours with your knees under your butt and your hands under your shoulders./n"
           "Then lift your right leg and squeeze your butt as much as you can. Go back to the start position and repeat the exercise.");
-  static var leftQuadStretchWithWall = Exercise(
+  static var leftQuadStretchWithWall = ExerciseModel(
       "LEFT QUAD STRETCH WITH WALL",
       "30s",
       "https://www.youtube.com/watch?v=TfcRyYf7WLg",
       "https://media.istockphoto.com/vectors/exercise-diagram-about-quadriceps-stretch-while-standing-vector-id1154569404?k=20&m=1154569404&s=612x612&w=0&h=drQ0y70yzGFxPeiqUOnZtJ7_a3zuqcXLUet7EVTwJ_I=",
       "Stand with your right hand on the wall. Bend your left leg and grasp your ankle or toes to bring your left calf close to your left thigh./n"
           "Hold this position.");
-  static var rightQuadStretchWithWall = Exercise(
+  static var rightQuadStretchWithWall = ExerciseModel(
       "RIGHT QUAD STRETCH WITH WALL",
       "30s",
       "https://www.youtube.com/watch?v=TfcRyYf7WLg",
       "https://media.istockphoto.com/vectors/exercise-diagram-about-quadriceps-stretch-while-standing-vector-id1154569404?k=20&m=1154569404&s=612x612&w=0&h=drQ0y70yzGFxPeiqUOnZtJ7_a3zuqcXLUet7EVTwJ_I=",
       "Stand with your left hand on the wall. Bend your right leg and grasp your ankle or toes to bring your right calf close to your right thigh./n"
           "Hold this position.");
-  static var kneeToChestStretchLeft = Exercise(
+  static var kneeToChestStretchLeft = ExerciseModel(
       "KNEE TO CHEST STRETCH LEFT",
       "30s",
       "https://www.youtube.com/watch?v=bJms9YyjoBI",
@@ -325,7 +316,7 @@ class ExerciseList {
       "Lie on the floor with your legs extended. Lift your left knee up and grap it with both hands./n"
           "Pull your left knee towards your chest as much you can while keeping your right leg straight on the ground./n"
           "Hold this position for a few seconds,");
-  static var kneeToChestStretchRight = Exercise(
+  static var kneeToChestStretchRight = ExerciseModel(
       "KNEE TO CHEST STRETCH RIGHT",
       "30s",
       "https://www.youtube.com/watch?v=bJms9YyjoBI",
@@ -333,14 +324,14 @@ class ExerciseList {
       "Lie on the floor with your legs extended. Lift your right knee up and grap it with both hands./n"
           "Pull your right knee towards your chest as much you can while keeping your left leg straight on the ground./n"
           "Hold this position for a few seconds,");
-  static var wallCalfRaise = Exercise(
+  static var wallCalfRaise = ExerciseModel(
       "WALL CALF RAISE",
       "x12",
       "https://www.youtube.com/watch?v=GQa_N7wft7M",
       "https://thumbs.dreamstime.com/z/straight-leg-calf-stretch-sport-exersice-silhouettes-woman-doing-exercise-workout-training-straight-leg-calf-stretch-sport-137440954.jpg",
       "Stand straight with your hands on the wall and feet shoulder width apart./n"
           "Lift your heels and stand on your toes.Then drop your heel down. Repeat the exercise.");
-  static var sumoSquatCalfRaisesWithWall = Exercise(
+  static var sumoSquatCalfRaisesWithWall = ExerciseModel(
       "SUMO SQUAT CALF RAISES WITH WALL",
       "x12",
       "https://www.youtube.com/watch?v=Hcy81KUTIZ8",
@@ -348,7 +339,7 @@ class ExerciseList {
       "Stand with your hands on the wall and your feet a little than shoulder width apart./n"
           "Lower your body until your thighs are parallel to the floor."
           "Lift your heels up and down.");
-  static var calfStretchLeft = Exercise(
+  static var calfStretchLeft = ExerciseModel(
       "CALF STRETCH LEFT",
       "30s",
       "https://www.youtube.com/watch?v=mJOGKTYUAzY",
@@ -356,7 +347,7 @@ class ExerciseList {
       "Stand one big step away in front of a wall./n"
           "Step forwards with your right foot and push the wall with your hands./n"
           "Please make sure your left leg is fully extended and your can feel your left calf stretching. Hold this position for a few seconds.");
-  static var calfStretchRight = Exercise(
+  static var calfStretchRight = ExerciseModel(
       "CALF STRETCH RIGHT",
       "30s",
       "https://www.youtube.com/watch?v=mJOGKTYUAzY",
@@ -366,7 +357,7 @@ class ExerciseList {
           "Please make sure your left leg is fully extended and your can feel your right calf stretching. Hold this position for a few seconds.");
 
   //Shoulder & Back Exercise
-  static var rhomboidPulls = Exercise(
+  static var rhomboidPulls = ExerciseModel(
       "RHOMBOID PULLS",
       "x14",
       "https://www.youtube.com/watch?v=DEyDbzSudEU",
@@ -374,7 +365,7 @@ class ExerciseList {
       "Stand with your feet shoulder width apart./n"
           "Raise your arms parallel to the ground, and bend your elbows."
           "Pull your elbows back and squeeze your shoulder blades./nRepeat this exercise.");
-  static var sideLyingFloorStretchLeft = Exercise(
+  static var sideLyingFloorStretchLeft = ExerciseModel(
       "SIDE-LYING FLOOR STRETCH LEFT",
       "30s",
       "https://www.youtube.com/watch?v=DMlSdmsHEeI",
@@ -388,7 +379,7 @@ class ExerciseList {
           "slightly bent in front of you and your left leg stretched behind the right leg./n"
           "Straighten your left arm over your head and gently pull on your left wrist to stretch the left side of your body./n"
           "Hold this position for a few seconds.");
-  static var sideLyingFloorStretchRight = Exercise(
+  static var sideLyingFloorStretchRight = ExerciseModel(
       "SIDE-LYING FLOOR STRETCH RIGHT",
       "30s",
       "https://www.youtube.com/watch?v=DMlSdmsHEeI",
@@ -402,7 +393,7 @@ class ExerciseList {
           "slightly bent in front of you and your right leg stretched behind the left leg./n"
           "Straighten your right arm over your head and gently pull on your right wrist to stretch the right side of your body./n"
           "Hold this position for a few seconds.");
-  static var armScissors = Exercise(
+  static var armScissors = ExerciseModel(
       "30s",
       "Shoulder&Back",
       "https://www.youtube.com/watch?v=pFrJQ-MyL10",
@@ -411,7 +402,7 @@ class ExerciseList {
           "Stretch your arms in front of you at shoulder height with one arm overlap the other in the shape of the letter X,"
           "and then spread them apart./n"
           "Switch arms, and repeat the exercise.");
-  static var catCowPose = Exercise(
+  static var catCowPose = ExerciseModel(
       "CAT COW POSE",
       "30s",
       "https://www.youtube.com/watch?v=w_UKcI1Ftn8",
@@ -420,14 +411,14 @@ class ExerciseList {
           "Then take a breath and make your belly fall down, shoulders roll back and head come up towards the ceiling./n"
           "As you exhale, curve your back upward and let your head come down. Repeat the exercise./n"
           "Do it slowly with each step of this exercise.");
-  static var proneTricepsPushUps = Exercise(
+  static var proneTricepsPushUps = ExerciseModel(
       "PRONE TRICEPS PUSH UPS",
       "x14",
       "https://www.youtube.com/watch?v=Rr43jMaoJ9g",
       "https://www.wikihow.com/images/thumb/4/4c/Do-a-Push-Up-Step-4-preview-Version-5.jpg/550px-nowatermark-Do-a-Push-Up-Step-4-preview-Version-5.jpg.webp",
       "Lie on your stomach with your hands underneath your shoulders and your elbows bent./n"
           "Slightly raise your chest up, and then go back to the start position./nRepeat this exercise.");
-  static var reclinedRhomboidSqueezes = Exercise(
+  static var reclinedRhomboidSqueezes = ExerciseModel(
       "RECLINED RHOMBOID SQUEEZES",
       "x12",
       "https://www.youtube.com/watch?v=olv2Sv9DwmA",
@@ -435,7 +426,7 @@ class ExerciseList {
       "Sit with your knees bent. Slightly lean your upper body back./n"
           "Stretch your arms in front of you, then pull your elbows back to make your elbows at a 90 degree angle and squeeze your shoulder blades./n"
           "Repeat this exercise.");
-  static var childPose = Exercise(
+  static var childPose = ExerciseModel(
       "CHILD'S POSE",
       "30s",
       "https://www.youtube.com/watch?v=DMwRPGMPB10",
@@ -446,7 +437,7 @@ class ExerciseList {
           "Keep your arms stretched forward as you sit back. Make sure there "
           "is enough space between your shoulders and ears during the exercise");
 
-  static List<Exercise> listAbsBeginner = [
+  static List<ExerciseModel> listExercise = [
     jumpingJacks,
     abdominalCrunches,
     russianTwist,
@@ -456,10 +447,7 @@ class ExerciseList {
     plank,
     cobraStretch,
     spineLumbarTwistStretchLeft,
-    spineLumbarTwistStretchRight
-  ];
-
-  static List<Exercise> listChestBeginner = [
+    spineLumbarTwistStretchRight,
     jumpingJacks,
     inclinePushups,
     kneePushUps,
@@ -470,10 +458,7 @@ class ExerciseList {
     wideArmPushUps,
     hinduPushUps,
     cobraStretch,
-    chestStretch
-  ];
-
-  static List<Exercise> listArmBeginner = [
+    chestStretch,
     armRaises,
     sideArmRaise,
     tricepsDips,
@@ -491,10 +476,7 @@ class ExerciseList {
     tricpesStretchLeft,
     tricpesStretchRight,
     standingBicepsStretchLeft,
-    spineLumbarTwistStretchRight
-  ];
-
-  static List<Exercise> listLegBeginner = [
+    spineLumbarTwistStretchRight,
     sideHop,
     squats,
     squats,
@@ -517,10 +499,7 @@ class ExerciseList {
     sumoSquatCalfRaisesWithWall,
     sumoSquatCalfRaisesWithWall,
     calfStretchLeft,
-    calfStretchRight
-  ];
-
-  static List<Exercise> listShoulderAndBackBeginner = [
+    calfStretchRight,
     jumpingJacks,
     armRaises,
     rhomboidPulls,
