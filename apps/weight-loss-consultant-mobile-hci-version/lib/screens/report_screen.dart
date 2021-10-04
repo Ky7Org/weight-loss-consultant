@@ -574,8 +574,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             Text(
                               'EDIT',
                               style: TextStyle(
-                                color: 
-                                Color(0xFF2D5BC7),
+                                color: Color(0xFF2D5BC7),
                               ),
                             )
                           ],
