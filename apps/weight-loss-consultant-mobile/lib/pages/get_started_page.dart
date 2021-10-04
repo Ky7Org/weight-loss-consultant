@@ -61,7 +61,7 @@ class GetStartedPage extends StatelessWidget {
                 color: Colors.white,
                 textColor: AppColors.PRIMARY_COLOR,
                 onPressed: () {
-                  Navigator.pushNamed(context, RoutePath.customerRegisterPage);
+                  Navigator.pushNamed(context, RoutePath.registerPage);
                 },
                 child: Text("Customer",
                     style: TextStyle(

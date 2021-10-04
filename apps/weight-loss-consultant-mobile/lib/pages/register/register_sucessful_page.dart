@@ -4,18 +4,18 @@ import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
-class TrainerRegisterSuccessfulPage extends StatefulWidget {
+class RegisterSuccessfulPage extends StatefulWidget {
   Map<dynamic, dynamic> data;
 
-  TrainerRegisterSuccessfulPage({Key? key, this.data = const {"fullname": ""}})
+  RegisterSuccessfulPage({Key? key, this.data = const {"email": ""}})
       : super(key: key);
 
   @override
-  _TrainerRegisterSuccessfulPageState createState() =>
-      _TrainerRegisterSuccessfulPageState();
+  _RegisterSuccessfulPageState createState() =>
+      _RegisterSuccessfulPageState();
 }
 
-class _TrainerRegisterSuccessfulPageState extends State<TrainerRegisterSuccessfulPage> {
+class _RegisterSuccessfulPageState extends State<RegisterSuccessfulPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,34 +29,45 @@ class _TrainerRegisterSuccessfulPageState extends State<TrainerRegisterSuccessfu
             Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "Hi",
+                  "Hi\nUser",
                   style: TextStyle(
                     fontSize: 36,
                     color: AppColors.PRIMARY_WORD_COLOR,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w800,
                   ),
                 )),
-            Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  widget.data["fullname"],
-                  style: TextStyle(
-                    fontSize: 36,
-                    color: AppColors.PRIMARY_WORD_COLOR,
-                    fontWeight: FontWeight.w900,
-                  ),
-                )),
+
             Align(
                 alignment: Alignment.topLeft,
                 child: Container(
-                  margin: EdgeInsets.fromLTRB(0, 20, 0, 30),
+                  margin: EdgeInsets.symmetric(vertical: 20),
                   width: 200,
-                  child: Text(
-                    "Your contact has been send to us. We will contact you soon",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                      "Please check your email",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        ),
+                      ),
+                      Text(
+                        widget.data["email"],
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: AppColors.PRIMARY_COLOR,
+                        ),
+                      ),
+                      Text(
+                        "and verifiy your account",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: AppColors.PRIMARY_WORD_COLOR,
+                        ),
+                      ),
+
+                    ]
                   ),
                 )),
             Container(
@@ -70,8 +81,8 @@ class _TrainerRegisterSuccessfulPageState extends State<TrainerRegisterSuccessfu
                 textColor: Colors.white,
                 color: HexColor("#B6C5D1"),
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, RoutePath.initialPage, (route) => false);
+                  Navigator.pushNamed(
+                      context, RoutePath.loginPage);
                 },
                 child: Text(
                   "Done",

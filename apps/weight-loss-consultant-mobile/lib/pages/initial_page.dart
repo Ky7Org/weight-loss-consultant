@@ -50,7 +50,7 @@ class InitialPage extends StatelessWidget {
                 textColor: Colors.white,
                 color: AppColors.PRIMARY_COLOR,
                 onPressed: () {
-                  Navigator.pushNamed(context, RoutePath.getStartedPage);
+                  Navigator.pushNamed(context, RoutePath.registerPage);
                 },
                 child: Text(
                   "Get started",
