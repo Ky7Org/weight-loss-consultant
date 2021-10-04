@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/customer_appbar.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
 
 
 class ReportScreen extends StatefulWidget {
@@ -11,6 +15,26 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
+  AccountModel user = AccountModel(email: "", fullname: "");
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount();
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +52,9 @@ class _ReportScreenState extends State<ReportScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Column(
-                            children: const <Widget>[
+                            children: <Widget>[
                               Text(
-                                '0',
+                                user.workoutNum.toString(),
                                 style: TextStyle(
                                     color: Color(0xFF0648F6),
                                     fontSize: 25,
@@ -48,9 +72,9 @@ class _ReportScreenState extends State<ReportScreen> {
                             ],
                           ),
                           Column(
-                            children: const <Widget>[
+                            children: <Widget>[
                               Text(
-                                '0',
+                                user.kcalNum.toString(),
                                 style: TextStyle(
                                     color: Color(0xFF0648F6),
                                     fontSize: 25,
@@ -68,9 +92,9 @@ class _ReportScreenState extends State<ReportScreen> {
                             ],
                           ),
                           Column(
-                            children: const <Widget>[
+                            children: <Widget>[
                               Text(
-                                '0',
+                                user.minute.toString(),
                                 style: TextStyle(
                                     color: Color(0xFF0648F6),
                                     fontSize: 25,

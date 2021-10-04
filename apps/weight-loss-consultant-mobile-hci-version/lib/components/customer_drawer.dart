@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/utilities/app_color.dart';
 
@@ -50,6 +51,7 @@ class CustomerDrawer {
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 10),
+                    width: 150,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,44 +76,43 @@ class CustomerDrawer {
   }
 
   static Widget builder (BuildContext context, String customerName, Image avatar){
-    return SafeArea(
-      top: false,
-      child: Drawer(
-          child: MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: ListView.builder(
-              itemCount: navigation.length + 1,
-              itemBuilder: (context, index){
-                if (index == 0) {
-                  return _buildHeader(customerName, avatar);
-                }
-                return ListTile(
-                  leading: Icon(
-                    navigation[index-1]["icon"],
-                    size: 30,
-                    //color: AppColors.PRIMARY_WORD_COLOR,
-                  ),
-                  horizontalTitleGap: 0,
-                  title: Text(
-                    navigation[index-1]["text"],
-                    style: TextStyle(
-                        //color: AppColors.PRIMARY_WORD_COLOR,
-                        fontSize: 20
-                    ),
-                  ),
-                  onTap: () {
-                    if (navigation[index-1]["text"] == "Logout"){
-                      Navigator.pushNamedAndRemoveUntil(context, RoutePath.loginScreen, (route) => false);
-                    } else {
-                      Navigator.pushNamed(context, navigation[index-1]["route"]);
-                    }
-                  },
-                );
+    return Drawer(
+        child: MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          child: ListView.builder(
+            itemCount: navigation.length + 1,
+            itemBuilder: (context, index){
+              if (index == 0) {
+                return _buildHeader(customerName, avatar);
               }
-            ),
-          )
-      ),
+              return ListTile(
+                leading: Icon(
+                  navigation[index-1]["icon"],
+                  size: 30,
+                  //color: AppColors.PRIMARY_WORD_COLOR,
+                ),
+                horizontalTitleGap: 0,
+                title: Text(
+                  navigation[index-1]["text"],
+                  style: TextStyle(
+                      //color: AppColors.PRIMARY_WORD_COLOR,
+                      fontSize: 20
+                  ),
+                ),
+                onTap: () async {
+                  if (navigation[index-1]["text"] == "Logout"){
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    prefs.clear();
+                    Navigator.pushNamedAndRemoveUntil(context, RoutePath.loginScreen, (route) => false);
+                  } else {
+                    Navigator.pushNamed(context, navigation[index-1]["route"]);
+                  }
+                },
+              );
+            }
+          ),
+        )
     );
   }
 }

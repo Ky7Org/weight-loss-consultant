@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/services/login_service.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/utilities/form_error_message.dart';
@@ -144,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
               email: _emailController.text,
               password: _passwordController.text,
             );
-            dynamic result = await service.login();
+            AccountModel result = await service.login();
             if (result != null) {
               Navigator.pushNamedAndRemoveUntil(context, RoutePath.customerMainScreen, (route) => false);
             }

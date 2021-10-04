@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/customer_appbar.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/customer_drawer.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
 
 class CustomerMainScreen extends StatefulWidget {
@@ -11,24 +15,17 @@ class CustomerMainScreen extends StatefulWidget {
 }
 
 class _CustomerMainScreenState extends State<CustomerMainScreen> {
-  int workoutNum = 0, kcalNum = 0, minute = 0;
-  int? level;
-
-  Map<String, dynamic> user = {
-    "fullname": "banhsbao",
-    "isFirstTime": true,
-  };
-
+  AccountModel user = AccountModel(email: "", fullname: "");
 
   Widget _buildDialogOptionCard(String title, String description, int level, StateSetter setState){
     return GestureDetector(
       onTap:(){
         setState(() {
-          this.level = level;
+          user.level = level;
         });
       },
       child: Card(
-          color: this.level != level ? Colors.white.withOpacity(0.4) : Colors.blue,
+          color: user.level != level ? Colors.white.withOpacity(0.4) : Colors.blue,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
@@ -65,7 +62,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Icon(
-                      this.level != level ? Icons.check_circle_outline : Icons.check_circle,
+                      user.level != level ? Icons.check_circle_outline : Icons.check_circle,
                       color: Colors.white,
                       size: 30,
                     ),
@@ -82,7 +79,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
   Widget _buildDialog(){
     return StatefulBuilder(
       builder: (context, setState) {
-        if (level != -1){
+        if (user.level != -1){
           Future.delayed(const Duration(milliseconds: 300), () {
             Navigator.pop(context);
           });
@@ -141,20 +138,28 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
     );
   }
 
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
 
-  @override
-  void initState() {
-    super.initState();
-    workoutNum = 0;
-    kcalNum = 0;
-    minute = 0;
-    level = -1;
-    if (user["isFirstTime"]){
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
+
+
+  void displayFirstTimeDialog(){
+    if (user.isFirstTime){
       WidgetsBinding.instance?.addPostFrameCallback((_) async {
         await showDialog<String>(
           context: context,
           builder: (BuildContext context){
-            if (level != -1){
+            if (user.level != -1){
               Navigator.pop(context);
             }
             return _buildDialog();
@@ -162,9 +167,24 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
         );
       });
     }
-
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount().then((value) => displayFirstTimeDialog());
+      setState(() {});
+    });
+  }
+
+
+
+  @override
+  void deactivate() {
+    saveAccount().then((value) => super.deactivate());
+  }
 
   Widget _buildWorkoutInformationRow(){
     TextStyle numStyle = TextStyle(
@@ -182,19 +202,19 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
       children: [
         Column(
           children: [
-            Text(workoutNum.toString(), style: numStyle),
+            Text(user.workoutNum.toString(), style: numStyle),
             Text("WORKOUT", style: typeStyle),
           ],
         ),
         Column(
           children: [
-            Text(kcalNum.toString(), style: numStyle,),
+            Text(user.kcalNum.toString(), style: numStyle,),
             Text("KCAL", style: typeStyle),
           ],
         ),
         Column(
           children: [
-            Text(minute.toString(), style: numStyle),
+            Text(user.minute.toString(), style: numStyle),
             Text("MINUTE", style: typeStyle),
           ],
         ),
@@ -317,7 +337,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
               colors: [Colors.blueAccent, Colors.white])),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        drawer: CustomerDrawer.builder(context, "BanhsBao", Image.asset("assets/images/miku.png")),
+        drawer: CustomerDrawer.builder(context, user.fullname, Image.asset("assets/images/miku.png")),
         appBar: CustomerAppbar.builder("HOME PAGE"),
         body: SingleChildScrollView(
           child: Padding(

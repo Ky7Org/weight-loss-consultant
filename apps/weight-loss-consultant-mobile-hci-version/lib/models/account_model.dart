@@ -1,52 +1,41 @@
-import 'package:flutter/cupertino.dart';
+class AccountModel {
+  late String email;
+  late String fullname;
+  int level = -1;
+  int workoutNum = 0;
+  int kcalNum = 0;
+  int minute = 0;
+  bool isFirstTime = true;
 
-class AccountModel extends ChangeNotifier{
-  late String _fullname;
-  late String _email;
-  late int _workoutLevel;
-  late int _workoutNum;
-  late int _kcalNum;
-  late int _minuteNum;
+  AccountModel(
+      {required this.email,
+      required this.fullname,
+      this.level = -1,
+      this.workoutNum = 0,
+      this.kcalNum = 0,
+      this.minute = 0,
+      this.isFirstTime = true});
 
-  String get fullname => _fullname;
-
-  set fullname(String value) {
-    _fullname = value;
-    notifyListeners();
+  factory AccountModel.fromJson(Map<String, dynamic> parsedJson) {
+    return AccountModel(
+      email: parsedJson['email'] ?? "",
+      fullname: parsedJson['fullname'] ?? "",
+      level: parsedJson['level'] ?? -1,
+      kcalNum: parsedJson['kcalNum'] ?? 0,
+      minute: parsedJson['minute'] ?? 0,
+      isFirstTime: parsedJson['isFirstTime'] ?? true,
+    );
   }
 
-  String get email => _email;
-
-  set email(String value) {
-    _email = value;
-    notifyListeners();
-  }
-
-  int get minuteNum => _minuteNum;
-
-  set minuteNum(int value) {
-    _minuteNum = value;
-    notifyListeners();
-  }
-
-  int get kcalNum => _kcalNum;
-
-  set kcalNum(int value) {
-    _kcalNum = value;
-    notifyListeners();
-  }
-
-  int get workoutNum => _workoutNum;
-
-  set workoutNum(int value) {
-    _workoutNum = value;
-    notifyListeners();
-  }
-
-  int get workoutLevel => _workoutLevel;
-
-  set workoutLevel(int value) {
-    _workoutLevel = value;
-    notifyListeners();
+  Map<String, dynamic> toJson() {
+    return {
+      "email": email,
+      "fullname": fullname,
+      "level": level,
+      "workoutNum": workoutNum,
+      "kcalNum": kcalNum,
+      "minute": minute,
+      "isFirstTime": isFirstTime,
+    };
   }
 }

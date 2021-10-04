@@ -5,7 +5,7 @@ import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dar
 
 void main(){
   runApp(const MaterialApp(
-    initialRoute: RoutePath.customerMainScreen,
+    initialRoute: RoutePath.loginScreen,
     onGenerateRoute: RouteGenerator.generateRoute,
   ));
 }
