@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/custom_dialog.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/services/diet_service.dart';
 
@@ -14,12 +18,33 @@ class TodayDietScreen extends StatefulWidget {
 class _TodayDietScreenState extends State<TodayDietScreen> {
 
   Map<String, List<DietModel>> _todayDiets = {};
+  AccountModel user = AccountModel(email: "", fullname: "");
+
   static final DietService _dietService = DietService();
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
 
   @override
   void initState() {
     super.initState();
-    _todayDiets = _dietService.getTodayDiet(1);
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount().then((value) {
+        _todayDiets = _dietService.getTodayDiet(user.level);
+      });
+      setState(() {});
+    });
   }
 
   PreferredSize _buildAppBar(){

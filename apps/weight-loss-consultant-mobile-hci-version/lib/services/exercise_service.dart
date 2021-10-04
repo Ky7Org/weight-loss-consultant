@@ -34,7 +34,7 @@ class ExerciseService{
     List<ExerciseModel> models = List.empty(growable: true);
     final _random = Random();
     int i = 0;
-    while (i < 10){
+    while (i < 15){
       var element = ExerciseList.listExercise[_random.nextInt(ExerciseList.listExercise.length)];
       if (models.contains(element)) continue;
       models.add(element);

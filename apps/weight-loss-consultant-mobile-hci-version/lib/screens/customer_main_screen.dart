@@ -22,6 +22,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
       onTap:(){
         setState(() {
           user.level = level;
+          saveAccount();
         });
       },
       child: Card(
