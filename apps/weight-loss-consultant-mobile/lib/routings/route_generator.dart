@@ -46,17 +46,9 @@ class RouteGenerator{
           return RecoverPasswordPage();
         });
       case RoutePath.customerHomePage:
-        if (args is Map<dynamic, dynamic>){
-          return MaterialPageRoute(builder: (_){
-            return CustomerHomePage(data: args,);
-          });
-        }
-        if (args == null){
           return MaterialPageRoute(builder: (_){
             return CustomerHomePage();
-          });
-        }
-        return _errorRoute();
+        });
       case RoutePath.chatPage:
         return MaterialPageRoute(builder: (_){
           return ChatPage();
