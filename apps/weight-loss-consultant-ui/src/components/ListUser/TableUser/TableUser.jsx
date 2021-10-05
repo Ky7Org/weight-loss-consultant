@@ -15,6 +15,7 @@ const TableUser = (props) => {
     'action',
     'phone',
   ]);
+
   const { dataEmpl } = props;
   const [isModalShown, setIsModalShown] = useState(false);
   const [modalOptions, setModalOptions] = useState(
