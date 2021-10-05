@@ -81,45 +81,5 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     );
     return result;
   }
-  //SORT by EMAIL
-  async orderByEmailAscAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
-    //providing alias
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.email', 'ASC');
-    return paginate<CustomerEntity>(queryBuilder, options);
-  }
-
-  async orderByEmailDescAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.email', 'DESC');
-    return paginate<CustomerEntity>(queryBuilder, options);
-  }
-  //
-  //SORT by FULLNAME
-  async orderByFullNameAscAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.fullname', 'ASC');
-    return paginate<CustomerEntity>(queryBuilder, options);
-  }
-
-  async orderByFullNameDescAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.fullname', 'DESC');
-    return paginate<CustomerEntity>(queryBuilder, options);
-  }
-  //
-  //SORT by DOB
-  async orderByDOBAscAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.dob', 'ASC');
-    return paginate<CustomerEntity>(queryBuilder, options);
-  }
-
-  async orderByDOBDescAndPaginate(options: IPaginationOptions) : Promise<Pagination<CustomerEntity>>{
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.dob', 'DESC');
-    return paginate<CustomerEntity>(queryBuilder, options);
-  }
-  //
-
+ 
 }
