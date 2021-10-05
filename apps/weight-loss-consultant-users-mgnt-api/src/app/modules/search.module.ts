@@ -12,18 +12,20 @@ import {CustomerService} from "../services/impl/customer.service.impl";
 import {CustomerMapper} from "../mappers/customer.mapper";
 import {SortingAndFilteringController} from "../controllers/sorting-filtering.controller";
 import {SortingAndFilteringService} from "../services/sorting-filtering.service";
+import {SearchService} from "../services/search.service";
+import {SearchController} from "../controllers/search.controller";
 
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([AdminRepository, TrainerRepository, CustomerRepository])],
   providers:
-    [ SortingAndFilteringService],
+    [ SearchService],
   exports: [
-     SortingAndFilteringService
+     SearchService
   ],
-  controllers: [SortingAndFilteringController]
+  controllers: [SearchController]
 })
-export class SortingAndFilteringModule {
+export class SearchModule {
 
 }
