@@ -195,7 +195,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                   ),
                   GestureDetector(
                     onTap: (){
-                      Navigator.pushNamed(context, RoutePath.chatPage);
+                      Navigator.pushNamed(context, RoutePath.myMessagePage);
                     },
                     child: SizedBox(
                       height: 118,
