@@ -187,8 +187,6 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GenericAppBar.builder("Trainer Message"),
-      drawer: CustomerDrawer.builder(
-          "Banhs bao", Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
       body: SafeArea(
         bottom: false,
         child: Chat(

@@ -11,4 +11,5 @@ class RoutePath{
   static const String resetPasswordPage = "/resetPassword";
   static const String registerPage = "/register";
   static const String myMessagePage = "/myMessage";
+  static const String settingPage = "/setting";
 }

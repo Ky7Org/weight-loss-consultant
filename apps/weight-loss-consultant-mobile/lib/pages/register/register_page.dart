@@ -5,33 +5,36 @@ import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/form_error_messages.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
-import 'package:weight_loss_consultant_mobile/services/login_service.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_register_service.dart';
 import 'package:weight_loss_consultant_mobile/utils/validator.dart';
 
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  bool _passwordVisible = false;
 
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
   final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
+  final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
 
   @override
   void initState() {
     _passwordVisible = false;
+    _confirmPasswordVisible = false;
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Sign in"),
+      appBar: GenericAppBar.builder("Create Account"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 30, 20, 30),
@@ -50,18 +53,13 @@ class _LoginPageState extends State<LoginPage> {
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
                 child: Align(
                     alignment: Alignment.topLeft,
-                    child: Container(
-                      width: 200,
-                      child: Text(
-                        "Welcome back!",
-                        style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.PRIMARY_WORD_COLOR
-                        ),
-                      ),
-                    )
-                ),
+                    child: Text(
+                      "Join our Training community",
+                      style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.PRIMARY_WORD_COLOR),
+                    )),
               ),
               Form(
                   key: _formKey,
@@ -69,12 +67,13 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Container(
                         padding:
-                        EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                         margin:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 0),
                         decoration: BoxDecoration(
                             color: AppColors.INPUT_COLOR,
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
                           controller: _email,
                           validator: (email) {
@@ -84,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                               return FormErrorMessage.emailInvalid;
                           },
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(fontSize: 30),
+                          style: TextStyle(fontSize: 20),
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             border: InputBorder.none,
@@ -99,20 +98,20 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Container(
                         padding:
-                        EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                         margin:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 0),
                         decoration: BoxDecoration(
                             color: AppColors.INPUT_COLOR,
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
-                          validator: (password){
-                            if (!password!.isEmpty)
-                              return null;
-                            else
+                          validator: (val){
+                            if (val!.isEmpty)
                               return FormErrorMessage.passwordInvalid;
+                            return null;
                           },
+                          controller: _pass,
                           obscureText: !_passwordVisible,
                           enableSuggestions: false,
                           autocorrect: false,
@@ -144,6 +143,54 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                        margin:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                        decoration: BoxDecoration(
+                            color: AppColors.INPUT_COLOR,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: TextFormField(
+                          validator: (val){
+                            if(val!.isEmpty)
+                              return FormErrorMessage.confirmPasswordInvalid;
+                            if(val != _pass.text)
+                              return FormErrorMessage.confirmPasswordMissMatch;
+                            return null;
+                          },
+                          controller: _confirmPass,
+                          obscureText: !_confirmPasswordVisible,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          style: TextStyle(fontSize: 30),
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                // Based on passwordVisible state choose the icon
+                                _confirmPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                              onPressed: () {
+                                // Update the state i.e. toogle the state of passwordVisible variable
+                                setState(() {
+                                  _confirmPasswordVisible = !_confirmPasswordVisible;
+                                });
+                              },
+                            ),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            border: InputBorder.none,
+                            labelText: 'Password',
+                            labelStyle: TextStyle(
+                                fontSize: 15,
+                                color: AppColors.PRIMARY_WORD_COLOR,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      Container(
                         height: 64,
                         width: double.infinity,
                         margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
@@ -156,18 +203,20 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState?.save();
-                              LoginService service = LoginService(
+                              CustomerRegisterService service = CustomerRegisterService(
                                 email: _email.text,
-                                password: _password.text,
+                                password: _pass.text,
                               );
-                              dynamic result = await service.login();
-                              if (result != null) {
-                                Navigator.pushNamedAndRemoveUntil(context, RoutePath.customerHomePage, (route) => false);
+                              bool result = await service.registerCustomer();
+                              if (result) {
+                                Navigator.pushNamed(context, RoutePath.trainerRegisterSuccessfullyPage, arguments: {
+                                  "email": _email.text
+                                });
                               }
                             }
                           },
                           child: Text(
-                            "Sign in",
+                            "Sign Up",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -176,28 +225,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   )),
-              InkWell(
-                  child: new Text(
-                      "Forget password?",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, RoutePath.recoverPasswordPage);
-                  }
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              Text(
-                  "Connect with your social account",
+              Text("Connect with your social account",
                   style: TextStyle(
-                      color: HexColor("#B6C5D1"),
-                  )
-              ),
+                    color: HexColor("#B6C5D1"),
+                  )),
               SizedBox(
                 height: 20,
               ),

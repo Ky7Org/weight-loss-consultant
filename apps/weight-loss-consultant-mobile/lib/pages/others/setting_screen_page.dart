@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/customer_sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
-
-import 'customer_home_page.dart';
 
 class SettingWidget extends StatelessWidget {
   final IconData icon;
@@ -45,28 +46,40 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  PanelController _pc = new PanelController();
+
   @override
   Widget build(BuildContext context) {
-    PanelController _pc = new PanelController();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: GenericAppBar.builder('Setting'),
-      bottomNavigationBar: bottom_navigator(
+      bottomNavigationBar: CustomerBottomNavigator(
         pc: _pc,
+        selectedIndex: CustomerBottomNavigatorIndex.SETTING,
+
       ),
-      body: Padding(
+      body: SlidingUpPanel(
+        controller: _pc,
+        panel: CategoryPanel(),
+        minHeight: 0,
+        maxHeight: 400,
+        body: Padding(
         padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
         child: Column(
           children: [
             SettingWidget(Icons.settings_outlined, "Account"),
             SettingWidget(Icons.payment_outlined, "Payment Account"),
             SettingWidget(Icons.notifications_none, "Notification"),
-            SizedBox(height: 50,),
             SettingWidget(Icons.contact_support_outlined, "Support"),
             SettingWidget(Icons.sticky_note_2_outlined, "Terms & Policies"),
+            SettingWidget(Icons.logout_outlined, "Logout"),
           ],
         ),
+      ),
       )
+
+
+
     );
   }
 }
