@@ -15,6 +15,7 @@ export class AuthController {
   @Post('/login')
   async login(@Request() req) : Promise<LoginResponse>{
     const dto: LoginRequest = req.user;
+    console.log("calling")
     return await this.authService.login(dto);
   }
 }
