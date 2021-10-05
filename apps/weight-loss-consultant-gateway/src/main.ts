@@ -3,14 +3,22 @@
  * This is only a minimal backend to get started.
  */
 
-import {Logger} from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from "./app/modules/app.module";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-
+import * as fs from 'fs';
+import * as dotenv from 'dotenv';
+import { ENV_FILE_PATH } from './app/constant';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
+  console.log(settings);
+  const app = await NestFactory.create(AppModule.forRoot(settings));
+  const globalPrefix = settings.API_ENDPOINT;
+  app.setGlobalPrefix(globalPrefix);
+  app.useGlobalPipes(new ValidationPipe());
+
   const port = process.env.PORT || 5000;
 
   const config = new DocumentBuilder()

@@ -1,4 +1,4 @@
-import { Controller, UseGuards } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import {AdminService} from "../services/impl/admin.service.impl"
 import {CreateAdminDto} from "../dtos/admin/create-admin.dto";
 import {UpdateAdminDto} from "../dtos/admin/update-admin.dto";
@@ -6,7 +6,15 @@ import {MessagePattern, Payload} from "@nestjs/microservices";
 import {GET_ALL_ADMINS, GET_ADMIN_BY_EMAIL, CREATE_ADMIN, UPDATE_ADMIN, DELETE_ADMIN} from "../../../../users-management-service-routes";
 import {AdminEntity} from "../entities/admin.entity";
 import {DeleteResult, UpdateResult} from "typeorm";
-import { FirebaseAuthGuard } from '../guards/firebase-auth.guard';
+import {
+  ADMIN_VIEW_DETAIL,
+  CUSTOMER_VIEW_DETAIL,
+  TRAINER_VIEW_DETAIL
+} from '../../../../weight-loss-consultant-authentication/src/app/services/authentication.service';
+import { CustomerEntity } from '../entities/customer.entity';
+import { CustomerService } from '../services/impl/customer.service.impl';
+import { TrainerService } from '../services/impl/trainer.service.impl';
+import { TrainerEntity } from '../entities/trainer.entity';
 
 type UpdateAdminType = {
   email: string;
@@ -16,24 +24,39 @@ type UpdateAdminType = {
 @Controller()
 export class AdminController {
 
-  constructor(private readonly userService: AdminService) {}
-  private readonly logger = new Logger(AdminController.name);
+  constructor(private readonly adminService: AdminService,
+              private readonly customerService: CustomerService,
+              private readonly trainerService: TrainerService) {}
 
   @MessagePattern({cmd: GET_ALL_ADMINS})
-  @UseGuards(FirebaseAuthGuard)
   async index(): Promise<AdminEntity[]> {
     try {
-      return this.userService.findAll();
+      return this.adminService.findAll();
     } catch (e) {
       console.error(e);
       return Promise.reject(e);
     }
   }
 
+  @MessagePattern({cmd: ADMIN_VIEW_DETAIL})
+  async viewAdminDetailByUsername(@Payload() username: string): Promise<AdminEntity> {
+    return this.adminService.viewDetail(username);
+  }
+
+  @MessagePattern({cmd: CUSTOMER_VIEW_DETAIL})
+  async viewCustomerDetailByUsername(@Payload() username: string): Promise<CustomerEntity> {
+    return this.customerService.findOneCustomer(username);
+  }
+
+  @MessagePattern({cmd: TRAINER_VIEW_DETAIL})
+  async viewTrainerDetailByUsername(@Payload() username: string): Promise<TrainerEntity> {
+    return this.trainerService.findOneTrainer(username);
+  }
+
   @MessagePattern({cmd: GET_ADMIN_BY_EMAIL})
   async getByEmail(@Payload() email: string): Promise<AdminEntity> {
     try {
-      return this.userService.viewDetail(email);
+      return this.adminService.viewDetail(email);
     } catch (e) {
       return Promise.reject(e);
     }
@@ -42,7 +65,7 @@ export class AdminController {
   @MessagePattern({cmd: CREATE_ADMIN})
   async create(@Payload() dto: CreateAdminDto): Promise<AdminEntity> {
     try {
-      return this.userService.create(dto);
+      return this.adminService.create(dto);
     } catch (e) {
       console.error(e);
       return Promise.reject(e);
@@ -52,7 +75,7 @@ export class AdminController {
   @MessagePattern({cmd: UPDATE_ADMIN})
   async update(@Payload() payload: UpdateAdminType): Promise<UpdateResult> {
     try {
-      return this.userService.edit(payload.dto);
+      return this.adminService.edit(payload.dto);
     } catch (e) {
       console.error(e);
       return Promise.reject(e);
@@ -62,14 +85,14 @@ export class AdminController {
   @MessagePattern({cmd: DELETE_ADMIN})
   async delete(@Payload() email): Promise<DeleteResult> {
     try {
-      return this.userService.delete(email);
+      return this.adminService.delete(email);
     } catch (e) {
       console.error(e);
       return Promise.reject(e);
     }
   }
 
-  //sort by email endpoint
+ /* //sort by email endpoint
   @Roles(Role.Admin)
   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
@@ -163,6 +186,6 @@ export class AdminController {
         limit,
       })
     }
-  }
+  }*/
 
 }

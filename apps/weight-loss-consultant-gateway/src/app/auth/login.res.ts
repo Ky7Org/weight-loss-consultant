@@ -2,6 +2,6 @@ export class LoginResponse {
   accessToken? : string;
   email: string;
   fullname: string;
-  avartar: string;
+  avatar: string;
   role: string;
 }

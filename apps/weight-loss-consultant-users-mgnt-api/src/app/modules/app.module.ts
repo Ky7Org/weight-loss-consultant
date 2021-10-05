@@ -9,7 +9,6 @@ import {TrainerModule} from "./trainer.module";
 import {CustomerModule} from "./customer.module";
 import {CustomerEntity} from "../entities/customer.entity";
 import { ENV_FILE_PATH } from '../constants/env-file-path';
-import {AuthModule} from "../auth/auth.module";
 import {CampaignEntity} from "../entities/campaign.entity";
 import {PackageEntity} from "../entities/package.enttiy";
 import {CampaignModule} from "./campaign.module";
@@ -46,7 +45,6 @@ export class AppModule {
         AdminModule,
         TrainerModule,
         CustomerModule,
-        AuthModule,
         CampaignModule,
         PackageModule
       ],

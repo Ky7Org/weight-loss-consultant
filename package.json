@@ -31,7 +31,6 @@
     "test:scheduling-api": "nx run weight-loss-consultant-scheduling-api:test",
     "test:authentication": "nx run weight-loss-consultant-authentication:test",
     "test:packages-mgnt-api": "nx run weight-loss-consultant-packages-mgnt-api:test",
-    "test:packages-mgnt-api": "nx run weight-loss-consultant-packages-mgnt-api:test",
     "coverage:gateway": "nx run weight-loss-consultant-gateway:test --coverage",
     "coverage:users-mgnt-api": "nx run weight-loss-consultant-users-mgnt-api:test --coverage",
     "coverage:health-mgnt-api": "nx run weight-loss-consultant-health-mgnt-api:test --coverage",

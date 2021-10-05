@@ -39,7 +39,7 @@ export class CampaignService extends BaseService<CampaignEntity, CampaignReposit
       throw new NotFoundException(`Not found customer with email: ${customerEmail}`)
     }
     const existeCampaign = await this.viewDetail(dto.id);
-    if (existeCampaign.length === 0) {
+    if (!existeCampaign) {
       throw new NotFoundException(`Not found campaign with id: ${id}`)
     }
     const entity: CampaignEntity = await CampaignMapper.mapUpdateCampaignDtoToEntity(dto, cust);
@@ -49,14 +49,14 @@ export class CampaignService extends BaseService<CampaignEntity, CampaignReposit
 
   async delete(id): Promise<DeleteResult> {
     const existeCampaign = await this.viewDetail(id);
-    if (existeCampaign.length === 0) {
+    if (!existeCampaign) {
       throw new NotFoundException(`Not found campaign with id: ${id}`)
     }
     return await this.repository.delete(id);
   }
 
-  async viewDetail(id): Promise<CampaignEntity[]> {
-    return await this.repository.find({
+  async viewDetail(id): Promise<CampaignEntity> {
+    return await this.repository.findOne({
       relations: ["customer"],
       where: [{
         id: `${id}`

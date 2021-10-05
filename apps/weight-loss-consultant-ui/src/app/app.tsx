@@ -67,7 +67,7 @@ export function App() {
               onClick={() => {
                 signInWithPopup(auth, provider).then(({user}) => {
                   return user.getIdToken().then(token => {
-                    return fetch('http://localhost:3000/resources', {
+                    return fetch('resources', {
                       headers: {
                         'Accept': 'application/json',
                         'Authorization': `Bearer ${token}`

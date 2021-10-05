@@ -2,7 +2,6 @@ import {Controller} from "@nestjs/common";
 import {CustomerService} from "../services/impl/customer.service.impl";
 import {CreateCustDto} from "../dtos/customer/create-customer.dto";
 import {UpdateCustDto} from "../dtos/customer/update-customer-dto";
-import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {MessagePattern, Payload} from "@nestjs/microservices";
 import {
   CREATE_CUSTOMER,

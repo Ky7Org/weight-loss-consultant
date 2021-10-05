@@ -10,6 +10,13 @@ import { JWT_CONFIG } from '../../constant';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AdminModule } from './admin.module';
 import { AccountModule } from './account.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import {
+  AUTHENTICATION_SERVICE_NAME,
+  AUTHENTICATION_SERVICE_PORT,
+  HOST,
+  USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT
+} from '../../../../../constant';
 
 @Module({
   imports: [
@@ -18,8 +25,18 @@ import { AccountModule } from './account.module';
     AdminModule,
     AccountModule,
     PassportModule,
+    ClientsModule.register([
+      {
+        name: USERS_MANAGEMENT_SERVICE_NAME,
+        transport: Transport.TCP,
+        options: {
+          host: HOST,
+          port: USERS_MANAGEMENT_SERVICE_PORT
+        }
+      }
+    ]),
     JwtModule.registerAsync({
-      imports:[ConfigModule],
+      imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('JWT_SECRET'),
         signOptions: {
@@ -27,7 +44,7 @@ import { AccountModule } from './account.module';
         }
       }),
       inject: [ConfigService]
-  })],
+    })],
   providers: [AuthenticationService, LocalStrategy, JwtStrategy],
   exports: [AuthenticationService]
 })

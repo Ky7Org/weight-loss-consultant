@@ -34,8 +34,9 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository>{
     return await this.repository.save(entity);
   }
 
-  async edit(dto : UpdateAdminDto, email: string) : Promise<UpdateResult> {
+  async edit(dto : UpdateAdminDto) : Promise<UpdateResult> {
     const entity : AdminEntity = await AdminMapper.mapUpdateAdminDTOToEntity(dto);
+    const email = dto.email;
     if (email !== entity.email) {
       throw new ConflictException(`Param: ${email} must match with request body email : ${entity.email} `)
     }

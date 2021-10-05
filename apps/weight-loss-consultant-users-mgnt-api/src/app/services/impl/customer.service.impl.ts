@@ -30,8 +30,9 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     return await this.repository.save(entity);
   }
 
-  async edit(dto: UpdateCustDto, email : string): Promise<UpdateResult> {
+  async edit(dto: UpdateCustDto): Promise<UpdateResult> {
     const entity: CustomerEntity = await CustomerMapper.mapUpdateCustDtoToEntity(dto);
+    const email = dto.email;
     if (email !== entity.email) {
       throw new ConflictException(`Param: ${email} must match with ${entity.email} in request body`)
     }
@@ -54,8 +55,8 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     return await this.repository.findOne(id);
   }
 
-  async viewDetail(id): Promise<CustomerEntity[]> {
-    return await this.repository.find({
+  async viewDetail(id): Promise<CustomerEntity> {
+    return this.repository.findOne({
       relations: ["campaigns"],
       where: [{
         email : `${id}`
@@ -66,7 +67,7 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
   //testing
   async getAllCustomerWithCampaignDetail(): Promise<CustomerEntity[]> {
     const value = "c";
-    const result = await this.repository.find(
+    const result = this.repository.find(
       {
         select: ["email", "dob"],
         where:{

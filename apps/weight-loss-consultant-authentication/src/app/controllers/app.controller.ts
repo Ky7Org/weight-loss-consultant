@@ -1,10 +1,6 @@
 import { Body, Controller, Get, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { AuthenticationService } from '../services/authentication.service';
-import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { CustomerService } from '../services/customer.service';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { CustomerDTO } from '../dtos/customer.dto';
-import { TrainerDTO } from '../dtos/trainer.dto';
 import { MailService } from '../services/mail.service';
 import { ResetPasswordRequestModel } from '../models/reset-password-request-model';
 import { generateOtp } from '../utils/otp-generator';
@@ -17,9 +13,11 @@ import { AccountDTO } from '../dtos/acount.dto';
 import { AccountService } from '../services/account.service';
 import { RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status } from '../../constant';
 import { TrainerService } from '../services/trainer.service';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { LoginRequestModel } from '../models/login-request-model';
-import { LoginResponseModel } from '../models/login-response-model';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { LOGIN } from '../../../../weight-loss-consultant-gateway/src/app/services/authentication/authentication.service';
+import { VALIDATE_AUTH_USER } from '../../../../weight-loss-consultant-gateway/src/app/auth/strategies/local.strategy';
+import { LoginRequest } from '../../../../weight-loss-consultant-gateway/src/app/auth/login.req';
+import { LoginResponse } from '../../../../weight-loss-consultant-gateway/src/app/auth/login.res';
 
 @Controller()
 export class AppController {
@@ -33,39 +31,17 @@ export class AppController {
               private readonly accountService: AccountService) {
   }
 
-
-  @Post('login')
-  @UseGuards(LocalAuthGuard)
-  @ApiOperation({ summary: 'Authentication account' })
-  @ApiBody({
-    type: LoginRequestModel,
-    required: true,
-    isArray: false,
-  })
-  @ApiResponse({
-    status: 200,
-    type: LoginResponseModel
-  })
-  async login(@Request() req): Promise<any> {
-    const dto: CustomerDTO | TrainerDTO = req.user;
-    return await this.authenticationService.login(dto);
-    // return new LoginResponseModel(result.accessToken);
+  @MessagePattern({cmd: VALIDATE_AUTH_USER})
+  async validateAuthenticatingUser(@Payload() payload) {
+    return this.authenticationService.validateAccount(payload.email, payload.password);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('test/jwt')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Test jwt' })
-  @ApiResponse({
-    status: 200,
-    type: String
-  })
-  getAll(@Request() req): string {
-    return "123";
+  @MessagePattern({cmd: LOGIN})
+  async login(@Payload() credential: LoginRequest): Promise<LoginResponse> {
+    return await this.authenticationService.login(credential);
   }
 
   @Post("reset-password")
-  @ApiOperation({ summary: 'Reset password' })
   async resetPassword(@Body() requestModel: ResetPasswordRequestModel, @Res() response): Promise<void> {
     const email = requestModel.email;
     try {
@@ -92,7 +68,6 @@ export class AppController {
   }
 
   @Post('reset-password/confirm')
-  @ApiOperation({ summary: 'Confirm reset password' })
   async confirmChangePassword(@Body() requestModel: ResetPasswordConfirmRequestModel, @Res() response): Promise<void> {
     try {
       const { email, otp, newPassword } = requestModel;
