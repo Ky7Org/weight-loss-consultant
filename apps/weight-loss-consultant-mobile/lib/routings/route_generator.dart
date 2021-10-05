@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:weight_loss_consultant_mobile/pages/chat_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/others/chat_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_home_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/my_message_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/others/initial_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/others/setting_screen_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/register/register_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_detail_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/authentication/login_page.dart';
-import 'package:weight_loss_consultant_mobile/pages/initial_page.dart';
-import 'package:weight_loss_consultant_mobile/pages/get_started_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/others/get_started_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/authentication/recorver_password_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/authentication/reset_password_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/register/trainer_register_page.dart';
@@ -72,6 +73,10 @@ class RouteGenerator{
       case RoutePath.myMessagePage:
         return MaterialPageRoute(builder: (_){
           return MyMessagesPage();
+        });
+      case RoutePath.settingPage:
+        return MaterialPageRoute(builder: (_){
+          return SettingScreen();
         });
       default:
         return _errorRoute();
