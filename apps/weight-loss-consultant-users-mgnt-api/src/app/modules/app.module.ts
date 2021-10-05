@@ -15,6 +15,7 @@ import {PackageEntity} from "../entities/package.enttiy";
 import {CampaignModule} from "./campaign.module";
 import {PackageModule} from "./package.module";
 import {SortingAndFilteringModule} from "./sorting-filtering.module";
+import {SearchModule} from "./search.module";
 
 
 export class AppModule {
@@ -51,7 +52,8 @@ export class AppModule {
         AuthModule,
         CampaignModule,
         PackageModule,
-        SortingAndFilteringModule
+        SortingAndFilteringModule,
+        SearchModule
       ],
     };
   }

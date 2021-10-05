@@ -1,11 +1,4 @@
 import {Get, Injectable} from "@nestjs/common";
-import {InjectRepository} from "@nestjs/typeorm";
-import {AdminEntity} from "../entities/admin.entity";
-import {Repository} from "typeorm";
-import {TrainerEntity} from "../entities/trainer.entity";
-import {CustomerEntity} from "../entities/customer.entity";
-import {IPaginationOptions, paginate, Pagination} from "nestjs-typeorm-paginate";
-import {Order, Role} from "../constants/enums";
 import {TrainerRepository} from "../repositories/trainer.repository";
 import {AdminRepository} from "../repositories/admin.repository";
 import {PaginationDto} from "../dtos/pagination/pagination.dto";
@@ -45,14 +38,14 @@ export class SortingAndFilteringService {
         break;
       }
       default: {
-        const result = await this.adminRepository.createQueryBuilder()
-          .where("gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
+        const result = await this.adminRepository.createQueryBuilder("admin")
+          .where("admin.gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
           .getMany()
-        const totalCount = await this.adminRepository.createQueryBuilder()
-          .where("gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
+        const totalCount = await this.adminRepository.createQueryBuilder("admin")
+          .where("admin.gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
           .getCount();
         const res = await this.mappingResultPaginate(totalCount, page, limit, result);
         return res;
@@ -65,7 +58,8 @@ export class SortingAndFilteringService {
     switch (genderFilter) {
       case "" : {
         const totalCount = await this.trainerRepository.count()
-        const result = await this.trainerRepository.createQueryBuilder()
+        const result = await this.trainerRepository.createQueryBuilder("trainer")
+          .leftJoinAndSelect("trainer.packages", "package")
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
@@ -75,14 +69,16 @@ export class SortingAndFilteringService {
         break;
       }
       default: {
-        const result = await this.trainerRepository.createQueryBuilder()
-          .where("gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
+        const result = await this.trainerRepository.createQueryBuilder("trainer")
+          .leftJoinAndSelect("trainer.packages", "package")
+          .where("trainer.gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
           .getMany()
-        const totalCount = await this.trainerRepository.createQueryBuilder()
-          .where("gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
+        const totalCount = await this.trainerRepository.createQueryBuilder("trainer")
+          .where("trainer.gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
+          .leftJoinAndSelect("trainer.packages", "package")
           .getCount();
         const res = await this.mappingResultPaginate(totalCount, page, limit, result);
         return res;
@@ -95,7 +91,8 @@ export class SortingAndFilteringService {
     switch (genderFilter) {
       case "" : {
         const totalCount = await this.customerRepository.count()
-        const result = await this.customerRepository.createQueryBuilder()
+        const result = await this.customerRepository.createQueryBuilder("customer")
+          .leftJoinAndSelect("customer.campaigns", "campaign")
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
@@ -105,14 +102,16 @@ export class SortingAndFilteringService {
         break;
       }
       default: {
-        const result = await this.customerRepository.createQueryBuilder()
+        const result = await this.customerRepository.createQueryBuilder("customer")
           .where("gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
+          .leftJoinAndSelect("customer.campaigns", "campaign")
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
           .getMany()
-        const totalCount = await this.customerRepository.createQueryBuilder()
-          .where("gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
+        const totalCount = await this.customerRepository.createQueryBuilder("customer")
+          .where("customer.gender = :gender", {gender: genderFilter === "Male" ? "Male" : "Female"})
+          .leftJoinAndSelect("customer.campaigns", "campaign")
           .getCount();
         const res = await this.mappingResultPaginate(totalCount, page, limit, result);
         return res;
