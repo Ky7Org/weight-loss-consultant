@@ -1,22 +1,15 @@
 import { Module } from '@nestjs/common';
 import { AuthenticationService } from '../services/authentication.service';
 import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from '../strategy/local.strategy';
 import { CustomerModule } from './customer.module';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from '../strategy/jwt.strategy';
 import { TrainerModule } from './trainer.module';
 import { JWT_CONFIG } from '../../constant';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AdminModule } from './admin.module';
 import { AccountModule } from './account.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import {
-  AUTHENTICATION_SERVICE_NAME,
-  AUTHENTICATION_SERVICE_PORT,
-  HOST,
-  USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT
-} from '../../../../../constant';
+import { HOST, USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT } from '../../../../../constant';
 
 @Module({
   imports: [
@@ -45,7 +38,7 @@ import {
       }),
       inject: [ConfigService]
     })],
-  providers: [AuthenticationService, LocalStrategy, JwtStrategy],
+  providers: [AuthenticationService],
   exports: [AuthenticationService]
 })
 export class AuthenticationModule {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Logger, Post, Res, UseFilters } from '@nestjs/common';
 import { AuthenticationService } from '../services/authentication.service';
 import { CustomerService } from '../services/customer.service';
 import { MailService } from '../services/mail.service';
@@ -13,15 +13,20 @@ import { AccountDTO } from '../dtos/acount.dto';
 import { AccountService } from '../services/account.service';
 import { RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status } from '../../constant';
 import { TrainerService } from '../services/trainer.service';
-import { MessagePattern, Payload } from '@nestjs/microservices';
-import { LOGIN } from '../../../../weight-loss-consultant-gateway/src/app/services/authentication/authentication.service';
-import { VALIDATE_AUTH_USER } from '../../../../weight-loss-consultant-gateway/src/app/auth/strategies/local.strategy';
-import { LoginRequest } from '../../../../weight-loss-consultant-gateway/src/app/auth/login.req';
-import { LoginResponse } from '../../../../weight-loss-consultant-gateway/src/app/auth/login.res';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
+import {
+  CONFIRM_CHANGE_PASSWORD,
+  EMAIL_PASSWORD_AUTHENTICATE_USER,
+  RESET_PASSWORD
+} from '../../../../authentication-routes';
+import { Observable } from 'rxjs';
+import { ExceptionFilter } from '../filters/rpc-exception.filter';
+import { LoginRequest } from '../models/login.req';
+import { LoginResponse } from '../models/login.res';
+import { RpcExceptionModel } from '../filters/rpc-exception.model';
 
 @Controller()
 export class AppController {
-  private readonly logger = new Logger(AppController.name);
 
   constructor(private customerService: CustomerService,
               private trainerService: TrainerService,
@@ -31,26 +36,23 @@ export class AppController {
               private readonly accountService: AccountService) {
   }
 
-  @MessagePattern({cmd: VALIDATE_AUTH_USER})
-  async validateAuthenticatingUser(@Payload() payload) {
-    return this.authenticationService.validateAccount(payload.email, payload.password);
+  @MessagePattern({cmd: EMAIL_PASSWORD_AUTHENTICATE_USER})
+  @UseFilters(new ExceptionFilter())
+  login(@Payload() credential: LoginRequest): Observable<LoginResponse> {
+    return this.authenticationService.login(credential);
   }
 
-  @MessagePattern({cmd: LOGIN})
-  async login(@Payload() credential: LoginRequest): Promise<LoginResponse> {
-    return await this.authenticationService.login(credential);
-  }
-
-  @Post("reset-password")
-  async resetPassword(@Body() requestModel: ResetPasswordRequestModel, @Res() response): Promise<void> {
+  @MessagePattern({cmd: RESET_PASSWORD})
+  @UseFilters(new ExceptionFilter())
+  async resetPassword(@Payload() requestModel: ResetPasswordRequestModel) {
     const email = requestModel.email;
     try {
       const tokenDTO = await this.resetPasswordTokenService.findLatestTokenByEmail(email);
       if (tokenDTO.expiredTime > new Date().getTime()) {
-        return response.status(400).json(
-          new ErrorResponseModel(400,
-            `Cannot request OTP for this email 2 times in ${RESET_PASSWORD_TOKEN_EXPIRED_TIME.MINUTE} minutes`,
-            'Bad request'));
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: `Cannot request OTP for this email 2 times in ${RESET_PASSWORD_TOKEN_EXPIRED_TIME.MINUTE} minutes`
+        } as RpcExceptionModel);
       }
     } catch (e) {
       //if no token then continue
@@ -64,34 +66,40 @@ export class AppController {
     tokenEntity.expiredTime = tokenEntity.createdTime + RESET_PASSWORD_TOKEN_EXPIRED_TIME.MILLISECOND;
     await this.resetPasswordTokenService.store(tokenEntity);
     await this.mailService.sendOTPEmail(requestModel.email, otp);
-    return response.status(200).json();
   }
 
-  @Post('reset-password/confirm')
-  async confirmChangePassword(@Body() requestModel: ResetPasswordConfirmRequestModel, @Res() response): Promise<void> {
+  @MessagePattern({cmd: CONFIRM_CHANGE_PASSWORD})
+  @UseFilters(new ExceptionFilter())
+  async confirmChangePassword(@Payload() requestModel: ResetPasswordConfirmRequestModel) {
     try {
       const { email, otp, newPassword } = requestModel;
       const tokenDTO = await this.resetPasswordTokenService.findLatestTokenByEmail(email);
       if (tokenDTO.otp !== otp) {
-        return response
-          .status(400)
-          .json(new ErrorResponseModel(400, 'Invalid otp', 'Bad request'));
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'Invalid OTP'
+        } as RpcExceptionModel);
       }
       if (tokenDTO.expiredTime < new Date().getTime() || tokenDTO.isInvalidated) {
-        return response
-          .status(400)
-          .json(new ErrorResponseModel(400, 'OTP is expired', 'Bad request'));
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'OTP is expired'
+        } as RpcExceptionModel);
       }
       const account: AccountDTO = await this.accountService.findAccountByEmail(email);
       if (account.status !== Status.ACTIVE){
-        return response.status(400).json(new ErrorResponseModel(400, "This account is inactive", 'Bad request'));
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'This account is inactivated'
+        } as RpcExceptionModel);
       }
       this.accountService.updatePassword(account, newPassword);
       this.resetPasswordTokenService.update(tokenDTO.id, {isInvalidated: true})
-      return response.status(200).json();
     } catch (e) {
-      this.logger.error(e);
-      return response.status(400).json(new ErrorResponseModel(400, e.message, 'Bad request'));
+      throw new RpcException({
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: e.message
+      } as RpcExceptionModel);
     }
   }
 }

@@ -13,15 +13,15 @@ import {
   Query,
   Res
 } from '@nestjs/common';
-import { TrainerService } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/services/impl/trainer.service.impl';
-import { Role } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/constants/enums';
-import { CreateTrainerDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/create-trainer';
-import { UpdateTrainerDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/update-trainer';
+import { TrainerService } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/services/impl/trainer.service.impl';
+import { Role } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/constants/enums';
+import { CreateTrainerDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/create-trainer';
+import { UpdateTrainerDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/update-trainer';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { AdminEntity } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/admin.entity';
-import { MissingParamsException } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/exceptions/missing.params';
-import { Roles } from '../author/roles.decorator';
-import { Public } from '../auth/public-decorator';
+import { AdminEntity } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/admin.entity';
+import { MissingParamsException } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/exceptions/missing.params';
+import { Roles } from '../../author/roles.decorator';
+import { Public } from '../../auth/public-decorator';
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
@@ -135,7 +135,7 @@ export class TrainerController {
   }
 
   //sort by email endpoint
-  @Roles(Role.Trainer, Role.Admin)
+/*  @Roles(Role.Trainer, Role.Admin)
   @ApiQuery({ name: 'page', type: Number, description: 'The current page index', example: 1 })
   @ApiQuery({ name: 'limit', type: Number, description: 'The max record of a page', example: 10 })
   @ApiQuery({ name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC' })
@@ -292,5 +292,5 @@ export class TrainerController {
         limit,
       })
     }
-  }
+  } */
 }

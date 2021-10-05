@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "build-and-start-prod:gateway": "npm run build:gateway",
     "start:ui": "nx run weight-loss-consultant-ui:serve",
     "start:gateway": "nx run weight-loss-consultant-gateway:serve",
     "start:users-mgnt-api": "nx run weight-loss-consultant-users-mgnt-api:serve",
@@ -82,8 +83,8 @@
     "lodash": "^4.17.21",
     "mime-types": "^2.1.32",
     "mysql": "^2.18.1",
-    "nestjs-typeorm-paginate": "^3.1.0",
     "nest-router": "^1.0.9",
+    "nestjs-typeorm-paginate": "^3.1.0",
     "passport": "^0.4.1",
     "passport-firebase-jwt": "^1.1.0",
     "passport-jwt": "^4.0.0",

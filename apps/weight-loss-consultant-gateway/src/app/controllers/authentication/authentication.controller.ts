@@ -1,6 +1,5 @@
-import { Body, Controller, Get, HttpStatus, Logger, Param, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { logger } from '@nrwl/tao/src/shared/logger';
 import { LoginRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/login-request-model';
 import { LoginResponseModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/login-response-model';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
@@ -8,17 +7,20 @@ import { ResetPasswordRequestModel } from '../../../../../weight-loss-consultant
 import { ResetPasswordConfirmRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/reset-password-confirm-request-model';
 import { Public } from '../../auth/public-decorator';
 import { LoginRequest } from '../../auth/login.req';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @ApiTags('Authentication')
 @ApiBearerAuth()
 @Controller(`/api/v1/auth`)
 export class AuthenticationController {
 
+  private readonly logger = new Logger(AuthenticationController.name);
+
   constructor(private readonly authenticationService: AuthenticationService) {
   }
 
   @Post('login')
-  @Public()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Authentication account' })
   @ApiBody({
     type: LoginRequestModel,
@@ -31,16 +33,12 @@ export class AuthenticationController {
   })
   async login(@Request() req, @Res() res) {
     const dto: LoginRequest = req.body;
-    console.log(dto);
     try {
       const result = await this.authenticationService.login(dto);
-      res.status(200).send(result);
-    } catch (e) {
-      logger.error(JSON.stringify(e));
-      if (e.status === 'error') {
-        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(e);
-      }
-      res.status(e.status).send(e);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -52,9 +50,9 @@ export class AuthenticationController {
     try {
       const result = await this.authenticationService.resetPassword(body);
       res.status(HttpStatus.OK).send(result);
-    } catch (e) {
-      logger.log(e);
-      res.status(e.status).end();
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -65,9 +63,9 @@ export class AuthenticationController {
     try {
       const result = await this.authenticationService.confirmChangePassword(body);
       res.status(HttpStatus.OK).send(result);
-    } catch (e) {
-      logger.log(e);
-      res.status(e.status).end();
+    } catch ({error}) {
+      this.logger.log(error);
+      res.status(error.statusCode).send(error);
     }
   }
 }

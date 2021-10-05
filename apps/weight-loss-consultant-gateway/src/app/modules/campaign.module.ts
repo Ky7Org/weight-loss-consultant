@@ -6,7 +6,7 @@ import {
   USERS_MANAGEMENT_SERVICE_NAME,
   USERS_MANAGEMENT_SERVICE_PORT,
 } from '../../../../../constant';
-import { CampaignController } from '../controllers/campaign.controller';
+import { CampaignController } from '../controllers/campaigns-management/campaign.controller';
 import { CampaignService } from '../services/campaign.service';
 
 

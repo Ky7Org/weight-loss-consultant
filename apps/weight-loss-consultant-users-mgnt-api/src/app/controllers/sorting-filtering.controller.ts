@@ -11,10 +11,8 @@ import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/sw
 import {CreatePackageDto} from "../dtos/package/create-package";
 import {UpdatePackageDto} from "../dtos/package/update-package";
 import {PackageService} from "../services/impl/package.service.impl";
-import {Roles} from "../author/roles.decorator";
 import {Role} from "../constants/enums";
 import {SortingAndFilteringService} from "../services/sorting-filtering.service";
-import {Public} from "../auth/public-decorator";
 import {Pagination} from "nestjs-typeorm-paginate";
 import {AdminEntity} from "../entities/admin.entity";
 import {TrainerEntity} from "../entities/trainer.entity";
@@ -33,7 +31,6 @@ export class SortingAndFilteringController {
 
 
 
-  @Public()
   @Post()
   @ApiBody({
     type: PaginationDto

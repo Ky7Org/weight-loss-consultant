@@ -3,15 +3,15 @@
  * This is only a minimal backend to get started.
  */
 
-import {Logger} from '@nestjs/common';
-import {NestFactory} from '@nestjs/core';
+import { Logger } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 
-import {AppModule} from './app/modules/app.module';
+import { AppModule } from './app/modules/app.module';
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
-import {ENV_FILE_PATH} from './constant';
-import {MicroserviceOptions, Transport} from "@nestjs/microservices";
-import {AUTHENTICATION_SERVICE_NAME, AUTHENTICATION_SERVICE_PORT, HOST} from "../../../constant";
+import { ENV_FILE_PATH } from './constant';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { AUTHENTICATION_SERVICE_NAME, AUTHENTICATION_SERVICE_PORT, HOST } from '../../../constant';
 
 
 async function bootstrap() {

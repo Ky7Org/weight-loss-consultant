@@ -1,7 +1,7 @@
-import {TrainerService} from '../trainer.service';
-import {TrainerRepository} from "../../repositories/trainer.repository";
+import { TrainerService } from '../trainer.service';
+import { TrainerRepository } from '../../repositories/trainer.repository';
 import { TrainerMapper } from '../../mappers/trainer.mapper';
-import {TrainerDTO} from "../../dtos/trainer.dto";
+import { TrainerDTO } from '../../dtos/trainer.dto';
 import { RedisCacheService } from '../redis-cache.service';
 
 describe('The TrainerService', () => {

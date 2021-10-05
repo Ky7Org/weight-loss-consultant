@@ -8,7 +8,7 @@ import {
 } from '../../../../../constant';
 import { AuthenticationController } from '../controllers/authentication/authentication.controller';
 import { AuthenticationService } from '../services/authentication/authentication.service';
-import { CustomerController } from '../controllers/customer.controller';
+import { CustomerController } from '../controllers/users-management/customer.controller';
 import { CustomerService } from '../services/customer.service';
 
 

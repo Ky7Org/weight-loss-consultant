@@ -1,4 +1,4 @@
-import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
+import {HttpStatus, Injectable } from '@nestjs/common';
 import {BaseService} from "../base.service";
 import {CustomerRepository} from "../../repositories/customer.repository";
 import {CustomerEntity} from "../../entities/customer.entity";
@@ -7,7 +7,8 @@ import {DeleteResult, Like, UpdateResult} from "typeorm";
 import {CustomerMapper} from "../../mappers/customer.mapper";
 import {CreateCustDto} from "../../dtos/customer/create-customer.dto";
 import {UpdateCustDto} from "../../dtos/customer/update-customer-dto";
-import {IPaginationOptions, paginate, Pagination} from "nestjs-typeorm-paginate";
+import { RpcException } from '@nestjs/microservices';
+import { RpcExceptionModel } from '../../filters/rpc-exception.model';
 
 @Injectable()
 export class CustomerService extends BaseService<CustomerEntity, CustomerRepository> {
@@ -21,38 +22,50 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     });
   }
 
-  async create(dto: CreateCustDto): Promise<CustomerEntity | null> {
+  async create(dto: CreateCustDto): Promise<CustomerEntity> {
     const entity: CustomerEntity = await CustomerMapper.mapCreateCustDtoToEntity(dto);
     const existedEmail = await this.repository.findOne(entity.email);
     if (existedEmail) {
-      throw new ConflictException(EMAIL_EXISTED_ERR);
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: EMAIL_EXISTED_ERR
+      } as RpcExceptionModel);
     }
-    return await this.repository.save(entity);
+    return this.repository.save<CustomerEntity>(entity);
   }
 
   async edit(dto: UpdateCustDto): Promise<UpdateResult> {
     const entity: CustomerEntity = await CustomerMapper.mapUpdateCustDtoToEntity(dto);
     const email = dto.email;
     if (email !== entity.email) {
-      throw new ConflictException(`Param: ${email} must match with ${entity.email} in request body`)
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `Param: ${email} must match with ${entity.email} in request body`
+      } as RpcExceptionModel);
     }
     const existedEmail = await this.repository.findOne(entity.email);
     if (existedEmail === undefined) {
-      throw new NotFoundException(`Not found customer with email : ${entity.email}`)
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found customer with email : ${entity.email}`
+      } as RpcExceptionModel);
     }
-    return await this.repository.update(entity.email, entity);
+    return this.repository.update(entity.email, entity);
   }
 
   async delete(id): Promise<DeleteResult> {
     const existedCustomer = await this.repository.findOne(id);
     if (existedCustomer === undefined) {
-      throw new NotFoundException(`Not found customer with email : ${id}`)
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found customer with email : ${id}`
+      } as RpcExceptionModel);
     }
     return await this.repository.delete(id);
   }
 
   async findOneCustomer(id) : Promise<CustomerEntity> {
-    return await this.repository.findOne(id);
+    return this.repository.findOne(id);
   }
 
   async viewDetail(id): Promise<CustomerEntity> {
@@ -82,5 +95,5 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     );
     return result;
   }
- 
+
 }

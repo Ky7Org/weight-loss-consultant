@@ -18,7 +18,7 @@ async function bootstrap() {
   const globalPrefix = settings.API_ENDPOINT;
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalPipes(new ValidationPipe());
-
+  const host = process.env.HOST || '127.0.0.1';
   const port = process.env.PORT || 5000;
 
   const config = new DocumentBuilder()
@@ -34,7 +34,7 @@ async function bootstrap() {
   SwaggerModule.setup('swagger-ui', app, document);
 
   await app.listen(port, () => {
-    Logger.log('Listening at http://localhost:' + port + '/');
+    Logger.log(`Application Gateway is listening at http://${host}:${port}/`);
   });
 }
 

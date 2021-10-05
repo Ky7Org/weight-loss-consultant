@@ -8,9 +8,9 @@ import {
   Res,
 } from "@nestjs/common";
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {CustomerService} from "../services/customer.service";
-import {CreateCustDto} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/create-customer.dto";
-import {UpdateCustDto} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/update-customer-dto";
+import {CustomerService} from "../../services/customer.service";
+import {CreateCustDto} from "../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/create-customer.dto";
+import {UpdateCustDto} from "../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/update-customer-dto";
 
 @ApiTags('Customer')
 @ApiBearerAuth()

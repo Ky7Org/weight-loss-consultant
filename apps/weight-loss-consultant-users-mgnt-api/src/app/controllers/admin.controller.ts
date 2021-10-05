@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import {AdminService} from "../services/impl/admin.service.impl"
 import {CreateAdminDto} from "../dtos/admin/create-admin.dto";
 import {UpdateAdminDto} from "../dtos/admin/update-admin.dto";
@@ -15,6 +15,7 @@ import { CustomerEntity } from '../entities/customer.entity';
 import { CustomerService } from '../services/impl/customer.service.impl';
 import { TrainerService } from '../services/impl/trainer.service.impl';
 import { TrainerEntity } from '../entities/trainer.entity';
+import { ExceptionFilter } from '../filters/rpc-exception.filter';
 
 type UpdateAdminType = {
   email: string;
@@ -29,6 +30,7 @@ export class AdminController {
               private readonly trainerService: TrainerService) {}
 
   @MessagePattern({cmd: GET_ALL_ADMINS})
+  @UseFilters(new ExceptionFilter())
   async index(): Promise<AdminEntity[]> {
     try {
       return this.adminService.findAll();
@@ -39,21 +41,25 @@ export class AdminController {
   }
 
   @MessagePattern({cmd: ADMIN_VIEW_DETAIL})
+  @UseFilters(new ExceptionFilter())
   async viewAdminDetailByUsername(@Payload() username: string): Promise<AdminEntity> {
     return this.adminService.viewDetail(username);
   }
 
   @MessagePattern({cmd: CUSTOMER_VIEW_DETAIL})
+  @UseFilters(new ExceptionFilter())
   async viewCustomerDetailByUsername(@Payload() username: string): Promise<CustomerEntity> {
     return this.customerService.findOneCustomer(username);
   }
 
   @MessagePattern({cmd: TRAINER_VIEW_DETAIL})
+  @UseFilters(new ExceptionFilter())
   async viewTrainerDetailByUsername(@Payload() username: string): Promise<TrainerEntity> {
     return this.trainerService.findOneTrainer(username);
   }
 
   @MessagePattern({cmd: GET_ADMIN_BY_EMAIL})
+  @UseFilters(new ExceptionFilter())
   async getByEmail(@Payload() email: string): Promise<AdminEntity> {
     try {
       return this.adminService.viewDetail(email);
@@ -63,6 +69,7 @@ export class AdminController {
   }
 
   @MessagePattern({cmd: CREATE_ADMIN})
+  @UseFilters(new ExceptionFilter())
   async create(@Payload() dto: CreateAdminDto): Promise<AdminEntity> {
     try {
       return this.adminService.create(dto);
@@ -73,6 +80,7 @@ export class AdminController {
   }
 
   @MessagePattern({cmd: UPDATE_ADMIN})
+  @UseFilters(new ExceptionFilter())
   async update(@Payload() payload: UpdateAdminType): Promise<UpdateResult> {
     try {
       return this.adminService.edit(payload.dto);
@@ -83,6 +91,7 @@ export class AdminController {
   }
 
   @MessagePattern({cmd: DELETE_ADMIN})
+  @UseFilters(new ExceptionFilter())
   async delete(@Payload() email): Promise<DeleteResult> {
     try {
       return this.adminService.delete(email);

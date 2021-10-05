@@ -6,7 +6,7 @@ import {
   USERS_MANAGEMENT_SERVICE_NAME,
   USERS_MANAGEMENT_SERVICE_PORT,
 } from '../../../../../constant';
-import { AdminController } from '../controllers/admin.controller';
+import { AdminController } from '../controllers/users-management/admin.controller';
 import { AdminService } from '../services/admin.service';
 
 

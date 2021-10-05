@@ -1,5 +1,3 @@
-import { PathLike } from 'fs';
-
 export const JWT_CONFIG = {
   expireTime: "60s"
 }

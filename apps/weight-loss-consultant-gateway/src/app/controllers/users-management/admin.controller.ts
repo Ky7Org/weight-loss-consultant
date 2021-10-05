@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
-import { AdminService } from '../services/admin.service';
+import { AdminService } from '../../services/admin.service';
 import { Response } from 'express';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateAdminDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/create-admin.dto';
-import { UpdateAdminDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/update-admin.dto';
-import { Roles } from '../author/roles.decorator';
-import { Role } from '../constants/enums';
+import { CreateAdminDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/create-admin.dto';
+import { UpdateAdminDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/update-admin.dto';
+import { Roles } from '../../author/roles.decorator';
+import { Role } from '../../constants/enums';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
