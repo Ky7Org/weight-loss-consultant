@@ -1,0 +1,8 @@
+.Container{
+  width: 88vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -44vw;
+  margin-right: -45vw;
+}

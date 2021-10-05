@@ -127,7 +127,7 @@ export class TrainerController {
   }
 
   //sort by email endpoint
- // @Roles(Role.Trainer, Role.Admin)
+  //@Roles(Role.Trainer, Role.Admin)
   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
   @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
@@ -255,7 +255,6 @@ export class TrainerController {
   }
 
   //sort by rating endpoint
- // @Roles(Role.Trainer, Role.Admin)
  // @Roles(Role.Trainer, Role.Admin)
   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})

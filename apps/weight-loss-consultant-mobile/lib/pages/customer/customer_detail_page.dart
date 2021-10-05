@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weight_loss_consultant_mobile/constants/role_enum.dart';
+import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 
@@ -13,13 +18,36 @@ class CustomerDetailPage extends StatefulWidget {
 
 class _CustomerDetailPageState extends State<CustomerDetailPage> {
   final _formKey = GlobalKey<FormState>();
+  AccountModel user = AccountModel(email: "", fullname: "", role: Role.undecided);
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount();
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GenericAppBar.builder("My profile"),
-      drawer: CustomerDrawer.builder(
-          "Banhs bao", Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -41,7 +69,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                     width: 40,
                   ),
                   Text(
-                    'BanhsBao',
+                    user.fullname,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
@@ -64,7 +92,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                       color: AppColors.PRIMARY_WORD_COLOR,
                     )),
                     TextSpan(
-                      text: ' SAI GON',
+                      text: 'SAI GON',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w900,
@@ -236,7 +264,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         height: 5,
                       ),
                       Text(
-                        'youza@gmail.com',
+                        user.email,
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontSize: 17,

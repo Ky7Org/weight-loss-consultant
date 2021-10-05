@@ -6,9 +6,12 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
 import 'package:weight_loss_consultant_mobile/constants/role_enum.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/customer_sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
@@ -50,98 +53,15 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
 
   int selectedIndex = 0;
   PanelController _pc = new PanelController();
-  List<Map> categories = [
-    {
-      "text": "Todo",
-      "imageName": "todo-icon.svg",
-    },
-    {
-      "text": "Message",
-      "imageName": "message-icon.svg",
-      "route": RoutePath.myMessagePage,
-    },
-    {
-      "text": "Campaign",
-      "imageName": "campaign-icon.svg",
-    },
-    {
-      "text": "Package",
-      "imageName": "package-icon.svg",
-    },
-    {
-      "text": "Calendar",
-      "imageName": "calendar-icon.svg",
-    },
-    {
-      "text": "Video Call",
-      "imageName": "video-call-icon.svg",
-    },
-    {
-      "text": "Tutorial",
-      "imageName": "tutorial-icon.svg",
-    },
-    {
-      "text": "Payment",
-      "imageName": "payment-icon.svg",
-    },
-    {
-      "text": "Profile",
-      "imageName": "profile-icon.svg",
-      "route": RoutePath.customerDetailPage,
-    },
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: CustomerDrawer.builder(user.fullname, Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
+      //drawer: CustomerDrawer.builder(user.fullname, Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
       appBar: MainAppBar.builder(user.fullname, context),
       body: SlidingUpPanel(
         controller: _pc,
-        panel: Center(
-          child: Wrap(
-            spacing: 10,
-            children: [
-              for (var items in categories)
-                GestureDetector(
-                  onTap: (){
-                    Navigator.pushNamed(context, items["route"]);
-                  },
-                  child: SizedBox(
-                    height: 118,
-                    width: 105,
-                    child: Card(
-                      elevation: 15,
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            SvgPicture.asset("assets/panel-image/category/${items["imageName"]}"),
-                            Expanded(
-                              flex: 1,
-                              child: Center(
-                                  child: Text(
-                                    "${items["text"]}",
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.PRIMARY_WORD_COLOR
-                                    ),
-                                  )
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
-                )
-            ],
-          )
-        ),
+        panel: CategoryPanel(),
         minHeight: 0,
         maxHeight: 400,
         body: Padding(
@@ -238,7 +158,9 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                 spacing: 10,
                 children: [
                   GestureDetector(
-                    onTap: (){},
+                    onTap: (){
+                      Navigator.pushNamed(context, RoutePath.customerTodoPage);
+                    },
                     child: SizedBox(
                       height: 118,
                       width: 105,
@@ -273,7 +195,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                   ),
                   GestureDetector(
                     onTap: (){
-                      Navigator.pushNamed(context, RoutePath.chatPage);
+                      Navigator.pushNamed(context, RoutePath.myMessagePage);
                     },
                     child: SizedBox(
                       height: 118,
@@ -345,82 +267,11 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: bottom_navigator(pc: _pc,)
-    );
-  }
-
-}
-
-class bottom_navigator extends StatefulWidget {
-  final PanelController? pc;
-  bottom_navigator({this.pc});
-
-  @override
-  State<bottom_navigator> createState() => _bottom_navigatorState();
-}
-
-class _bottom_navigatorState extends State<bottom_navigator> {
-  int selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: this.selectedIndex,
-      type: BottomNavigationBarType.fixed,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-      selectedIconTheme: IconThemeData(
-        color: AppColors.PRIMARY_COLOR,
-      ),
-      onTap: (int index) {
-        setState(() {
-          if (index == 2 ){
-            if (widget.pc!.isPanelClosed){
-              widget.pc?.open();
-            } else{
-              widget.pc?.close();
-            }
-          } else {
-            if (index == 3){
-              Navigator.pushNamed(context, RoutePath.chatPage);
-            }
-            this.selectedIndex = index;
-          }
-        });
-      },
-      iconSize: 30,
-      items: [
-        BottomNavigationBarItem(
-          title: Text('Home'),
-          icon: Icon(Icons.home_outlined),
-        ),
-        BottomNavigationBarItem(
-          title: Text('Calendar'),
-          icon: Icon(Icons.calendar_today),
-        ),
-        BottomNavigationBarItem(
-
-          title: Text('Icon'),
-          icon: Container(
-            width: 50,
-            height: 50,
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.PRIMARY_COLOR,
-            ),
-            child: SvgPicture.asset("assets/logo/9-dots-icon.svg"),
-          ),
-        ),
-        BottomNavigationBarItem(
-          title: Text('Favorites'),
-          icon: Icon(Icons.mail_outline),
-        ),
-        BottomNavigationBarItem(
-          title: Text('Settings'),
-          icon: Icon(Icons.settings_outlined),
-        ),
-      ],
+      bottomNavigationBar: CustomerBottomNavigator(pc: _pc, selectedIndex: CustomerBottomNavigatorIndex.HOME,)
     );
   }
 }
+
+
+
+

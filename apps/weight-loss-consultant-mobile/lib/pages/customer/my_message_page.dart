@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/customer_sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
@@ -31,10 +34,11 @@ class _MyMessagesPageState extends State<MyMessagesPage>
 
   Widget _buildMessage(String name, String message, String date) {
     return GestureDetector(
-      onTap:(){
+      onTap: () {
         Navigator.pushNamed(context, RoutePath.chatPage);
       },
-      child: (Container(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
         height: 109,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -84,11 +88,16 @@ class _MyMessagesPageState extends State<MyMessagesPage>
                             ),
                           ],
                         ),
-                        Padding(padding: EdgeInsets.only(top: 10), child:   Text(
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ...',
-                          style: TextStyle(color: Color(0xFF0D3F67), fontSize: 13.5, fontWeight: FontWeight.w500),
-                        ),)
-
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Text(
+                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ...',
+                            style: TextStyle(
+                                color: Color(0xFF0D3F67),
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -97,7 +106,7 @@ class _MyMessagesPageState extends State<MyMessagesPage>
             ),
           ],
         ),
-      )),
+      ),
     );
   }
 
@@ -106,76 +115,84 @@ class _MyMessagesPageState extends State<MyMessagesPage>
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: GenericAppBar.builder('My Message'),
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                height: 48,
-                decoration: BoxDecoration(
-                    color: const Color(0xFFF0F3F6),
-                    borderRadius: BorderRadius.circular(18),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: const Offset(0, 3),
-                      )
-                    ]),
-                child: TabBar(
-                  controller: _tabController,
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    color: Colors.white,
-                  ),
-                  labelColor: const Color(0xFF0D3F67),
-                  unselectedLabelColor: const Color(0xFFB6C5D1),
-                  tabs: const [
-                    Tab(
-                      child: Text(
-                        'Other(3)',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    Tab(
-                      child: Text(
-                        'My Trainer',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w700),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                  child: TabBarView(
-                controller: _tabController,
+        body: SlidingUpPanel(
+            controller: _pc,
+            panel: CategoryPanel(),
+            minHeight: 0,
+            maxHeight: 400,
+            body: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildMessage('BanhsBao', "Ahiihii", "20 Jan"),
-                      _buildMessage('Bang Ngo', "Ahiihii", "20 Jan"),
-                      _buildMessage('Tien Truong', "Ahiihii", "20 Jan")
-                    ],
-                  ),
-                  Center(
-                    child: Text(
-                      'My Trainer',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                  Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    height: 48,
+                    decoration: BoxDecoration(
+                        color: const Color(0xFFF0F3F6),
+                        borderRadius: BorderRadius.circular(18),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(0, 3),
+                          )
+                        ]),
+                    child: TabBar(
+                      controller: _tabController,
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: Colors.white,
+                      ),
+                      labelColor: const Color(0xFF0D3F67),
+                      unselectedLabelColor: const Color(0xFFB6C5D1),
+                      tabs: const [
+                        Tab(
+                          child: Text(
+                            'Other(3)',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            'My Trainer',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                        )
+                      ],
                     ),
                   ),
+                  SizedBox(height: 20,),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            _buildMessage('BanhsBao', "Ahiihii", "20 Jan"),
+                            _buildMessage('Bang Ngo', "Ahiihii", "20 Jan"),
+                            _buildMessage('Tien Truong', "Ahiihii", "20 Jan")
+                          ],
+                        ),
+                        Center(
+                          child: Text(
+                            'My Trainer',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
+                  )
+                  )
                 ],
-              ))
-            ],
-          ),
-        ),
-        bottomNavigationBar: bottom_navigator(
+              ),
+            )),
+        bottomNavigationBar: CustomerBottomNavigator(
           pc: _pc,
+          selectedIndex: CustomerBottomNavigatorIndex.MESSAGE,
         ));
   }
 }

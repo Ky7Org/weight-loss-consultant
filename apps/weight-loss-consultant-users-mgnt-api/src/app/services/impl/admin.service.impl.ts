@@ -1,4 +1,4 @@
-import {ConflictException, Injectable, LoggerService, NotFoundException} from "@nestjs/common";
+import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {BaseService} from "../base.service";
 import {
   DeleteResult,
@@ -10,7 +10,7 @@ import {AdminMapper} from "../../mappers/admin.mapper";
 import {CreateAdminDto} from "../../dtos/admin/create-admin.dto";
 import {UpdateAdminDto} from "../../dtos/admin/update-admin.dto";
 import {EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG} from "../../constants/validation-err-message";
-import {IPaginationOptions, Pagination, paginate} from "nestjs-typeorm-paginate";
+
 
 
 
@@ -63,44 +63,4 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository>{
     return result;
   }
 
-  //SORT by EMAIL
-  async orderByEmailAscAndPaginate(options: IPaginationOptions) : Promise<Pagination<AdminEntity>>{
-    //providing alias
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.email', 'ASC');
-    return paginate<AdminEntity>(queryBuilder, options);
-  }
-
-  async orderByEmailDescAndPaginate(options: IPaginationOptions) : Promise<Pagination<AdminEntity>>{
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.email', 'DESC');
-    return paginate<AdminEntity>(queryBuilder, options);
-  }
-  //
-  //SORT by FULLNAME
-  async orderByFullNameAscAndPaginate(options: IPaginationOptions) : Promise<Pagination<AdminEntity>>{
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.fullname', 'ASC');
-    return paginate<AdminEntity>(queryBuilder, options);
-  }
-
-  async orderByFullNameDescAndPaginate(options: IPaginationOptions) : Promise<Pagination<AdminEntity>>{
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.fullname', 'DESC');
-    return paginate<AdminEntity>(queryBuilder, options);
-  }
-  //
-  //SORT by DOB
-  async orderByDOBAscAndPaginate(options: IPaginationOptions) : Promise<Pagination<AdminEntity>>{
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.dob', 'ASC');
-    return paginate<AdminEntity>(queryBuilder, options);
-  }
-
-  async orderByDOBDescAndPaginate(options: IPaginationOptions) : Promise<Pagination<AdminEntity>>{
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.dob', 'DESC');
-    return paginate<AdminEntity>(queryBuilder, options);
-  }
-  //
 }

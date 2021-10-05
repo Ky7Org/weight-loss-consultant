@@ -1,4 +1,5 @@
-import {ConflictException, Injectable, LoggerService, NotFoundException} from "@nestjs/common";
+import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
+
 import {BaseService} from "../base.service";
 import {
   DeleteResult,
@@ -11,7 +12,6 @@ import {CreateTrainerDto} from "../../dtos/trainer/create-trainer";
 import {UpdateTrainerDto} from "../../dtos/trainer/update-trainer";
 import {EMAIL_EXISTED_ERR} from "../../constants/validation-err-message";
 import {IPaginationOptions, paginate, Pagination} from "nestjs-typeorm-paginate";
-
 
 @Injectable()
 export class TrainerService extends BaseService<TrainerEntity, TrainerRepository> {
@@ -68,77 +68,4 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     return await this.repository.findOne(id);
   }
 
-  //SORT by EMAIL
-  async orderByEmailAscAndPaginate(options: IPaginationOptions): Promise<Pagination<TrainerEntity>> {
-    //providing alias
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder
-      .orderBy('c.email', 'ASC');
-
-    return paginate<TrainerEntity>(queryBuilder, options);
-  }
-
-  async orderByEmailDescAndPaginate(options: IPaginationOptions): Promise<Pagination<TrainerEntity>> {
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.email', 'DESC');
-    return paginate<TrainerEntity>(queryBuilder, options);
-  }
-
-  //
-  //SORT by FULLNAME
-  async orderByFullNameAscAndPaginate(options: IPaginationOptions): Promise<Pagination<TrainerEntity>> {
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.fullname', 'ASC');
-    return paginate<TrainerEntity>(queryBuilder, options);
-  }
-
-  async orderByFullNameDescAndPaginate(options: IPaginationOptions): Promise<Pagination<TrainerEntity>> {
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.fullname', 'DESC');
-    return paginate<TrainerEntity>(queryBuilder, options);
-  }
-
-  //
-  //SORT by DOB
-  async orderByDOBAscAndPaginate(options: IPaginationOptions): Promise<Pagination<TrainerEntity>> {
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.dob', 'ASC');
-    return paginate<TrainerEntity>(queryBuilder, options);
-  }
-
-  async orderByDOBDescAndPaginate(options: IPaginationOptions): Promise<Pagination<TrainerEntity>> {
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.dob', 'DESC');
-    return paginate<TrainerEntity>(queryBuilder, options);
-  }
-
-  //
-  //SORT by Year Of Exp
-  async orderByYearOfExpAscAndPaginate(options: IPaginationOptions): Promise<Pagination<TrainerEntity>> {
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.yearOfExp', 'ASC');
-    return paginate<TrainerEntity>(queryBuilder, options);
-  }
-
-  async orderByYearOfExpDescAndPaginate(options: IPaginationOptions): Promise<Pagination<TrainerEntity>> {
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.yearOfExp', 'DESC');
-    return paginate<TrainerEntity>(queryBuilder, options);
-  }
-
-  //
-  //SORT by rating
-  async orderByRatingAscAndPaginate(options: IPaginationOptions): Promise<Pagination<TrainerEntity>> {
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.rating', 'ASC');
-    return paginate<TrainerEntity>(queryBuilder, options);
-  }
-
-  async orderByRatingDescAndPaginate(options: IPaginationOptions): Promise<Pagination<TrainerEntity>> {
-    const queryBuilder = this.repository.createQueryBuilder('c');
-    queryBuilder.orderBy('c.rating', 'DESC');
-    return paginate<TrainerEntity>(queryBuilder, options);
-  }
-
-  //
 }

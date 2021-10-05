@@ -1,4 +1,4 @@
-import { DynamicModule } from '@nestjs/common';
+import {DynamicModule, MiddlewareConsumer, RequestMethod} from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -13,6 +13,8 @@ import {CampaignEntity} from "../entities/campaign.entity";
 import {PackageEntity} from "../entities/package.enttiy";
 import {CampaignModule} from "./campaign.module";
 import {PackageModule} from "./package.module";
+import {SortingAndFilteringModule} from "./sorting-filtering.module";
+
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -46,7 +48,8 @@ export class AppModule {
         TrainerModule,
         CustomerModule,
         CampaignModule,
-        PackageModule
+        PackageModule,
+        SortingAndFilteringModule
       ],
     };
   }
