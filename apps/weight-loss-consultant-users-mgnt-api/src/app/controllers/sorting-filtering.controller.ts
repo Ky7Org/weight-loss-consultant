@@ -22,7 +22,7 @@ import {CustomerEntity} from "../entities/customer.entity";
 import {PaginationDto} from "../dtos/pagination/pagination.dto";
 import {PaginatedResultDto} from "../dtos/pagination/paginated-result.dto";
 
-@ApiTags('Package')
+@ApiTags('Sorting and Filtering')
 @ApiBearerAuth()
 @Controller('/v1/sortingAndFiltering')
 export class SortingAndFilteringController {
@@ -34,17 +34,13 @@ export class SortingAndFilteringController {
 
 
   @Public()
-  @Get()
-  @ApiResponse({status: 200, description: 'Package details has shown below:'})
+  @Post()
+  @ApiBody({
+    type: PaginationDto
+  })
+  @ApiResponse({status: 200, description: 'Data has been changed:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Package ID not found'})
-  @ApiParam({
-      name: "id",
-      type: Number,
-      example: "1",
-      required: true
-    }
-  )
+  @ApiResponse({status: 404, description: 'Something wrong occured'})
   async sortAndFilter(@Body() payload : PaginationDto, @Res() res)
     : Promise<void> {
     try {
