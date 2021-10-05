@@ -158,7 +158,9 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                 spacing: 10,
                 children: [
                   GestureDetector(
-                    onTap: (){},
+                    onTap: (){
+                      Navigator.pushNamed(context, RoutePath.customerTodoPage);
+                    },
                     child: SizedBox(
                       height: 118,
                       width: 105,

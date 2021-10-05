@@ -29,6 +29,9 @@ class _CustomerBottomNavigatorState extends State<CustomerBottomNavigator> {
       ),
       onTap: (int index) {
         switch (index) {
+          case 0:
+            Navigator.pushNamedAndRemoveUntil(context, RoutePath.customerHomePage, (route) => false);
+            break;
           case 2:
             if (widget.pc.isPanelClosed) {
               widget.pc.open();
