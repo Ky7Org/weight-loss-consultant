@@ -6,7 +6,9 @@ import { AdminRepository } from '../repositories/admin.repository';
 import { RedisCacheModule } from './redis-cache.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AdminRepository]), RedisCacheModule],
+  imports: [TypeOrmModule.forFeature([AdminRepository])
+    , RedisCacheModule
+  ],
   providers: [AdminService, AdminMapper],
   exports: [AdminService, AdminMapper],
 })
