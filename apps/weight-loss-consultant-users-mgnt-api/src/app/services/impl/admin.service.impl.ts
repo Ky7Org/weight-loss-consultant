@@ -13,6 +13,7 @@ import {EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG} from "../../constants/validation-e
 
 
 
+
 @Injectable()
 export class AdminService extends BaseService<AdminEntity, AdminRepository>{
 
@@ -60,4 +61,5 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository>{
     }
     return result;
   }
+
 }

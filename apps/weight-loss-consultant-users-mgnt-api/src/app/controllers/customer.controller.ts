@@ -4,7 +4,7 @@ import {
   Get, Logger,
   Param,
   Post,
-  Put,
+  Put, Query,
   Res,
 } from "@nestjs/common";
 import {CustomerService} from "../services/impl/customer.service.impl";
@@ -14,6 +14,7 @@ import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/sw
 import {Roles} from "../author/roles.decorator";
 import {Role} from "../constants/enums";
 import {Public} from "../auth/public-decorator";
+
 
 @ApiTags('Customer')
 @ApiBearerAuth()

@@ -16,6 +16,7 @@ import {CampaignModule} from "./campaign.module";
 import {PackageModule} from "./package.module";
 import {SortingAndFilteringModule} from "./sorting-filtering.module";
 
+
 export class AppModule {
   static forRoot(settings): DynamicModule {
     return {

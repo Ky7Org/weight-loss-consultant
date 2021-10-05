@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:weight_loss_consultant_mobile/constants.dart';
+import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 class CustomerDrawer {
   static List<Map> navigation = [
     {
       "text": "Home",
       "icon": Icons.home_outlined,
-      "route": "/customerMain"
+      "route": RoutePath.customerHomePage
     },
     {
       "text": "Message",
       "icon": Icons.mail_outline,
-      "route": "/chat"
+      "route": RoutePath.myMessagePage,
     },
     {
       "text": "My calendar",
@@ -27,7 +28,7 @@ class CustomerDrawer {
     {
       "text": "Logout",
       "icon": Icons.logout_outlined,
-      "route": "/login"
+      "route": RoutePath.loginPage,
     },
   ];
   static Drawer builder(String customerName, Image avatar, String customerRole){
@@ -59,12 +60,15 @@ class CustomerDrawer {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      customerName,
-                                      style: TextStyle(
-                                        color: AppColors.PRIMARY_WORD_COLOR,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
+                                    Container(
+                                      width: 150,
+                                      child: Text(
+                                        customerName,
+                                        style: TextStyle(
+                                          color: AppColors.PRIMARY_WORD_COLOR,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                     Text(customerRole),
@@ -94,7 +98,7 @@ class CustomerDrawer {
                 ),
                 onTap: () {
                   if (navigation[index-1]["text"] == "Logout"){
-                    Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, RoutePath.initialPage, (route) => false);
                   } else {
                     Navigator.pushNamed(context, navigation[index-1]["route"]);
                   }

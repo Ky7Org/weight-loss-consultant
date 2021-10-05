@@ -17,6 +17,7 @@ import {CustomerModule} from "./app/modules/customer.module";
 import {TrainerModule} from "./app/modules/trainer.module";
 import {SortingAndFilteringModule} from "./app/modules/sorting-filtering.module";
 
+
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
   const app = await NestFactory.create(AppModule.forRoot(settings));
@@ -34,6 +35,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config,
     {include: [AdminModule,CustomerModule, TrainerModule, SortingAndFilteringModule]});
+
   SwaggerModule.setup('swagger-ui', app, document);
   await app.listen(port, () => {
     Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);

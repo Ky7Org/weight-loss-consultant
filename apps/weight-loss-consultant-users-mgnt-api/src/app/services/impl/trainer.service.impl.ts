@@ -1,4 +1,5 @@
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
+
 import {BaseService} from "../base.service";
 import {
   DeleteResult,
@@ -10,7 +11,7 @@ import {TrainerMapper} from "../../mappers/trainer.mapper";
 import {CreateTrainerDto} from "../../dtos/trainer/create-trainer";
 import {UpdateTrainerDto} from "../../dtos/trainer/update-trainer";
 import {EMAIL_EXISTED_ERR} from "../../constants/validation-err-message";
-
+import {IPaginationOptions, paginate, Pagination} from "nestjs-typeorm-paginate";
 
 @Injectable()
 export class TrainerService extends BaseService<TrainerEntity, TrainerRepository> {
@@ -66,4 +67,5 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   async findOneTrainer(id): Promise<TrainerEntity> {
     return await this.repository.findOne(id);
   }
+
 }

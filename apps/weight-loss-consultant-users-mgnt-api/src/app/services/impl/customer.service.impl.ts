@@ -7,6 +7,7 @@ import {DeleteResult, Like, UpdateResult} from "typeorm";
 import {CustomerMapper} from "../../mappers/customer.mapper";
 import {CreateCustDto} from "../../dtos/customer/create-customer.dto";
 import {UpdateCustDto} from "../../dtos/customer/update-customer-dto";
+import {IPaginationOptions, paginate, Pagination} from "nestjs-typeorm-paginate";
 
 @Injectable()
 export class CustomerService extends BaseService<CustomerEntity, CustomerRepository> {
@@ -80,5 +81,5 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     );
     return result;
   }
-
+ 
 }

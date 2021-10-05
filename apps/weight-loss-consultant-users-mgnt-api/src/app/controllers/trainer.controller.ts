@@ -1,5 +1,5 @@
 import {
-  Body, Controller,
+  Body, Controller, DefaultValuePipe,
   Delete,
   Get, Logger,
   Param,
@@ -14,6 +14,7 @@ import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/sw
 import {Roles} from "../author/roles.decorator";
 import {Role} from "../constants/enums";
 import {Public} from "../auth/public-decorator";
+
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
@@ -125,5 +126,6 @@ export class TrainerController {
       res.status(e.status).send({error:e.message});
     }
   }
+
 
 }
