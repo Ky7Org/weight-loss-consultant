@@ -5,6 +5,7 @@ import './ListUser.module.css';
 import { getAllUser } from '../../services/admin';
 import TableUser from './TableUser/TableUser';
 import Container from '../../components/UIContainer/UIContainer';
+import { useSelector } from 'react-redux';
 const ListUser = () => {
   const [dataEmplOrigin, setDataEmplOrigin] = useState([]);
   const [dataEmpl, setDataEmpl] = useState([]);
@@ -12,7 +13,7 @@ const ListUser = () => {
   const [loading, setLoading] = useState(false);
   const [isButtonDownDisabled] = useState(false);
   const [messageError] = useState(null);
-
+  const { search, textSearch } = useSelector((state) => state.search);
   const fetchAPIGetUser = () => {
     var api = getAllUser();
     console.log(api);
@@ -32,24 +33,10 @@ const ListUser = () => {
 
   const filterSuccess = (values) => {
     var dataFilter = dataEmplOrigin;
-    if (values?.departments)
-      if (values?.departments?.length > 0) {
-        setDataEmpl(
-          (dataFilter = dataFilter.filter((x) =>
-            values.departments.includes(x?.department?.id)
-          ))
-        );
-      }
     if (values?.textSearch !== '') {
       setDataEmpl(
-        (dataFilter = dataFilter.filter(
-          (x) =>
-            x?.fullName
-              .toLowerCase()
-              .includes(values.textSearch.toLowerCase()) ||
-            x?.user?.email
-              .toLowerCase()
-              .includes(values.textSearch.toLowerCase())
+        (dataFilter = dataFilter.filter((x) =>
+          x?.fullName.toLowerCase().includes(textSearch.toLowerCase())
         ))
       );
     }
@@ -68,7 +55,6 @@ const ListUser = () => {
               <TableUser
                 dataEmpl={dataEmpl}
                 onNavigation={(id) => onNavigation(id)}
-                filterSuccess={(values) => filterSuccess(values)}
                 isButtonDownDisabled={isButtonDownDisabled}
                 messageError={messageError}
               />
