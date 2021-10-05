@@ -15,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  bool _rememberMe = false;
   bool _passwordVisible = false;
 
   final TextEditingController _passwordController = new TextEditingController();
@@ -97,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
               suffixIcon: IconButton(
                 icon: Icon(
                   _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Theme.of(context).primaryColorDark,
+                  color: Colors.white,
                 ),
                 onPressed: (){
                   setState(() {
@@ -148,7 +147,11 @@ class _LoginScreenState extends State<LoginScreen> {
             );
             AccountModel result = await service.login();
             if (result != null) {
-              Navigator.pushNamedAndRemoveUntil(context, RoutePath.customerMainScreen, (route) => false);
+              if (result.isFirstTime){
+                Navigator.pushNamedAndRemoveUntil(context, RoutePath.yourInformationScreen, (route) => false);
+              } else {
+                Navigator.pushNamedAndRemoveUntil(context, RoutePath.customerMainScreen, (route) => false);
+              }
             }
           }
         },
@@ -249,7 +252,6 @@ class _LoginScreenState extends State<LoginScreen> {
               text: 'Don\'t have an Account? ',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18.0,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -257,7 +259,6 @@ class _LoginScreenState extends State<LoginScreen> {
               text: 'Sign Up',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -299,17 +300,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 40.0,
-                    vertical: 120.0,
+                    vertical: 85.0,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       const Text(
+                        'WEIGHT LOSS CONSULTANT',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 35.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20,),
+                      const Text(
                         'Sign In',
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'OpenSans',
-                          fontSize: 30.0,
+                          fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -317,10 +328,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            const SizedBox(height: 30.0),
+                            const SizedBox(height: 20.0),
                             _buildEmailTF(),
-                            const SizedBox(height: 30.0,),
+                            const SizedBox(height: 20.0,),
                             _buildPasswordTF(),
+                            const SizedBox(height: 10.0,),
                             _buildLoginBtn(),
                           ],
                         ),
