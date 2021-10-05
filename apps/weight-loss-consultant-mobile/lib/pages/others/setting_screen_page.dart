@@ -5,17 +5,21 @@ import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigato
 import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 class SettingWidget extends StatelessWidget {
   final IconData icon;
   final String title;
+  final Function onPress;
 
-  SettingWidget(this.icon, this.title);
+  SettingWidget(this.icon, this.title, this.onPress);
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-        onPressed: () => null,
+        onPressed: (){
+          onPress();
+        },
         child: Row(children: [
           Icon(icon, color: Color(0xFF0D3F67), size: 24,),
           SizedBox(
@@ -67,12 +71,14 @@ class _SettingScreenState extends State<SettingScreen> {
         padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
         child: Column(
           children: [
-            SettingWidget(Icons.settings_outlined, "Account"),
-            SettingWidget(Icons.payment_outlined, "Payment Account"),
-            SettingWidget(Icons.notifications_none, "Notification"),
-            SettingWidget(Icons.contact_support_outlined, "Support"),
-            SettingWidget(Icons.sticky_note_2_outlined, "Terms & Policies"),
-            SettingWidget(Icons.logout_outlined, "Logout"),
+            SettingWidget(Icons.settings_outlined, "Account", (){}),
+            SettingWidget(Icons.payment_outlined, "Payment Account",(){}),
+            SettingWidget(Icons.notifications_none, "Notification",(){}),
+            SettingWidget(Icons.contact_support_outlined, "Support",(){}),
+            SettingWidget(Icons.sticky_note_2_outlined, "Terms & Policies",(){}),
+            SettingWidget(Icons.logout_outlined, "Logout",(){
+              Navigator.pushNamedAndRemoveUntil(context, RoutePath.loginPage, (route) => false);
+            }),
           ],
         ),
       ),

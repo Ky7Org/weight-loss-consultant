@@ -12,6 +12,7 @@ class CategoryPanel extends StatelessWidget {
     {
       "text": "Todo",
       "imageName": "todo-icon.svg",
+      "route": RoutePath.customerTodoPage,
     },
     {
       "text": "Message",

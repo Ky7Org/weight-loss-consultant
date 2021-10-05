@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
 import 'package:weight_loss_consultant_mobile/pages/others/chat_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_home_page.dart';
@@ -77,6 +78,10 @@ class RouteGenerator{
       case RoutePath.settingPage:
         return MaterialPageRoute(builder: (_){
           return SettingScreen();
+        });
+      case RoutePath.customerTodoPage:
+        return MaterialPageRoute(builder: (_){
+          return CustomerTodoPage();
         });
       default:
         return _errorRoute();

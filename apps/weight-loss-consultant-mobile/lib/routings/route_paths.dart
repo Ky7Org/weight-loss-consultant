@@ -12,4 +12,5 @@ class RoutePath{
   static const String registerPage = "/register";
   static const String myMessagePage = "/myMessage";
   static const String settingPage = "/setting";
+  static const String customerTodoPage = "/customerTodo";
 }
