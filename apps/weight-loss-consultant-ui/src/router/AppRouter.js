@@ -11,9 +11,15 @@ export default function AppRouter() {
       <PublicRoute path="/auth/signin" component={Signin} exact={true} />
       <PrivateRoute path="/home" component={HomePage} exact={true} />
       <PrivateRoute
+<<<<<<< HEAD
         path="/admin/user/usermanager"
         component={ListUser}
         exact={true}
+=======
+        path="/admin/user/manager"
+        component={ListUser}
+        exact={false}
+>>>>>>> FUSE-61-V1
       />
       <Redirect exact from="/" to="/home" />
       <Route exact path="/page-not-found">

@@ -74,8 +74,13 @@ const WelcomePage = (props) => {
                       <a style={{ color: 'white' }}> Home Page </a>
                     </NavLink>
                   </Menu.Item>
+<<<<<<< HEAD
                   <Menu.Item key="/admin/user/list" icon={<TableOutlined />}>
                     <NavLink to="/admin/user/list">
+=======
+                  <Menu.Item key="/admin/user/manager" icon={<TableOutlined />}>
+                    <NavLink to="/admin/user/manager">
+>>>>>>> FUSE-61-V1
                       <a style={{ color: 'white' }}> User Manager </a>
                     </NavLink>
                   </Menu.Item>

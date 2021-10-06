@@ -109,17 +109,28 @@ const Signin = (props) => {
               style={{ fontSize: '45px', marginTop: '15px', color: '#ff3333' }}
               className="resource flex"
               onClick={() => {
+<<<<<<< HEAD
+=======
+                setErrorRes('');
+>>>>>>> FUSE-61-V1
                 signInWithPopup(auth, provider)
                   .then(({ user }) => {
                     user.getIdToken().then((token) => {
                       signInGoogle(token)
                         .then((res) => {
+<<<<<<< HEAD
                           console.log(res);
                           console.log(res.data);
                           // dispatch(SigninHandler(res.data));
                         })
                         .catch((err) => {
                           console.log(err);
+=======
+                          dispatch(SigninHandler(res.data));
+                        })
+                        .catch((err) => {
+                          setErrorRes(err?.response?.statusText);
+>>>>>>> FUSE-61-V1
                         });
                     });
                   })
