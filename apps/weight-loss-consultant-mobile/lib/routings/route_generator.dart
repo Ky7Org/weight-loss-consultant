@@ -24,7 +24,7 @@ class RouteGenerator{
     switch (settings.name){
       case RoutePath.initialPage:
         return MaterialPageRoute(builder: (_){
-          return EditProfilePage();
+          return InitialPage();
         });
       case RoutePath.getStartedPage:
         return MaterialPageRoute(builder: (_){
