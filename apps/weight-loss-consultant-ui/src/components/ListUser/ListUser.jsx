@@ -48,7 +48,7 @@ const ListUser = () => {
 
   return (
     <div className="Container">
-      <Container style={{ marginTop: 30 }}>
+      <Container style={{ marginTop: 50 }}>
         <Row className="page">
           <Col xs={24} xl={24}>
             <Spin spinning={loading}>
