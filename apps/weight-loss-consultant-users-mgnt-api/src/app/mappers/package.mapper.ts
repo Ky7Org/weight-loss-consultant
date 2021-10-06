@@ -1,9 +1,9 @@
-import {Injectable} from "@nestjs/common";
-import {CreatePackageDto} from "../dtos/package/create-package";
-import {PackageEntity} from "../entities/package.enttiy";
-import {UpdatePackageDto} from "../dtos/package/update-package";
-import {PackageStatus} from "../constants/enums";
-import {TrainerEntity} from "../entities/trainer.entity";
+import { Injectable } from '@nestjs/common';
+import { CreatePackageDto } from '../dtos/package/create-package';
+import { PackageEntity } from '../entities/package.enttiy';
+import { UpdatePackageDto } from '../dtos/package/update-package';
+import { PackageStatus } from '../constants/enums';
+import { TrainerEntity } from '../entities/trainer.entity';
 
 @Injectable()
 export class PackageMapper {
