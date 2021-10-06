@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomerService } from '../../services/customer.service';
-import { CreateCustDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/create-customer.dto';
-import { UpdateCustDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/update-customer-dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { CreateCustDto } from '../../dtos/customer/create-customer.dto';
+import { UpdateCustDto } from '../../dtos/customer/update-customer-dto';
 
 @ApiTags('Customer')
 @ApiBearerAuth()

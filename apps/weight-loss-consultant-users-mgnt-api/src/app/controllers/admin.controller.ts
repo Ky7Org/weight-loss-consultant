@@ -4,19 +4,15 @@ import { CreateAdminDto } from '../dtos/admin/create-admin.dto';
 import { UpdateAdminDto } from '../dtos/admin/update-admin.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
-  CREATE_ADMIN,
+  ADMIN_VIEW_DETAIL,
+  CREATE_ADMIN, CUSTOMER_VIEW_DETAIL,
   DELETE_ADMIN,
   GET_ADMIN_BY_EMAIL,
-  GET_ALL_ADMINS,
+  GET_ALL_ADMINS, TRAINER_VIEW_DETAIL,
   UPDATE_ADMIN
 } from '../../../../common/routes/users-management-service-routes';
 import { AdminEntity } from '../entities/admin.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import {
-  ADMIN_VIEW_DETAIL,
-  CUSTOMER_VIEW_DETAIL,
-  TRAINER_VIEW_DETAIL
-} from '../../../../weight-loss-consultant-authentication/src/app/services/authentication.service';
 import { CustomerEntity } from '../entities/customer.entity';
 import { CustomerService } from '../services/impl/customer.service.impl';
 import { TrainerService } from '../services/impl/trainer.service.impl';

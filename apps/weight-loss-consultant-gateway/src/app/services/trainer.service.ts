@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
 import { ClientProxy } from '@nestjs/microservices';
-import { TrainerEntity } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/trainer.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import {
   CREATE_TRAINER,
@@ -10,9 +9,10 @@ import {
   GET_TRAINER_BY_EMAIL,
   UPDATE_TRAINER
 } from '../../../../common/routes/users-management-service-routes';
-import { UpdateTrainerDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/update-trainer';
-import { CreateTrainerDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/create-trainer';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
+import { TrainerEntity } from '../entities/trainer.entity';
+import { UpdateTrainerDto } from '../dtos/trainer/update-trainer';
+import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
 
 @Injectable()
 export class TrainerService {

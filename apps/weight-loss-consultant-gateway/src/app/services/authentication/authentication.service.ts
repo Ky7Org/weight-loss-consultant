@@ -1,10 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AUTHENTICATION_SERVICE_NAME } from '../../../../../../constant';
 import { ClientProxy } from '@nestjs/microservices';
-import { LoginResponseModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/login-response-model';
 import { LoginRequest } from '../../auth/login.req';
-import { ResetPasswordRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/reset-password-request-model';
-import { ResetPasswordConfirmRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/reset-password-confirm-request-model';
 import {
   CONFIRM_CHANGE_PASSWORD,
   EMAIL_PASSWORD_AUTHENTICATE_USER,
@@ -12,6 +9,9 @@ import {
   RESET_PASSWORD,
   VALIDATE_ACCOUNT
 } from '../../../../../common/routes/authentication-routes';
+import { LoginResponseModel } from '../../models/login-response-model';
+import { ResetPasswordConfirmRequestModel } from '../../models/reset-password-confirm-request-model';
+import { ResetPasswordRequestModel } from '../../models/reset-password-request-model';
 
 @Injectable()
 export class AuthenticationService {

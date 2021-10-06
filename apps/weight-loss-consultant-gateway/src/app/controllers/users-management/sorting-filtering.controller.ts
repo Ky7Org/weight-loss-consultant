@@ -1,8 +1,8 @@
 import { Body, Controller, HttpStatus, Logger, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SortingAndFilteringService } from '../../services/sorting-and-filtering.service';
-import { PaginationDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/pagination/pagination.dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { PaginationDto } from '../../dtos/pagination/pagination.dto';
 
 @ApiTags('Sorting and Filtering')
 @ApiBearerAuth()
