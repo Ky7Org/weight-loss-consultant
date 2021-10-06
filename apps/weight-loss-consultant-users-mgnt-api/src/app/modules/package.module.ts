@@ -6,7 +6,6 @@ import { TrainerRepository } from '../repositories/trainer.repository';
 import { TrainerService } from '../services/impl/trainer.service.impl';
 import { PackageService } from '../services/impl/package.service.impl';
 import { TrainerMapper } from '../mappers/trainer.mapper';
-import { PackageController } from '../controllers/package.controller';
 
 
 @Module({
@@ -16,8 +15,7 @@ import { PackageController } from '../controllers/package.controller';
   exports: [
     PackageService, PackageMapper, TrainerService, TrainerMapper
   ],
-  controllers: [PackageController]
+  controllers: []
 })
 export class PackageModule {
-
 }

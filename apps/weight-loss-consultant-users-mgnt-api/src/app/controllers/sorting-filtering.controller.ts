@@ -1,43 +1,20 @@
-import { Body, Controller, Logger, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Logger, Post, Query, Res, UseFilters } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SortingAndFilteringService } from '../services/sorting-filtering.service';
 import { PaginationDto } from '../dtos/pagination/pagination.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { SORTING_AND_FILTERING_USERS } from '../../../../users-management-service-routes';
+import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 
-@ApiTags('Sorting and Filtering')
-@ApiBearerAuth()
-@Controller('/v1/sortingAndFiltering')
+@Controller()
 export class SortingAndFilteringController {
-  private readonly logger = new Logger(SortingAndFilteringController.name);
 
   constructor(private readonly service: SortingAndFilteringService) {
   }
 
-
-
-  @Post()
-  @ApiBody({
-    type: PaginationDto
-  })
-  @ApiQuery({
-    name: 'search',
-    type: String
-  })
-  @ApiResponse({status: 200, description: 'Data has been changed:'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Something wrong occured'})
-  async sortAndFilter(
-    @Body() payload : PaginationDto,
-    @Res() res,
-    @Query('search') search : string)
-    : Promise<void> {
-    try {
-      const result =  await this.service.sortingAndFiltering(payload)
-      res.status(200).send(result);
-    } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).end();
-    }
+  @MessagePattern({cmd: SORTING_AND_FILTERING_USERS})
+  @UseFilters(new ExceptionFilter())
+  async sortAndFilter(@Payload() payload: PaginationDto) {
+    return this.service.sortingAndFiltering(payload)
   }
-
-
 }

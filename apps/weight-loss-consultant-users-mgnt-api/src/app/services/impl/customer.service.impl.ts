@@ -8,7 +8,7 @@ import { CustomerMapper } from '../../mappers/customer.mapper';
 import { CreateCustDto } from '../../dtos/customer/create-customer.dto';
 import { UpdateCustDto } from '../../dtos/customer/update-customer-dto';
 import { RpcException } from '@nestjs/microservices';
-import { RpcExceptionModel } from '../../filters/rpc-exception.model';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
 
 @Injectable()
 export class CustomerService extends BaseService<CustomerEntity, CustomerRepository> {

@@ -8,7 +8,7 @@ import { UpdatePackageDto } from '../../dtos/package/update-package';
 import { BaseService } from '../base.service';
 import { TrainerService } from './trainer.service.impl';
 import { RpcException } from '@nestjs/microservices';
-import { RpcExceptionModel } from '../../filters/rpc-exception.model';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
 
 @Injectable()
 export class PackageService extends BaseService<PackageEntity, PackageRepository> {

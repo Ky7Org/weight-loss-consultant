@@ -3,6 +3,8 @@ import { TrainerService } from '../services/trainer.service';
 import { TrainerController } from '../controllers/users-management/trainer.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HOST, USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT } from '../../../../../constant';
+import { SearchController } from '../controllers/users-management/search.controller';
+import { SearchService } from '../services/search.service';
 
 
 @Module({
@@ -15,8 +17,8 @@ import { HOST, USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT } fr
         port: USERS_MANAGEMENT_SERVICE_PORT
       }
     }])],
-  controllers: [TrainerController],
-  providers: [TrainerService],
-  exports: [TrainerService]
+  controllers: [SearchController],
+  providers: [SearchService],
+  exports: [SearchService]
 })
-export class TrainerModule {}
+export class SearchModule {}

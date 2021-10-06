@@ -1,8 +1,9 @@
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { CreateCampaignDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/campaign/create-campaign';
 import { UpdateCampaignDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/campaign/update-campaign';
 import { CampaignService } from '../../services/campaign.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @ApiTags('Campaign')
 @ApiBearerAuth()
@@ -15,6 +16,7 @@ export class CampaignController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'The campaigns has shown below.' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   async index(@Res() res) {
@@ -28,6 +30,7 @@ export class CampaignController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'Campaign details has shown below:' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Campaign ID not found' })
@@ -49,6 +52,7 @@ export class CampaignController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: CreateCampaignDto
   })
@@ -65,6 +69,7 @@ export class CampaignController {
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: UpdateCampaignDto
   })
@@ -89,6 +94,7 @@ export class CampaignController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'The campaign information has been successfully deleted.' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Campaign ID not found.' })

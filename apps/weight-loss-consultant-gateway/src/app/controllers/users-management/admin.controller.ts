@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { AdminService } from '../../services/admin.service';
 import { Response } from 'express';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -6,6 +6,7 @@ import { CreateAdminDto } from '../../../../../weight-loss-consultant-users-mgnt
 import { UpdateAdminDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/update-admin.dto';
 import { Roles } from '../../author/roles.decorator';
 import { Role } from '../../constants/enums';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -18,7 +19,7 @@ export class AdminController {
   }
 
   @Get()
-  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard)
   async getAllAdmins(@Res() res: Response) {
     try {
       const result = await this.adminService.getAllAdmins();
@@ -30,6 +31,7 @@ export class AdminController {
   }
 
   @Get(':email')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'Admin details has shown below:' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Email not found' })
@@ -51,6 +53,7 @@ export class AdminController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: CreateAdminDto
   })
@@ -68,6 +71,7 @@ export class AdminController {
   }
 
   @Put(':email')
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: UpdateAdminDto
   })
@@ -91,6 +95,7 @@ export class AdminController {
   }
 
   @Delete(':email')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'The admin information has been successfully deleted.' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Email not found.' })

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
-import { TrainerEntity } from '../entities/trainer.entity';
-import { UpdateTrainerDto } from '../dtos/trainer/update-trainer';
-import { AccountStatus } from '../constants/enums';
+import {Injectable} from "@nestjs/common";
+import {CreateTrainerDto} from "../dtos/trainer/create-trainer";
+import {TrainerEntity} from "../entities/trainer.entity";
+import {UpdateTrainerDto} from "../dtos/trainer/update-trainer";
+import {AccountStatus} from "../constants/enums";
 
 
 @Injectable()
