@@ -57,23 +57,25 @@ export class AuthenticationService {
       .pipe(map(([admin, customer, trainer]) => {
         return [admin, customer, trainer];
       }), catchError((e, u) => {
+        console.log(e);
         throw new RpcException({
           statusCode: HttpStatus.UNAUTHORIZED,
           message: 'Invalid username or password.'
         } as RpcExceptionModel);
         return u;
-    })).toPromise();
+      })).toPromise();
     let user: AdminEntity | CustomerEntity | TrainerEntity;
     let userRole: Role;
-    if (users[0] !== undefined) {
+    console.log(users);
+    if (users[0] !== undefined && users[0] !== null) {
       user = users[0] as AdminEntity;
       userRole = Role.Admin;
     }
-    if (users[1] !== undefined) {
+    if (users[1] !== undefined && users[1] !== null) {
       user = users[1] as CustomerEntity;
       userRole = Role.Customer;
     }
-    if (users[2] !== undefined) {
+    if (users[2] !== undefined && users[2] !== null) {
       user = users[2] as TrainerEntity;
       userRole = Role.Trainer;
     }
@@ -83,6 +85,7 @@ export class AuthenticationService {
         message: 'Invalid username or password.'
       } as RpcExceptionModel);
     }
+    console.log(user);
     return {
       ...user,
       role: userRole
@@ -96,18 +99,25 @@ export class AuthenticationService {
       this.validateTrainer(username).pipe(defaultIfEmpty(null))])
       .pipe(map(([admin, customer, trainer]) => {
         return [admin, customer, trainer];
+      }), catchError((e, u) => {
+        console.log(e);
+        throw new RpcException({
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: 'Invalid username or password.'
+        } as RpcExceptionModel);
+        return u;
       })).toPromise();
     let user: AdminEntity | CustomerEntity | TrainerEntity;
     let userRole: Role;
-    if (users[0] !== undefined) {
+    if (users[0] !== undefined && users[0] !== null) {
       user = users[0] as AdminEntity;
       userRole = Role.Admin;
     }
-    if (users[1] !== undefined) {
+    if (users[1] !== undefined && users[1] !== null) {
       user = users[1] as CustomerEntity;
       userRole = Role.Customer;
     }
-    if (users[2] !== undefined) {
+    if (users[2] !== undefined && users[2] !== null) {
       user = users[2] as TrainerEntity;
       userRole = Role.Trainer;
     }
