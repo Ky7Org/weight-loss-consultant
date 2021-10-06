@@ -4,12 +4,9 @@ import {AdminRepository} from "../repositories/admin.repository";
 import {PaginationDto} from "../dtos/pagination/pagination.dto";
 import {PaginatedResultDto} from "../dtos/pagination/paginated-result.dto";
 import {CustomerRepository} from "../repositories/customer.repository";
+import {Gender} from "../constants/enums";
 
 
-export enum Gender {
-  MALE = 1,
-  FEMALE = 2
-}
 
 @Injectable()
 export class SortingAndFilteringService {

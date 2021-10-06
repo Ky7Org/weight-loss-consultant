@@ -26,3 +26,8 @@ export enum Order {
   Ascending = "ASC",
   Descending = "DESC"
 }
+
+export enum Gender {
+  MALE = 1,
+  FEMALE = 2
+}
