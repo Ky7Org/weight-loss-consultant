@@ -42,3 +42,14 @@ export const CallAPIOutsite = (endpoint, method = 'GET', body) => {
     data: body,
   });
 };
+export const CallAPIGoogle = (endpoint, token) => {
+  var header = {
+    Accept: 'application/json',
+    Authorization: `Bearer ${token}`,
+  };
+  return axios({
+    method: 'POST',
+    url: `${endpoint}`,
+    headers: header,
+  });
+};
