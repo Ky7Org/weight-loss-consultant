@@ -7,8 +7,9 @@ const HeaderAuth = (props) => {
   const history = useHistory();
   return (
     <div
-      className="header"
-      style={{ boxShadow: 'rgba(17, 12, 46, 0.1) 0px 0 100px 0px' }}
+      style={{
+        boxShadow: 'rgba(17, 12, 46, 0.1) 0px 0 100px 0px',
+      }}
     >
       <Container>
         <Row align="middle" style={{ height: 75 }}>

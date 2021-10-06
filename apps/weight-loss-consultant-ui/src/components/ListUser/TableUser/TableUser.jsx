@@ -10,10 +10,10 @@ import {
 const TableUser = (props) => {
   const [editableColumns, setEditableColumns] = useState([
     'fullName',
+    'email',
     'action',
     'phone',
     'gender',
-    'status',
   ]);
 
   const { dataEmpl } = props;
@@ -28,11 +28,7 @@ const TableUser = (props) => {
       key: 'id',
       sorter: (a, b) => Sorter.TEXT(a.fullname, b.fullname),
       render(text, row) {
-        return (
-          <div style={{ fontWeight: 'bold', marginRight: '10px' }}>
-            {row?.fullname}
-          </div>
-        );
+        return <>{row?.fullname}</>;
       },
     },
     {
@@ -81,7 +77,7 @@ const TableUser = (props) => {
     },
     {
       title: 'Status',
-      dataIndex: 'status',
+      dataIndex: 'Status',
       key: 'id',
       sorter: (a, b) => Sorter.TEXT(a?.status || '', b?.status || ''),
       render(text, row) {
@@ -170,6 +166,7 @@ const TableUser = (props) => {
   return (
     <div className="Container">
       <Table
+        color="red"
         size="large"
         style={{ paddingTop: '10px', width: '100vw' }}
         dataSource={dataEmpl}
