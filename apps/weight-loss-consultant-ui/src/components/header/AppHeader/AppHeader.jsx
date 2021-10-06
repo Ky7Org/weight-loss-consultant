@@ -63,7 +63,8 @@ const AppHeader = () => {
     let title = 'Page Not Found';
     if (location.pathname === '/' || location.pathname === '/home')
       return (title = 'Home Page');
-    if (location.pathname === '/admin/user/list') return (title = 'User List');
+    if (location.pathname === '/admin/user/manager')
+      return (title = 'User Manager');
     if (location.pathname === '/userInformation')
       return (title = 'My Information');
     if (location.pathname.includes('/admin/user/update/'))
@@ -72,7 +73,6 @@ const AppHeader = () => {
   }, [location]);
 
   const handleSearch = (value) => {
-    console.log(value);
     dispatch(searchActions.saveTextSearch(value));
   };
 
@@ -81,16 +81,22 @@ const AppHeader = () => {
       <Container>
         <Row justify="space-between" align="middle">
           {!isAuthUser ? (
-            <img src={logo} alt="WLC logo" className={styles.logo} />
+            <img src={logo} alt="WLC logo" style={{ width: '250px' }} />
           ) : (
             <>
-              <Title level={1}>{pageTitle}</Title>
-              {(pageTitle === 'User List' || pageTitle === 'User') && (
+              <Title
+                level={1}
+                strong
+                style={{ color: '#19253b', fontSize: '50px' }}
+              >
+                {pageTitle}
+              </Title>
+              {(pageTitle === 'User Manager' || pageTitle === 'User') && (
                 <div className={styles.search}>
                   <div className={styles.searchField}>
                     <Search
                       onSearch={handleSearch}
-                      placeholder={'search User by name/email'}
+                      placeholder={'Search user'}
                     />
                   </div>
                   <div className={styles.modal}>
