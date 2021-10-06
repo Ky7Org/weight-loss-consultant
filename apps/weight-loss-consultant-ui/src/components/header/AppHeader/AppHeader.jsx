@@ -34,7 +34,12 @@ const AppHeader = () => {
       <Container>
         <Row justify="space-between" align="middle">
           {!isAuthUser ? (
-            <img src={logo} alt="WLC logo" className={styles.logo} />
+            <img
+              src={logo}
+              alt="WLC logo"
+              className={styles.logo}
+              style={{ width: '200px' }}
+            />
           ) : (
             <>
               <Title level={1}>{pageTitle}</Title>

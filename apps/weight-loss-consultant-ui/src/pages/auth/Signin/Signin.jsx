@@ -7,10 +7,14 @@ import * as cookie from 'js-cookie';
 import { REMEMBER } from '../../../constants/AppConstants';
 import { SubmitButton, Input, Checkbox, Form, FormItem } from 'formik-antd';
 import { Button, Row, Col, Alert } from 'antd';
-import { signInAPI } from '../../../services/user';
+import { signInAPI, signInGoogle } from '../../../services/user';
 import { SigninHandler } from '../../../states-manager/authentication/authentication-action';
 import image from '../../../assets/image/image2.png';
 import Container from '../../../components/UIContainer/UIContainer';
+import { firebaseConfig } from '../../../constants/GoogleAuthenticaiton';
+import { initializeApp } from '@firebase/app';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from '@firebase/auth';
+import { GoogleCircleFilled } from '@ant-design/icons';
 
 const Signin = (props) => {
   const rememberMe = useMemo(() => {
@@ -23,7 +27,9 @@ const Signin = (props) => {
     password: rememberMe?.password,
     remember: rememberMe?.remember,
   };
-
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
   const validateForm = Yup.object({
     email: Yup.string().required('Email is required'),
     password: Yup.string().required('Password is required'),
@@ -98,6 +104,31 @@ const Signin = (props) => {
               </Form>
             )}
           </Formik>
+          <div>
+            <GoogleCircleFilled
+              style={{ fontSize: '45px', marginTop: '15px', color: '#ff3333' }}
+              className="resource flex"
+              onClick={() => {
+                signInWithPopup(auth, provider)
+                  .then(({ user }) => {
+                    user.getIdToken().then((token) => {
+                      signInGoogle(token)
+                        .then((res) => {
+                          console.log(res);
+                          console.log(res.data);
+                          // dispatch(SigninHandler(res.data));
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                    });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }}
+            />
+          </div>
         </Col>
       </Row>
     </Container>
