@@ -1,11 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import {
-  HOST,
-  USERS_MANAGEMENT_SERVICE_NAME,
-  USERS_MANAGEMENT_SERVICE_PORT,
-} from '../../../../../constant';
+import { HOST, USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT } from '../../../../../constant';
 import { CampaignController } from '../controllers/campaigns-management/campaign.controller';
 import { CampaignService } from '../services/campaign.service';
 

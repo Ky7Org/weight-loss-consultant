@@ -1,5 +1,3 @@
-import { PathLike } from 'fs';
-
 export const JWT_CONFIG = {
   expireTime: "60s"
 }
@@ -26,6 +24,6 @@ export const ENV_FILE_PATH = (() : string => {
   if (process.cwd().includes("dist")){
     return "./assets/.env"
   }
-  return "./apps/weight-loss-consultant-authentication/src/assets/.env"
+  return "./.env"
 })();
 

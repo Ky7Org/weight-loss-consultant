@@ -1,11 +1,17 @@
-import {Inject, Injectable} from "@nestjs/common";
-import {USERS_MANAGEMENT_SERVICE_NAME} from "../../../../../constant";
-import {ClientProxy} from "@nestjs/microservices";
-import {AdminEntity} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/admin.entity";
-import {GET_ALL_ADMINS, GET_ADMIN_BY_EMAIL, UPDATE_ADMIN, DELETE_ADMIN, CREATE_ADMIN} from "../../../../users-management-service-routes";
-import {UpdateAdminDto} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/update-admin.dto";
-import {DeleteResult, UpdateResult} from "typeorm";
-import {CreateAdminDto} from "../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/create-admin.dto";
+import { Inject, Injectable } from '@nestjs/common';
+import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
+import { ClientProxy } from '@nestjs/microservices';
+import { AdminEntity } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/admin.entity';
+import {
+  CREATE_ADMIN,
+  DELETE_ADMIN,
+  GET_ADMIN_BY_EMAIL,
+  GET_ALL_ADMINS,
+  UPDATE_ADMIN
+} from '../../../../users-management-service-routes';
+import { UpdateAdminDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/update-admin.dto';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { CreateAdminDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/create-admin.dto';
 
 @Injectable()
 export class AdminService {

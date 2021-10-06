@@ -1,9 +1,6 @@
-import {HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { BaseService } from '../base.service';
-import {
-  DeleteResult,
-  UpdateResult
-} from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { AdminRepository } from '../../repositories/admin.repository';
 import { AdminEntity } from '../../entities/admin.entity';
 import { AdminMapper } from '../../mappers/admin.mapper';

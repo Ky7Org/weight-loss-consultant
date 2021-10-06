@@ -1,9 +1,7 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import {AppController} from "../controllers/app.controller";
-import {AppService} from "../services/app.service";
-import {ClientsModule, Transport} from "@nestjs/microservices";
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import {HealthCheckModule} from "./health-check.module";
+import { DynamicModule } from '@nestjs/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule } from '@nestjs/config';
+import { HealthCheckModule } from './health-check.module';
 import {
   AUTHENTICATION_SERVICE_NAME,
   AUTHENTICATION_SERVICE_PORT,
@@ -12,10 +10,11 @@ import {
   HOST,
   PACKAGES_MANAGEMENT_SERVICE_NAME,
   PACKAGES_MANAGEMENT_SERVICE_PORT,
-  SCHEDULING_SERVICE_NAME, SCHEDULING_SERVICE_PORT,
+  SCHEDULING_SERVICE_NAME,
+  SCHEDULING_SERVICE_PORT,
   USERS_MANAGEMENT_SERVICE_NAME,
   USERS_MANAGEMENT_SERVICE_PORT
-} from "../../../../../constant";
+} from '../../../../../constant';
 import { TrainerModule } from './trainer.module';
 import { PackageModule } from './package.module';
 import { AdminModule } from './admin.module';
@@ -90,9 +89,9 @@ export class AppModule {
           })
         }),
       ],
-      controllers: [AppController],
-      providers: [AppService],
-      exports: [AppService],
+      controllers: [],
+      providers: [],
+      exports: [],
     };
   }
 }

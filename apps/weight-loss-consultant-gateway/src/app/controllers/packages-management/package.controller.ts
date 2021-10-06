@@ -1,12 +1,12 @@
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res } from '@nestjs/common';
 import { CreatePackageDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/package/create-package';
 import { UpdatePackageDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/package/update-package';
 import { PackageService } from '../../services/package.service';
 
 @ApiTags('Package')
 @ApiBearerAuth()
-@Controller('/api/v1/packages')
+@Controller('/v1/packages')
 export class PackageController {
   private readonly logger = new Logger(PackageController.name);
 
@@ -17,31 +17,31 @@ export class PackageController {
   async index(@Res() res) {
     try {
       const result = await this.packageService.getPackageDetailsWithTrainer();
-      res.status(200).send(result);
-    } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).end();
+      res.status(HttpStatus.OK).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
   @Get(':id')
-  @ApiResponse({status: 200, description: 'Package details has shown below:'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Package ID not found'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'Package details has shown below:' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Package ID not found' })
   @ApiParam({
-      name: "id",
+      name: 'id',
       type: Number,
-      example: "1",
+      example: '1',
       required: true
     }
   )
   async getByID(@Param('id') id: number, @Res() res) {
     try {
       const result = await this.packageService.viewDetail(id);
-      res.status(200).send(result);
-    } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).end();
+      res.status(HttpStatus.OK).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.status).send(error);
     }
   }
 
@@ -49,15 +49,15 @@ export class PackageController {
   @ApiBody({
     type: CreatePackageDto
   })
-  @ApiResponse({status: 201, description: 'The new package has been successfully created.'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'The new package has been successfully created.' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   async create(@Body() dto: CreatePackageDto, @Res() res) {
     try {
       const result = await this.packageService.create(dto);
-      res.status(200).send(result);
-    } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).send({error:e.message});
+      res.status(HttpStatus.CREATED).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.status).send(error);
     }
   }
 
@@ -65,34 +65,34 @@ export class PackageController {
   @ApiBody({
     type: UpdatePackageDto
   })
-  @ApiResponse({status: 200, description: 'The package information has been successfully updated.'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Package ID not found.'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'The package information has been successfully updated.' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Package ID not found.' })
   @ApiParam({
-      name: "id",
+      name: 'id',
       type: Number,
-      example: "1",
+      example: '1',
       required: true
     }
   )
-  async update(@Param('id') id : number, @Body() dto: UpdatePackageDto, @Res() res) {
+  async update(@Param('id') id: number, @Body() dto: UpdatePackageDto, @Res() res) {
     try {
       const result = await this.packageService.edit(dto, id);
-      res.status(200).send(result);
-    } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).send({error: e.message});
+      res.status(HttpStatus.OK).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
   @Delete(':id')
-  @ApiResponse({status: 200, description: 'The package information has been successfully deleted.'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Package ID not found.'})
+  @ApiResponse({ status: 200, description: 'The package information has been successfully deleted.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 404, description: 'Package ID not found.' })
   @ApiParam({
-      name: "id",
+      name: 'id',
       type: Number,
-      example: "1",
+      example: '1',
       required: true
     }
   )
@@ -100,9 +100,9 @@ export class PackageController {
     try {
       const result = await this.packageService.delete(id);
       res.status(200).send(result);
-    } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).send({error: e.message});
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 }

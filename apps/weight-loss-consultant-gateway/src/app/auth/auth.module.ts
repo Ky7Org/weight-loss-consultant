@@ -1,18 +1,14 @@
-import { Injectable, Module } from '@nestjs/common';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { JWT_CONFIG } from '../constant';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { RolesGuard } from '../author/roles.guard';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUTHENTICATION_SERVICE_NAME, AUTHENTICATION_SERVICE_PORT, HOST } from '../../../../../constant';
 import { PassportModule } from '@nestjs/passport';
 import { AuthenticationController } from '../controllers/authentication/authentication.controller';
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { FirebaseAuthStrategy } from './strategies/firebase-auth.strategy';
-import { FirebaseAuthGuard } from './firebase-auth.guard';
 
 @Module({
   imports: [

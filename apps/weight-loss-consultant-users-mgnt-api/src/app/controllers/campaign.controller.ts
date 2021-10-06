@@ -1,14 +1,12 @@
-import {
-  Body,
-  Controller,
-} from "@nestjs/common";
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
-import {CampaignService} from "../services/impl/campaign.service.impl";
+import { Body, Controller } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CreateCampaignDto } from '../dtos/campaign/create-campaign';
+import { CampaignService } from '../services/impl/campaign.service.impl';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   CREATE_CAMPAIGN,
-  DELETE_CAMPAIGN_BY_ID, FIND_ALL_CAMPAIGNS,
+  DELETE_CAMPAIGN_BY_ID,
+  FIND_ALL_CAMPAIGNS,
   FIND_CAMPAIGN_BY_ID,
   UPDATE_CAMPAIGN_BY_ID
 } from '../../../../campaigns-management-routes';

@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Logger, Post, Res, UseFilters } from '@nestjs/common';
+import { Controller, HttpStatus, UseFilters } from '@nestjs/common';
 import { AuthenticationService } from '../services/authentication.service';
 import { CustomerService } from '../services/customer.service';
 import { MailService } from '../services/mail.service';
@@ -8,7 +8,6 @@ import { ResetPasswordTokenService } from '../services/reset-password-token.serv
 import { ResetPasswordTokenEntity } from '../entities/reset-password-token.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { ResetPasswordConfirmRequestModel } from '../models/reset-password-confirm-request-model';
-import { ErrorResponseModel } from '../models/error-response-model';
 import { AccountDTO } from '../dtos/acount.dto';
 import { AccountService } from '../services/account.service';
 import { RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status } from '../../constant';
@@ -16,10 +15,10 @@ import { TrainerService } from '../services/trainer.service';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import {
   CONFIRM_CHANGE_PASSWORD,
-  EMAIL_PASSWORD_AUTHENTICATE_USER, GOOGLE_FIREBASE_AUTHENTICATE_USER,
+  EMAIL_PASSWORD_AUTHENTICATE_USER,
+  GOOGLE_FIREBASE_AUTHENTICATE_USER,
   RESET_PASSWORD
 } from '../../../../authentication-routes';
-import { Observable } from 'rxjs';
 import { ExceptionFilter } from '../filters/rpc-exception.filter';
 import { LoginRequest } from '../models/login.req';
 import { LoginResponse } from '../models/login.res';

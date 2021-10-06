@@ -3,16 +3,15 @@ import { DynamicModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_FILE_PATH } from '../constants/env-file-path';
-import {CampaignEntity} from "../entities/campaign.entity";
-import {CampaignModule} from "./campaign.module";
-import {PackageEntity} from "../entities/package.enttiy";
-import {PackageModule} from "./package.module";
-import {CustomerEntity} from "../entities/customer.entity";
-import {TrainerEntity} from "../entities/trainer.entity";
-import {AdminEntity} from "../entities/admin.entity";
-import {CustomerModule} from "./customer.module";
-import {TrainerModule} from "./trainer.module";
-import {AuthModule} from "../auth/auth.module";
+import { CampaignEntity } from '../entities/campaign.entity';
+import { CampaignModule } from './campaign.module';
+import { PackageEntity } from '../entities/package.enttiy';
+import { PackageModule } from './package.module';
+import { CustomerEntity } from '../entities/customer.entity';
+import { TrainerEntity } from '../entities/trainer.entity';
+import { AdminEntity } from '../entities/admin.entity';
+import { CustomerModule } from './customer.module';
+import { TrainerModule } from './trainer.module';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -46,7 +45,6 @@ export class AppModule {
         CampaignModule,
         PackageModule,
         TrainerModule,
-        AuthModule
       ],
     };
   }

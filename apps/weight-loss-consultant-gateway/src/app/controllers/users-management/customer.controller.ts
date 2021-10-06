@@ -1,21 +1,15 @@
-import {
-  Body,
-  Controller, Delete,
-  Get, HttpStatus,
-  Param,
-  Post,
-  Put,
-  Res,
-} from "@nestjs/common";
-import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {CustomerService} from "../../services/customer.service";
-import {CreateCustDto} from "../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/create-customer.dto";
-import {UpdateCustDto} from "../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/update-customer-dto";
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CustomerService } from '../../services/customer.service';
+import { CreateCustDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/create-customer.dto';
+import { UpdateCustDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/update-customer-dto';
 
 @ApiTags('Customer')
 @ApiBearerAuth()
-@Controller('api/v1/customers')
+@Controller('/v1/customers')
 export class CustomerController {
+
+  private readonly logger: Logger = new Logger(CustomerController.name);
 
   constructor(private readonly customerService: CustomerService) {}
 
@@ -23,8 +17,9 @@ export class CustomerController {
   async index(@Res() res) {
     try {
       res.status(HttpStatus.OK).send(await this.customerService.findAll());
-    } catch (e) {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -43,9 +38,9 @@ export class CustomerController {
     try {
       const customer = await this.customerService.viewDetail(email);
       res.status(HttpStatus.OK).send(customer);
-    } catch (e) {
-      console.error(e);
-      res.status(e.status).end();
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -60,9 +55,9 @@ export class CustomerController {
     try {
       const result = await this.customerService.create(dto);
       res.status(HttpStatus.OK).send(result);
-    } catch (e) {
-      console.error(e.status)
-      res.status(e.status).json(e.message);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -84,9 +79,9 @@ export class CustomerController {
     try {
       const result = await this.customerService.edit(email, dto);
       res.status(HttpStatus.OK).send(result);
-    } catch (e) {
-      console.error(e);
-      res.status(e.status).end();
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -105,9 +100,9 @@ export class CustomerController {
     try {
       const result = await this.customerService.delete(email);
       res.status(HttpStatus.OK).send(result);
-    } catch (e) {
-      console.error(e);
-      res.status(e.status).end();
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 

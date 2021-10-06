@@ -9,7 +9,7 @@ import { Role } from '../../constants/enums';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
-@Controller(`/api/v1/admins`)
+@Controller(`/v1/admins`)
 export class AdminController {
 
   private readonly logger: Logger = new Logger(AdminController.name);
@@ -61,7 +61,7 @@ export class AdminController {
     try {
       const result = await this.adminService.create(dto);
       res.status(HttpStatus.CREATED).send(result);
-    } catch ({error}) {
+    } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
@@ -82,9 +82,11 @@ export class AdminController {
   })
   async update(@Param('email') email, @Body() dto: UpdateAdminDto, @Res() res) {
     try {
-      res.status(HttpStatus.OK).send(await this.adminService.update(email, dto));
-    } catch (e) {
-      res.status(HttpStatus.NOT_FOUND).end();
+      const result = await this.adminService.update(email, dto);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -99,6 +101,12 @@ export class AdminController {
     required: true
   })
   async delete(@Param('email') email, @Res() res) {
-    res.status(HttpStatus.OK).send(await this.adminService.delete(email));
+    try {
+      const result = await this.adminService.delete(email);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
   }
 }

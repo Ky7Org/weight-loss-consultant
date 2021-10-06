@@ -1,19 +1,8 @@
-import {
-  Body, Controller, DefaultValuePipe,
-  Delete,
-  Get, Logger,
-  Param, ParseIntPipe,
-  Post,
-  Put, Query,
-  Res,
-} from "@nestjs/common";
-import {TrainerService} from "../services/impl/trainer.service.impl";
-import {CreateTrainerDto} from "../dtos/trainer/create-trainer";
-import {UpdateTrainerDto} from "../dtos/trainer/update-trainer";
-import {ApiBearerAuth, ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {Pagination} from "nestjs-typeorm-paginate";
-import {AdminEntity} from "../entities/admin.entity";
-import {MissingParamsException} from "../exceptions/missing.params";
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Res } from '@nestjs/common';
+import { TrainerService } from '../services/impl/trainer.service.impl';
+import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
+import { UpdateTrainerDto } from '../dtos/trainer/update-trainer';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Trainer')
 @ApiBearerAuth()

@@ -1,16 +1,13 @@
-import { ConflictException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 
-import {BaseService} from "../base.service";
-import {
-  DeleteResult,
-  UpdateResult
-} from "typeorm";
-import {TrainerEntity} from "../../entities/trainer.entity";
-import {TrainerRepository} from "../../repositories/trainer.repository";
-import {TrainerMapper} from "../../mappers/trainer.mapper";
-import {CreateTrainerDto} from "../../dtos/trainer/create-trainer";
-import {UpdateTrainerDto} from "../../dtos/trainer/update-trainer";
-import {EMAIL_EXISTED_ERR} from "../../constants/validation-err-message";
+import { BaseService } from '../base.service';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { TrainerEntity } from '../../entities/trainer.entity';
+import { TrainerRepository } from '../../repositories/trainer.repository';
+import { TrainerMapper } from '../../mappers/trainer.mapper';
+import { CreateTrainerDto } from '../../dtos/trainer/create-trainer';
+import { UpdateTrainerDto } from '../../dtos/trainer/update-trainer';
+import { EMAIL_EXISTED_ERR } from '../../constants/validation-err-message';
 import { RpcException } from '@nestjs/microservices';
 import { RpcExceptionModel } from '../../filters/rpc-exception.model';
 

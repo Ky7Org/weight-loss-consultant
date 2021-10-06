@@ -1,9 +1,8 @@
-import {AdminRepository} from "../repositories/admin.repository";
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {Module} from "@nestjs/common";
-import {AdminMapper} from "../mappers/admin.mapper";
-import { AdminController } from "../controllers/admin.controller";
-import {AdminService} from "../services/impls/admin.service.impl";
+import { AdminRepository } from '../repositories/admin.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common';
+import { AdminMapper } from '../mappers/admin.mapper';
+import { AdminService } from '../services/impls/admin.service.impl';
 
 
 @Module({
@@ -13,7 +12,7 @@ import {AdminService} from "../services/impls/admin.service.impl";
     exports: [
       AdminService, AdminMapper
     ],
-    controllers: [AdminController]
+    controllers: []
 })
 export class AdminModule {
 

@@ -1,24 +1,7 @@
-import {
-  Body,
-  Controller, Delete,
-  Get, Logger,
-  Param,
-  Post,
-  Put, Query,
-  Res,
-} from "@nestjs/common";
-import {ApiBearerAuth, ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {CreatePackageDto} from "../dtos/package/create-package";
-import {UpdatePackageDto} from "../dtos/package/update-package";
-import {PackageService} from "../services/impl/package.service.impl";
-import {Role} from "../constants/enums";
-import {SortingAndFilteringService} from "../services/sorting-filtering.service";
-import {Pagination} from "nestjs-typeorm-paginate";
-import {AdminEntity} from "../entities/admin.entity";
-import {TrainerEntity} from "../entities/trainer.entity";
-import {CustomerEntity} from "../entities/customer.entity";
-import {PaginationDto} from "../dtos/pagination/pagination.dto";
-import {PaginatedResultDto} from "../dtos/pagination/paginated-result.dto";
+import { Body, Controller, Logger, Post, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SortingAndFilteringService } from '../services/sorting-filtering.service';
+import { PaginationDto } from '../dtos/pagination/pagination.dto';
 
 @ApiTags('Sorting and Filtering')
 @ApiBearerAuth()

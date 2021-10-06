@@ -1,11 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import {
-  AUTHENTICATION_SERVICE_NAME,
-  AUTHENTICATION_SERVICE_PORT,
-  HOST,
-} from '../../../../../constant';
+import { AUTHENTICATION_SERVICE_NAME, AUTHENTICATION_SERVICE_PORT, HOST } from '../../../../../constant';
 import { AuthenticationController } from '../controllers/authentication/authentication.controller';
 import { AuthenticationService } from '../services/authentication/authentication.service';
 

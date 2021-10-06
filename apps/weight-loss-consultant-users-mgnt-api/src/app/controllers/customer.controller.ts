@@ -1,16 +1,17 @@
-import {Controller} from "@nestjs/common";
-import {CustomerService} from "../services/impl/customer.service.impl";
-import {CreateCustDto} from "../dtos/customer/create-customer.dto";
-import {UpdateCustDto} from "../dtos/customer/update-customer-dto";
-import {MessagePattern, Payload} from "@nestjs/microservices";
+import { Controller } from '@nestjs/common';
+import { CustomerService } from '../services/impl/customer.service.impl';
+import { CreateCustDto } from '../dtos/customer/create-customer.dto';
+import { UpdateCustDto } from '../dtos/customer/update-customer-dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   CREATE_CUSTOMER,
-  DELETE_CUSTOMER, GET_ALL_CUSTOMER,
+  DELETE_CUSTOMER,
+  GET_ALL_CUSTOMER,
   UPDATE_CUSTOMER,
   VIEW_DETAIL_CUSTOMER
-} from "../../../../users-management-service-routes";
-import {DeleteResult, UpdateResult} from "typeorm";
-import {CustomerEntity} from "../entities/customer.entity";
+} from '../../../../users-management-service-routes';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { CustomerEntity } from '../entities/customer.entity';
 
 @Controller()
 export class CustomerController {

@@ -1,31 +1,15 @@
-import { ApiBearerAuth, ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import {
-  Body,
-  Controller,
-  DefaultValuePipe,
-  Delete,
-  Get,
-  Logger,
-  Param,
-  ParseIntPipe,
-  Post,
-  Put,
-  Query,
-  Res
-} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Res } from '@nestjs/common';
 import { TrainerService } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/services/impl/trainer.service.impl';
 import { Role } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/constants/enums';
 import { CreateTrainerDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/create-trainer';
 import { UpdateTrainerDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/update-trainer';
-import { Pagination } from 'nestjs-typeorm-paginate';
-import { AdminEntity } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/admin.entity';
-import { MissingParamsException } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/exceptions/missing.params';
 import { Roles } from '../../author/roles.decorator';
 import { Public } from '../../auth/public-decorator';
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
-@Controller('/api/v1/trainers')
+@Controller('/v1/trainers')
 export class TrainerController {
 
   private readonly logger = new Logger(TrainerController.name);

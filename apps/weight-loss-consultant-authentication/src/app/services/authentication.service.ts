@@ -7,9 +7,8 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { AdminEntity } from '../entities/admin.entity';
 import { CustomerEntity } from '../entities/customer.entity';
 import { TrainerEntity } from '../entities/trainer.entity';
-import { combineLatest, Observable } from 'rxjs';
-import { catchError, defaultIfEmpty, map } from 'rxjs/operators';
-import { LoginResponse } from '../../../../weight-loss-consultant-gateway/src/app/auth/login.res';
+import { combineLatest, from, Observable } from 'rxjs';
+import { defaultIfEmpty, map } from 'rxjs/operators';
 import { LoginRequest } from 'apps/weight-loss-consultant-gateway/src/app/auth/login.req';
 import { RpcExceptionModel } from '../filters/rpc-exception.model';
 
@@ -37,18 +36,39 @@ export class AuthenticationService {
   }
 
   private validateAdmin(username: string): Observable<AdminEntity> {
-    return this.usersManagementServiceProxy
-      .send<AdminEntity, string>({ cmd: ADMIN_VIEW_DETAIL }, username);
+    return from(this.usersManagementServiceProxy
+      .send<AdminEntity, string>({ cmd: ADMIN_VIEW_DETAIL }, username)
+      .toPromise().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: 'Invalid username or password.'
+        } as RpcExceptionModel);
+        return err;
+      }));
   }
 
   private validateCustomer(username: string): Observable<CustomerEntity> {
-    return this.usersManagementServiceProxy
-      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username);
+    return from(this.usersManagementServiceProxy
+      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username)
+      .toPromise().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: 'Invalid username or password.'
+        } as RpcExceptionModel);
+        return err;
+      }));
   }
 
   private validateTrainer(username: string): Observable<TrainerEntity> {
-    return this.usersManagementServiceProxy
-      .send<TrainerEntity, string>({ cmd: TRAINER_VIEW_DETAIL }, username);
+    return from(this.usersManagementServiceProxy
+      .send<TrainerEntity, string>({ cmd: TRAINER_VIEW_DETAIL }, username)
+      .toPromise().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: 'Invalid username or password.'
+        } as RpcExceptionModel);
+        return err;
+      }));
   }
 
   private async validateAccountWithoutPassword(username: string) {

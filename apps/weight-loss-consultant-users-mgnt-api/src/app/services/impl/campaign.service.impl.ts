@@ -1,4 +1,4 @@
-import { ConflictException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CampaignEntity } from '../../entities/campaign.entity';
 import { CampaignRepository } from '../../repositories/campaign.repository';

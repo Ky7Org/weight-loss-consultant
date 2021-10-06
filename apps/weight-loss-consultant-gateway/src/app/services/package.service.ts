@@ -11,7 +11,8 @@ import {
   DELETE_PACKAGE_BY_ID,
   FIND_ALL_PACKAGES,
   FIND_PACKAGE_BY_ID,
-  UPDATE_PACKAGE_BY_ID, UpdatePackagePayloadType
+  UPDATE_PACKAGE_BY_ID,
+  UpdatePackagePayloadType
 } from '../../../../packages-management-routes';
 
 @Injectable()

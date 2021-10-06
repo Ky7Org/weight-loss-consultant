@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/login-request-model';
 import { LoginResponseModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/login-response-model';
@@ -7,12 +7,11 @@ import { ResetPasswordRequestModel } from '../../../../../weight-loss-consultant
 import { ResetPasswordConfirmRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/reset-password-confirm-request-model';
 import { Public } from '../../auth/public-decorator';
 import { LoginRequest } from '../../auth/login.req';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { FirebaseAuthGuard } from '../../auth/firebase-auth.guard';
 
 @ApiTags('Authentication')
 @ApiBearerAuth()
-@Controller(`/api/v1/auth`)
+@Controller(`/v1/auth`)
 export class AuthenticationController {
 
   private readonly logger = new Logger(AuthenticationController.name);
@@ -37,7 +36,7 @@ export class AuthenticationController {
     try {
       const result = await this.authenticationService.login(dto);
       res.status(HttpStatus.OK).send(result);
-    } catch ({error}) {
+    } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
@@ -54,7 +53,7 @@ export class AuthenticationController {
     try {
       const result = await this.authenticationService.loginWithFirebase(req.user);
       res.status(HttpStatus.OK).send(result);
-    } catch ({error}) {
+    } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
@@ -68,7 +67,7 @@ export class AuthenticationController {
     try {
       const result = await this.authenticationService.resetPassword(body);
       res.status(HttpStatus.OK).send(result);
-    } catch ({error}) {
+    } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
@@ -81,7 +80,7 @@ export class AuthenticationController {
     try {
       const result = await this.authenticationService.confirmChangePassword(body);
       res.status(HttpStatus.OK).send(result);
-    } catch ({error}) {
+    } catch ({ error }) {
       this.logger.log(error);
       res.status(error.statusCode).send(error);
     }
