@@ -57,7 +57,7 @@ export class PackageController {
       res.status(HttpStatus.CREATED).send(result);
     } catch ({ error }) {
       this.logger.error(error);
-      res.status(error.status).send(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
