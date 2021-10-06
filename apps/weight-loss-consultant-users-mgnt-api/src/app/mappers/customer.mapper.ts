@@ -1,8 +1,8 @@
-import {CreateCustDto} from "../dtos/customer/create-customer.dto";
-import {CustomerEntity} from "../entities/customer.entity";
-import {UpdateCustDto} from "../dtos/customer/update-customer-dto";
-import {Injectable} from "@nestjs/common";
-import {AccountStatus} from "../constants/enums";
+import { CreateCustDto } from '../dtos/customer/create-customer.dto';
+import { CustomerEntity } from '../entities/customer.entity';
+import { UpdateCustDto } from '../dtos/customer/update-customer-dto';
+import { Injectable } from '@nestjs/common';
+import { AccountStatus } from '../constants/enums';
 
 @Injectable()
 export class CustomerMapper {

@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomerModule } from './customer.module';

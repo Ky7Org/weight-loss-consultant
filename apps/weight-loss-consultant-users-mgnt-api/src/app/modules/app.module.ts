@@ -1,21 +1,20 @@
-import {DynamicModule, MiddlewareConsumer, RequestMethod} from '@nestjs/common';
+import { DynamicModule } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import {AdminEntity} from "../entities/admin.entity";
-import {AdminModule} from "./admin.module";
+import { AdminEntity } from '../entities/admin.entity';
+import { AdminModule } from './admin.module';
 import { TrainerEntity } from '../entities/trainer.entity';
-import {TrainerModule} from "./trainer.module";
-import {CustomerModule} from "./customer.module";
-import {CustomerEntity} from "../entities/customer.entity";
+import { TrainerModule } from './trainer.module';
+import { CustomerModule } from './customer.module';
+import { CustomerEntity } from '../entities/customer.entity';
 import { ENV_FILE_PATH } from '../constants/env-file-path';
-import {AuthModule} from "../auth/auth.module";
-import {CampaignEntity} from "../entities/campaign.entity";
-import {PackageEntity} from "../entities/package.enttiy";
-import {CampaignModule} from "./campaign.module";
-import {PackageModule} from "./package.module";
-import {SortingAndFilteringModule} from "./sorting-filtering.module";
-import {SearchModule} from "./search.module";
+import { CampaignEntity } from '../entities/campaign.entity';
+import { PackageEntity } from '../entities/package.enttiy';
+import { CampaignModule } from './campaign.module';
+import { PackageModule } from './package.module';
+import { SortingAndFilteringModule } from './sorting-filtering.module';
+import { SearchModule } from './search.module';
 
 
 export class AppModule {
@@ -49,7 +48,6 @@ export class AppModule {
         AdminModule,
         TrainerModule,
         CustomerModule,
-        AuthModule,
         CampaignModule,
         PackageModule,
         SortingAndFilteringModule,
