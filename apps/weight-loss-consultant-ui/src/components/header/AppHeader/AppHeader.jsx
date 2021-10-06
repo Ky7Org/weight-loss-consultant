@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom';
 import logo from '../../../assets/image/weightlossLogo.png';
 import { useSelector, useDispatch } from 'react-redux';
 import { searchActions } from '../../../states-manager/search/search-slice';
-import { filterActions } from '../../../states-manager/filter/filter-slice';
 import styles from './AppHeader.module.scss';
 import {
   FilterOutlined,
@@ -35,16 +34,6 @@ const AppHeader = () => {
       setorderSelected(true);
     }
   };
-  class filterObject {
-    constructor(selectedGender, sortBySelected, roles, order, page, limit) {
-      this.gender = selectedGender;
-      this.sort = sortBySelected;
-      this.role = roles;
-      this.order = order;
-      this.page = page;
-      this.limit = limit;
-    }
-  }
   const { Option } = Select;
   const handleSortBySelected = (sortBy) => {
     setSortBySelected(sortBy);
@@ -60,16 +49,7 @@ const AppHeader = () => {
   );
   const filteredRole = roleOption.filter((o) => !selectedRole?.includes(o));
   const handleConfirmModal = () => {
-    const filter = new filterObject(
-      selectedGender,
-      sortBySelected,
-      selectedRole,
-      order,
-      1,
-      10
-    );
-    console.log(filter);
-    dispatch(filterActions.saveObjectFilter(filter));
+    console.log('OK');
     setIsModalShown(false);
   };
   const handleCancelModal = () => {
@@ -101,7 +81,7 @@ const AppHeader = () => {
       <Container>
         <Row justify="space-between" align="middle">
           {!isAuthUser ? (
-            <img src={logo} alt="WLC logo" style={{ width: '200px' }} />
+            <img src={logo} alt="WLC logo" className={styles.logo} />
           ) : (
             <>
               <Title level={1}>{pageTitle}</Title>
@@ -185,7 +165,7 @@ const AppHeader = () => {
                           }}
                         >
                           <div>
-                            <h5 style={{ fontWeight: 'bold' }}>User Roles</h5>
+                            <h5 style={{ fontWeight: 'bold' }}>User Gender</h5>
                             <Select
                               mode="multiple"
                               placeholder="Select Role Filter"

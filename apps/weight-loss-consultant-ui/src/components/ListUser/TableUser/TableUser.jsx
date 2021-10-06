@@ -154,7 +154,7 @@ const TableUser = (props) => {
   return (
     <div className="Container">
       <Table
-        style={{ paddingTop: '10px' }}
+        style={{ paddingTop: '10px', width: '100vw' }}
         dataSource={dataEmpl}
         columns={columns}
         rowKey="email"
@@ -166,7 +166,7 @@ const TableUser = (props) => {
           total: dataEmpl?.length || 0,
           responsive: true,
         }}
-        scroll={{ x: 700 }}
+        scroll={{ x: 700, y: 700 }}
       />
       <Modal
         maskClosable={false}
