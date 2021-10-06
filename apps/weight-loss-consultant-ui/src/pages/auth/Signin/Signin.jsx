@@ -109,17 +109,16 @@ const Signin = (props) => {
               style={{ fontSize: '45px', marginTop: '15px', color: '#ff3333' }}
               className="resource flex"
               onClick={() => {
+                setErrorRes('');
                 signInWithPopup(auth, provider)
                   .then(({ user }) => {
                     user.getIdToken().then((token) => {
                       signInGoogle(token)
                         .then((res) => {
-                          console.log(res);
-                          console.log(res.data);
-                          // dispatch(SigninHandler(res.data));
+                          dispatch(SigninHandler(res.data));
                         })
                         .catch((err) => {
-                          console.log(err);
+                          setErrorRes(err?.response?.statusText);
                         });
                     });
                   })

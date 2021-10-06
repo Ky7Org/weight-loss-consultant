@@ -7,6 +7,9 @@ import {
   HomeOutlined,
   LogoutOutlined,
   TableOutlined,
+  CreditCardOutlined,
+  SolutionOutlined,
+  WarningOutlined,
 } from '@ant-design/icons';
 import wlc from '../../assets/image/LogoTextWhite.png';
 import AppRouter from '../../router/AppRouter';
@@ -15,7 +18,6 @@ import AppHeader from '../../components/header/AppHeader/AppHeader';
 import useWindowDimensions from '../../components/hook-custom/useWindowDimensions';
 import './styles.css';
 const { Sider } = Layout;
-const { SubMenu } = Menu;
 const WelcomePage = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -62,22 +64,45 @@ const WelcomePage = (props) => {
                   selectedKeys={[location.pathname]}
                   defaultSelectedKeys={['1']}
                 >
-                  <SubMenu
-                    key="sub1"
-                    title={`Hi, ${user?.decodeInfo?.email}`}
-                    icon={<UserOutlined />}
-                  >
-                    <Menu.Item key="/userInformation">
-                      <NavLink to="/userInformation">My Information</NavLink>
-                    </Menu.Item>
-                  </SubMenu>
+                  <Menu.Item key="/" icon={<UserOutlined />}>
+                    <NavLink to="/">
+                      <a style={{ color: 'white' }}>{`Hi, ${user?.email}`}</a>
+                    </NavLink>
+                  </Menu.Item>
                   <Menu.Item key="/home" icon={<HomeOutlined />}>
-                    <NavLink to="/home">{'Home'}</NavLink>
+                    <NavLink to="/home">
+                      <a style={{ color: 'white' }}> Home Page </a>
+                    </NavLink>
                   </Menu.Item>
                   <Menu.Item key="/admin/user/list" icon={<TableOutlined />}>
-                    <NavLink to="/admin/user/list">User List</NavLink>
+                    <NavLink to="/admin/user/list">
+                      <a style={{ color: 'white' }}> User Manager </a>
+                    </NavLink>
                   </Menu.Item>
-
+                  <Menu.Item
+                    key="/admin/user/contract"
+                    icon={<SolutionOutlined />}
+                  >
+                    <NavLink to="/admin/user/contract">
+                      <a style={{ color: 'white' }}> User Contract </a>
+                    </NavLink>
+                  </Menu.Item>
+                  <Menu.Item
+                    key="/admin/user/payment"
+                    icon={<CreditCardOutlined />}
+                  >
+                    <NavLink to="/admin/user/payment">
+                      <a style={{ color: 'white' }}> User Payment</a>
+                    </NavLink>
+                  </Menu.Item>
+                  <Menu.Item
+                    key="/admin/user/report"
+                    icon={<WarningOutlined />}
+                  >
+                    <NavLink to="/admin/user/report">
+                      <a style={{ color: 'white' }}> User Report</a>
+                    </NavLink>
+                  </Menu.Item>
                   <hr className="sider__lineDivider" />
                   <Menu.Item
                     key="/signout"

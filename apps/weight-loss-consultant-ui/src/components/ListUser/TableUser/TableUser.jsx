@@ -2,12 +2,18 @@ import { useMemo, useState } from 'react';
 import { Button, Table, Row, Modal, Select } from 'antd';
 import './TableUser.css';
 import { Sorter } from '../../../utils/sorter';
+import {
+  InfoCircleOutlined,
+  CheckCircleFilled,
+  CloseCircleFilled,
+} from '@ant-design/icons';
 
 const TableUser = (props) => {
   const [editableColumns, setEditableColumns] = useState([
     'fullName',
     'email',
     'action',
+    'phone',
   ]);
   const { dataEmpl } = props;
   const [isModalShown, setIsModalShown] = useState(false);
@@ -63,7 +69,37 @@ const TableUser = (props) => {
       key: 'id',
       sorter: (a, b) => Sorter.TEXT(a?.status || '', b?.status || ''),
       render(text, row) {
-        return <>{row?.status}</>;
+        return (
+          <div>
+            {row?.status == 1 ? (
+              <div style={{ display: 'flex' }}>
+                <div>
+                  <CheckCircleFilled
+                    style={{
+                      color: 'green',
+                      fontSize: '20px',
+                      marginLeft: '30px',
+                    }}
+                  />
+                </div>
+                <div style={{ marginLeft: '10px', fontWeight: 'bold' }}>
+                  Active
+                </div>
+              </div>
+            ) : (
+              <div>
+                <CloseCircleFilled
+                  style={{
+                    color: 'red',
+                    fontSize: '20px',
+                    marginLeft: '30px',
+                  }}
+                />
+                <div style={{ marginLeft: '10px' }}>Inactive</div>
+              </div>
+            )}
+          </div>
+        );
       },
     },
     {
@@ -81,10 +117,16 @@ const TableUser = (props) => {
       render(text, row) {
         return (
           <Row justify="end">
-            <div>
-              <div>Setting 1</div>
-              <div>Setting 2</div>
-              <div>Setting 3</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                <InfoCircleOutlined
+                  style={{
+                    fontSize: '20px',
+                    color: '#ff3939',
+                    marginRight: '30px',
+                  }}
+                />
+              </div>
             </div>
           </Row>
         );
