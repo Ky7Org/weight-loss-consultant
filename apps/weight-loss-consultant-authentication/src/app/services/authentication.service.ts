@@ -8,7 +8,7 @@ import { AdminEntity } from '../entities/admin.entity';
 import { CustomerEntity } from '../entities/customer.entity';
 import { TrainerEntity } from '../entities/trainer.entity';
 import { combineLatest, from, Observable } from 'rxjs';
-import { defaultIfEmpty, map } from 'rxjs/operators';
+import { catchError, defaultIfEmpty, map, tap } from 'rxjs/operators';
 import { LoginRequest } from 'apps/weight-loss-consultant-gateway/src/app/auth/login.req';
 import { RpcExceptionModel } from '../filters/rpc-exception.model';
 
@@ -36,39 +36,18 @@ export class AuthenticationService {
   }
 
   private validateAdmin(username: string): Observable<AdminEntity> {
-    return from(this.usersManagementServiceProxy
-      .send<AdminEntity, string>({ cmd: ADMIN_VIEW_DETAIL }, username)
-      .toPromise().catch((err) => {
-        throw new RpcException({
-          statusCode: HttpStatus.UNAUTHORIZED,
-          message: 'Invalid username or password.'
-        } as RpcExceptionModel);
-        return err;
-      }));
+    return this.usersManagementServiceProxy
+      .send<AdminEntity, string>({ cmd: ADMIN_VIEW_DETAIL }, username);
   }
 
   private validateCustomer(username: string): Observable<CustomerEntity> {
-    return from(this.usersManagementServiceProxy
-      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username)
-      .toPromise().catch((err) => {
-        throw new RpcException({
-          statusCode: HttpStatus.UNAUTHORIZED,
-          message: 'Invalid username or password.'
-        } as RpcExceptionModel);
-        return err;
-      }));
+    return this.usersManagementServiceProxy
+      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username);
   }
 
   private validateTrainer(username: string): Observable<TrainerEntity> {
-    return from(this.usersManagementServiceProxy
-      .send<TrainerEntity, string>({ cmd: TRAINER_VIEW_DETAIL }, username)
-      .toPromise().catch((err) => {
-        throw new RpcException({
-          statusCode: HttpStatus.UNAUTHORIZED,
-          message: 'Invalid username or password.'
-        } as RpcExceptionModel);
-        return err;
-      }));
+    return this.usersManagementServiceProxy
+      .send<TrainerEntity, string>({ cmd: TRAINER_VIEW_DETAIL }, username);
   }
 
   private async validateAccountWithoutPassword(username: string) {
@@ -77,18 +56,24 @@ export class AuthenticationService {
       this.validateTrainer(username).pipe(defaultIfEmpty(null))])
       .pipe(map(([admin, customer, trainer]) => {
         return [admin, customer, trainer];
-      })).toPromise();
+      }), catchError((e, u) => {
+        throw new RpcException({
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: 'Invalid username or password.'
+        } as RpcExceptionModel);
+        return u;
+    })).toPromise();
     let user: AdminEntity | CustomerEntity | TrainerEntity;
     let userRole: Role;
-    if (users[0] !== null) {
+    if (users[0] !== undefined) {
       user = users[0] as AdminEntity;
       userRole = Role.Admin;
     }
-    if (users[1] !== null) {
+    if (users[1] !== undefined) {
       user = users[1] as CustomerEntity;
       userRole = Role.Customer;
     }
-    if (users[2] !== null) {
+    if (users[2] !== undefined) {
       user = users[2] as TrainerEntity;
       userRole = Role.Trainer;
     }
@@ -114,15 +99,15 @@ export class AuthenticationService {
       })).toPromise();
     let user: AdminEntity | CustomerEntity | TrainerEntity;
     let userRole: Role;
-    if (users[0] !== null) {
+    if (users[0] !== undefined) {
       user = users[0] as AdminEntity;
       userRole = Role.Admin;
     }
-    if (users[1] !== null) {
+    if (users[1] !== undefined) {
       user = users[1] as CustomerEntity;
       userRole = Role.Customer;
     }
-    if (users[2] !== null) {
+    if (users[2] !== undefined) {
       user = users[2] as TrainerEntity;
       userRole = Role.Trainer;
     }
