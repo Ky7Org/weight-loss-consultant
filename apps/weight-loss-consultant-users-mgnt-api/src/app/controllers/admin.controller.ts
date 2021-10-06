@@ -1,136 +1,113 @@
+import { Controller, UseFilters } from '@nestjs/common';
+import { AdminService } from '../services/impl/admin.service.impl';
+import { CreateAdminDto } from '../dtos/admin/create-admin.dto';
+import { UpdateAdminDto } from '../dtos/admin/update-admin.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
-  Body,
-  Controller,
-  DefaultValuePipe,
-  Delete,
-  Get,
-  Logger,
-  Param,
-  ParseIntPipe,
-  Post,
-  Put,
-  Query,
-  Res
-} from "@nestjs/common";
-import {AdminService} from "../services/impl/admin.service.impl"
-import {CreateAdminDto} from "../dtos/admin/create-admin.dto";
-import {UpdateAdminDto} from "../dtos/admin/update-admin.dto";
-import {ApiBearerAuth, ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {Roles} from "../author/roles.decorator";
-import {Role} from "../constants/enums";
-import {Pagination} from "nestjs-typeorm-paginate";
-import {AdminEntity} from "../entities/admin.entity";
-import {MissingParamsException} from "../exceptions/missing.params";
+  CREATE_ADMIN,
+  DELETE_ADMIN,
+  GET_ADMIN_BY_EMAIL,
+  GET_ALL_ADMINS,
+  UPDATE_ADMIN
+} from '../../../../users-management-service-routes';
+import { AdminEntity } from '../entities/admin.entity';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import {
+  ADMIN_VIEW_DETAIL,
+  CUSTOMER_VIEW_DETAIL,
+  TRAINER_VIEW_DETAIL
+} from '../../../../weight-loss-consultant-authentication/src/app/services/authentication.service';
+import { CustomerEntity } from '../entities/customer.entity';
+import { CustomerService } from '../services/impl/customer.service.impl';
+import { TrainerService } from '../services/impl/trainer.service.impl';
+import { TrainerEntity } from '../entities/trainer.entity';
+import { ExceptionFilter } from '../filters/rpc-exception.filter';
 
-@ApiTags('Admin')
-@ApiBearerAuth()
-@Controller('/v1/admins')
+type UpdateAdminType = {
+  email: string;
+  dto: UpdateAdminDto;
+};
+
+@Controller()
 export class AdminController {
 
-  private readonly logger = new Logger(AdminController.name);
+  constructor(private readonly adminService: AdminService,
+              private readonly customerService: CustomerService,
+              private readonly trainerService: TrainerService) {}
 
-  constructor(private readonly userService: AdminService) {
-  }
-
-  @Roles(Role.Admin)
-  @Get()
-  async index(@Res() res): Promise<void> {
+  @MessagePattern({cmd: GET_ALL_ADMINS})
+  @UseFilters(new ExceptionFilter())
+  async index(): Promise<AdminEntity[]> {
     try {
-      const result = await this.userService.findAll();
-      res.status(200).send(result);
+      return this.adminService.findAll();
     } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).end();
+      console.error(e);
+      return Promise.reject(e);
     }
   }
 
-  @Roles(Role.Admin)
-  @Get(':email')
-  @ApiResponse({status: 200, description: 'Admin details has shown below:'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Email not found'})
-  @ApiParam({
-      name: "email",
-      type: String,
-      example: "email@gmail.com",
-      required: true
-    }
-  )
-  async getByEmail(@Param('email') email: string, @Res() res): Promise<void> {
+  @MessagePattern({cmd: ADMIN_VIEW_DETAIL})
+  @UseFilters(new ExceptionFilter())
+  async viewAdminDetailByUsername(@Payload() username: string): Promise<AdminEntity> {
+    return this.adminService.viewDetail(username);
+  }
+
+  @MessagePattern({cmd: CUSTOMER_VIEW_DETAIL})
+  @UseFilters(new ExceptionFilter())
+  async viewCustomerDetailByUsername(@Payload() username: string): Promise<CustomerEntity> {
+    return this.customerService.findOneCustomer(username);
+  }
+
+  @MessagePattern({cmd: TRAINER_VIEW_DETAIL})
+  @UseFilters(new ExceptionFilter())
+  async viewTrainerDetailByUsername(@Payload() username: string): Promise<TrainerEntity> {
+    return this.trainerService.findOneTrainer(username);
+  }
+
+  @MessagePattern({cmd: GET_ADMIN_BY_EMAIL})
+  @UseFilters(new ExceptionFilter())
+  async getByEmail(@Payload() email: string): Promise<AdminEntity> {
     try {
-      const admin = await this.userService.viewDetail(email);
-      res.status(200).send(admin);
+      return this.adminService.viewDetail(email);
     } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).end();
+      return Promise.reject(e);
     }
   }
 
-  @Roles(Role.Admin)
-  @Post()
-  @ApiBody({
-    type: CreateAdminDto
-  })
-  @ApiResponse({status: 201, description: 'The new admin has been successfully created.'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 409, description: 'Email has already existed.'})
-  async create(@Body() dto: CreateAdminDto, @Res() res): Promise<void> {
+  @MessagePattern({cmd: CREATE_ADMIN})
+  @UseFilters(new ExceptionFilter())
+  async create(@Payload() dto: CreateAdminDto): Promise<AdminEntity> {
     try {
-      const result = await this.userService.create(dto);
-      res.status(200).send(result);
+      return this.adminService.create(dto);
     } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).end();
+      console.error(e);
+      return Promise.reject(e);
     }
   }
 
-  @Roles(Role.Admin)
-  @Put(':email')
-  @ApiBody({
-    type: UpdateAdminDto
-  })
-  @ApiResponse({status: 200, description: 'The admin information has been successfully updated.'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Email not found.'})
-  @ApiParam({
-    name: "email",
-    type: String,
-    example: "email@gmail.com",
-    required: true
-  })
-  async update(@Param('email') email, @Body() dto: UpdateAdminDto, @Res() res): Promise<void> {
+  @MessagePattern({cmd: UPDATE_ADMIN})
+  @UseFilters(new ExceptionFilter())
+  async update(@Payload() payload: UpdateAdminType): Promise<UpdateResult> {
     try {
-      const result = await this.userService.edit(dto, email);
-      res.status(200).send(result);
+      return this.adminService.edit(payload.dto);
     } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).end();
+      console.error(e);
+      return Promise.reject(e);
     }
-
   }
 
-  @Roles(Role.Admin)
-  @Delete(':email')
-  @ApiResponse({status: 200, description: 'The admin information has been successfully deleted.'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Email not found.'})
-  @ApiParam({
-    name: "email",
-    type: String,
-    example: "email@gmail.com",
-    required: true
-  })
-  async delete(@Param('email') email, @Res() res): Promise<void> {
+  @MessagePattern({cmd: DELETE_ADMIN})
+  @UseFilters(new ExceptionFilter())
+  async delete(@Payload() email): Promise<DeleteResult> {
     try {
-      const result = await this.userService.delete(email);
-      res.status(200).send(result);
+      return this.adminService.delete(email);
     } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).end();
+      console.error(e);
+      return Promise.reject(e);
     }
   }
 
-  //sort by email endpoint
+ /* //sort by email endpoint
   @Roles(Role.Admin)
   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
@@ -224,6 +201,6 @@ export class AdminController {
         limit,
       })
     }
-  }
+  }*/
 
 }

@@ -3,17 +3,17 @@
  * This is only a minimal backend to get started.
  */
 
-import {Logger} from '@nestjs/common';
-import {NestFactory} from '@nestjs/core';
+import { Logger } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 
-import {SwaggerModule, DocumentBuilder} from '@nestjs/swagger';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import {AppModule} from './app/modules/app.module';
-import * as dotenv from "dotenv";
-import * as fs from "fs";
+import { AppModule } from './app/modules/app.module';
+import * as dotenv from 'dotenv';
+import * as fs from 'fs';
 import { ENV_FILE_PATH } from './app/constants/env-file-path';
-import {CampaignModule} from "./app/modules/campaign.module";
-import {PackageModule} from "./app/modules/package.module";
+import { CampaignModule } from './app/modules/campaign.module';
+import { PackageModule } from './app/modules/package.module';
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));

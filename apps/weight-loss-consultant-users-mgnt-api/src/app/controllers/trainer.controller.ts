@@ -1,22 +1,8 @@
-import {
-  Body, Controller, DefaultValuePipe,
-  Delete,
-  Get, Logger,
-  Param, ParseIntPipe,
-  Post,
-  Put, Query,
-  Res,
-} from "@nestjs/common";
-import {TrainerService} from "../services/impl/trainer.service.impl";
-import {CreateTrainerDto} from "../dtos/trainer/create-trainer";
-import {UpdateTrainerDto} from "../dtos/trainer/update-trainer";
-import {ApiBearerAuth, ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {Roles} from "../author/roles.decorator";
-import {Role} from "../constants/enums";
-import {Public} from "../auth/public-decorator";
-import {Pagination} from "nestjs-typeorm-paginate";
-import {AdminEntity} from "../entities/admin.entity";
-import {MissingParamsException} from "../exceptions/missing.params";
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Res } from '@nestjs/common';
+import { TrainerService } from '../services/impl/trainer.service.impl';
+import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
+import { UpdateTrainerDto } from '../dtos/trainer/update-trainer';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
@@ -28,7 +14,7 @@ export class TrainerController {
   constructor(private readonly trainerService: TrainerService) {
   }
 
-  @Roles(Role.Admin)
+ // @Roles(Role.Admin)
   @ApiResponse({status: 200, description: 'Trainers have shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden: Only available for admin role'})
   @Get()
@@ -42,7 +28,7 @@ export class TrainerController {
     }
   }
 
-  @Roles(Role.Admin, Role.Trainer)
+  //@Roles(Role.Admin, Role.Trainer)
   @Get(':email')
   @ApiResponse({status: 200, description: 'Trainer details has shown below:'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -64,7 +50,7 @@ export class TrainerController {
     }
   }
 
-  @Public()
+  //@Public()
   @Post()
   @ApiBody({
     type: CreateTrainerDto
@@ -82,7 +68,7 @@ export class TrainerController {
     }
   }
 
-  @Roles(Role.Admin, Role.Trainer)
+ // @Roles(Role.Admin, Role.Trainer)
   @Put(':email')
   @ApiBody({
     type: UpdateTrainerDto
@@ -107,7 +93,7 @@ export class TrainerController {
     }
   }
 
-  @Roles(Role.Admin, Role.Trainer)
+  //@Roles(Role.Admin, Role.Trainer)
   @Delete(':email')
   @ApiResponse({status: 200, description: 'The trainer information has been successfully deleted.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
@@ -129,8 +115,8 @@ export class TrainerController {
     }
   }
 
-  //sort by email endpoint
-  @Roles(Role.Trainer, Role.Admin)
+/*  //sort by email endpoint
+  //@Roles(Role.Trainer, Role.Admin)
   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
   @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
@@ -162,7 +148,7 @@ export class TrainerController {
   }
 
   //Sort by fullname endpoint
-  @Roles(Role.Trainer, Role.Admin)
+ // @Roles(Role.Trainer, Role.Admin)
   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
   @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
@@ -194,7 +180,7 @@ export class TrainerController {
   }
 
   //sort by DOB endpoint
-  @Roles(Role.Admin)
+ // @Roles(Role.Admin)
   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
   @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
@@ -226,7 +212,7 @@ export class TrainerController {
   }
 
   //sort by year of exp endpoint
-  @Roles(Role.Trainer, Role.Admin)
+  //@Roles(Role.Trainer, Role.Admin)
   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
   @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
@@ -258,7 +244,7 @@ export class TrainerController {
   }
 
   //sort by rating endpoint
-  @Roles(Role.Trainer, Role.Admin)
+ // @Roles(Role.Trainer, Role.Admin)
   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
   @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
@@ -287,5 +273,5 @@ export class TrainerController {
         limit,
       })
     }
-  }
+  }*/
 }

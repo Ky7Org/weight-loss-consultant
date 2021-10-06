@@ -1,9 +1,7 @@
-import {PartialType} from '@nestjs/mapped-types';
-import {CreateAdminDto} from './create-admin.dto';
-import {IsEmail, isNumber, IsString, MaxLength, MinLength} from "class-validator";
-import * as LIMIT_LENGTH from "../../constants/properties-length-limit";
-import * as ERR_MSG from "../../constants/validation-err-message";
-import {ApiProperty} from "@nestjs/swagger";
+import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import * as LIMIT_LENGTH from '../../constants/properties-length-limit';
+import * as ERR_MSG from '../../constants/validation-err-message';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateAdminDto {
   @IsEmail()

@@ -1,12 +1,12 @@
-import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
-import {DeleteResult, UpdateResult} from "typeorm";
-import {PackageEntity} from "../../entities/package.enttiy";
-import {PackageRepository} from "../../repositories/package.repository";
-import {PackageMapper} from "../../mappers/package.mapper";
-import {CreatePackageDto} from "../../dtos/package/create-package";
-import {UpdatePackageDto} from "../../dtos/package/update-package";
-import {BaseService} from "../base.service";
-import {TrainerService} from "./trainer.service.impl";
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { PackageEntity } from '../../entities/package.enttiy';
+import { PackageRepository } from '../../repositories/package.repository';
+import { PackageMapper } from '../../mappers/package.mapper';
+import { CreatePackageDto } from '../../dtos/package/create-package';
+import { UpdatePackageDto } from '../../dtos/package/update-package';
+import { BaseService } from '../base.service';
+import { TrainerService } from './trainer.service.impl';
 
 @Injectable()
 export class PackageService extends BaseService<PackageEntity, PackageRepository> {

@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAdminDto } from "../dtos/admin/create-admin.dto";
-import {AdminEntity} from "../entities/admin.entity";
-import {UpdateAdminDto} from "../dtos/admin/update-admin.dto";
-import {AccountStatus} from "../constants/enums";
+import { CreateAdminDto } from '../dtos/admin/create-admin.dto';
+import { AdminEntity } from '../entities/admin.entity';
+import { UpdateAdminDto } from '../dtos/admin/update-admin.dto';
+import { AccountStatus } from '../constants/enums';
+
 @Injectable()
 export class AdminMapper {
 static async mapCreateAdminDTOToEntity(dto: CreateAdminDto): Promise<AdminEntity | null> {
