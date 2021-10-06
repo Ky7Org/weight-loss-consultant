@@ -8,14 +8,14 @@ import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_register_service.dart';
 import 'package:weight_loss_consultant_mobile/utils/validator.dart';
 
-class CustomerRegisterPage extends StatefulWidget {
-  const CustomerRegisterPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  _CustomerRegisterPageState createState() => _CustomerRegisterPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _CustomerRegisterPageState extends State<CustomerRegisterPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
   bool _passwordVisible = false;
@@ -54,7 +54,7 @@ class _CustomerRegisterPageState extends State<CustomerRegisterPage> {
                 child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      "Join our Trainer community",
+                      "Join our Training community",
                       style: TextStyle(
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
@@ -209,7 +209,9 @@ class _CustomerRegisterPageState extends State<CustomerRegisterPage> {
                               );
                               bool result = await service.registerCustomer();
                               if (result) {
-                                Navigator.pushNamed(context, RoutePath.loginPage);
+                                Navigator.pushNamed(context, RoutePath.trainerRegisterSuccessfullyPage, arguments: {
+                                  "email": _email.text
+                                });
                               }
                             }
                           },

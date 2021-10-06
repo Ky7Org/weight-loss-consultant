@@ -34,7 +34,9 @@ import { FirebaseAuthStrategy } from './strategies/firebase-auth.strategy';
     })],
 
   providers: [JwtStrategy, FirebaseAuthStrategy,  ConfigService,
-    AuthenticationService],
+    AuthenticationService,
+    //{provide: APP_GUARD, useClass: RolesGuard}
+    ],
   exports: [AuthenticationService],
   controllers: [AuthenticationController]
 })

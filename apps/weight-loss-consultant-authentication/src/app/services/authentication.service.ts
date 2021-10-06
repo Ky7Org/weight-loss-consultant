@@ -7,8 +7,8 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { AdminEntity } from '../entities/admin.entity';
 import { CustomerEntity } from '../entities/customer.entity';
 import { TrainerEntity } from '../entities/trainer.entity';
-import { combineLatest, from, Observable } from 'rxjs';
-import { catchError, defaultIfEmpty, map, tap } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { catchError, defaultIfEmpty, map } from 'rxjs/operators';
 import { LoginRequest } from 'apps/weight-loss-consultant-gateway/src/app/auth/login.req';
 import { RpcExceptionModel } from '../filters/rpc-exception.model';
 
@@ -57,6 +57,7 @@ export class AuthenticationService {
       .pipe(map(([admin, customer, trainer]) => {
         return [admin, customer, trainer];
       }), catchError((e, u) => {
+        console.log(e);
         throw new RpcException({
           statusCode: HttpStatus.UNAUTHORIZED,
           message: 'Invalid username or password.'
@@ -65,6 +66,7 @@ export class AuthenticationService {
       })).toPromise();
     let user: AdminEntity | CustomerEntity | TrainerEntity;
     let userRole: Role;
+    console.log(users);
     if (users[0] !== undefined && users[0] !== null) {
       user = users[0] as AdminEntity;
       userRole = Role.Admin;
@@ -83,6 +85,7 @@ export class AuthenticationService {
         message: 'Invalid username or password.'
       } as RpcExceptionModel);
     }
+    console.log(user);
     return {
       ...user,
       role: userRole
@@ -97,6 +100,7 @@ export class AuthenticationService {
       .pipe(map(([admin, customer, trainer]) => {
         return [admin, customer, trainer];
       }), catchError((e, u) => {
+        console.log(e);
         throw new RpcException({
           statusCode: HttpStatus.UNAUTHORIZED,
           message: 'Invalid username or password.'

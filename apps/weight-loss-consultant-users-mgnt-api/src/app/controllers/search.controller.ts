@@ -1,42 +1,19 @@
-import { Body, Controller, Logger, Post, Query, Res } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PaginationDto } from '../dtos/pagination/pagination.dto';
+import { Controller, UseFilters } from '@nestjs/common';
 import { SearchService } from '../services/search.service';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { SearchPaginationPayloadType } from '../../../../common/dtos/search-pagination-dto.payload';
+import { SEARCH_USERS } from '../../../../common/routes/users-management-service-routes';
+import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 
-@ApiTags('Sorting and Filtering')
-@ApiBearerAuth()
-@Controller('/v1/search')
+
+@Controller()
 export class SearchController {
-  private readonly logger = new Logger(SearchController.name);
-
   constructor(private readonly service: SearchService) {
   }
 
-  //@Public()
-  @Post()
-  @ApiBody({
-    type: PaginationDto
-  })
-  @ApiQuery({
-    name: 'search',
-    type: String
-  })
-  @ApiResponse({status: 200, description: 'Data has been changed:'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-  @ApiResponse({status: 404, description: 'Something wrong occured'})
-  async search(
-    @Body() payload : PaginationDto,
-    @Res() res,
-    @Query('search') search : string)
-    : Promise<void> {
-    try {
-      const result =  await this.service.search(payload, search);
-      res.status(200).send(result);
-    } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).end();
-    }
+  @MessagePattern({cmd: SEARCH_USERS})
+  @UseFilters(new ExceptionFilter())
+  async search(@Payload() payload: SearchPaginationPayloadType){
+    return this.service.search(payload.pagination, payload.search);
   }
-
-
 }

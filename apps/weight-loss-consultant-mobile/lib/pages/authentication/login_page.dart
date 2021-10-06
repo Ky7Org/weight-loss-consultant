@@ -162,9 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                               );
                               dynamic result = await service.login();
                               if (result != null) {
-                                Navigator.pushReplacementNamed(context, RoutePath.customerHomePage, arguments: {
-                                  "fullname": result["fullname"] as String
-                                });
+                                Navigator.pushNamedAndRemoveUntil(context, RoutePath.customerHomePage, (route) => false);
                               }
                             }
                           },

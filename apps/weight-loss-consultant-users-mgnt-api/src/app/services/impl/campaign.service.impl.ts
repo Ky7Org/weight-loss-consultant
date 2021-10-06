@@ -7,8 +7,8 @@ import { CreateCampaignDto } from '../../dtos/campaign/create-campaign';
 import { UpdateCampaignDto } from '../../dtos/campaign/update-campaign';
 import { BaseService } from '../base.service';
 import { CustomerService } from './customer.service.impl';
-import { RpcExceptionModel } from '../../filters/rpc-exception.model';
 import { RpcException } from '@nestjs/microservices';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
 
 @Injectable()
 export class CampaignService extends BaseService<CampaignEntity, CampaignRepository> {

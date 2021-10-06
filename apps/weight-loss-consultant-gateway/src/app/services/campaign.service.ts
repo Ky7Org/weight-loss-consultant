@@ -11,7 +11,7 @@ import {
   FIND_ALL_CAMPAIGNS,
   FIND_CAMPAIGN_BY_ID,
   UPDATE_CAMPAIGN_BY_ID
-} from '../../../../campaigns-management-routes';
+} from '../../../../common/routes/campaigns-management-routes';
 
 export type UpdateCampaignPayloadType = {
   dto: UpdateCampaignDto;

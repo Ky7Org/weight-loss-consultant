@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomerService } from '../../services/customer.service';
 import { CreateCustDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/create-customer.dto';
 import { UpdateCustDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/update-customer-dto';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @ApiTags('Customer')
 @ApiBearerAuth()
@@ -14,9 +15,11 @@ export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async index(@Res() res) {
     try {
-      res.status(HttpStatus.OK).send(await this.customerService.findAll());
+      const result = await this.customerService.findAll();
+      res.status(HttpStatus.OK).send(result);
     } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
@@ -45,6 +48,7 @@ export class CustomerController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: CreateCustDto
   })
@@ -62,6 +66,7 @@ export class CustomerController {
   }
 
   @Put(':email')
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: UpdateCustDto
   })
@@ -86,6 +91,7 @@ export class CustomerController {
   }
 
   @Delete(':email')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({status: HttpStatus.OK, description: 'The customer information has been successfully deleted.'})
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
   @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Email not found.'})

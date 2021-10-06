@@ -9,7 +9,7 @@ import { CreateTrainerDto } from '../../dtos/trainer/create-trainer';
 import { UpdateTrainerDto } from '../../dtos/trainer/update-trainer';
 import { EMAIL_EXISTED_ERR } from '../../constants/validation-err-message';
 import { RpcException } from '@nestjs/microservices';
-import { RpcExceptionModel } from '../../filters/rpc-exception.model';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
 
 @Injectable()
 export class TrainerService extends BaseService<TrainerEntity, TrainerRepository> {

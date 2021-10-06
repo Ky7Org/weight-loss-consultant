@@ -1,8 +1,9 @@
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { CreatePackageDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/package/create-package';
 import { UpdatePackageDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/package/update-package';
 import { PackageService } from '../../services/package.service';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @ApiTags('Package')
 @ApiBearerAuth()
@@ -14,6 +15,7 @@ export class PackageController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async index(@Res() res) {
     try {
       const result = await this.packageService.getPackageDetailsWithTrainer();
@@ -25,6 +27,7 @@ export class PackageController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'Package details has shown below:' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Package ID not found' })
@@ -46,6 +49,7 @@ export class PackageController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: CreatePackageDto
   })
@@ -62,6 +66,7 @@ export class PackageController {
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: UpdatePackageDto
   })
@@ -86,6 +91,7 @@ export class PackageController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'The package information has been successfully deleted.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Package ID not found.' })

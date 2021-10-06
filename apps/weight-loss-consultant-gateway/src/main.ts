@@ -13,6 +13,7 @@ import { ENV_FILE_PATH } from './app/constant';
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
+  console.log(settings);
   const app = await NestFactory.create(AppModule.forRoot(settings));
   const globalPrefix = settings.API_ENDPOINT;
   app.setGlobalPrefix(globalPrefix);

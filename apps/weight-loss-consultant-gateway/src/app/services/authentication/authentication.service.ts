@@ -11,7 +11,7 @@ import {
   GOOGLE_FIREBASE_AUTHENTICATE_USER,
   RESET_PASSWORD,
   VALIDATE_ACCOUNT
-} from '../../../../../authentication-routes';
+} from '../../../../../common/routes/authentication-routes';
 
 @Injectable()
 export class AuthenticationService {

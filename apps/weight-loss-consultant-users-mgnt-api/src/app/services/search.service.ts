@@ -25,7 +25,6 @@ export class SearchService {
   }
 
   async search(payload: PaginationDto, search: string): Promise<PaginatedResultDto> {
-
     if (payload) {
       const roleFilter: string = payload.roleFilter;
       const genderFilter: string = payload.genderFilter;

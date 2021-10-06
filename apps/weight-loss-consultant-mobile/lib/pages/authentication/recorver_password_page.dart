@@ -15,6 +15,7 @@ class RecoverPasswordPage extends StatefulWidget {
 class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
   final _formKey = GlobalKey<FormState>();
 
+  final TextEditingController _emailController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +69,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                             color: AppColors.INPUT_COLOR,
                             borderRadius: BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
+                          controller: _emailController,
                           validator: (email) {
                             if (Validator.isEmailValid(email as String))
                               return null;
@@ -100,7 +102,9 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                           color: AppColors.PRIMARY_COLOR,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              Navigator.pushNamed(context, RoutePath.resetPasswordPage);
+                              Navigator.pushNamed(context, RoutePath.resetPasswordPage, arguments: {
+                                "email": _emailController.text
+                              });
                             }
                           },
                           child: Text(

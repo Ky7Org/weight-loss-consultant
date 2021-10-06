@@ -22,8 +22,10 @@ import { CampaignModule } from './campaign.module';
 import { CustomerModule } from './customer.module';
 import { AuthenticationModule } from './auth.module';
 import { AppJwtModule } from '../auth/auth.module';
-import { ENV_FILE_PATH } from '../../../../weight-loss-consultant-authentication/src/constant';
 import * as Joi from 'joi';
+import { ENV_FILE_PATH } from '../constant';
+import { SearchModule } from './search.module';
+import { SortingAndFilteringModule } from './sorting-filtering.module';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -38,6 +40,8 @@ export class AppModule {
         CustomerModule,
         AuthenticationModule,
         HealthCheckModule,
+        SearchModule,
+        SortingAndFilteringModule,
         ClientsModule.register([
           {
             name: AUTHENTICATION_SERVICE_NAME,

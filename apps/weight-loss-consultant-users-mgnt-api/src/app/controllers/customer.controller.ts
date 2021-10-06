@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { CustomerService } from '../services/impl/customer.service.impl';
 import { CreateCustDto } from '../dtos/customer/create-customer.dto';
 import { UpdateCustDto } from '../dtos/customer/update-customer-dto';
@@ -9,9 +9,10 @@ import {
   GET_ALL_CUSTOMER,
   UPDATE_CUSTOMER,
   VIEW_DETAIL_CUSTOMER
-} from '../../../../users-management-service-routes';
+} from '../../../../common/routes/users-management-service-routes';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
+import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 
 @Controller()
 export class CustomerController {
@@ -20,51 +21,36 @@ export class CustomerController {
   }
 
   @MessagePattern({ cmd: GET_ALL_CUSTOMER })
+  @UseFilters(new ExceptionFilter())
   async index(): Promise<CustomerEntity[]> {
-    try {
-      return  this.customerService.findAll();
-    } catch (e) {
-      return Promise.reject(e);
-    }
+    return this.customerService.findAll();
   }
 
-  @MessagePattern({ cmd: VIEW_DETAIL_CUSTOMER})
+  @MessagePattern({ cmd: VIEW_DETAIL_CUSTOMER })
+  @UseFilters(new ExceptionFilter())
   async getByEmail(@Payload() email: string): Promise<CustomerEntity> {
-    try {
-      return this.customerService.viewDetail(email);
-    } catch (e) {
-      return Promise.reject(e);
-    }
+    return this.customerService.viewDetail(email);
   }
 
   @MessagePattern({ cmd: CREATE_CUSTOMER })
+  @UseFilters(new ExceptionFilter())
   async create(@Payload() dto: CreateCustDto): Promise<CustomerEntity> {
-    try {
-      return this.customerService.create(dto);
-    } catch (e) {
-      return Promise.reject(e);
-    }
+    return this.customerService.create(dto);
   }
 
-  @MessagePattern({ cmd: UPDATE_CUSTOMER})
+  @MessagePattern({ cmd: UPDATE_CUSTOMER })
+  @UseFilters(new ExceptionFilter())
   async update(@Payload() payload: {
     email: string;
     dto: UpdateCustDto;
   }): Promise<UpdateResult> {
-    try {
-      return this.customerService.edit(payload.dto);
-    } catch (e) {
-      return Promise.reject(e);
-    }
+    return this.customerService.edit(payload.dto);
   }
 
-  @MessagePattern({cmd: DELETE_CUSTOMER})
+  @MessagePattern({ cmd: DELETE_CUSTOMER })
+  @UseFilters(new ExceptionFilter())
   async delete(@Payload() email): Promise<DeleteResult> {
-    try {
-      return this.customerService.delete(email);
-    } catch (e) {
-      return Promise.reject(e);
-    }
+    return this.customerService.delete(email);
   }
 
 }

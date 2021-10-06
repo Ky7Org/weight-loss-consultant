@@ -8,8 +8,7 @@ import { CreateAdminDto } from '../../dtos/admin/create-admin.dto';
 import { UpdateAdminDto } from '../../dtos/admin/update-admin.dto';
 import { EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG } from '../../constants/validation-err-message';
 import { RpcException } from '@nestjs/microservices';
-import { RpcExceptionModel } from '../../filters/rpc-exception.model';
-
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
 
 @Injectable()
 export class AdminService extends BaseService<AdminEntity, AdminRepository> {

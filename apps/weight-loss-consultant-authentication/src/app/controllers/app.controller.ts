@@ -18,7 +18,7 @@ import {
   EMAIL_PASSWORD_AUTHENTICATE_USER,
   GOOGLE_FIREBASE_AUTHENTICATE_USER,
   RESET_PASSWORD
-} from '../../../../authentication-routes';
+} from '../../../../common/routes/authentication-routes';
 import { ExceptionFilter } from '../filters/rpc-exception.filter';
 import { LoginRequest } from '../models/login.req';
 import { LoginResponse } from '../models/login.res';
