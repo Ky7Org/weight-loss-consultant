@@ -1,4 +1,11 @@
-import { PaginationDto } from '../../weight-loss-consultant-users-mgnt-api/src/app/dtos/pagination/pagination.dto';
+class PaginationDto {
+  roleFilter? : string;
+  genderFilter? : string;
+  page? : number;
+  limit? : number;
+  sortBy? : string;
+  order? : string;
+}
 
 export type SearchPaginationPayloadType = {
   pagination: PaginationDto,

@@ -1,7 +1,6 @@
 import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AccountService } from './account.service';
-import { Role } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/constants/enums';
 import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { AdminEntity } from '../entities/admin.entity';
@@ -9,13 +8,14 @@ import { CustomerEntity } from '../entities/customer.entity';
 import { TrainerEntity } from '../entities/trainer.entity';
 import { combineLatest, Observable } from 'rxjs';
 import { catchError, defaultIfEmpty, map } from 'rxjs/operators';
-import { LoginRequest } from 'apps/weight-loss-consultant-gateway/src/app/auth/login.req';
 import { RpcExceptionModel } from '../filters/rpc-exception.model';
-
-
-export const ADMIN_VIEW_DETAIL = 'admin-view-detail';
-export const CUSTOMER_VIEW_DETAIL = 'customer-view-detail';
-export const TRAINER_VIEW_DETAIL = 'trainer-view-detail';
+import { LoginRequest } from '../models/login.req';
+import { Role } from '../constants/enums';
+import {
+  ADMIN_VIEW_DETAIL,
+  CUSTOMER_VIEW_DETAIL,
+  TRAINER_VIEW_DETAIL
+} from '../../../../common/routes/users-management-service-routes';
 
 export interface UserIdentity {
   email: string;

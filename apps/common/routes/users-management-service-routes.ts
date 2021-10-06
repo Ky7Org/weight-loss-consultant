@@ -18,3 +18,7 @@ export const DELETE_TRAINER = 'delete-trainer';
 
 export const SORTING_AND_FILTERING_USERS = 'sorting-and-filtering-users';
 export const SEARCH_USERS = 'search-users';
+
+export const ADMIN_VIEW_DETAIL = 'admin-view-detail';
+export const CUSTOMER_VIEW_DETAIL = 'customer-view-detail';
+export const TRAINER_VIEW_DETAIL = 'trainer-view-detail';

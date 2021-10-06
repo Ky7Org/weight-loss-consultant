@@ -1,11 +1,11 @@
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { CreateTrainerDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/create-trainer';
-import { UpdateTrainerDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/update-trainer';
 import { Roles } from '../../author/roles.decorator';
 import { TrainerService } from '../../services/trainer.service';
 import { Role } from '../../constants/enums';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { CreateTrainerDto } from '../../dtos/trainer/create-trainer';
+import { UpdateTrainerDto } from '../../dtos/trainer/update-trainer';
 
 @ApiTags('Trainer')
 @ApiBearerAuth()

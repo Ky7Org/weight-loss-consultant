@@ -1,9 +1,9 @@
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { CreatePackageDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/package/create-package';
-import { UpdatePackageDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/package/update-package';
 import { PackageService } from '../../services/package.service';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { CreatePackageDto } from '../../dtos/package/create-package';
+import { UpdatePackageDto } from '../../dtos/package/update-package';
 
 @ApiTags('Package')
 @ApiBearerAuth()

@@ -1,13 +1,13 @@
 import { Body, Controller, HttpStatus, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { LoginRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/login-request-model';
-import { LoginResponseModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/login-response-model';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { ResetPasswordRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/reset-password-request-model';
-import { ResetPasswordConfirmRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/reset-password-confirm-request-model';
 import { Public } from '../../auth/public-decorator';
 import { LoginRequest } from '../../auth/login.req';
 import { FirebaseAuthGuard } from '../../auth/firebase-auth.guard';
+import { LoginResponseModel } from '../../models/login-response-model';
+import { LoginRequestModel } from '../../models/login-request-model';
+import { ResetPasswordRequestModel } from '../../models/reset-password-request-model';
+import { ResetPasswordConfirmRequestModel } from '../../models/reset-password-confirm-request-model';
 
 @ApiTags('Authentication')
 @ApiBearerAuth()

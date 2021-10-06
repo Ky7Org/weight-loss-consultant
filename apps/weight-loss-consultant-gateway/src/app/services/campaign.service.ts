@@ -1,9 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
 import { ClientProxy } from '@nestjs/microservices';
-import { CampaignEntity } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/campaign.entity';
-import { CreateCampaignDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/campaign/create-campaign';
-import { UpdateCampaignDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/campaign/update-campaign';
 import { DeleteResult } from 'typeorm';
 import {
   CREATE_CAMPAIGN,
@@ -12,11 +9,10 @@ import {
   FIND_CAMPAIGN_BY_ID,
   UPDATE_CAMPAIGN_BY_ID
 } from '../../../../common/routes/campaigns-management-routes';
-
-export type UpdateCampaignPayloadType = {
-  dto: UpdateCampaignDto;
-  id: number;
-}
+import { CampaignEntity } from '../entities/campaign.entity';
+import { UpdateCampaignDto } from '../dtos/campaign/update-campaign';
+import { CreateCampaignDto } from '../dtos/campaign/create-campaign';
+import { UpdateCampaignPayloadType } from '../../../../common/dtos/update-campaign-dto.payload';
 
 @Injectable()
 export class CampaignService {

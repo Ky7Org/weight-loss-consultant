@@ -1,9 +1,9 @@
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { CreateCampaignDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/campaign/create-campaign';
-import { UpdateCampaignDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/campaign/update-campaign';
 import { CampaignService } from '../../services/campaign.service';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { CreateCampaignDto } from '../../dtos/campaign/create-campaign';
+import { UpdateCampaignDto } from '../../dtos/campaign/update-campaign';
 
 @ApiTags('Campaign')
 @ApiBearerAuth()

@@ -2,9 +2,9 @@ import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Re
 import { AdminService } from '../../services/admin.service';
 import { Response } from 'express';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateAdminDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/create-admin.dto';
-import { UpdateAdminDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/update-admin.dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { CreateAdminDto } from '../../dtos/admin/create-admin.dto';
+import { UpdateAdminDto } from '../../dtos/admin/update-admin.dto';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
