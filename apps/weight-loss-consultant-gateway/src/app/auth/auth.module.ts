@@ -11,6 +11,8 @@ import { AUTHENTICATION_SERVICE_NAME, AUTHENTICATION_SERVICE_PORT, HOST } from '
 import { PassportModule } from '@nestjs/passport';
 import { AuthenticationController } from '../controllers/authentication/authentication.controller';
 import { AuthenticationService } from '../services/authentication/authentication.service';
+import { FirebaseAuthStrategy } from './strategies/firebase-auth.strategy';
+import { FirebaseAuthGuard } from './firebase-auth.guard';
 
 @Module({
   imports: [
@@ -35,10 +37,8 @@ import { AuthenticationService } from '../services/authentication/authentication
       inject: [ConfigService]
     })],
 
-  providers: [JwtStrategy,  ConfigService,
-    AuthenticationService,
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: RolesGuard }],
+  providers: [JwtStrategy, FirebaseAuthStrategy,  ConfigService,
+    AuthenticationService],
   exports: [AuthenticationService],
   controllers: [AuthenticationController]
 })

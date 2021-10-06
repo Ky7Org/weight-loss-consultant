@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/login-request-model';
 import { LoginResponseModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/login-response-model';
@@ -8,6 +8,7 @@ import { ResetPasswordConfirmRequestModel } from '../../../../../weight-loss-con
 import { Public } from '../../auth/public-decorator';
 import { LoginRequest } from '../../auth/login.req';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { FirebaseAuthGuard } from '../../auth/firebase-auth.guard';
 
 @ApiTags('Authentication')
 @ApiBearerAuth()
@@ -20,7 +21,7 @@ export class AuthenticationController {
   }
 
   @Post('login')
-  @UseGuards(JwtAuthGuard)
+  @Public()
   @ApiOperation({ summary: 'Authentication account' })
   @ApiBody({
     type: LoginRequestModel,
@@ -35,6 +36,23 @@ export class AuthenticationController {
     const dto: LoginRequest = req.body;
     try {
       const result = await this.authenticationService.login(dto);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Post('login/firebase')
+  @UseGuards(FirebaseAuthGuard)
+  @ApiOperation({ summary: 'Authentication account firebase' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: LoginResponseModel
+  })
+  async loginWithFirebase(@Request() req, @Res() res) {
+    try {
+      const result = await this.authenticationService.loginWithFirebase(req.user);
       res.status(HttpStatus.OK).send(result);
     } catch ({error}) {
       this.logger.error(error);

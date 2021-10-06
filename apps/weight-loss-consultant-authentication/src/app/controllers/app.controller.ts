@@ -16,7 +16,7 @@ import { TrainerService } from '../services/trainer.service';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import {
   CONFIRM_CHANGE_PASSWORD,
-  EMAIL_PASSWORD_AUTHENTICATE_USER,
+  EMAIL_PASSWORD_AUTHENTICATE_USER, GOOGLE_FIREBASE_AUTHENTICATE_USER,
   RESET_PASSWORD
 } from '../../../../authentication-routes';
 import { Observable } from 'rxjs';
@@ -38,8 +38,14 @@ export class AppController {
 
   @MessagePattern({cmd: EMAIL_PASSWORD_AUTHENTICATE_USER})
   @UseFilters(new ExceptionFilter())
-  login(@Payload() credential: LoginRequest): Observable<LoginResponse> {
+  async login(@Payload() credential: LoginRequest): Promise<LoginResponse> {
     return this.authenticationService.login(credential);
+  }
+
+  @MessagePattern({cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER})
+  @UseFilters(new ExceptionFilter())
+  async loginWithFirebase(@Payload() firebaseUser: any): Promise<any> {
+    return this.authenticationService.loginWithFirebase(firebaseUser);
   }
 
   @MessagePattern({cmd: RESET_PASSWORD})

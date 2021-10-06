@@ -7,7 +7,7 @@ import { ResetPasswordRequestModel } from '../../../../../weight-loss-consultant
 import { ResetPasswordConfirmRequestModel } from '../../../../../weight-loss-consultant-authentication/src/app/models/reset-password-confirm-request-model';
 import {
   CONFIRM_CHANGE_PASSWORD,
-  EMAIL_PASSWORD_AUTHENTICATE_USER,
+  EMAIL_PASSWORD_AUTHENTICATE_USER, GOOGLE_FIREBASE_AUTHENTICATE_USER,
   RESET_PASSWORD, VALIDATE_ACCOUNT
 } from '../../../../../authentication-routes';
 @Injectable()
@@ -41,5 +41,11 @@ export class AuthenticationService {
     const pattern = { cmd: VALIDATE_ACCOUNT };
     const payload = {email: email, password: password};
     return this.authenticationServiceProxy.send(pattern, payload).toPromise<any>();
+  }
+
+  async loginWithFirebase(firebaseUser: any): Promise<any> {
+    const pattern = {cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER}
+    return this.authenticationServiceProxy.send<any, any>(pattern, firebaseUser)
+      .toPromise<any>();
   }
 }
