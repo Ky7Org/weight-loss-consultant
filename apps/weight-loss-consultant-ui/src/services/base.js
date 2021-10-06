@@ -23,7 +23,7 @@ export const CallAPI = (
   }
   return axios({
     method: method,
-    url: `${REACT_APP_API_URL}${endpoint}`,
+    url: `${endpoint}`,
     headers: headers,
     data: body,
     responseType: responseType,
@@ -37,7 +37,7 @@ export const CallAPIOutsite = (endpoint, method = 'GET', body) => {
 
   return axios({
     method: method,
-    url: `${CITY_URL_PUBLIC}${endpoint}`,
+    url: `${endpoint}`,
     headers: headers,
     data: body,
   });
