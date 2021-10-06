@@ -65,9 +65,9 @@ export class TrainerController {
     try {
       const result = await this.trainerService.create(dto);
       res.status(200).send(result);
-    } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).send({ error: e.message });
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -90,9 +90,9 @@ export class TrainerController {
     try {
       const result = await this.trainerService.edit(dto, email);
       res.status(200).send(result);
-    } catch (e) {
-      this.logger.error(e)
-      res.status(res.status).send({ error: e.message });
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -112,9 +112,9 @@ export class TrainerController {
     try {
       const result = await this.trainerService.delete(email);
       res.status(200).send(result);
-    } catch (e) {
-      this.logger.error(e)
-      res.status(e.status).send({ error: e.message });
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
