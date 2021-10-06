@@ -3,7 +3,6 @@ import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Re
 import { CreateTrainerDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/create-trainer';
 import { UpdateTrainerDto } from '../../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/update-trainer';
 import { Roles } from '../../author/roles.decorator';
-import { Public } from '../../auth/public-decorator';
 import { TrainerService } from '../../services/trainer.service';
 import { Role } from '../../constants/enums';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';

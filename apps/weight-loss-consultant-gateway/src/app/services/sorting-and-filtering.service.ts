@@ -3,7 +3,7 @@ import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
 import { ClientProxy } from '@nestjs/microservices';
 import { PaginationDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/pagination/pagination.dto';
 import { PaginatedResultDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/pagination/paginated-result.dto';
-import { SORTING_AND_FILTERING_USERS } from '../../../../users-management-service-routes';
+import { SORTING_AND_FILTERING_USERS } from '../../../../common/routes/users-management-service-routes';
 
 @Injectable()
 export class SortingAndFilteringService {

@@ -9,7 +9,7 @@ import {
   FIND_ALL_CAMPAIGNS,
   FIND_CAMPAIGN_BY_ID,
   UPDATE_CAMPAIGN_BY_ID
-} from '../../../../campaigns-management-routes';
+} from '../../../../common/routes/campaigns-management-routes';
 import { UpdateCampaignPayloadType } from '../../../../weight-loss-consultant-gateway/src/app/services/campaign.service';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 

@@ -7,8 +7,9 @@ import {
   CREATE_TRAINER,
   DELETE_TRAINER,
   GET_ALL_TRAINERS,
-  GET_TRAINER_BY_EMAIL, UPDATE_TRAINER
-} from '../../../../users-management-service-routes';
+  GET_TRAINER_BY_EMAIL,
+  UPDATE_TRAINER
+} from '../../../../common/routes/users-management-service-routes';
 import { UpdateTrainerDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/update-trainer';
 import { CreateTrainerDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/trainer/create-trainer';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';

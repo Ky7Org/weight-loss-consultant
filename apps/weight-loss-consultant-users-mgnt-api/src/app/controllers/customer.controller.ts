@@ -9,7 +9,7 @@ import {
   GET_ALL_CUSTOMER,
   UPDATE_CUSTOMER,
   VIEW_DETAIL_CUSTOMER
-} from '../../../../users-management-service-routes';
+} from '../../../../common/routes/users-management-service-routes';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';

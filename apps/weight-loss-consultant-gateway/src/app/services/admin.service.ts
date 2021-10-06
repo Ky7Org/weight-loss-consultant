@@ -8,7 +8,7 @@ import {
   GET_ADMIN_BY_EMAIL,
   GET_ALL_ADMINS,
   UPDATE_ADMIN
-} from '../../../../users-management-service-routes';
+} from '../../../../common/routes/users-management-service-routes';
 import { UpdateAdminDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/update-admin.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateAdminDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/admin/create-admin.dto';

@@ -1,14 +1,16 @@
-import { Body, Controller, Delete, Get, Logger, UseFilters } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { PackageService } from '../services/impls/package.service.impl';
 import { CreatePackageDto } from '../dtos/package/create-package';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
-  CREATE_PACKAGE, DELETE_PACKAGE_BY_ID,
-  FIND_ALL_PACKAGES, FIND_PACKAGE_BY_ID,
+  CREATE_PACKAGE,
+  DELETE_PACKAGE_BY_ID,
+  FIND_ALL_PACKAGES,
+  FIND_PACKAGE_BY_ID,
   UPDATE_PACKAGE_BY_ID,
   UpdatePackagePayloadType
-} from '../../../../packages-management-routes';
+} from '../../../../common/routes/packages-management-routes';
 
 
 @Controller()

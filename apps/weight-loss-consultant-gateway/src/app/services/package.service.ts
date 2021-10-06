@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DeleteResult } from 'typeorm';
-import { PACKAGES_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
+import { PACKAGES_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
 import { ClientProxy } from '@nestjs/microservices';
 import { PackageEntity } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/entities/package.enttiy';
 import { CreatePackageDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/package/create-package';
@@ -13,7 +13,7 @@ import {
   FIND_PACKAGE_BY_ID,
   UPDATE_PACKAGE_BY_ID,
   UpdatePackagePayloadType
-} from '../../../../packages-management-routes';
+} from '../../../../common/routes/packages-management-routes';
 
 @Injectable()
 export class PackageService {

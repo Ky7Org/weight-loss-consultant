@@ -9,8 +9,6 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthenticationController } from '../controllers/authentication/authentication.controller';
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { FirebaseAuthStrategy } from './strategies/firebase-auth.strategy';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from '../author/roles.guard';
 
 @Module({
   imports: [

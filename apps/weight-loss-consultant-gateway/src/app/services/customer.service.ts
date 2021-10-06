@@ -8,7 +8,7 @@ import {
   GET_ALL_CUSTOMER,
   UPDATE_CUSTOMER,
   VIEW_DETAIL_CUSTOMER
-} from '../../../../users-management-service-routes';
+} from '../../../../common/routes/users-management-service-routes';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { UpdateCustDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/update-customer-dto';
 import { CreateCustDto } from '../../../../weight-loss-consultant-users-mgnt-api/src/app/dtos/customer/create-customer.dto';

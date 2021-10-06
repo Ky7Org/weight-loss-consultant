@@ -1,10 +1,8 @@
-import { Body, Controller, Logger, Post, Query, Res, UseFilters } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PaginationDto } from '../dtos/pagination/pagination.dto';
+import { Controller, UseFilters } from '@nestjs/common';
 import { SearchService } from '../services/search.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { SearchPaginationPayloadType } from '../../../../common/dtos/search-pagination-dto.payload';
-import { SEARCH_USERS, SORTING_AND_FILTERING_USERS } from '../../../../users-management-service-routes';
+import { SEARCH_USERS } from '../../../../common/routes/users-management-service-routes';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 
 

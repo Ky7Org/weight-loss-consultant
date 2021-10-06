@@ -9,7 +9,7 @@ import {
   GET_ADMIN_BY_EMAIL,
   GET_ALL_ADMINS,
   UPDATE_ADMIN
-} from '../../../../users-management-service-routes';
+} from '../../../../common/routes/users-management-service-routes';
 import { AdminEntity } from '../entities/admin.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import {

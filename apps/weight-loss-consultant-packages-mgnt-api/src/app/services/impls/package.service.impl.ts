@@ -1,4 +1,4 @@
-import { ConflictException, HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { PackageEntity } from '../../entities/package.enttiy';
 import { PackageRepository } from '../../repositories/package.repository';
@@ -9,7 +9,7 @@ import { BaseService } from '../base.service';
 import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../../constant';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { TrainerEntity } from '../../entities/trainer.entity';
-import { GET_TRAINER_BY_EMAIL } from '../../../../../users-management-service-routes';
+import { GET_TRAINER_BY_EMAIL } from '../../../../../common/routes/users-management-service-routes';
 import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
 
 @Injectable()
