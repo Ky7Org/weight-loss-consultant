@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
-import { Status } from '../../constant'
+import { Status } from '../../constant';
 
 @Entity('Admin')
 export class AdminEntity extends BaseEntity {

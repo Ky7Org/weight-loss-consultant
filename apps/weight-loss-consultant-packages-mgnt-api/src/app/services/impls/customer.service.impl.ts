@@ -1,11 +1,11 @@
-import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
-import {BaseService} from "../base.service";
-import {CustomerRepository} from "../../repositories/customer.repository";
-import {CustomerEntity} from "../../entities/customer.entity";
-import {DeleteResult, Like, UpdateResult} from "typeorm";
-import {CustomerMapper} from "../../mappers/customer.mapper";
-import {CreateCustDto} from "../../dtos/customer/create-customer.dto";
-import {UpdateCustDto} from "../../dtos/customer/update-customer-dto";
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BaseService } from '../base.service';
+import { CustomerRepository } from '../../repositories/customer.repository';
+import { CustomerEntity } from '../../entities/customer.entity';
+import { DeleteResult, Like, UpdateResult } from 'typeorm';
+import { CustomerMapper } from '../../mappers/customer.mapper';
+import { CreateCustDto } from '../../dtos/customer/create-customer.dto';
+import { UpdateCustDto } from '../../dtos/customer/update-customer-dto';
 
 @Injectable()
 export class CustomerService extends BaseService<CustomerEntity, CustomerRepository> {

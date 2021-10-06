@@ -1,18 +1,10 @@
-import {
-  Body,
-  Controller, Delete,
-  Get, Logger,
-  Param,
-  Post,
-  Put,
-  Res,
-} from "@nestjs/common";
-import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {PackageService} from "../services/impls/package.service.impl";
-import {CreatePackageDto} from "../dtos/package/create-package";
-import {UpdatePackageDto} from "../dtos/package/update-package";
-import {Roles} from "../author/roles.decorator";
-import {Role} from "../constants/enums";
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PackageService } from '../services/impls/package.service.impl';
+import { CreatePackageDto } from '../dtos/package/create-package';
+import { UpdatePackageDto } from '../dtos/package/update-package';
+import { Roles } from '../author/roles.decorator';
+import { Role } from '../constants/enums';
 
 
 @ApiTags('Package')
