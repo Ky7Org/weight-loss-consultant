@@ -11,9 +11,9 @@ export default function AppRouter() {
       <PublicRoute path="/auth/signin" component={Signin} exact={true} />
       <PrivateRoute path="/home" component={HomePage} exact={true} />
       <PrivateRoute
-        path="/admin/user/usermanager"
+        path="/admin/user/manager"
         component={ListUser}
-        exact={true}
+        exact={false}
       />
       <Redirect exact from="/" to="/home" />
       <Route exact path="/page-not-found">

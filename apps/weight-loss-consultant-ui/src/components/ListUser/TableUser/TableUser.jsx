@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Button, Table, Row, Modal, Select } from 'antd';
+import { Button, Table, Row, Modal, Select, Tag } from 'antd';
 import './TableUser.css';
 import { Sorter } from '../../../utils/sorter';
 import {
@@ -7,13 +7,13 @@ import {
   CheckCircleFilled,
   CloseCircleFilled,
 } from '@ant-design/icons';
-
 const TableUser = (props) => {
   const [editableColumns, setEditableColumns] = useState([
     'fullName',
     'email',
     'action',
     'phone',
+    'gender',
   ]);
 
   const { dataEmpl } = props;
@@ -45,6 +45,17 @@ const TableUser = (props) => {
       dataIndex: 'gender',
       key: 'id',
       sorter: (a, b) => Sorter.TEXT(a?.gender || '', b?.gender || ''),
+      render(text, row) {
+        return (
+          <div>
+            {row?.gender == 1 ? (
+              <Tag color="blue">Male</Tag>
+            ) : (
+              <Tag color="pink">Female</Tag>
+            )}
+          </div>
+        );
+      },
     },
     {
       title: 'Address',
@@ -155,6 +166,8 @@ const TableUser = (props) => {
   return (
     <div className="Container">
       <Table
+        color="red"
+        size="large"
         style={{ paddingTop: '10px', width: '100vw' }}
         dataSource={dataEmpl}
         columns={columns}
@@ -186,7 +199,7 @@ const TableUser = (props) => {
           {defaultColumns.slice(0, defaultColumns.length - 1).map((column) => (
             <Select.Option
               key={column.dataIndex}
-              disabled={['fullName', 'email', 'status'].includes(
+              disabled={['fullName', 'email', 'status', 'action'].includes(
                 column.dataIndex
               )}
             >

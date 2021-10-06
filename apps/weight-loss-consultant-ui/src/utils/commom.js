@@ -1,10 +1,8 @@
 export const contains = (role, currentRole) => {
-  console.log('CurrentRole: ' + currentRole);
   var result = false;
   if (currentRole?.includes(role) === true) {
     result = true;
   }
-  console.log('Current Roles:' + currentRole);
   return result;
 };
 

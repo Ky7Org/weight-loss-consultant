@@ -7,7 +7,7 @@ import ErrorPage from '../pages/ErrorPages/ErrorPages';
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const { user, isAuthUser } = useSelector((state) => state.authentication);
   const resultComponent = (props) => {
-    var role = user?.decodeInfo?.role;
+    var role = user?.role;
     if (isAuthUser && contains(ADMIN, role)) {
       return <Component {...props} />;
     }
