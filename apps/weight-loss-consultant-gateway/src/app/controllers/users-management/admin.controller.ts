@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res } from '@nestjs/common';
 import { AdminService } from '../../services/admin.service';
 import { Response } from 'express';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -12,6 +12,8 @@ import { Role } from '../../constants/enums';
 @Controller(`/api/v1/admins`)
 export class AdminController {
 
+  private readonly logger: Logger = new Logger(AdminController.name);
+
   constructor(private readonly adminService: AdminService) {
   }
 
@@ -21,13 +23,9 @@ export class AdminController {
     try {
       const result = await this.adminService.getAllAdmins();
       res.status(HttpStatus.OK).send(result);
-    } catch (e) {
-      console.error(e);
-      if (e.status === 'error') {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(e.message);
-        return;
-      }
-      res.status(HttpStatus.BAD_REQUEST).send(e.message);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -44,9 +42,11 @@ export class AdminController {
   )
   async getByEmail(@Param('email') email: string, @Res() res) {
     try {
-      res.status(HttpStatus.OK).send(await this.adminService.getByEmail(email));
-    } catch (e) {
-      res.status(HttpStatus.NOT_FOUND).end();
+      const result = await this.adminService.getByEmail(email);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 
@@ -59,9 +59,11 @@ export class AdminController {
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email has already existed.' })
   async create(@Body() dto: CreateAdminDto, @Res() res) {
     try {
-      res.status(HttpStatus.CREATED).send(await this.adminService.create(dto));
-    } catch (e) {
-      res.status(HttpStatus.CONFLICT).end();
+      const result = await this.adminService.create(dto);
+      res.status(HttpStatus.CREATED).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
     }
   }
 

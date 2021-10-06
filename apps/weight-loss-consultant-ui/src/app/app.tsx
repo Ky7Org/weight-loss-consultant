@@ -3,8 +3,8 @@ import styles from './app.module.scss';
 import { ReactComponent as Logo } from './logo.svg';
 import star from './star.svg';
 import { initializeApp } from 'firebase/app';
-import {getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { Route, Link } from 'react-router-dom';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { Link, Route } from 'react-router-dom';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDGeSvCLi54bDoGazqiMQuJVpHFZC0TsHE',
@@ -67,7 +67,8 @@ export function App() {
               onClick={() => {
                 signInWithPopup(auth, provider).then(({user}) => {
                   return user.getIdToken().then(token => {
-                    return fetch('resources', {
+                    return fetch('api/v1/auth/login/firebase', {
+                      method: 'POST',
                       headers: {
                         'Accept': 'application/json',
                         'Authorization': `Bearer ${token}`
