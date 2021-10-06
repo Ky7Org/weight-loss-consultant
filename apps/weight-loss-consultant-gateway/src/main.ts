@@ -15,8 +15,8 @@ async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
   console.log(settings);
   const app = await NestFactory.create(AppModule.forRoot(settings));
-  const globalPrefix = settings.API_ENDPOINT;
-  app.setGlobalPrefix(globalPrefix);
+ // const globalPrefix = settings.API_ENDPOINT;
+  //app.setGlobalPrefix(globalPrefix);
   app.useGlobalPipes(new ValidationPipe());
   const host = process.env.HOST || '127.0.0.1';
   const port = process.env.PORT || 5000;
