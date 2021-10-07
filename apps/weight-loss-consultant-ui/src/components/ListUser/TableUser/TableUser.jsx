@@ -1,14 +1,21 @@
 import { useMemo, useState } from 'react';
-import { Button, Table, Row, Modal, Select } from 'antd';
+import { Button, Table, Row, Modal, Select, Tag } from 'antd';
 import './TableUser.css';
 import { Sorter } from '../../../utils/sorter';
-
+import {
+  InfoCircleOutlined,
+  CheckCircleFilled,
+  CloseCircleFilled,
+} from '@ant-design/icons';
 const TableUser = (props) => {
   const [editableColumns, setEditableColumns] = useState([
     'fullName',
-    'email',
     'action',
+    'phone',
+    'gender',
+    'status',
   ]);
+
   const { dataEmpl } = props;
   const [isModalShown, setIsModalShown] = useState(false);
   const [modalOptions, setModalOptions] = useState(
@@ -21,7 +28,11 @@ const TableUser = (props) => {
       key: 'id',
       sorter: (a, b) => Sorter.TEXT(a.fullname, b.fullname),
       render(text, row) {
-        return <>{row?.fullname}</>;
+        return (
+          <div style={{ fontWeight: 'bold', marginRight: '10px' }}>
+            {row?.fullname}
+          </div>
+        );
       },
     },
     {
@@ -38,6 +49,17 @@ const TableUser = (props) => {
       dataIndex: 'gender',
       key: 'id',
       sorter: (a, b) => Sorter.TEXT(a?.gender || '', b?.gender || ''),
+      render(text, row) {
+        return (
+          <div>
+            {row?.gender == 1 ? (
+              <Tag color="blue">Male</Tag>
+            ) : (
+              <Tag color="pink">Female</Tag>
+            )}
+          </div>
+        );
+      },
     },
     {
       title: 'Address',
@@ -59,11 +81,41 @@ const TableUser = (props) => {
     },
     {
       title: 'Status',
-      dataIndex: 'Status',
+      dataIndex: 'status',
       key: 'id',
       sorter: (a, b) => Sorter.TEXT(a?.status || '', b?.status || ''),
       render(text, row) {
-        return <>{row?.status}</>;
+        return (
+          <div>
+            {row?.status == 1 ? (
+              <div style={{ display: 'flex' }}>
+                <div>
+                  <CheckCircleFilled
+                    style={{
+                      color: 'green',
+                      fontSize: '20px',
+                      marginLeft: '30px',
+                    }}
+                  />
+                </div>
+                <div style={{ marginLeft: '10px', fontWeight: 'bold' }}>
+                  Active
+                </div>
+              </div>
+            ) : (
+              <div>
+                <CloseCircleFilled
+                  style={{
+                    color: 'red',
+                    fontSize: '20px',
+                    marginLeft: '30px',
+                  }}
+                />
+                <div style={{ marginLeft: '10px' }}>Inactive</div>
+              </div>
+            )}
+          </div>
+        );
       },
     },
     {
@@ -81,10 +133,16 @@ const TableUser = (props) => {
       render(text, row) {
         return (
           <Row justify="end">
-            <div>
-              <div>Setting 1</div>
-              <div>Setting 2</div>
-              <div>Setting 3</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                <InfoCircleOutlined
+                  style={{
+                    fontSize: '20px',
+                    color: '#ff3939',
+                    marginRight: '30px',
+                  }}
+                />
+              </div>
             </div>
           </Row>
         );
@@ -112,6 +170,7 @@ const TableUser = (props) => {
   return (
     <div className="Container">
       <Table
+        size="large"
         style={{ paddingTop: '10px', width: '100vw' }}
         dataSource={dataEmpl}
         columns={columns}
@@ -143,7 +202,7 @@ const TableUser = (props) => {
           {defaultColumns.slice(0, defaultColumns.length - 1).map((column) => (
             <Select.Option
               key={column.dataIndex}
-              disabled={['fullName', 'email', 'status'].includes(
+              disabled={['fullName', 'email', 'status', 'action'].includes(
                 column.dataIndex
               )}
             >

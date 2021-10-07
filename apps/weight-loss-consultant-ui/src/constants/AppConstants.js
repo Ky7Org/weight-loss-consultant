@@ -4,3 +4,4 @@ export const REFRESH_TOKEN = 'refreshToken';
 export const REMEMBER = 'remember';
 export const TOKEN = '';
 export const USER_STORAGE = 'user';
+export const SEARCH = 'search';

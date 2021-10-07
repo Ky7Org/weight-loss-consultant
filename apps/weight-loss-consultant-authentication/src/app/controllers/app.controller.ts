@@ -1,10 +1,6 @@
-import { Body, Controller, Get, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Controller, HttpStatus, UseFilters } from '@nestjs/common';
 import { AuthenticationService } from '../services/authentication.service';
-import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { CustomerService } from '../services/customer.service';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { CustomerDTO } from '../dtos/customer.dto';
-import { TrainerDTO } from '../dtos/trainer.dto';
 import { MailService } from '../services/mail.service';
 import { ResetPasswordRequestModel } from '../models/reset-password-request-model';
 import { generateOtp } from '../utils/otp-generator';
@@ -12,18 +8,24 @@ import { ResetPasswordTokenService } from '../services/reset-password-token.serv
 import { ResetPasswordTokenEntity } from '../entities/reset-password-token.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { ResetPasswordConfirmRequestModel } from '../models/reset-password-confirm-request-model';
-import { ErrorResponseModel } from '../models/error-response-model';
 import { AccountDTO } from '../dtos/acount.dto';
 import { AccountService } from '../services/account.service';
 import { RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status } from '../../constant';
 import { TrainerService } from '../services/trainer.service';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { LoginRequestModel } from '../models/login-request-model';
-import { LoginResponseModel } from '../models/login-response-model';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
+import {
+  CONFIRM_CHANGE_PASSWORD,
+  EMAIL_PASSWORD_AUTHENTICATE_USER,
+  GOOGLE_FIREBASE_AUTHENTICATE_USER,
+  RESET_PASSWORD
+} from '../../../../common/routes/authentication-routes';
+import { ExceptionFilter } from '../filters/rpc-exception.filter';
+import { LoginRequest } from '../models/login.req';
+import { LoginResponse } from '../models/login.res';
+import { RpcExceptionModel } from '../filters/rpc-exception.model';
 
 @Controller()
 export class AppController {
-  private readonly logger = new Logger(AppController.name);
 
   constructor(private customerService: CustomerService,
               private trainerService: TrainerService,
@@ -33,48 +35,29 @@ export class AppController {
               private readonly accountService: AccountService) {
   }
 
-
-  @Post('login')
-  @UseGuards(LocalAuthGuard)
-  @ApiOperation({ summary: 'Authentication account' })
-  @ApiBody({
-    type: LoginRequestModel,
-    required: true,
-    isArray: false,
-  })
-  @ApiResponse({
-    status: 200,
-    type: LoginResponseModel
-  })
-  async login(@Request() req): Promise<any> {
-    const dto: CustomerDTO | TrainerDTO = req.user;
-    return await this.authenticationService.login(dto);
-    // return new LoginResponseModel(result.accessToken);
+  @MessagePattern({cmd: EMAIL_PASSWORD_AUTHENTICATE_USER})
+  @UseFilters(new ExceptionFilter())
+  async login(@Payload() credential: LoginRequest): Promise<LoginResponse> {
+    return this.authenticationService.login(credential);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('test/jwt')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Test jwt' })
-  @ApiResponse({
-    status: 200,
-    type: String
-  })
-  getAll(@Request() req): string {
-    return "123";
+  @MessagePattern({cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER})
+  @UseFilters(new ExceptionFilter())
+  async loginWithFirebase(@Payload() firebaseUser: any): Promise<any> {
+    return this.authenticationService.loginWithFirebase(firebaseUser);
   }
 
-  @Post("reset-password")
-  @ApiOperation({ summary: 'Reset password' })
-  async resetPassword(@Body() requestModel: ResetPasswordRequestModel, @Res() response): Promise<void> {
+  @MessagePattern({cmd: RESET_PASSWORD})
+  @UseFilters(new ExceptionFilter())
+  async resetPassword(@Payload() requestModel: ResetPasswordRequestModel) {
     const email = requestModel.email;
     try {
       const tokenDTO = await this.resetPasswordTokenService.findLatestTokenByEmail(email);
       if (tokenDTO.expiredTime > new Date().getTime()) {
-        return response.status(400).json(
-          new ErrorResponseModel(400,
-            `Cannot request OTP for this email 2 times in ${RESET_PASSWORD_TOKEN_EXPIRED_TIME.MINUTE} minutes`,
-            'Bad request'));
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: `Cannot request OTP for this email 2 times in ${RESET_PASSWORD_TOKEN_EXPIRED_TIME.MINUTE} minutes`
+        } as RpcExceptionModel);
       }
     } catch (e) {
       //if no token then continue
@@ -88,35 +71,40 @@ export class AppController {
     tokenEntity.expiredTime = tokenEntity.createdTime + RESET_PASSWORD_TOKEN_EXPIRED_TIME.MILLISECOND;
     await this.resetPasswordTokenService.store(tokenEntity);
     await this.mailService.sendOTPEmail(requestModel.email, otp);
-    return response.status(200).json();
   }
 
-  @Post('reset-password/confirm')
-  @ApiOperation({ summary: 'Confirm reset password' })
-  async confirmChangePassword(@Body() requestModel: ResetPasswordConfirmRequestModel, @Res() response): Promise<void> {
+  @MessagePattern({cmd: CONFIRM_CHANGE_PASSWORD})
+  @UseFilters(new ExceptionFilter())
+  async confirmChangePassword(@Payload() requestModel: ResetPasswordConfirmRequestModel) {
     try {
       const { email, otp, newPassword } = requestModel;
       const tokenDTO = await this.resetPasswordTokenService.findLatestTokenByEmail(email);
       if (tokenDTO.otp !== otp) {
-        return response
-          .status(400)
-          .json(new ErrorResponseModel(400, 'Invalid otp', 'Bad request'));
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'Invalid OTP'
+        } as RpcExceptionModel);
       }
       if (tokenDTO.expiredTime < new Date().getTime() || tokenDTO.isInvalidated) {
-        return response
-          .status(400)
-          .json(new ErrorResponseModel(400, 'OTP is expired', 'Bad request'));
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'OTP is expired'
+        } as RpcExceptionModel);
       }
       const account: AccountDTO = await this.accountService.findAccountByEmail(email);
       if (account.status !== Status.ACTIVE){
-        return response.status(400).json(new ErrorResponseModel(400, "This account is inactive", 'Bad request'));
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'This account is inactivated'
+        } as RpcExceptionModel);
       }
       this.accountService.updatePassword(account, newPassword);
       this.resetPasswordTokenService.update(tokenDTO.id, {isInvalidated: true})
-      return response.status(200).json();
     } catch (e) {
-      this.logger.error(e);
-      return response.status(400).json(new ErrorResponseModel(400, e.message, 'Bad request'));
+      throw new RpcException({
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: e.message
+      } as RpcExceptionModel);
     }
   }
 }

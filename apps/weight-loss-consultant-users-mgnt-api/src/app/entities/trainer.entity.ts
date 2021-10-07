@@ -2,8 +2,7 @@ import {BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryCol
 import {PackageEntity} from "./package.enttiy";
 import {TrainerStyleEntity} from "./trainer-style.entity";
 import {ProfileStyleEntity} from "./profile-trainer.entity";
-// import {ProfileStyleEntity} from "./profile-trainer.entity";
-// import {TrainerStyleEntity} from "./trainer-style.entity";
+
 
 
 @Entity("Trainer")

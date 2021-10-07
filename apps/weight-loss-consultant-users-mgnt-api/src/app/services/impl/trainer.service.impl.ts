@@ -1,17 +1,15 @@
-import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
+import { HttpStatus, Injectable } from '@nestjs/common';
 
-import {BaseService} from "../base.service";
-import {
-  DeleteResult,
-  UpdateResult
-} from "typeorm";
-import {TrainerEntity} from "../../entities/trainer.entity";
-import {TrainerRepository} from "../../repositories/trainer.repository";
-import {TrainerMapper} from "../../mappers/trainer.mapper";
-import {CreateTrainerDto} from "../../dtos/trainer/create-trainer";
-import {UpdateTrainerDto} from "../../dtos/trainer/update-trainer";
-import {EMAIL_EXISTED_ERR} from "../../constants/validation-err-message";
-import {IPaginationOptions, paginate, Pagination} from "nestjs-typeorm-paginate";
+import { BaseService } from '../base.service';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { TrainerEntity } from '../../entities/trainer.entity';
+import { TrainerRepository } from '../../repositories/trainer.repository';
+import { TrainerMapper } from '../../mappers/trainer.mapper';
+import { CreateTrainerDto } from '../../dtos/trainer/create-trainer';
+import { UpdateTrainerDto } from '../../dtos/trainer/update-trainer';
+import { EMAIL_EXISTED_ERR } from '../../constants/validation-err-message';
+import { RpcException } from '@nestjs/microservices';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
 
 @Injectable()
 export class TrainerService extends BaseService<TrainerEntity, TrainerRepository> {
@@ -33,7 +31,10 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     const entity: TrainerEntity = await TrainerMapper.mapCreateDtoToEntity(dto);
     const existedEmail = await this.repository.findOne(entity.email);
     if (existedEmail) {
-      throw new ConflictException(EMAIL_EXISTED_ERR);
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: EMAIL_EXISTED_ERR
+      } as RpcExceptionModel);
     }
     return this.repository.save(entity);
   }
@@ -41,11 +42,17 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   async edit(dto: UpdateTrainerDto, email: string): Promise<UpdateResult> {
     const entity: TrainerEntity = await TrainerMapper.mapUpdateTrainerDTOToEntity(dto);
     if (email !== entity.email) {
-      throw new ConflictException(`Param: ${email} must match with ${entity.email} in request body`)
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `Param: ${email} must match with ${entity.email} in request body`
+      } as RpcExceptionModel);
     }
     const foundTrainer = await this.repository.findOne(entity.email);
     if (foundTrainer === undefined) {
-      throw new NotFoundException(`Not found trainer with email : ${entity.email}`)
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found trainer with email : ${entity.email}`
+      } as RpcExceptionModel);
     }
     return this.repository.update(entity.email, entity);
   }
@@ -53,7 +60,10 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   async delete(id): Promise<DeleteResult> {
     const foundTrainer = await this.repository.findOne(id);
     if (foundTrainer === undefined) {
-      throw new NotFoundException(`Not found trainer with email : ${id}`)
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found trainer with email : ${id}`
+      } as RpcExceptionModel);
     }
     return this.repository.delete(id);
   }
@@ -71,5 +81,4 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   async findOneTrainer(id): Promise<TrainerEntity> {
     return this.repository.findOne(id);
   }
-
 }

@@ -1,9 +1,10 @@
-import {Get, Injectable} from "@nestjs/common";
-import {TrainerRepository} from "../repositories/trainer.repository";
-import {AdminRepository} from "../repositories/admin.repository";
-import {PaginationDto} from "../dtos/pagination/pagination.dto";
-import {PaginatedResultDto} from "../dtos/pagination/paginated-result.dto";
-import {CustomerRepository} from "../repositories/customer.repository";
+import { Injectable } from '@nestjs/common';
+import { TrainerRepository } from '../repositories/trainer.repository';
+import { AdminRepository } from '../repositories/admin.repository';
+import { PaginationDto } from '../dtos/pagination/pagination.dto';
+import { PaginatedResultDto } from '../dtos/pagination/paginated-result.dto';
+import { CustomerRepository } from '../repositories/customer.repository';
+
 
 
 @Injectable()
@@ -25,7 +26,6 @@ export class SearchService {
   }
 
   async search(payload: PaginationDto, search: string): Promise<PaginatedResultDto> {
-
     if (payload) {
       const roleFilter: string = payload.roleFilter;
       const genderFilter: string = payload.genderFilter;
