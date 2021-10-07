@@ -1,0 +1,279 @@
+{
+	"info": {
+		"_postman_id": "7701059d-8643-4b35-8449-ec819b3bf3b6",
+		"name": "Package management service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Campaign",
+			"item": [
+				{
+					"name": "get all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiZnVsbG5hbWUiOiJhZG1pbiBjdXRlIiwicm9sZXMiOlsiYWRtaW4iXSwiaWF0IjoxNjMzMjE5NTk4LCJleHAiOjE2MzMyMjU1OTh9.qpOK6gG9yCQJFnWyqqZbu3-hS8S16nhrJ7O_htRCWtU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/campaigns",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerEmail\" : \"customer\",\r\n    \"description\" : \"text descrip v2\",\r\n    \"startDate\" : \"1\",\r\n    \"endDate\" : \"1\",\r\n    \"feedback\" : \"feedback from customer cute v2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/v1/campaigns",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/v1/campaigns/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"campaigns",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/v1/campaigns/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"campaigns",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : 4,\r\n    \"customerEmail\" : \"customer\",\r\n    \"description\" : \"des update\",\r\n    \"status\" : 1,\r\n    \"startDate\" : \"1\",\r\n    \"endDate\" : \"1\",\r\n    \"feedback\" : \"abc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/v1/campaigns/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"campaigns",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Package",
+			"item": [
+				{
+					"name": "get all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRyYWluZXIiLCJmdWxsbmFtZSI6InRyYWluZXIgc21hbGwgbXVzY2xlIiwicm9sZSI6IlRSQUlORVIiLCJhdmFydGFyIjoibGluayIsImlhdCI6MTYzMjk5NTYzMiwiZXhwIjoxNjMyOTk1NjkyfQ.JSw75F7cshVYUQgXSDEHWnhXMI95WkPh6IojibnJUmY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/v1/packages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"packages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRyYWluZXIiLCJmdWxsbmFtZSI6InRyYWluZXIgc21hbGwgbXVzY2xlIiwicm9sZSI6IlRSQUlORVIiLCJhdmFydGFyIjoibGluayIsImlhdCI6MTYzMjk5NTcxMywiZXhwIjoxNjMyOTk1NzczfQ.stRFl115TjrChek8lDNIwb85YugzwaD-g9Z0Z6lUiWo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/v1/packages/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"packages",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"exercisePlan\": \"exercise for 2 weeks, loss 10kg\",\r\n    \"schedule\": \"schedule information\",\r\n    \"price\": 2600,\r\n    \"status\": 1,\r\n    \"dietPlan\": \"diet plan information\",\r\n    \"trainerEmail\": \"tientrainer@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/v1/packages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"packages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/v1/packages/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"packages",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

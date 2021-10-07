@@ -22,6 +22,19 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
+      - name: Install newman
+        run: npm install -g newman
+
+      - name: Run the API and Postman's tests
+        run: |
+          npm run start:authentication && npm run start:users-mgnt-api && npm run start:packages-mgnt-api &
+          sleep 60
+          newman run "weight-loss-consultant.postman_collection.json"
+        env:
+          PORT: "3000"
+          STAGE: "local"
+          NODE_ENV: "develop"
+
       - name: Lint ReactJS UI code
         run: npm run lint:ui
 
