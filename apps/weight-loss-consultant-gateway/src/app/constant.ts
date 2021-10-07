@@ -1,5 +1,5 @@
 export const JWT_CONFIG = {
-  expireTime: "60s"
+  expireTime: "6000s"
 }
 
 export enum Role {

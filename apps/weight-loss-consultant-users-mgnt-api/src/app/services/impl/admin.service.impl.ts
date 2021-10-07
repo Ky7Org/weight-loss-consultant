@@ -23,16 +23,16 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
 
   async create(dto: CreateAdminDto): Promise<AdminEntity> {
     return AdminMapper.mapCreateAdminDTOToEntity(dto)
-      .then((entity) => this.repository.findOne(entity.email))
-      .then((entity) => {
-        if (entity) {
+      .then(async (entity) => {
+        if (await this.repository.findOne(entity.email)) {
           throw new RpcException({
             statusCode: HttpStatus.CONFLICT,
-            message: EMAIL_EXISTED_ERR,
+            message: EMAIL_EXISTED_ERR
           } as RpcExceptionModel);
         }
         return entity;
       }).then((entity) => this.repository.save(entity));
+
   }
 
   async edit(dto: UpdateAdminDto): Promise<UpdateResult> {

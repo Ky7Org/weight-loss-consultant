@@ -5,7 +5,7 @@ import { TrainerService } from '../../services/trainer.service';
 import { MailService } from '../../services/mail.service';
 import { ResetPasswordTokenService } from '../../services/reset-password-token.service';
 import { AccountService } from '../../services/account.service';
-import { LoginResponseModel } from '../../models/login-response-model';
+import { LoginResponse } from '../../models/login.res';
 
 describe('The AuthenticationController', () => {
 
@@ -31,7 +31,7 @@ describe('The AuthenticationController', () => {
           email: 'test@example.com'
         },
       };
-      const expectedResult = new LoginResponseModel("123");
+      const expectedResult = new LoginResponse();
       jest.spyOn(appController, 'login')
         .mockImplementation(() => Promise.resolve(expectedResult));
       expect(await appController.login(req)).toStrictEqual(expectedResult);

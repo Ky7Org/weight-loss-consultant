@@ -1,3 +1,3 @@
 export const JWT_CONFIG = {
-  expireTime: "6000s"
+  expireTime: "600000s"
 }
