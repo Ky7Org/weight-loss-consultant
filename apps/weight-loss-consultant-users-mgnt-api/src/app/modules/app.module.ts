@@ -1,5 +1,4 @@
 import { DynamicModule } from '@nestjs/common';
-
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AdminEntity } from '../entities/admin.entity';
@@ -9,7 +8,6 @@ import { TrainerModule } from './trainer.module';
 import { CustomerModule } from './customer.module';
 import { CustomerEntity } from '../entities/customer.entity';
 import { ENV_FILE_PATH } from '../constants/env-file-path';
-import {AuthModule} from "../auth/auth.module";
 import {CampaignEntity} from "../entities/campaign.entity";
 import {PackageEntity} from "../entities/package.enttiy";
 import {CampaignModule} from "./campaign.module";
@@ -18,8 +16,6 @@ import {SortingAndFilteringModule} from "./sorting-filtering.module";
 import {SearchModule} from "./search.module";
 import {ProfileStyleEntity} from "../entities/profile-trainer.entity";
 import {TrainerStyleEntity} from "../entities/trainer-style.entity";
-
-
 
 export class AppModule {
   static forRoot(settings): DynamicModule {

@@ -28,7 +28,6 @@ async function bootstrap() {
     .addTag('Admin')
     .addTag('Trainer')
     .addTag('Customer')
-    .addTag('Packages')
     .addTag('Authentication')
     .addTag('Campaign')
     .addBearerAuth()

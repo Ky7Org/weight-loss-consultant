@@ -1,6 +1,5 @@
 import { CallAPI, CallAPIGoogle, CallAPIGoole } from './base';
 
-import { AUTHENTICATION_PORT } from '../constants/AppPort';
 
 export const signInAPI = (data) =>
   CallAPI(`api/v1/auth/login`, 'post', data);
