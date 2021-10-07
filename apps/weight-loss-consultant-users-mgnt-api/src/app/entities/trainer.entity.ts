@@ -1,5 +1,9 @@
-import {BaseEntity, Column, Entity, OneToMany, PrimaryColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn} from "typeorm";
 import {PackageEntity} from "./package.enttiy";
+import {TrainerStyleEntity} from "./trainer-style.entity";
+import {ProfileStyleEntity} from "./profile-trainer.entity";
+// import {ProfileStyleEntity} from "./profile-trainer.entity";
+// import {TrainerStyleEntity} from "./trainer-style.entity";
 
 
 @Entity("Trainer")
@@ -41,5 +45,7 @@ export class TrainerEntity extends BaseEntity {
   @OneToMany(() => PackageEntity, packaged => packaged.trainer)
   packages: PackageEntity[];
 
-  // roles: Role[];
+  @OneToMany(() => ProfileStyleEntity, profileStyle => profileStyle.trainer)
+  profileStyles: ProfileStyleEntity[];
+
 }

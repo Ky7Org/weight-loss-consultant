@@ -16,6 +16,8 @@ import {CampaignModule} from "./campaign.module";
 import {PackageModule} from "./package.module";
 import {SortingAndFilteringModule} from "./sorting-filtering.module";
 import {SearchModule} from "./search.module";
+import {ProfileStyleEntity} from "../entities/profile-trainer.entity";
+import {TrainerStyleEntity} from "../entities/trainer-style.entity";
 
 
 export class AppModule {
@@ -41,7 +43,9 @@ export class AppModule {
               TrainerEntity,
               CustomerEntity,
               CampaignEntity,
-              PackageEntity
+              PackageEntity,
+              TrainerStyleEntity,
+              ProfileStyleEntity
             ],
           }),
           inject: [ConfigService],

@@ -20,19 +20,22 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     super(repository);
   }
 
-  async findAll(): Promise<TrainerEntity[] | null> {
-    return await this.repository.find({
-      relations: ["packages"]
-    });
+  async findAll(): Promise<TrainerEntity[]> {
+    const result = await this.repository.createQueryBuilder("trainer")
+      .leftJoinAndSelect("trainer.profileStyles", "profileStyles")
+      .leftJoinAndSelect("profileStyles.style", "style")
+      .leftJoinAndSelect("trainer.packages", "package")
+      .getMany();
+    return result;
   }
 
-  async create(dto: CreateTrainerDto): Promise<TrainerEntity | null> {
+  async create(dto: CreateTrainerDto): Promise<TrainerEntity> {
     const entity: TrainerEntity = await TrainerMapper.mapCreateDtoToEntity(dto);
     const existedEmail = await this.repository.findOne(entity.email);
     if (existedEmail) {
       throw new ConflictException(EMAIL_EXISTED_ERR);
     }
-    return await this.repository.save(entity);
+    return this.repository.save(entity);
   }
 
   async edit(dto: UpdateTrainerDto, email: string): Promise<UpdateResult> {
@@ -44,7 +47,7 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     if (foundTrainer === undefined) {
       throw new NotFoundException(`Not found trainer with email : ${entity.email}`)
     }
-    return await this.repository.update(entity.email, entity);
+    return this.repository.update(entity.email, entity);
   }
 
   async delete(id): Promise<DeleteResult> {
@@ -52,20 +55,21 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     if (foundTrainer === undefined) {
       throw new NotFoundException(`Not found trainer with email : ${id}`)
     }
-    return await this.repository.delete(id);
+    return this.repository.delete(id);
   }
 
-  async viewDetail(id): Promise<TrainerEntity[]> {
-    return await this.repository.find({
-      relations: ["packages"],
-      where: [{
-        email: `${id}`
-      }]
-    });
+  async viewDetail(id): Promise<TrainerEntity> {
+    const result = await this.repository.createQueryBuilder("trainer")
+      .leftJoinAndSelect("trainer.profileStyles", "profileStyles")
+      .leftJoinAndSelect("profileStyles.style", "style")
+      .leftJoinAndSelect("trainer.packages", "package")
+      .where("trainer.email = :email", {email : id})
+      .getOne();
+    return result;
   }
 
   async findOneTrainer(id): Promise<TrainerEntity> {
-    return await this.repository.findOne(id);
+    return this.repository.findOne(id);
   }
 
 }
