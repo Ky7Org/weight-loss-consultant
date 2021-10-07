@@ -6,6 +6,11 @@ import { PaginatedResultDto } from '../dtos/pagination/paginated-result.dto';
 import { PaginationDto } from '../dtos/pagination/pagination.dto';
 import { Gender } from '../constants/enums';
 
+export enum Gender {
+  MALE = 1,
+  FEMALE = 2
+}
+
 @Injectable()
 export class SortingAndFilteringService {
   constructor(

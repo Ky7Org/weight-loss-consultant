@@ -19,9 +19,12 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   }
 
   async findAll(): Promise<TrainerEntity[]> {
-    return this.repository.find({
-      relations: ["packages"]
-    });
+    const result = await this.repository.createQueryBuilder("trainer")
+      .leftJoinAndSelect("trainer.profileStyles", "profileStyles")
+      .leftJoinAndSelect("profileStyles.style", "style")
+      .leftJoinAndSelect("trainer.packages", "package")
+      .getMany();
+    return result;
   }
 
   async create(dto: CreateTrainerDto): Promise<TrainerEntity> {
@@ -66,12 +69,13 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   }
 
   async viewDetail(id): Promise<TrainerEntity> {
-    return this.repository.findOne({
-      relations: ["packages"],
-      where: [{
-        email: `${id}`
-      }]
-    });
+    const result = await this.repository.createQueryBuilder("trainer")
+      .leftJoinAndSelect("trainer.profileStyles", "profileStyles")
+      .leftJoinAndSelect("profileStyles.style", "style")
+      .leftJoinAndSelect("trainer.packages", "package")
+      .where("trainer.email = :email", {email : id})
+      .getOne();
+    return result;
   }
 
   async findOneTrainer(id): Promise<TrainerEntity> {

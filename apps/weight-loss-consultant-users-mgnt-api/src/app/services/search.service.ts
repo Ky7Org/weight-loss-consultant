@@ -6,6 +6,7 @@ import { PaginatedResultDto } from '../dtos/pagination/paginated-result.dto';
 import { CustomerRepository } from '../repositories/customer.repository';
 
 
+
 @Injectable()
 export class SearchService {
   constructor(

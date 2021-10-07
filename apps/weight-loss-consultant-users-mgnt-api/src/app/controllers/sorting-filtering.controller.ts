@@ -5,6 +5,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { SORTING_AND_FILTERING_USERS } from '../../../../common/routes/users-management-service-routes';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 
+
 @Controller()
 export class SortingAndFilteringController {
 
