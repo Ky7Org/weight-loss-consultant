@@ -9,6 +9,7 @@ import { CreateCustDto } from '../../dtos/customer/create-customer.dto';
 import { UpdateCustDto } from '../../dtos/customer/update-customer-dto';
 import { RpcException } from '@nestjs/microservices';
 import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
+import {UpdateCustomerPayload} from "../../controllers/customer.controller";
 
 @Injectable()
 export class CustomerService extends BaseService<CustomerEntity, CustomerRepository> {
@@ -34,9 +35,9 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     return this.repository.save<CustomerEntity>(entity);
   }
 
-  async edit(dto: UpdateCustDto): Promise<UpdateResult> {
-    const entity: CustomerEntity = await CustomerMapper.mapUpdateCustDtoToEntity(dto);
-    const email = dto.email;
+  async edit(payload: UpdateCustomerPayload): Promise<UpdateResult> {
+    const entity: CustomerEntity = await CustomerMapper.mapUpdateCustDtoToEntity(payload.dto);
+    const email = payload.email;
     if (email !== entity.email) {
       throw new RpcException({
         statusCode: HttpStatus.CONFLICT,
