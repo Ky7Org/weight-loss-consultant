@@ -19,7 +19,7 @@ import { TrainerService } from '../services/impl/trainer.service.impl';
 import { TrainerEntity } from '../entities/trainer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 
-type UpdateAdminType = {
+export type UpdateAdminType = {
   email: string;
   dto: UpdateAdminDto;
 };
@@ -71,7 +71,7 @@ export class AdminController {
   @MessagePattern({ cmd: UPDATE_ADMIN })
   @UseFilters(new ExceptionFilter())
   async update(@Payload() payload: UpdateAdminType): Promise<UpdateResult> {
-    return this.adminService.edit(payload.dto);
+    return this.adminService.edit(payload);
   }
 
   @MessagePattern({ cmd: DELETE_ADMIN })

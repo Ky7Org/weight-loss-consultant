@@ -9,6 +9,7 @@ import { UpdateAdminDto } from '../../dtos/admin/update-admin.dto';
 import { EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG } from '../../constants/validation-err-message';
 import { RpcException } from '@nestjs/microservices';
 import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
+import {UpdateAdminType} from "../../controllers/admin.controller";
 
 @Injectable()
 export class AdminService extends BaseService<AdminEntity, AdminRepository> {
@@ -35,13 +36,13 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
 
   }
 
-  async edit(dto: UpdateAdminDto): Promise<UpdateResult> {
-    return AdminMapper.mapUpdateAdminDTOToEntity(dto)
+  async edit(payload: UpdateAdminType): Promise<UpdateResult> {
+    return AdminMapper.mapUpdateAdminDTOToEntity(payload.dto)
       .then((entity) => {
-        if (dto.email !== entity.email) {
+        if (payload.email !== payload.dto.email) {
           throw new RpcException({
             statusCode: HttpStatus.CONFLICT,
-            message: `Param: ${dto.email} must match with request body email : ${entity.email} `
+            message: `Param: ${payload.dto.email} must match with request body email : ${payload.email} `
           } as RpcExceptionModel);
         }
         return entity;
@@ -51,7 +52,8 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
         if (entity === undefined) {
           throw new RpcException({
             statusCode: HttpStatus.BAD_REQUEST,
-            message: `Not found admin with email: ${entity.email}`
+            //undefined, so cannot reference to email => payload.email
+            message: `Not found admin with email: ${payload.email}`
           } as RpcExceptionModel);
         }
         return entity;
