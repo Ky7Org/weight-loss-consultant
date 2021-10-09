@@ -8,6 +8,7 @@ import {CustomerMapper} from '../../mappers/customer.mapper';
 import {CreateCustDto} from '../../dtos/customer/create-customer.dto';
 import {RpcException} from '@nestjs/microservices';
 import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
+
 import {UpdateCustomerPayload} from "../../controllers/customer.controller";
 
 @Injectable()
