@@ -1,14 +1,13 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { BaseService } from '../base.service';
-import { CustomerRepository } from '../../repositories/customer.repository';
-import { CustomerEntity } from '../../entities/customer.entity';
-import { EMAIL_EXISTED_ERR } from '../../constants/validation-err-message';
-import { DeleteResult, Like, UpdateResult } from 'typeorm';
-import { CustomerMapper } from '../../mappers/customer.mapper';
-import { CreateCustDto } from '../../dtos/customer/create-customer.dto';
-import { UpdateCustDto } from '../../dtos/customer/update-customer-dto';
-import { RpcException } from '@nestjs/microservices';
-import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
+import {HttpStatus, Injectable} from '@nestjs/common';
+import {BaseService} from '../base.service';
+import {CustomerRepository} from '../../repositories/customer.repository';
+import {CustomerEntity} from '../../entities/customer.entity';
+import {EMAIL_EXISTED_ERR} from '../../constants/validation-err-message';
+import {DeleteResult, Like, UpdateResult} from 'typeorm';
+import {CustomerMapper} from '../../mappers/customer.mapper';
+import {CreateCustDto} from '../../dtos/customer/create-customer.dto';
+import {RpcException} from '@nestjs/microservices';
+import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
 import {UpdateCustomerPayload} from "../../controllers/customer.controller";
 
 @Injectable()
