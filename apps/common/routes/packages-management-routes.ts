@@ -1,4 +1,4 @@
-import { UpdatePackageDto } from '../../weight-loss-consultant-users-mgnt-api/src/app/dtos/package/update-package';
+import {UpdatePackageDto} from '../../weight-loss-consultant-users-mgnt-api/src/app/dtos/package/update-package';
 
 export const DELETE_PACKAGE_BY_ID = 'delete-package-by-id';
 export const FIND_ALL_PACKAGES = 'find-all-packages';

@@ -1,7 +1,7 @@
-import { IsEmail, IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
-import * as LIMIT_LENGTH from '../../constants/properties-length-limit';
-import * as ERR_MSG from '../../constants/validation-err-message';
-import { ApiProperty } from '@nestjs/swagger';
+import {IsEmail, IsNumber, IsString, MaxLength, MinLength} from 'class-validator';
+import * as LIMIT_LENGTH from '../../../../../common/constants/properties-length-limit';
+import * as ERR_MSG from '../../../../../common/constants/validation-err-message';
+import {ApiProperty} from '@nestjs/swagger';
 
 export class UpdateTrainerDto {
   @IsEmail()

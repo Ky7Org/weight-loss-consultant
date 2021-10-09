@@ -1,32 +1,59 @@
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CustomerService } from '../../services/customer.service';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
-import { CreateCustDto } from '../../dtos/customer/create-customer.dto';
-import { UpdateCustDto } from '../../dtos/customer/update-customer-dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  OnModuleInit,
+  Param,
+  Post,
+  Put,
+  Res,
+  UseFilters,
+  UseGuards
+} from '@nestjs/common';
+import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
+import {CreateCustDto} from '../../dtos/customer/create-customer.dto';
+import {UpdateCustDto} from '../../dtos/customer/update-customer-dto';
+import {USERS_MANAGEMENT} from "../../../../../common/api.routes";
+import {Client, ClientGrpc} from "@nestjs/microservices";
+import {GRPC_CUSTOMER_SERVICE, USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
+import {CustomerService} from "../../../../../common/proto-models/users-mgnt.proto";
+import {HttpExceptionFilter} from "../../../../../common/filters/http-exception.filter";
+import {GenericHttpException} from "../../../../../common/filters/generic-http.exception";
+import {Roles} from "../../decorators/roles.decorator";
+import {Role} from "../../../../../common/constants/enums";
 
 @ApiTags('Customer')
 @ApiBearerAuth()
-@Controller('/v1/customers')
-export class CustomerController {
+@Controller(USERS_MANAGEMENT.CUSTOMERS_API)
+export class CustomerController implements OnModuleInit{
 
-  private readonly logger: Logger = new Logger(CustomerController.name);
+  @Client(USERS_MANAGEMENT_GRPC_SERVICE)
+  private readonly adminServiceClient: ClientGrpc;
+  private customerService: CustomerService;
 
-  constructor(private readonly customerService: CustomerService) {}
+  onModuleInit() {
+    this.customerService = this.adminServiceClient.getService<CustomerService>(GRPC_CUSTOMER_SERVICE);
+  }
 
   @Get()
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin, Role.Trainer)
+  @UseFilters(new HttpExceptionFilter())
   async index(@Res() res) {
     try {
-      const result = await this.customerService.findAll();
+      const result = await this.customerService.findAll({});
       res.status(HttpStatus.OK).send(result);
-    } catch ({ error }) {
-      this.logger.error(error);
-      res.status(error.statusCode).send(error);
+    } catch (e) {
+      throw new GenericHttpException(e);
     }
   }
 
   @Get(':email')
+  @UseFilters(new HttpExceptionFilter())
+  @Roles(Role.Admin, Role.Trainer)
   @ApiResponse({status: HttpStatus.OK, description: 'Customer details has shown below:'})
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
   @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Email not found'})
@@ -39,16 +66,16 @@ export class CustomerController {
   )
   async getByEmail(@Param('email') email: string, @Res() res) {
     try {
-      const customer = await this.customerService.viewDetail(email);
+      const customer = await this.customerService.viewDetail({email});
       res.status(HttpStatus.OK).send(customer);
-    } catch ({ error }) {
-      this.logger.error(error);
-      res.status(error.statusCode).send(error);
+    } catch (e) {
+      throw new GenericHttpException(e);
     }
   }
 
   @Post()
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @ApiBody({
     type: CreateCustDto
   })
@@ -59,9 +86,8 @@ export class CustomerController {
     try {
       const result = await this.customerService.create(dto);
       res.status(HttpStatus.OK).send(result);
-    } catch ({ error }) {
-      this.logger.error(error);
-      res.status(error.statusCode).send(error);
+    } catch (e) {
+      throw new GenericHttpException(e);
     }
   }
 
@@ -82,11 +108,10 @@ export class CustomerController {
   )
   async update(@Param('email') email, @Body() dto: UpdateCustDto, @Res() res) {
     try {
-      const result = await this.customerService.edit(email, dto);
+      const result = await this.customerService.update({email, dto});
       res.status(HttpStatus.OK).send(result);
-    } catch ({ error }) {
-      this.logger.error(error);
-      res.status(error.statusCode).send(error);
+    } catch (e) {
+      throw new GenericHttpException(e);
     }
   }
 
@@ -106,9 +131,8 @@ export class CustomerController {
     try {
       const result = await this.customerService.delete(email);
       res.status(HttpStatus.OK).send(result);
-    } catch ({ error }) {
-      this.logger.error(error);
-      res.status(error.statusCode).send(error);
+    } catch (e) {
+      throw new GenericHttpException(e);
     }
   }
 

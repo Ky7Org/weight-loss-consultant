@@ -1,49 +1,47 @@
-import { Controller, UseFilters } from '@nestjs/common';
-import { TrainerService } from '../services/impl/trainer.service.impl';
-import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import {ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors} from '@nestjs/common';
+import {TrainerService} from '../services/impl/trainer.service.impl';
+import {CreateTrainerDto} from '../dtos/trainer/create-trainer';
+import {GrpcMethod, Payload} from '@nestjs/microservices';
+import {ExceptionFilter} from '../../../../common/filters/rpc-exception.filter';
+import {UpdateTrainerPayloadType} from '../../../../common/dtos/update-trainer-dto.payload';
 import {
-  CREATE_TRAINER,
-  DELETE_TRAINER,
-  GET_ALL_TRAINERS,
-  GET_TRAINER_BY_EMAIL,
-  UPDATE_TRAINER
-} from '../../../../common/routes/users-management-service-routes';
-import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
-import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
+  GRPC_TRAINER_SERVICE,
+  TRAINER_SERVICE_FIND_ALL,
+  TRAINER_SERVICE_VIEW_DETAIL
+} from "../../../../common/grpc-services.route";
+import {constructGRPCResponse} from "../../../../common/utils";
+import {TrainerEntityViewDetailRequest} from "../../../../common/proto-models/users-mgnt.proto";
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class TrainerController {
   constructor(private readonly trainerService: TrainerService) {
   }
 
-  @MessagePattern({cmd: GET_ALL_TRAINERS})
+  @GrpcMethod(GRPC_TRAINER_SERVICE, TRAINER_SERVICE_FIND_ALL)
   @UseFilters(new ExceptionFilter())
-  async index() {
-    return this.trainerService.findAll();
+  index() {
+    return constructGRPCResponse(this.trainerService.findAll());
   }
 
-  @MessagePattern({cmd: GET_TRAINER_BY_EMAIL})
+  @GrpcMethod(GRPC_TRAINER_SERVICE, TRAINER_SERVICE_VIEW_DETAIL)
   @UseFilters(new ExceptionFilter())
-  async getByEmail(@Payload() email: string) {
-    return this.trainerService.viewDetail(email);
+  getByEmail(payload: TrainerEntityViewDetailRequest) {
+    return constructGRPCResponse(this.trainerService.viewDetail(payload.email));
   }
 
-  @MessagePattern({cmd: CREATE_TRAINER})
   @UseFilters(new ExceptionFilter())
-  async create(@Payload() dto: CreateTrainerDto) {
+  create(@Payload() dto: CreateTrainerDto) {
     return this.trainerService.create(dto);
   }
 
-  @MessagePattern({cmd: UPDATE_TRAINER})
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() payload: UpdateTrainerPayloadType) {
+  update(@Payload() payload: UpdateTrainerPayloadType) {
     return this.trainerService.edit(payload.dto, payload.email);
   }
 
-  @MessagePattern({cmd: DELETE_TRAINER})
   @UseFilters(new ExceptionFilter())
-  async delete(@Payload() email) {
+  delete(@Payload() email) {
     return this.trainerService.delete(email);
   }
 

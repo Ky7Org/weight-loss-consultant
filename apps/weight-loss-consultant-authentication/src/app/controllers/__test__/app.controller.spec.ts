@@ -1,11 +1,11 @@
-import { AppController } from '../app.controller';
-import { CustomerService } from '../../services/customer.service';
-import { AuthenticationService } from '../../services/authentication.service';
-import { TrainerService } from '../../services/trainer.service';
-import { MailService } from '../../services/mail.service';
-import { ResetPasswordTokenService } from '../../services/reset-password-token.service';
-import { AccountService } from '../../services/account.service';
-import { LoginResponse } from '../../models/login.res';
+import {AppController} from '../app.controller';
+import {CustomerService} from '../../services/customer.service';
+import {AuthenticationService} from '../../services/authentication.service';
+import {TrainerService} from '../../services/trainer.service';
+import {MailService} from '../../services/mail.service';
+import {ResetPasswordTokenService} from '../../services/reset-password-token.service';
+import {AccountService} from '../../services/account.service';
+import {LoginResponse} from '../../models/login.res';
 
 describe('The AuthenticationController', () => {
 

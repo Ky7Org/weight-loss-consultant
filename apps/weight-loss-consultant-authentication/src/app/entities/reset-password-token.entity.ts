@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import {BaseEntity, Column, Entity, PrimaryColumn} from 'typeorm';
 
 @Entity("ResetPasswordToken")
 export class ResetPasswordTokenEntity extends BaseEntity{

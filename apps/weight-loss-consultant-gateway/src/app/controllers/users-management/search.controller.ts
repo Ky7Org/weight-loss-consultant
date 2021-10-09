@@ -1,11 +1,12 @@
-import { Body, Controller, HttpStatus, Logger, Post, Query, Res } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SearchService } from '../../services/search.service';
-import { PaginationDto } from '../../dtos/pagination/pagination.dto';
+import {Body, Controller, HttpStatus, Logger, Post, Query, Res} from '@nestjs/common';
+import {ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {PaginationDto} from '../../dtos/pagination/pagination.dto';
+import {SearchService} from "../../services/users-management/search.service";
+import {USERS_MANAGEMENT} from "../../../../../common/api.routes";
 
 @ApiTags('Sorting and Filtering')
 @ApiBearerAuth()
-@Controller('/v1/search')
+@Controller(USERS_MANAGEMENT.SEARCH_API)
 export class SearchController {
   private readonly logger = new Logger(SearchController.name);
 

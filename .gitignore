@@ -38,7 +38,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-#env files
+#.env files
 apps/weight-loss-consultant-authentication/src/assets/.env
 apps/weight-loss-consultant-users-mgnt-api/src/.env
 /apps/weight-loss-consultant-authentication/src/assets/.env

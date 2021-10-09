@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { ResetPasswordTokenDTO } from '../dtos/reset-password-token.dto';
-import { ResetPasswordTokenEntity } from '../entities/reset-password-token.entity';
+import {Injectable} from '@nestjs/common';
+import {ResetPasswordTokenDTO} from '../dtos/reset-password-token.dto';
+import {ResetPasswordTokenEntity} from '../entities/reset-password-token.entity';
 
 @Injectable()
 export class ResetPasswordTokenMapper {

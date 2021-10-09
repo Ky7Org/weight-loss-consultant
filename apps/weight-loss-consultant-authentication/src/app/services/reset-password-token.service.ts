@@ -1,9 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { BaseService } from './base/base.service';
-import { ResetPasswordTokenEntity } from '../entities/reset-password-token.entity';
-import { ResetPasswordTokenRepository } from '../repositories/reset-password-token.repository';
-import { ResetPasswordTokenMapper } from '../mappers/reset-password-token.mapper';
-import { ResetPasswordTokenDTO } from '../dtos/reset-password-token.dto';
+import {Injectable, Logger} from '@nestjs/common';
+import {ResetPasswordTokenEntity} from '../entities/reset-password-token.entity';
+import {ResetPasswordTokenRepository} from '../repositories/reset-password-token.repository';
+import {ResetPasswordTokenMapper} from '../mappers/reset-password-token.mapper';
+import {ResetPasswordTokenDTO} from '../dtos/reset-password-token.dto';
+import {BaseService} from "../../../../common/services/base.service";
 
 @Injectable()
 export class ResetPasswordTokenService extends BaseService<ResetPasswordTokenEntity, ResetPasswordTokenRepository>{
@@ -19,7 +19,6 @@ export class ResetPasswordTokenService extends BaseService<ResetPasswordTokenEnt
       .where("token.email = :email", { email: email })
       .orderBy({"token.createdTime": "DESC"})
       .getOneOrFail();
-    const dto = this.resetPasswordTokenMapper.mapEntityToDTO(entity);
-    return dto;
+    return this.resetPasswordTokenMapper.mapEntityToDTO(entity);
   }
 }

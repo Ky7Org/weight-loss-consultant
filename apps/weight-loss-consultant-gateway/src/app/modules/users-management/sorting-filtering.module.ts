@@ -1,0 +1,19 @@
+import {Module} from '@nestjs/common';
+import {ClientsModule} from '@nestjs/microservices';
+import {USERS_MANAGEMENT_SERVICE_NAME} from '../../../../../../constant';
+import {SortingAndFilteringController} from '../../controllers/users-management/sorting-filtering.controller';
+import {USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
+import {SortingAndFilteringService} from "../../services/users-management/sorting-and-filtering.service";
+
+
+@Module({
+  imports: [ClientsModule.register([
+    {
+      name: USERS_MANAGEMENT_SERVICE_NAME,
+      ...USERS_MANAGEMENT_GRPC_SERVICE,
+    }])],
+  controllers: [SortingAndFilteringController],
+  providers: [SortingAndFilteringService],
+  exports: [SortingAndFilteringService]
+})
+export class SortingAndFilteringModule {}

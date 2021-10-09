@@ -1,8 +1,6 @@
-import {BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn} from "typeorm";
-import {PackageEntity} from "./package.enttiy";
-import {TrainerStyleEntity} from "./trainer-style.entity";
+import {BaseEntity, Column, Entity, OneToMany, PrimaryColumn} from "typeorm";
+import {PackageEntity} from "./package.entity";
 import {ProfileStyleEntity} from "./profile-trainer.entity";
-
 
 
 @Entity("Trainer")

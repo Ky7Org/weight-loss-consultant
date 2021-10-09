@@ -1,13 +1,14 @@
-import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { PackageService } from '../../services/package.service';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
-import { CreatePackageDto } from '../../dtos/package/create-package';
-import { UpdatePackageDto } from '../../dtos/package/update-package';
+import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
+import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
+import {CreatePackageDto} from '../../dtos/package/create-package';
+import {UpdatePackageDto} from '../../dtos/package/update-package';
+import {PACKAGES_MANAGEMENT} from "../../../../../common/api.routes";
+import {PackageService} from "../../services/packages-management/package.service";
 
 @ApiTags('Package')
 @ApiBearerAuth()
-@Controller('/v1/packages')
+@Controller(PACKAGES_MANAGEMENT.PACKAGES_API)
 export class PackageController {
   private readonly logger = new Logger(PackageController.name);
 

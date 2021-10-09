@@ -1,31 +1,20 @@
-import { Module } from '@nestjs/common';
-import { AuthenticationService } from '../services/authentication.service';
-import { PassportModule } from '@nestjs/passport';
-import { CustomerModule } from './customer.module';
-import { JwtModule } from '@nestjs/jwt';
-import { TrainerModule } from './trainer.module';
-import { JWT_CONFIG } from '../../constant';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AdminModule } from './admin.module';
-import { AccountModule } from './account.module';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { HOST, USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT } from '../../../../../constant';
+import {Module} from '@nestjs/common';
+import {AuthenticationService} from '../services/authentication.service';
+import {PassportModule} from '@nestjs/passport';
+import {JwtModule} from '@nestjs/jwt';
+import {JWT_CONFIG} from '../../constant';
+import {ConfigModule, ConfigService} from '@nestjs/config';
+import {ClientsModule} from '@nestjs/microservices';
+import {USERS_MANAGEMENT_SERVICE_NAME} from '../../../../../constant';
+import {USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../common/grpc-services.route";
 
 @Module({
   imports: [
-    CustomerModule,
-    TrainerModule,
-    AdminModule,
-    AccountModule,
     PassportModule,
     ClientsModule.register([
       {
         name: USERS_MANAGEMENT_SERVICE_NAME,
-        transport: Transport.TCP,
-        options: {
-          host: HOST,
-          port: USERS_MANAGEMENT_SERVICE_PORT
-        }
+        ...USERS_MANAGEMENT_GRPC_SERVICE
       }
     ]),
     JwtModule.registerAsync({

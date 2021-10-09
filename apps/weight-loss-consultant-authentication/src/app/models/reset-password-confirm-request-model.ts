@@ -1,6 +1,6 @@
-import { Match } from '../decorators/match.decorator';
-import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {Match} from '../decorators/match.decorator';
+import {IsEmail, IsNotEmpty, IsString, Length} from 'class-validator';
+import {ApiProperty} from '@nestjs/swagger';
 
 export class ResetPasswordConfirmRequestModel{
   @ApiProperty()

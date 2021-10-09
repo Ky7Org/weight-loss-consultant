@@ -1,12 +1,13 @@
-import { Body, Controller, HttpStatus, Logger, Post, Query, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SortingAndFilteringService } from '../../services/sorting-and-filtering.service';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
-import { PaginationDto } from '../../dtos/pagination/pagination.dto';
+import {Body, Controller, HttpStatus, Logger, Post, Query, Res, UseGuards} from '@nestjs/common';
+import {ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
+import {PaginationDto} from '../../dtos/pagination/pagination.dto';
+import {SortingAndFilteringService} from "../../services/users-management/sorting-and-filtering.service";
+import {USERS_MANAGEMENT} from "../../../../../common/api.routes";
 
 @ApiTags('Sorting and Filtering')
 @ApiBearerAuth()
-@Controller('/v1/sortingAndFiltering')
+@Controller(USERS_MANAGEMENT.SORTING_AND_FILTERING_API)
 export class SortingAndFilteringController {
 
   private readonly logger = new Logger(SortingAndFilteringController.name);

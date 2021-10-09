@@ -1,8 +1,8 @@
-import { CustomerService } from '../customer.service';
-import { CustomerRepository } from '../../repositories/customer.repository';
-import { CustomerMapper } from '../../mappers/customer.mapper';
-import { CustomerDTO } from '../../dtos/customer.dto';
-import { RedisCacheService } from '../redis-cache.service';
+import {CustomerService} from '../customer.service';
+import {CustomerRepository} from '../../repositories/customer.repository';
+import {CustomerMapper} from '../../mappers/customer.mapper';
+import {CustomerDTO} from '../../dtos/customer.dto';
+import {RedisCacheService} from '../redis-cache.service';
 
 describe('The CustomerService', () => {
   let customerService: CustomerService;

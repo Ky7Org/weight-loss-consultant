@@ -1,21 +1,17 @@
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { AccountService } from './account.service';
-import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { AdminEntity } from '../entities/admin.entity';
-import { CustomerEntity } from '../entities/customer.entity';
-import { TrainerEntity } from '../entities/trainer.entity';
-import { combineLatest, Observable } from 'rxjs';
-import { catchError, defaultIfEmpty, map } from 'rxjs/operators';
-import { RpcExceptionModel } from '../filters/rpc-exception.model';
-import { LoginRequest } from '../models/login.req';
-import { Role } from '../constants/enums';
-import {
-  ADMIN_VIEW_DETAIL,
-  CUSTOMER_VIEW_DETAIL,
-  TRAINER_VIEW_DETAIL
-} from '../../../../common/routes/users-management-service-routes';
+import {HttpStatus, Injectable, Logger, OnModuleInit} from '@nestjs/common';
+import {JwtService} from '@nestjs/jwt';
+import {Client, ClientGrpc, RpcException} from '@nestjs/microservices';
+import {combineLatest, from, Observable} from 'rxjs';
+import {catchError, defaultIfEmpty, map} from 'rxjs/operators';
+import {LoginRequest} from '../models/login.req';
+import {Role} from '../constants/enums';
+import {USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../common/grpc-services.route";
+import {AdminService, CustomerService, TrainerService} from "../../../../common/proto-models/users-mgnt.proto";
+import {unwrapGRPCResponse$} from "../../../../common/utils";
+import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
+import {AdminEntity} from "../../../../common/entities/admin.entity";
+import {CustomerEntity} from "../../../../common/entities/customer.entity";
+import {TrainerEntity} from "../../../../common/entities/trainer.entity";
 
 export interface UserIdentity {
   email: string;
@@ -25,29 +21,35 @@ export interface UserIdentity {
 }
 
 @Injectable()
-export class AuthenticationService {
+export class AuthenticationService implements OnModuleInit {
 
   private readonly logger = new Logger(AuthenticationService.name);
 
-  constructor(private readonly accountService: AccountService,
-              @Inject(USERS_MANAGEMENT_SERVICE_NAME)
-              private readonly usersManagementServiceProxy: ClientProxy,
-              private readonly jwtService: JwtService) {
+  @Client(USERS_MANAGEMENT_GRPC_SERVICE)
+  private readonly usersManagementClient: ClientGrpc;
+
+  private adminService: AdminService;
+  private customerService: CustomerService;
+  private trainerService: TrainerService;
+
+  constructor(private readonly jwtService: JwtService) {}
+
+  onModuleInit() {
+    this.adminService = this.usersManagementClient.getService<AdminService>('AdminService');
+    this.customerService = this.usersManagementClient.getService<CustomerService>('CustomerService');
+    this.trainerService = this.usersManagementClient.getService<TrainerService>('TrainerService');
   }
 
-  private validateAdmin(username: string): Observable<AdminEntity> {
-    return this.usersManagementServiceProxy
-      .send<AdminEntity, string>({ cmd: ADMIN_VIEW_DETAIL }, username);
+  private validateAdmin(email: string): Observable<AdminEntity> {
+    return unwrapGRPCResponse$(this.adminService.viewDetail({email}));
   }
 
-  private validateCustomer(username: string): Observable<CustomerEntity> {
-    return this.usersManagementServiceProxy
-      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username);
+  private validateCustomer(email: string): Observable<CustomerEntity> {
+    return unwrapGRPCResponse$(this.customerService.viewDetail({email}));
   }
 
-  private validateTrainer(username: string): Observable<TrainerEntity> {
-    return this.usersManagementServiceProxy
-      .send<TrainerEntity, string>({ cmd: TRAINER_VIEW_DETAIL }, username);
+  private validateTrainer(email: string): Observable<TrainerEntity> {
+    return unwrapGRPCResponse$(this.trainerService.viewDetail({email}));
   }
 
   private async validateAccountWithoutPassword(username: string) {
@@ -141,7 +143,6 @@ export class AuthenticationService {
         message: 'Invalid username or password.'
       } as RpcExceptionModel);
     }
-
     user = await this.validateAccount(user.email, user.password);
     return {
       accessToken: this.jwtService.sign(user),

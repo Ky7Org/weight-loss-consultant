@@ -1,9 +1,9 @@
-import { Controller, UseFilters } from '@nestjs/common';
-import { SearchService } from '../services/search.service';
-import { MessagePattern, Payload } from '@nestjs/microservices';
-import { SearchPaginationPayloadType } from '../../../../common/dtos/search-pagination-dto.payload';
-import { SEARCH_USERS } from '../../../../common/routes/users-management-service-routes';
-import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
+import {Controller, UseFilters} from '@nestjs/common';
+import {SearchService} from '../services/search.service';
+import {MessagePattern, Payload} from '@nestjs/microservices';
+import {SearchPaginationPayloadType} from '../../../../common/dtos/search-pagination-dto.payload';
+import {SEARCH_USERS} from '../../../../common/routes/users-management-service-routes';
+import {ExceptionFilter} from '../../../../common/filters/rpc-exception.filter';
 
 
 @Controller()
