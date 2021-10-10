@@ -16,3 +16,6 @@ export const HEALTH_MANAGEMENT_SERVICE_PORT = 5004;
 
 export const SCHEDULING_SERVICE_NAME = "scheduling_service";
 export const SCHEDULING_SERVICE_PORT = 5005;
+
+export const CAMPAIGN_MANAGEMENT_SERVICE_NAME = "campaign_management_service";
+export const CAMPAIGN_MANAGEMENT_SERVICE_PORT = 5006;
