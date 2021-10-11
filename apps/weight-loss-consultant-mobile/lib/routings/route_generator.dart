@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/edit_profile_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/others/chat_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_home_page.dart';
