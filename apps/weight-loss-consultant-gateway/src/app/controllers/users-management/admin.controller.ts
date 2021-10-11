@@ -117,6 +117,7 @@ export class AdminController implements OnModuleInit {
   async update(@Param('email') email: string, @Body() payload: UpdateAdminDto, @Res() res) {
     try {
       const result = await unwrapGRPCResponse(this.adminService.update({email, payload}));
+      console.log(result)
       res.status(HttpStatus.OK).send(result);
     } catch (e) {
       throw new GenericHttpException(e);

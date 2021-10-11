@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, OneToMany, PrimaryColumn} from "typeorm";
+import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn} from "typeorm";
 import {PackageEntity} from "./package.entity";
 import {ProfileStyleEntity} from "./profile-trainer.entity";
 
@@ -18,6 +18,7 @@ export class TrainerEntity extends BaseEntity {
   @Column({type: 'varchar', length: 200})
   address: string;
 
+  @Index()
   @Column({type: 'char', length: 11})
   phone: string;
 
