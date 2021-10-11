@@ -23,9 +23,9 @@ async function bootstrap() {
       port: USERS_MANAGEMENT_SERVICE_PORT,
     }
   });
-  await app.listen(() => {
-    Logger.log(`Microservice ${USERS_MANAGEMENT_SERVICE_NAME} is registered on port ${USERS_MANAGEMENT_SERVICE_PORT}`);
-  });
+  await app.listen();
+  Logger.log(`Microservice ${USERS_MANAGEMENT_SERVICE_NAME} is registered on port ${USERS_MANAGEMENT_SERVICE_PORT}`);
+
 }
 
 bootstrap();
