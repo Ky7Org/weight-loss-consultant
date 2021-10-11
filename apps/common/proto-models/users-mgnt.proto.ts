@@ -1,4 +1,5 @@
 import {Observable} from "rxjs";
+import {ApiProperty} from "@nestjs/swagger";
 
 export class AdminEntity {
   email?: string;
@@ -26,7 +27,7 @@ export interface AdminService {
   delete(data: EmailBody): Observable<any>;
 
   update(data: UpdateAdminEntityRequest): Observable<AdminEntityResponse>;
-  create(data): Observable<any>;
+  create(data : CreateAdminEntity): Observable<AdminEntityResponse>;
 }
 
 export interface CustomerService {
@@ -50,6 +51,13 @@ export interface CustomerService {
   update(data): Observable<any>;
   delete(data): Observable<any>;
 }
+
+export type CreateAdminEntity = {
+  email: string;
+  password: string;
+  retypePassword: string;
+}
+
 
 export type UpdateAdminEntityRequest = { email: string, payload: UpdateAdminEntity };
 

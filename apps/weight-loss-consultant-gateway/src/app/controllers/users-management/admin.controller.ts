@@ -90,8 +90,9 @@ export class AdminController implements OnModuleInit {
   @ApiResponse({status: HttpStatus.CONFLICT, description: 'Email has already existed.'})
   async create(@Body() dto: CreateAdminDto, @Res() res) {
     try {
-      //  const result = await this.adminService.create(dto);
-      res.status(HttpStatus.CREATED).send(null);
+      const result = await unwrapGRPCResponse(this.adminService.create(dto));
+      console.log(result);
+      res.status(HttpStatus.CREATED).send(result);
     } catch (e) {
       throw new GenericHttpException(e);
     }

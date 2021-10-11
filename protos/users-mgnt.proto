@@ -7,12 +7,19 @@ service AdminService {
   rpc ViewDetail(AdminEntityViewDetailRequest) returns (AdminEntityResponse);
   rpc Update(UpdateAdminRequest) returns (AdminEntityResponse);
   rpc Delete(EmailBody) returns (EmptyBody);
+  rpc Create(CreateAdminEntity) returns (AdminEntityResponse);
 }
 
 message EmptyBody {}
 
 message EmailBody {
   string email = 1;
+}
+
+message CreateAdminEntity {
+  string email = 1;
+  string password = 2;
+  string retypePassword = 3;
 }
 
 message UpdateAdminEntity {
@@ -24,7 +31,7 @@ message UpdateAdminEntity {
   string gender = 6;
   string profileImage = 7;
   int32 status = 8;
-  int64 dob = 9;
+  int32 dob = 9;
 }
 
 message UpdateAdminRequest {
@@ -93,7 +100,7 @@ message CustomerEntity {
 
 
 message CampaignEntity {
-  int64 id = 1;
+  int32 id = 1;
   string description = 2;
   int32 status = 3;
   int64 startDate = 4;
@@ -139,7 +146,7 @@ message TrainerEntity {
 }
 
 message PackageEntity {
-  int64 id = 1;
+  int32 id = 1;
   string exercisePlan = 2;
   string schedule = 3;
   float price = 4;

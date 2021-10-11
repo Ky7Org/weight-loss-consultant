@@ -21,7 +21,7 @@ import {ENV_FILE_PATH} from "../../common/constants/env-file-path";
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule.forRoot(settings), USERS_MANAGEMENT_GRPC_SERVICE);
-  await app.useGlobalPipes(new ValidationPipe());
+  // await app.useGlobalPipes(new ValidationPipe());
   await app.listen();
   Logger.log(`Microservice ${USERS_MANAGEMENT_GRPC_SERVICE_NAME} is listening on`);
   Logger.log(`[ grpc://${GRPC_SERVICES_HOST}:${USERS_MANAGEMENT_GRPC_SERVICE_PORT} ]`);

@@ -29,15 +29,19 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
   }
 
   async create(dto: CreateAdminDto): Promise<AdminEntity> {
-    if (dto === undefined || dto === null) {
-      throw constructGrpcException(HttpStatus.BAD_REQUEST, `${EMAIL_EXISTED_ERR}`);
+    try {
+      if (dto === undefined || dto === null) {
+        throw constructGrpcException(HttpStatus.BAD_REQUEST, `${EMAIL_EXISTED_ERR}`);
+      }
+      const mappedAdminDto = await AdminMapper.mapCreateAdminDTOToEntity(dto);
+      if (await this.repository.findOne(mappedAdminDto?.email)) {
+        throw constructGrpcException(HttpStatus.CONFLICT, EMAIL_EXISTED_ERR);
+      }
+      await this.redisCacheService.del(ADMIN_SERVICE_FIND_ALL_KEY);
+      return this.repository.save(mappedAdminDto);
+    } catch (e) {
+      console.log(e);
     }
-    const mappedAdminDto = await AdminMapper.mapCreateAdminDTOToEntity(dto);
-    if (await this.repository.findOne(mappedAdminDto?.email)) {
-      throw constructGrpcException(HttpStatus.CONFLICT, EMAIL_EXISTED_ERR);
-    }
-    await this.redisCacheService.del(ADMIN_SERVICE_FIND_ALL_KEY);
-    return this.repository.save(mappedAdminDto);
   }
 
   async edit(payload: UpdateAdminEntityRequest): Promise<UpdateResult> {
