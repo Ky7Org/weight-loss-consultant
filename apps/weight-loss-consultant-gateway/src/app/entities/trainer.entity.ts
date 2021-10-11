@@ -1,5 +1,5 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { PackageEntity } from './package.enttiy';
+import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn} from 'typeorm';
+import {PackageEntity} from './package.entity';
 
 
 @Entity("Trainer")
@@ -17,6 +17,7 @@ export class TrainerEntity extends BaseEntity {
   @Column({type: 'varchar', length: 200})
   address: string;
 
+  @Index()
   @Column({type: 'char', length: 11})
   phone: string;
 

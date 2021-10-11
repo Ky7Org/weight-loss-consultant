@@ -1,8 +1,6 @@
-import {BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn} from "typeorm";
-import {PackageEntity} from "./package.enttiy";
-import {TrainerStyleEntity} from "./trainer-style.entity";
+import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn} from "typeorm";
+import {PackageEntity} from "./package.entity";
 import {ProfileStyleEntity} from "./profile-trainer.entity";
-
 
 
 @Entity("Trainer")
@@ -20,6 +18,7 @@ export class TrainerEntity extends BaseEntity {
   @Column({type: 'varchar', length: 200})
   address: string;
 
+  @Index()
   @Column({type: 'char', length: 11})
   phone: string;
 
