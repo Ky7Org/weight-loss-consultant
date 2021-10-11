@@ -58,10 +58,10 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
         message: `Param: ${email} must match with ${entity.email} in request body`
       } as RpcExceptionModel);
     }
-    const admin = await this.repository.createQueryBuilder("trainer")
+    const trainer = await this.repository.createQueryBuilder("trainer")
       .where("trainer.phone = :phone", {phone: entity.phone})
 
-    if (admin) {
+    if (trainer) {
       throw constructGrpcException(HttpStatus.CONFLICT, `The phone number has already existed. Please choose another one.`);
     }
     const foundTrainer = await this.repository.findOne(entity.email);
