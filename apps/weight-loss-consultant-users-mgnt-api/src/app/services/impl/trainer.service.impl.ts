@@ -11,6 +11,7 @@ import {TRAINER_SERVICE_FIND_ALL_KEY, TRAINER_SERVICE_VIEW_DETAIL_KEY} from "../
 import {TrainerMapper} from "../../../../../common/mappers/trainer.mapper";
 import {BaseService} from "../../../../../common/services/base.service";
 import {EMAIL_EXISTED_ERR} from "../../../../../common/constants/validation-err-message";
+import {constructGrpcException} from "../../../../../common/utils";
 
 @Injectable()
 export class TrainerService extends BaseService<TrainerEntity, TrainerRepository> {
@@ -56,6 +57,12 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
         statusCode: HttpStatus.CONFLICT,
         message: `Param: ${email} must match with ${entity.email} in request body`
       } as RpcExceptionModel);
+    }
+    const admin = await this.repository.createQueryBuilder("trainer")
+      .where("trainer.phone = :phone", {phone: entity.phone})
+
+    if (admin) {
+      throw constructGrpcException(HttpStatus.CONFLICT, `The phone number has already existed. Please choose another one.`);
     }
     const foundTrainer = await this.repository.findOne(entity.email);
     if (foundTrainer === undefined) {

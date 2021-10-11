@@ -11,6 +11,7 @@ import {CUSTOMER_SERVICE_FIND_ALL_KEY, CUSTOMER_SERVICE_VIEW_DETAIL_KEY} from ".
 import {CustomerMapper} from "../../../../../common/mappers/customer.mapper";
 import {BaseService} from "../../../../../common/services/base.service";
 import {EMAIL_EXISTED_ERR} from "../../../../../common/constants/validation-err-message";
+import {constructGrpcException} from "../../../../../common/utils";
 
 @Injectable()
 export class CustomerService extends BaseService<CustomerEntity, CustomerRepository> {
@@ -53,6 +54,12 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
         statusCode: HttpStatus.CONFLICT,
         message: `Param: ${email} must match with ${entity.email} in request body`
       } as RpcExceptionModel);
+    }
+    const customer = await this.repository.createQueryBuilder("customer")
+      .where("customer.phone = :phone", {phone: entity.phone})
+
+    if (customer) {
+      throw constructGrpcException(HttpStatus.CONFLICT, `The phone number has already existed. Please choose another one.`);
     }
     const existedEmail = await this.repository.findOne(entity.email);
     if (existedEmail === undefined) {
