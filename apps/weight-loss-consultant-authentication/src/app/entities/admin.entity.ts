@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import {BaseEntity, Column, Entity, Index, PrimaryColumn} from 'typeorm';
 import { Status } from '../../constant';
 
 @Entity('Admin')
@@ -11,6 +11,7 @@ export class AdminEntity extends BaseEntity {
   fullname: string;
   @Column({ type: 'varchar', length: 200 })
   address: string;
+  @Index()
   @Column({ type: 'char', length: 11 })
   phone: string;
   @Column({ type: 'varchar', length: 20 })

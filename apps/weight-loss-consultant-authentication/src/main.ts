@@ -23,9 +23,9 @@ async function bootstrap() {
       port: AUTHENTICATION_SERVICE_PORT
     }
   });
-  await app.listen(() => {
-    Logger.log(`Microservice ${AUTHENTICATION_SERVICE_NAME} is listening on http://${HOST}/${AUTHENTICATION_SERVICE_PORT}`);
-  });
+  await app.listen();
+  Logger.log(`Microservice ${AUTHENTICATION_SERVICE_NAME} is listening on http://${HOST}/${AUTHENTICATION_SERVICE_PORT}`);
+
 }
 
 bootstrap();

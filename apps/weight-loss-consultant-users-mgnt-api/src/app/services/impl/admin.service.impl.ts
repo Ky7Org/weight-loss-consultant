@@ -5,10 +5,10 @@ import {AdminRepository} from '../../repositories/admin.repository';
 import {AdminEntity} from '../../entities/admin.entity';
 import {AdminMapper} from '../../mappers/admin.mapper';
 import {CreateAdminDto} from '../../dtos/admin/create-admin.dto';
-import {UpdateAdminDto} from '../../dtos/admin/update-admin.dto';
 import {EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG} from '../../constants/validation-err-message';
 import {RpcException} from '@nestjs/microservices';
 import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
+import {UpdateAdminType} from "../../controllers/admin.controller";
 
 @Injectable()
 export class AdminService extends BaseService<AdminEntity, AdminRepository> {
@@ -36,28 +36,30 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
   }
 
   async edit(payload: UpdateAdminType): Promise<UpdateResult> {
-    return AdminMapper.mapUpdateAdminDTOToEntity(payload.dto)
-      .then((entity) => {
-        if (payload.email !== payload.dto.email) {
-          throw new RpcException({
-            statusCode: HttpStatus.CONFLICT,
-            message: `Param: ${payload.dto.email} must match with request body email : ${payload.email} `
-          } as RpcExceptionModel);
-        }
-        return entity;
-      })
-      .then((entity) => this.repository.findOne(entity.email))
-      .then((entity) => {
-        if (entity === undefined) {
-          throw new RpcException({
-            statusCode: HttpStatus.BAD_REQUEST,
-            //undefined, so cannot reference to email => payload.email
-            message: `Not found admin with email: ${payload.email}`
-          } as RpcExceptionModel);
-        }
-        return entity;
-      })
-      .then((entity) => this.repository.update(entity.email, entity));
+    const entity = await AdminMapper.mapUpdateAdminDTOToEntity(payload.dto);
+    if (payload.email !== payload.dto.email) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `Param: ${payload.dto.email} must match with request body email : ${payload.email} `
+      } as RpcExceptionModel);
+    }
+    const phoneAdmin = await this.repository.createQueryBuilder("a")
+      .where("a.phone = :phone" , {phone: entity.phone})
+      .getOne();
+    if (phoneAdmin) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `The phone number has been already registered, please choose another one.`
+      } as RpcExceptionModel);
+    }
+    const foundAdmin = await this.repository.findOne(payload.email);
+    if (foundAdmin === undefined) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `Not found admin with email: ${payload.email}`
+      } as RpcExceptionModel);
+    }
+    return this.repository.update(entity.email, entity);
   }
 
   async delete(id): Promise<DeleteResult> {

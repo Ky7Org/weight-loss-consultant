@@ -44,6 +44,15 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
         message: `Param: ${email} must match with ${entity.email} in request body`
       } as RpcExceptionModel);
     }
+    const customerPhone = await this.repository.createQueryBuilder("customer")
+      .where("customer.phone = :phone", {phone : entity.phone})
+      .getOne();
+    if (customerPhone) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `The phone number has been already registered, please choose another one.`
+      } as RpcExceptionModel);
+    }
     const existedEmail = await this.repository.findOne(entity.email);
     if (existedEmail === undefined) {
       throw new RpcException({
