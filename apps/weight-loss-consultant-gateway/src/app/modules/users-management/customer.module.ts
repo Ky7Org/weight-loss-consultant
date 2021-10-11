@@ -4,7 +4,6 @@ import {ClientsModule} from '@nestjs/microservices';
 import {USERS_MANAGEMENT_SERVICE_NAME} from '../../../../../../constant';
 import {CustomerController} from '../../controllers/users-management/customer.controller';
 import {USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
-import {CustomerService} from "../../services/users-management/customer.service";
 
 
 @Module({
@@ -16,8 +15,8 @@ import {CustomerService} from "../../services/users-management/customer.service"
     }])
   ],
   controllers: [CustomerController],
-  providers: [CustomerService],
-  exports: [CustomerService]
+  providers: [],
+  exports: []
 })
 export class CustomerModule {
 }

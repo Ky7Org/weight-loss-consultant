@@ -4,16 +4,13 @@ import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
 import {CreatePackageDto} from '../../dtos/package/create-package';
 import {UpdatePackageDto} from '../../dtos/package/update-package';
 import {PACKAGES_MANAGEMENT} from "../../../../../common/api.routes";
-import {PackageService} from "../../services/packages-management/package.service";
 
 @ApiTags('Package')
 @ApiBearerAuth()
 @Controller(PACKAGES_MANAGEMENT.PACKAGES_API)
 export class PackageController {
   private readonly logger = new Logger(PackageController.name);
-
-  constructor(private readonly packageService: PackageService) {
-  }
+  private readonly packageService: any;
 
   @Get()
   @UseGuards(JwtAuthGuard)

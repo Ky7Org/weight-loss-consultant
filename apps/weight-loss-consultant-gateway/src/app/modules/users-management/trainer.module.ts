@@ -3,7 +3,6 @@ import {TrainerController} from '../../controllers/users-management/trainer.cont
 import {ClientsModule} from '@nestjs/microservices';
 import {USERS_MANAGEMENT_SERVICE_NAME} from '../../../../../../constant';
 import {USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
-import {TrainerService} from "../../services/users-management/trainer.service";
 
 @Module({
   imports: [ClientsModule.register([
@@ -12,7 +11,7 @@ import {TrainerService} from "../../services/users-management/trainer.service";
       ...USERS_MANAGEMENT_GRPC_SERVICE,
     }])],
   controllers: [TrainerController],
-  providers: [TrainerService],
-  exports: [TrainerService]
+  providers: [],
+  exports: []
 })
 export class TrainerModule {}

@@ -4,7 +4,6 @@ import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
 import {CreateCampaignDto} from '../../dtos/campaign/create-campaign';
 import {UpdateCampaignDto} from '../../dtos/campaign/update-campaign';
 import {CAMPAIGNS_MANAGEMENT} from "../../../../../common/api.routes";
-import {CampaignService} from "../../services/campaigns-management/campaign.service";
 
 @ApiTags('Campaign')
 @ApiBearerAuth()
@@ -12,9 +11,7 @@ import {CampaignService} from "../../services/campaigns-management/campaign.serv
 export class CampaignController {
 
   private readonly logger = new Logger(CampaignController.name);
-
-  constructor(private readonly campaignService: CampaignService) {
-  }
+  private readonly campaignService: any;
 
   @Get()
   @UseGuards(JwtAuthGuard)

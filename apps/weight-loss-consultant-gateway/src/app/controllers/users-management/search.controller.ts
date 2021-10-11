@@ -1,7 +1,6 @@
 import {Body, Controller, HttpStatus, Logger, Post, Query, Res} from '@nestjs/common';
 import {ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {PaginationDto} from '../../dtos/pagination/pagination.dto';
-import {SearchService} from "../../services/users-management/search.service";
 import {USERS_MANAGEMENT} from "../../../../../common/api.routes";
 
 @ApiTags('Sorting and Filtering')
@@ -9,8 +8,8 @@ import {USERS_MANAGEMENT} from "../../../../../common/api.routes";
 @Controller(USERS_MANAGEMENT.SEARCH_API)
 export class SearchController {
   private readonly logger = new Logger(SearchController.name);
-
-  constructor(private readonly service: SearchService) {
+  private readonly service: any;
+  constructor() {
   }
 
   //@Public()

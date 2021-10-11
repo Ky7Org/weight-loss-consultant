@@ -7,9 +7,9 @@ import {ClientsModule} from '@nestjs/microservices';
 import {AUTHENTICATION_SERVICE_NAME} from '../../../../../../constant';
 import {PassportModule} from '@nestjs/passport';
 import {AuthenticationController} from '../../controllers/authentication/authentication.controller';
-import {AuthenticationService} from '../../services/authentication/authentication.service';
 import {FirebaseAuthStrategy} from '../../strategies/firebase-auth.strategy';
 import {AUTHENTICATION_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
+import { AuthenticationService } from '../../../../../weight-loss-consultant-authentication/src/app/services/authentication.service';
 
 @Module({
   imports: [

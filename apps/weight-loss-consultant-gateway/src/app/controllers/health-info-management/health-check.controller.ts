@@ -1,9 +1,9 @@
 import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
-import {JwtAuthGuard} from "../../auth/jwt-auth.guard";
 import {ApiBody, ApiParam, ApiResponse} from "@nestjs/swagger";
 import {HealthInfoService} from "../../services/health.service";
 import {CreateHealthInfoDto} from "../../dtos/heath-info/create-health-info.dto";
 import {UpdateHealthInfoDto} from "../../dtos/heath-info/update-health-info.dto";
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 
 @Controller(`/v1/healths`)
 export class HealthCheckController {
