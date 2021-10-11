@@ -49,12 +49,6 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
       throw constructGrpcException(HttpStatus.CONFLICT,
         `Param: ${payload.payload.email} must match with request body email: ${payload.email}`);
     }
-    const admin = await this.repository.createQueryBuilder("admin")
-      .where("admin.phone = :phone", {phone: payload.payload.phone})
-
-    if (admin) {
-      throw constructGrpcException(HttpStatus.CONFLICT, `The phone number has already existed. Please choose another one.`);
-    }
     const adminEntity = await this.repository.findOne(payload.email);
     if (adminEntity === undefined) {
       throw constructGrpcException(HttpStatus.BAD_REQUEST, `${NOT_FOUND_ERR_MSG}${payload.email}`);
@@ -86,9 +80,5 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
       }
     }
     return result;
-  }
-
-  private checkPhoneExisted() {
-
   }
 }
