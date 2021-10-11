@@ -2,6 +2,7 @@ import {HeathInfoEntity} from "./health-info.entity";
 import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn} from 'typeorm';
 import {CampaignEntity} from './campaign.entity';
 
+
 @Entity('Customer')
 export class CustomerEntity extends BaseEntity{
   @PrimaryColumn({ type: 'varchar', length: 320})

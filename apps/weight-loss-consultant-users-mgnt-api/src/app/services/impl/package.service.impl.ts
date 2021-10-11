@@ -1,14 +1,14 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { DeleteResult, UpdateResult } from 'typeorm';
-import { PackageEntity } from '../../entities/package.enttiy';
-import { PackageRepository } from '../../repositories/package.repository';
-import { PackageMapper } from '../../mappers/package.mapper';
-import { CreatePackageDto } from '../../dtos/package/create-package';
-import { UpdatePackageDto } from '../../dtos/package/update-package';
-import { BaseService } from '../base.service';
-import { TrainerService } from './trainer.service.impl';
-import { RpcException } from '@nestjs/microservices';
-import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
+import {HttpStatus, Injectable} from '@nestjs/common';
+import {DeleteResult, UpdateResult} from 'typeorm';
+import {PackageEntity} from '../../entities/package.enttiy';
+import {PackageRepository} from '../../repositories/package.repository';
+import {PackageMapper} from '../../mappers/package.mapper';
+import {CreatePackageDto} from '../../dtos/package/create-package';
+import {UpdatePackageDto} from '../../dtos/package/update-package';
+import {BaseService} from '../base.service';
+import {TrainerService} from './trainer.service.impl';
+import {RpcException} from '@nestjs/microservices';
+import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
 
 @Injectable()
 export class PackageService extends BaseService<PackageEntity, PackageRepository> {

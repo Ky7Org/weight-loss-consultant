@@ -14,6 +14,11 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 
+export type UpdateCustomerPayload = {
+  email: string;
+  dto: UpdateCustDto;
+}
+
 @Controller()
 export class CustomerController {
 
@@ -40,11 +45,8 @@ export class CustomerController {
 
   @MessagePattern({ cmd: UPDATE_CUSTOMER })
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() payload: {
-    email: string;
-    dto: UpdateCustDto;
-  }): Promise<UpdateResult> {
-    return this.customerService.edit(payload.dto);
+  async update(@Payload() payload: UpdateCustomerPayload): Promise<UpdateResult> {
+    return this.customerService.edit(payload);
   }
 
   @MessagePattern({ cmd: DELETE_CUSTOMER })
