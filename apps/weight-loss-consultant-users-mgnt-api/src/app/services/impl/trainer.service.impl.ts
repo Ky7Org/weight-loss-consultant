@@ -31,7 +31,7 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
       if (result !== undefined) {
         await this.redisCacheService.set<TrainerEntity[]>(`${TRAINER_SERVICE_FIND_ALL_KEY}`, result);
       } else {
-
+//
       }
     }
     return result;
@@ -60,7 +60,7 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     }
     const admin = await this.repository.createQueryBuilder("trainer")
       .where("trainer.phone = :phone", {phone: entity.phone})
-
+      .getOne();
     if (admin) {
       throw constructGrpcException(HttpStatus.CONFLICT, `The phone number has already existed. Please choose another one.`);
     }

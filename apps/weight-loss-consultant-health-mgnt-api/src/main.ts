@@ -26,9 +26,9 @@ async function bootstrap() {
       port: HEALTH_MANAGEMENT_SERVICE_PORT
     }
   });
-  await app.listen(() => {
-    Logger.log(`Microservice ${HEALTH_MANAGEMENT_SERVICE_NAME} is listening on http://${HOST}/${HEALTH_MANAGEMENT_SERVICE_PORT}`);
-  });
+  await app.listen();
+  Logger.log(`Microservice ${HEALTH_MANAGEMENT_SERVICE_NAME} is listening on http://${HOST}/${HEALTH_MANAGEMENT_SERVICE_PORT}`);
+
 }
 
 bootstrap();

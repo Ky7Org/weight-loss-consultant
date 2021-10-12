@@ -57,7 +57,7 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     }
     const customer = await this.repository.createQueryBuilder("customer")
       .where("customer.phone = :phone", {phone: entity.phone})
-
+      .getOne();
     if (customer) {
       throw constructGrpcException(HttpStatus.CONFLICT, `The phone number has already existed. Please choose another one.`);
     }

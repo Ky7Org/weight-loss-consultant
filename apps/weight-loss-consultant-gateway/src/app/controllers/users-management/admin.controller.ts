@@ -44,6 +44,7 @@ export class AdminController implements OnModuleInit {
   }
 
   @Get()
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard)
   @UseFilters(new HttpExceptionFilter())
   @ApiResponse({status: HttpStatus.OK, description: SWAGGER_GET_ALL_ADMINS_RESPONSE})

@@ -94,7 +94,7 @@ message CustomerEntity {
   string gender = 6;
   string status = 7;
   string profileImage = 8;
-  int64 dob = 9;
+  int32 dob = 9;
   repeated CampaignEntity campaigns = 10;
 }
 

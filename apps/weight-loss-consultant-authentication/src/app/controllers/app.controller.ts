@@ -34,6 +34,7 @@ export class AppController {
   @GrpcMethod(GRPC_AUTHENTICATION_SERVICE)
   @UseFilters(new ExceptionFilter())
   login(credential: LoginRequest) {
+    console.log(credential)
     return constructGRPCResponse(this.authenticationService.login(credential));
   }
 

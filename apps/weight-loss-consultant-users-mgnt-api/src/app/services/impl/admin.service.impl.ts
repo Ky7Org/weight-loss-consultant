@@ -51,7 +51,7 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
     }
     const admin = await this.repository.createQueryBuilder("admin")
       .where("admin.phone = :phone", {phone: payload.payload.phone})
-
+      .getOne();
     if (admin) {
       throw constructGrpcException(HttpStatus.CONFLICT, `The phone number has already existed. Please choose another one.`);
     }
@@ -86,9 +86,5 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
       }
     }
     return result;
-  }
-
-  private checkPhoneExisted() {
-
   }
 }
