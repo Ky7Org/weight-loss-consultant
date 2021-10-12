@@ -7,7 +7,6 @@ import {ResetPasswordTokenService} from '../services/reset-password-token.servic
 import {ResetPasswordTokenEntity} from '../entities/reset-password-token.entity';
 import {v4 as uuidv4} from 'uuid';
 import {ResetPasswordConfirmRequestModel} from '../models/reset-password-confirm-request-model';
-import {RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status} from '../../constant';
 import {GrpcMethod, MessagePattern, Payload, RpcException} from '@nestjs/microservices';
 import {
   CONFIRM_CHANGE_PASSWORD,
@@ -21,6 +20,7 @@ import {
 import {constructGRPCResponse} from "../../../../common/utils";
 import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
 import {ExceptionFilter} from "../../../../common/filters/rpc-exception.filter";
+import { RESET_PASSWORD_TOKEN_EXPIRED_TIME } from '../../../../common/constants/jwt';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)

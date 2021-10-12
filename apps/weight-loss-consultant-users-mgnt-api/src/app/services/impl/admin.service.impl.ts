@@ -1,4 +1,4 @@
-import {HttpStatus, Injectable} from '@nestjs/common';
+import { HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import {DeleteResult, UpdateResult} from 'typeorm';
 import {AdminRepository} from '../../repositories/admin.repository';
 import {AdminEntity} from '../../entities/admin.entity';
@@ -10,13 +10,22 @@ import {BaseService} from "../../../../../common/services/base.service";
 import {EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG} from "../../../../../common/constants/validation-err-message";
 import {constructGrpcException} from "../../../../../common/utils";
 import {UpdateAdminEntityRequest} from "../../../../../common/proto-models/users-mgnt.proto";
+import { Mapper } from '@automapper/types';
+import { InjectMapper } from '@automapper/nestjs';
+import { UpdateAdminDto } from '../../dtos/admin/update-admin.dto';
+import { AdminDto } from '../../dtos/admin/admin.dto';
 
 @Injectable()
-export class AdminService extends BaseService<AdminEntity, AdminRepository> {
+export class AdminService extends BaseService<AdminEntity, AdminRepository> implements OnModuleInit{
 
   constructor(repository: AdminRepository,
-              private readonly redisCacheService: RedisCacheService) {
+              private readonly redisCacheService: RedisCacheService,
+              @InjectMapper() private readonly mapper: Mapper) {
     super(repository);
+  }
+
+  onModuleInit() {
+    this.mapper.createMap(AdminEntity, AdminDto);
   }
 
   async findAll(): Promise<AdminEntity[]> {
@@ -73,7 +82,7 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
       .then((e) => this.repository.delete(e.email));
   }
 
-  async viewDetail(email: string): Promise<AdminEntity> {
+  async viewDetail(email: string): Promise<AdminDto> {
     if (email === undefined || email === null) {
       throw constructGrpcException(HttpStatus.BAD_REQUEST, `${NOT_FOUND_ERR_MSG}`);
     }
@@ -85,6 +94,6 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
         await this.redisCacheService.set<AdminEntity>(`${ADMIN_SERVICE_VIEW_DETAIL_KEY}${email}`, result);
       }
     }
-    return result;
+    return this.mapper.map(result, AdminDto, AdminEntity);
   }
 }

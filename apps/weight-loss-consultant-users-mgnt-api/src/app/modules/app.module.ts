@@ -1,26 +1,29 @@
-import {DynamicModule} from '@nestjs/common';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {ConfigModule, ConfigService} from '@nestjs/config';
-import {AdminEntity} from '../entities/admin.entity';
-import {AdminModule} from './admin.module';
-import {TrainerEntity} from '../entities/trainer.entity';
-import {TrainerModule} from './trainer.module';
-import {CustomerModule} from './customer.module';
-import {CustomerEntity} from '../entities/customer.entity';
-import {CampaignEntity} from "../entities/campaign.entity";
-import {PackageEntity} from "../entities/package.entity";
-import {CampaignModule} from "./campaign.module";
-import {SortingAndFilteringModule} from "./sorting-filtering.module";
-import {SearchModule} from "./search.module";
-import {ProfileStyleEntity} from "../entities/profile-trainer.entity";
-import {TrainerStyleEntity} from "../entities/trainer-style.entity";
-import {ENV_FILE_PATH} from "../../../../common/constants/env-file-path";
+import { DynamicModule } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AdminEntity } from '../entities/admin.entity';
+import { AdminModule } from './admin.module';
+import { TrainerEntity } from '../entities/trainer.entity';
+import { TrainerModule } from './trainer.module';
+import { CustomerModule } from './customer.module';
+import { CustomerEntity } from '../entities/customer.entity';
+import { CampaignEntity } from '../entities/campaign.entity';
+import { PackageEntity } from '../entities/package.entity';
+import { CampaignModule } from './campaign.module';
+import { SortingAndFilteringModule } from './sorting-filtering.module';
+import { SearchModule } from './search.module';
+import { ProfileStyleEntity } from '../entities/profile-trainer.entity';
+import { TrainerStyleEntity } from '../entities/trainer-style.entity';
+import { ENV_FILE_PATH } from '../../../../common/constants/env-file-path';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
     return {
       module: AppModule,
       imports: [
+
         ConfigModule.forRoot({
           isGlobal: true,
           envFilePath: ENV_FILE_PATH
@@ -42,17 +45,17 @@ export class AppModule {
               PackageEntity,
               TrainerStyleEntity,
               ProfileStyleEntity
-            ],
+            ]
           }),
-          inject: [ConfigService],
+          inject: [ConfigService]
         }),
         AdminModule,
         TrainerModule,
         CustomerModule,
         CampaignModule,
         SortingAndFilteringModule,
-        SearchModule,
-      ],
+        SearchModule
+      ]
     };
   }
 }

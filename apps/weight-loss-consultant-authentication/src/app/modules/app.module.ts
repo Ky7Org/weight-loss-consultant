@@ -8,8 +8,7 @@ import {MailModule} from './mail.module';
 import {ResetPasswordTokenEntity} from '../entities/reset-password-token.entity';
 import {ResetPasswordTokenModule} from './reset-password-token.module';
 import * as Joi from 'joi';
-import {ENV_FILE_PATH} from '../../constant';
-
+import { ENV_FILE_PATH } from '../../../../common/constants/env-file-path';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {

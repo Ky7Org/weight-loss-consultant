@@ -43,6 +43,9 @@
   },
   "private": true,
   "dependencies": {
+    "@automapper/classes": "^6.2.1",
+    "@automapper/core": "^6.2.1",
+    "@automapper/nestjs": "^6.2.1",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@grpc/grpc-js": "^1.3.7",
@@ -112,6 +115,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@automapper/types": "^6.2.1",
     "@nestjs/schematics": "^8.0.3",
     "@nestjs/testing": "^8.0.11",
     "@nrwl/cli": "12.10.0",
