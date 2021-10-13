@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_add_custom_activity_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_add_custom_diet_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_add_diet_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_add_workout_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_calendar_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_main_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_todo_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/login_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/onboarding/your_ability_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/onboarding/your_daily_diet_goal_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/onboarding/your_goal_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/onboarding/your_information_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/onboarding/your_method_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/onboarding/your_workout_routine_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/recover_password.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/report_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/reset_password.dart';
@@ -19,7 +31,7 @@ class RouteGenerator{
         });
       case RoutePath.recoverPasswordScreen:
         return MaterialPageRoute(builder: (_){
-          return RecoverScreen();
+          return const RecoverScreen();
         });
       case RoutePath.signUpScreen:
         return MaterialPageRoute(builder: (_){
@@ -34,19 +46,70 @@ class RouteGenerator{
         return _errorRoute();
       case RoutePath.customerMainScreen:
         return MaterialPageRoute(builder: (_){
-          return CustomerMainScreen();
+          return const CustomerMainScreen();
         });
       case RoutePath.todayExerciseScreen:
         return MaterialPageRoute(builder: (_){
-          return TodayExerciseScreen();
+          return const TodayExerciseScreen();
         });
       case RoutePath.todayDietScreen:
         return MaterialPageRoute(builder: (_){
-          return TodayDietScreen();
+          return const TodayDietScreen();
         });
       case RoutePath.customerReportScreen:
         return MaterialPageRoute(builder: (_){
-          return ReportScreen();
+          return const ReportScreen();
+        });
+      case RoutePath.yourInformationScreen:
+        return MaterialPageRoute(builder: (_){
+          return const YourInformationScreen();
+        });
+      case RoutePath.yourGoalScreen:
+        return MaterialPageRoute(builder: (_){
+          return const YourGoalScreen();
+        });
+      case RoutePath.yourMethodScreen:
+        return MaterialPageRoute(builder: (_){
+          return const YourMethodScreen();
+        });
+      case RoutePath.customerCalendar:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerCalendarScreen();
+        });
+      case RoutePath.customerTodoPage:
+        if (args is DateTime){
+          return MaterialPageRoute(builder: (_){
+            return CustomerTodoPage(date: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.yourAbilityPage:
+        return MaterialPageRoute(builder: (_){
+          return const YourAbilityScreen();
+        });
+      case RoutePath.yourDailyDietGoalScreen:
+        return MaterialPageRoute(builder: (_){
+          return const YourDailyDietGoalScreen();
+        });
+      case RoutePath.yourWorkoutRoutineScreen:
+        return MaterialPageRoute(builder: (_){
+          return const YourWorkoutRoutineScreen();
+        });
+      case RoutePath.customerAddWorkoutScreen:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerAddWorkoutScreen();
+        });
+      case RoutePath.customerAddDietScreen:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerAddDietScreen();
+        });
+      case RoutePath.customerAddCustomActivity:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerAddCustomActivityScreen();
+        });
+      case RoutePath.customerAddCustomFood:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerAddCustomDietScreen();
         });
       default:
        return _errorRoute();
@@ -55,7 +118,7 @@ class RouteGenerator{
 
   static Route<dynamic> _errorRoute(){
     return MaterialPageRoute(builder: (_){
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: Text("Something went wrong"),
         ),

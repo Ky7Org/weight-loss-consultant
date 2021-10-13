@@ -24,31 +24,36 @@ export class AuthenticationService {
     const payload = dto;
 
       return this.authenticationServiceProxy.send(pattern, payload)
-        .toPromise<LoginResponseModel>();
+        // .toPromise<LoginResponseModel>();
+        .toPromise();
   }
 
 
   async resetPassword(dto: ResetPasswordRequestModel): Promise<any> {
     const pattern = { cmd: RESET_PASSWORD };
     const payload = dto;
-    return this.authenticationServiceProxy.send(pattern, payload).toPromise<any>();
+    // return this.authenticationServiceProxy.send(pattern, payload).toPromise<any>();
+    return this.authenticationServiceProxy.send(pattern, payload).toPromise();
   }
 
   async confirmChangePassword(dto: ResetPasswordConfirmRequestModel) {
     const pattern = { cmd: CONFIRM_CHANGE_PASSWORD };
     const payload = dto;
-    return this.authenticationServiceProxy.send(pattern, payload).toPromise<any>();
+    // return this.authenticationServiceProxy.send(pattern, payload).toPromise<any>();
+    return this.authenticationServiceProxy.send(pattern, payload).toPromise();
   }
 
   async validateAccount(email: string, password: string) {
     const pattern = { cmd: VALIDATE_ACCOUNT };
     const payload = {email: email, password: password};
-    return this.authenticationServiceProxy.send(pattern, payload).toPromise<any>();
+    // return this.authenticationServiceProxy.send(pattern, payload).toPromise<any>();
+    return this.authenticationServiceProxy.send(pattern, payload).toPromise();
   }
 
   async loginWithFirebase(firebaseUser: any): Promise<any> {
     const pattern = {cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER}
     return this.authenticationServiceProxy.send<any, any>(pattern, firebaseUser)
-      .toPromise<any>();
+      // .toPromise<any>();
+      .toPromise();
   }
 }

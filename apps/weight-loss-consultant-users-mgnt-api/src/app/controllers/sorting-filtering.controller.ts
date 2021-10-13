@@ -12,9 +12,9 @@ export class SortingAndFilteringController {
   constructor(private readonly service: SortingAndFilteringService) {
   }
 
-  @MessagePattern({cmd: SORTING_AND_FILTERING_USERS})
-  @UseFilters(new ExceptionFilter())
-  async sortAndFilter(@Payload() payload: PaginationDto) {
-    return this.service.sortingAndFiltering(payload)
-  }
+  // @MessagePattern({cmd: SORTING_AND_FILTERING_USERS})
+  // @UseFilters(new ExceptionFilter())
+  // async sortAndFilter(@Payload() payload: PaginationDto, search : string) {
+  //   return this.service.sortingAndFiltering(payload, search)
+  // }
 }

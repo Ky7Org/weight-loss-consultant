@@ -5,6 +5,10 @@ import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { CreateAdminDto } from '../../dtos/admin/create-admin.dto';
 import { UpdateAdminDto } from '../../dtos/admin/update-admin.dto';
+import {PaginationDto} from "../../dtos/pagination/pagination.dto";
+import {Roles} from "../../author/roles.decorator";
+import {Role} from "../../constants/enums";
+
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -18,9 +22,9 @@ export class AdminController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getAllAdmins(@Res() res: Response) {
+  async getAllAdmins(@Res() res: Response, @Body() payload: PaginationDto) {
     try {
-      const result = await this.adminService.getAllAdmins();
+      const result = await this.adminService.getAllAdmins(payload);
       res.status(HttpStatus.OK).send(result);
     } catch ({ error }) {
       this.logger.error(error);

@@ -10,14 +10,17 @@ import { CustomerRepository } from '../repositories/customer.repository';
 import { TrainerRepository } from '../repositories/trainer.repository';
 import { CustomerMapper } from '../mappers/customer.mapper';
 import { TrainerMapper } from '../mappers/trainer.mapper';
+import {SortingAndFilteringService} from "../services/sorting-filtering.service";
+import {SortingAndFilteringModule} from "./sorting-filtering.module";
 
 
 @Module({
     imports: [
       TypeOrmModule.forFeature([CustomerRepository,]),
       TypeOrmModule.forFeature([AdminRepository,]),
-      TypeOrmModule.forFeature([TrainerRepository,])],
-    providers: [AdminService, AdminMapper, CustomerService, TrainerService, CustomerMapper, TrainerMapper],
+      TypeOrmModule.forFeature([TrainerRepository,]),
+      SortingAndFilteringModule],
+    providers: [AdminService, AdminMapper, CustomerService, TrainerService, CustomerMapper, TrainerMapper, SortingAndFilteringService],
     exports: [
       AdminService, AdminMapper,
     ],
