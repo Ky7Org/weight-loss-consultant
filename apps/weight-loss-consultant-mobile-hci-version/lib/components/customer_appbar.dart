@@ -7,14 +7,14 @@ class CustomerAppbar {
       title: Text(
         title,
         style: TextStyle(
-            fontSize: 20,
+            fontSize: 17,
             color: Colors.white,
             fontWeight: FontWeight.bold),
       ),
-      centerTitle: false,
+      centerTitle: true,
       titleSpacing: 0,
-      shadowColor: Colors.grey,
-      backgroundColor: AppColor.appPrimaryColor,
+      shadowColor: Colors.transparent,
+      backgroundColor: Color(0xFF01579B),
       iconTheme: IconThemeData(
           color: Colors.white
           ),
