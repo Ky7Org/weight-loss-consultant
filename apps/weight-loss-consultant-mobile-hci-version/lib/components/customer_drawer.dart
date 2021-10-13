@@ -16,6 +16,11 @@ class CustomerDrawer {
       "route": RoutePath.customerReportScreen,
     },
     {
+      "text": "Calendar",
+      "icon": Icons.calendar_today,
+      "route": RoutePath.customerCalendar,
+    },
+    {
       "text": "Settings",
       "icon": Icons.settings,
     },
@@ -33,7 +38,7 @@ class CustomerDrawer {
       height: 150,
       child: DrawerHeader(
         decoration: BoxDecoration(
-          color: AppColor.appPrimaryColor,
+          color: Color(0xFF01579B),
         ),
         child: Container(
           margin: EdgeInsets.only(top: 18),
@@ -61,6 +66,7 @@ class CustomerDrawer {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                       ],
