@@ -9,16 +9,23 @@ import {EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG} from '../../constants/validation-e
 import {RpcException} from '@nestjs/microservices';
 import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
 import {UpdateAdminType} from "../../controllers/admin.controller";
+import {SortingAndFilteringService} from "../sorting-filtering.service";
+import {PaginationDto} from "../../dtos/pagination/pagination.dto";
+import {PaginatedResultDto} from "../../dtos/pagination/paginated-result.dto";
 
 @Injectable()
-export class AdminService extends BaseService<AdminEntity, AdminRepository> {
+export class AdminService {
 
-  constructor(repository: AdminRepository) {
-    super(repository);
+  constructor(
+    private readonly repository: AdminRepository,
+    private readonly pagingService : SortingAndFilteringService) {
   }
 
-  async findAll(): Promise<AdminEntity[]> {
-    return this.repository.find();
+  async findAll(payload : PaginationDto): Promise<PaginatedResultDto> {
+    if (payload) {
+      const result = await this.pagingService.sortingAndFiltering(payload);
+      return result;
+    }
   }
 
   async create(dto: CreateAdminDto): Promise<AdminEntity> {

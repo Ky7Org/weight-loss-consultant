@@ -21,31 +21,36 @@ export class CustomerService {
   async findAll(): Promise<CustomerEntity[]> {
     const pattern = {cmd: GET_ALL_CUSTOMER};
     const payload = {};
-    return this.usersManagementService.send(pattern, payload).toPromise<CustomerEntity[]>();
+    // return this.usersManagementService.send(pattern, payload).toPromise<CustomerEntity[]>();
+    return this.usersManagementService.send(pattern, payload).toPromise();
   }
 
   async viewDetail(email: string): Promise<CustomerEntity> {
     const pattern = {cmd: VIEW_DETAIL_CUSTOMER};
     const payload = email;
-    return this.usersManagementService.send(pattern, payload).toPromise<CustomerEntity>();
+    // return this.usersManagementService.send(pattern, payload).toPromise<CustomerEntity>();
+    return this.usersManagementService.send(pattern, payload).toPromise();
   }
 
 
   async delete(email): Promise<DeleteResult> {
     const pattern = {cmd: DELETE_CUSTOMER };
     const payload = email;
-    return this.usersManagementService.send(pattern, payload).toPromise<DeleteResult>();
+    // return this.usersManagementService.send(pattern, payload).toPromise<DeleteResult>();
+    return this.usersManagementService.send(pattern, payload).toPromise();
   }
 
   async edit(email: string, dto: UpdateCustDto): Promise<UpdateResult> {
     const pattern = {cmd: UPDATE_CUSTOMER };
     const payload = {email, dto};
-    return this.usersManagementService.send(pattern, payload).toPromise<UpdateResult>();
+    // return this.usersManagementService.send(pattern, payload).toPromise<UpdateResult>();
+    return this.usersManagementService.send(pattern, payload).toPromise();
   }
 
   async create(dto: CreateCustDto): Promise<CustomerEntity> {
     const pattern = {cmd: CREATE_CUSTOMER };
     const payload = dto;
-    return this.usersManagementService.send(pattern, payload).toPromise<CustomerEntity>();
+    // return this.usersManagementService.send(pattern, payload).toPromise<CustomerEntity>();
+    return this.usersManagementService.send(pattern, payload).toPromise();
   }
 }
