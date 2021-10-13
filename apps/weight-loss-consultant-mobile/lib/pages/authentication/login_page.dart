@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/form_error_messages.dart';
@@ -7,6 +8,7 @@ import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.d
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/login_service.dart';
 import 'package:weight_loss_consultant_mobile/utils/validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -18,6 +20,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+
+  //firebase
+  final _auth = FirebaseAuth.instance;
+
   bool _passwordVisible = false;
 
   final TextEditingController _email = TextEditingController();
@@ -27,6 +33,19 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     _passwordVisible = false;
   }
+
+  //login function
+  void login(String email, String password) async {
+    if (_formKey.currentState!.validate()) {
+      await _auth.signInWithEmailAndPassword(email: email, password: password)
+          .then((uid) => {
+            Navigator.pushNamedAndRemoveUntil(context, RoutePath.customerHomePage, (route) => false)
+      }).catchError((e){
+        Fluttertoast.showToast(msg: e!.message);
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +93,8 @@ class _LoginPageState extends State<LoginPage> {
                         EdgeInsets.symmetric(vertical: 10, horizontal: 0),
                         decoration: BoxDecoration(
                             color: AppColors.INPUT_COLOR,
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(20))),
                         child: TextFormField(
                           controller: _email,
                           validator: (email) {
@@ -105,9 +125,11 @@ class _LoginPageState extends State<LoginPage> {
 
                         decoration: BoxDecoration(
                             color: AppColors.INPUT_COLOR,
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(20))),
                         child: TextFormField(
-                          validator: (password){
+                          controller: _password,
+                          validator: (password) {
                             if (!password!.isEmpty)
                               return null;
                             else
@@ -124,7 +146,9 @@ class _LoginPageState extends State<LoginPage> {
                                 _passwordVisible
                                     ? Icons.visibility
                                     : Icons.visibility_off,
-                                color: Theme.of(context).primaryColorDark,
+                                color: Theme
+                                    .of(context)
+                                    .primaryColorDark,
                               ),
                               onPressed: () {
                                 // Update the state i.e. toogle the state of passwordVisible variable
@@ -153,18 +177,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           textColor: Colors.white,
                           color: AppColors.PRIMARY_COLOR,
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState?.save();
-                              LoginService service = LoginService(
-                                email: _email.text,
-                                password: _password.text,
-                              );
-                              dynamic result = await service.login();
-                              if (result != null) {
-                                Navigator.pushNamedAndRemoveUntil(context, RoutePath.customerHomePage, (route) => false);
-                              }
-                            }
+                          onPressed: (){
+                            login(_email.text, _password.text);
                           },
                           child: Text(
                             "Sign in",
@@ -178,11 +192,11 @@ class _LoginPageState extends State<LoginPage> {
                   )),
               InkWell(
                   child: new Text(
-                      "Forget password?",
+                    "Forget password?",
                     style: TextStyle(
-                      fontSize: 15,
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.bold
+                        fontSize: 15,
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.bold
                     ),
                   ),
                   onTap: () {
@@ -195,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
               Text(
                   "Connect with your social account",
                   style: TextStyle(
-                      color: HexColor("#B6C5D1"),
+                    color: HexColor("#B6C5D1"),
                   )
               ),
               SizedBox(
