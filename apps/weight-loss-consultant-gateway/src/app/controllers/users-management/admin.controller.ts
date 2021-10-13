@@ -6,6 +6,8 @@ import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { CreateAdminDto } from '../../dtos/admin/create-admin.dto';
 import { UpdateAdminDto } from '../../dtos/admin/update-admin.dto';
 import {PaginationDto} from "../../dtos/pagination/pagination.dto";
+import {Roles} from "../../author/roles.decorator";
+import {Role} from "../../constants/enums";
 
 
 @ApiTags('Admin')
