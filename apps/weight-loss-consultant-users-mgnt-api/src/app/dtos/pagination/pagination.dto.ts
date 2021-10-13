@@ -13,4 +13,6 @@ export class PaginationDto {
   sortBy? : string;
   @ApiProperty()
   order? : string;
+  @ApiProperty()
+  searchValue? : string;
 }

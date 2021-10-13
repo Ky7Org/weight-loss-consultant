@@ -18,6 +18,8 @@ import { CustomerService } from '../services/impl/customer.service.impl';
 import { TrainerService } from '../services/impl/trainer.service.impl';
 import { TrainerEntity } from '../entities/trainer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
+import {PaginationDto} from "../dtos/pagination/pagination.dto";
+import {PaginatedResultDto} from "../dtos/pagination/paginated-result.dto";
 
 export type UpdateAdminType = {
   email: string;
@@ -34,8 +36,8 @@ export class AdminController {
 
   @MessagePattern({ cmd: GET_ALL_ADMINS })
   @UseFilters(new ExceptionFilter())
-  async index(): Promise<AdminEntity[]> {
-    return this.adminService.findAll();
+  async index(@Payload() payload: PaginationDto): Promise<PaginatedResultDto> {
+    return this.adminService.findAll(payload);
   }
 
   @MessagePattern({ cmd: ADMIN_VIEW_DETAIL })
