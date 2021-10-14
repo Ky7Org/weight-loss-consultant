@@ -8,13 +8,13 @@ import { TrainerModule } from './trainer.module';
 import { CustomerModule } from './customer.module';
 import { CustomerEntity } from '../entities/customer.entity';
 import { CampaignEntity } from '../entities/campaign.entity';
-import { PackageEntity } from '../entities/package.entity';
 import { CampaignModule } from './campaign.module';
 import { SortingAndFilteringModule } from './sorting-filtering.module';
 import { SearchModule } from './search.module';
 import { ProfileStyleEntity } from '../entities/profile-trainer.entity';
 import { TrainerStyleEntity } from '../entities/trainer-style.entity';
 import { ENV_FILE_PATH } from '../../../../common/constants/env-file-path';
+import { PackageEntity } from '../entities/package.entity';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {

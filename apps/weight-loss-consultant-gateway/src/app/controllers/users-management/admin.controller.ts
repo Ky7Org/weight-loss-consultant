@@ -46,10 +46,10 @@ export class AdminController implements OnModuleInit {
   @Get()
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard)
-  async getAllAdmins(@Res() res: Response) {
+  async getAllAdmins(@Res() res) {
     try {
       const result = await unwrapGRPCResponse(this.adminService.findAll({}));
-      return resp.status(HttpStatus.OK).send(result);
+      return res.status(HttpStatus.OK).send(result);
     } catch (error) {
       throw new GenericHttpException(error);
     }

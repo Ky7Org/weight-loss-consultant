@@ -7,9 +7,7 @@ import {ClientsModule} from '@nestjs/microservices';
 import {AUTHENTICATION_SERVICE_NAME} from '../../../../../../constant';
 import {PassportModule} from '@nestjs/passport';
 import {AuthenticationController} from '../../controllers/authentication/authentication.controller';
-import {FirebaseAuthStrategy} from '../../strategies/firebase-auth.strategy';
 import {AUTHENTICATION_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
-import { AuthenticationService } from '../../../../../weight-loss-consultant-authentication/src/app/services/authentication.service';
 
 @Module({
   imports: [
@@ -30,11 +28,8 @@ import { AuthenticationService } from '../../../../../weight-loss-consultant-aut
       inject: [ConfigService]
     })],
 
-  providers: [JwtStrategy, FirebaseAuthStrategy,  ConfigService,
-    AuthenticationService,
-    //{provide: APP_GUARD, useClass: RolesGuard}
-    ],
-  exports: [AuthenticationService],
+  providers: [JwtStrategy,  ConfigService],
+  exports: [],
   controllers: [AuthenticationController]
 })
 export class AppJwtModule {

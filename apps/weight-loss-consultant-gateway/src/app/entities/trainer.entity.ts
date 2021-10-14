@@ -1,6 +1,5 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { PackageEntity } from './package.enttiy';
-
+import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
+import { PackageEntity } from './package.entity';
 
 @Entity("Trainer")
 export class TrainerEntity extends BaseEntity {

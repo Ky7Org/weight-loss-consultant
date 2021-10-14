@@ -1,6 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
-import { Status } from '../../constant';
-
+import { AccountStatus } from '../constants/enums';
 
 @Entity('Customer')
 export class CustomerEntity extends BaseEntity {
@@ -17,7 +16,7 @@ export class CustomerEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 20 })
   gender: string;
   @Column({ type: 'int' })
-  status: Status;
+  status: AccountStatus;
   @Column({ type: 'varchar', length: 320 })
   profileImage: string;
   @Column('bigint')

@@ -1,7 +1,5 @@
 import {Body, Controller, HttpStatus, Logger, OnModuleInit, Post, Request, Res, UseGuards} from '@nestjs/common';
 import {ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {Public} from '../../decorators/public-decorator';
-import {FirebaseAuthGuard} from '../../guards/firebase-auth.guard';
 import {LoginResponseModel} from '../../models/login-response-model';
 import {LoginRequestModel} from '../../models/login-request-model';
 import {ResetPasswordRequestModel} from '../../models/reset-password-request-model';
@@ -11,6 +9,7 @@ import {Client, ClientGrpc} from "@nestjs/microservices";
 import {AUTHENTICATION_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
 import {AuthenticationService} from "../../../../../common/proto-models/authentication.proto";
 import {AUTHENTICATION} from "../../../../../common/api.routes";
+import { Public } from '../../decorators/public.decorator';
 
 @ApiTags('Authentication')
 @ApiBearerAuth()
@@ -58,8 +57,8 @@ export class AuthenticationController implements OnModuleInit{
   })
   async loginWithFirebase(@Request() req: Request, @Res() res) {
     try {
-      const result = await this.authenticationService.loginWithFirebase(req.headers['authorization']);
-      res.status(HttpStatus.OK).send(result);
+     // const result = await this.authenticationService.loginWithFirebase(req.headers['authorization']);
+      res.status(HttpStatus.OK).send(null);
     } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);

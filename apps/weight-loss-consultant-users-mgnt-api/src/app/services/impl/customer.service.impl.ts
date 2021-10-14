@@ -61,10 +61,8 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
       .where("customer.phone = :phone", {phone : entity.phone})
       .getOne();
     if (customerPhone) {
-      throw new RpcException({
-        statusCode: HttpStatus.CONFLICT,
-        message: `The phone number has been already registered, please choose another one.`
-      } as RpcExceptionModel);
+      throw constructGrpcException(HttpStatus.CONFLICT,
+        `The phone number has been already registered, please choose another one.`);
     }
     const existedEmail = await this.repository.findOne(entity.email);
     if (existedEmail === undefined) {
