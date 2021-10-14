@@ -1,23 +1,18 @@
-import {ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors} from '@nestjs/common';
-import {CustomerService} from '../services/impl/customer.service.impl';
-import {CreateCustDto} from '../dtos/customer/create-customer.dto';
-import {UpdateCustDto} from '../dtos/customer/update-customer-dto';
-import {GrpcMethod, MessagePattern, Payload} from '@nestjs/microservices';
+import { Controller, UseFilters } from '@nestjs/common';
+import { CustomerService } from '../services/impl/customer.service.impl';
+import { CreateCustDto } from '../dtos/customer/create-customer.dto';
+import { UpdateCustDto } from '../dtos/customer/update-customer-dto';
+import { GrpcMethod } from '@nestjs/microservices';
+import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import {
-  CREATE_CUSTOMER,
-  DELETE_CUSTOMER,
-  UPDATE_CUSTOMER
-} from '../../../../common/routes/users-management-service-routes';
-import {DeleteResult, UpdateResult} from 'typeorm';
-import {CustomerEntity} from '../entities/customer.entity';
-import {ExceptionFilter} from '../../../../common/filters/rpc-exception.filter';
-import {
+  CUSTOMER_SERVICE_DELETE,
   CUSTOMER_SERVICE_FIND_ALL,
+  CUSTOMER_SERVICE_UPDATE,
   CUSTOMER_SERVICE_VIEW_DETAIL,
   GRPC_CUSTOMER_SERVICE
-} from "../../../../common/grpc-services.route";
-import {constructGRPCResponse} from "../../../../common/utils";
-import {CustomerEntityViewDetailRequest} from "../../../../common/proto-models/users-mgnt.proto";
+} from '../../../../common/grpc-services.route';
+import { constructGRPCResponse } from '../../../../common/utils';
+import { CustomerEntityViewDetailRequest } from '../../../../common/proto-models/users-mgnt.proto';
 
 export type UpdateCustomerPayload = {
   email: string;
@@ -25,7 +20,6 @@ export type UpdateCustomerPayload = {
 }
 
 @Controller()
-@UseInterceptors(ClassSerializerInterceptor)
 export class CustomerController {
 
   constructor(private readonly customerService: CustomerService) {
@@ -43,22 +37,22 @@ export class CustomerController {
     return constructGRPCResponse(this.customerService.viewDetail(payload.email));
   }
 
-  @MessagePattern({ cmd: CREATE_CUSTOMER })
+  @GrpcMethod(GRPC_CUSTOMER_SERVICE, CUSTOMER_SERVICE_VIEW_DETAIL)
   @UseFilters(new ExceptionFilter())
-  async create(@Payload() dto: CreateCustDto): Promise<CustomerEntity> {
-    return this.customerService.create(dto);
+  async create(dto: CreateCustDto) {
+    return constructGRPCResponse(this.customerService.create(dto));
   }
 
-  @MessagePattern({ cmd: UPDATE_CUSTOMER })
+  @GrpcMethod(GRPC_CUSTOMER_SERVICE, CUSTOMER_SERVICE_UPDATE)
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() payload: UpdateCustomerPayload): Promise<UpdateResult> {
-    return this.customerService.edit(payload);
+  async update(payload: UpdateCustomerPayload) {
+    return constructGRPCResponse(this.customerService.edit(payload));
   }
 
-  @MessagePattern({ cmd: DELETE_CUSTOMER })
+  @GrpcMethod(GRPC_CUSTOMER_SERVICE, CUSTOMER_SERVICE_DELETE)
   @UseFilters(new ExceptionFilter())
-  async delete(@Payload() email): Promise<DeleteResult> {
-    return this.customerService.delete(email);
+  async delete(email) {
+    return constructGRPCResponse(this.customerService.delete(email));
   }
 
 }

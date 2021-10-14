@@ -43,7 +43,13 @@ export const ADMIN_SERVICE_CREATE = 'Create';
 export const GRPC_CUSTOMER_SERVICE = 'CustomerService';
 export const CUSTOMER_SERVICE_FIND_ALL = 'FindAll';
 export const CUSTOMER_SERVICE_VIEW_DETAIL = 'ViewDetail';
+export const CUSTOMER_SERVICE_UPDATE = 'Update';
+export const CUSTOMER_SERVICE_CREATE = 'Create';
+export const CUSTOMER_SERVICE_DELETE = 'Delete';
 
 export const GRPC_TRAINER_SERVICE = 'TrainerService';
 export const TRAINER_SERVICE_FIND_ALL = 'FindAll';
 export const TRAINER_SERVICE_VIEW_DETAIL = 'ViewDetail';
+export const TRAINER_SERVICE_CREATE = 'Create';
+export const TRAINER_SERVICE_UPDATE = 'Update';
+export const TRAINER_SERVICE_DELETE = 'Delete';

@@ -1,10 +1,10 @@
-import {AdminRepository} from '../repositories/admin.repository';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {Module} from '@nestjs/common';
-import {TrainerRepository} from '../repositories/trainer.repository';
-import {CustomerRepository} from '../repositories/customer.repository';
-import {SearchService} from '../services/search.service';
-import {SearchController} from '../controllers/search.controller';
+import { AdminRepository } from '../repositories/admin.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common';
+import { TrainerRepository } from '../repositories/trainer.repository';
+import { CustomerRepository } from '../repositories/customer.repository';
+import { SearchService } from '../services/search.service';
+import { SearchController } from '../controllers/search.controller';
 
 
 @Module({

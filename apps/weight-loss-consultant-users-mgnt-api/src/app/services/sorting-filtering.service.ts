@@ -1,10 +1,10 @@
-import {Injectable} from "@nestjs/common";
-import {TrainerRepository} from "../repositories/trainer.repository";
-import {AdminRepository} from "../repositories/admin.repository";
-import {CustomerRepository} from "../repositories/customer.repository";
-import {PaginatedResultDto} from '../dtos/pagination/paginated-result.dto';
-import {PaginationDto} from '../dtos/pagination/pagination.dto';
-import {Gender} from "../../../../common/constants/enums";
+import { Injectable } from '@nestjs/common';
+import { TrainerRepository } from '../repositories/trainer.repository';
+import { AdminRepository } from '../repositories/admin.repository';
+import { CustomerRepository } from '../repositories/customer.repository';
+import { PaginatedResultDto } from '../dtos/pagination/paginated-result.dto';
+import { PaginationDto } from '../dtos/pagination/pagination.dto';
+import { Gender } from '../../../../common/constants/enums';
 
 @Injectable()
 export class SortingAndFilteringService {

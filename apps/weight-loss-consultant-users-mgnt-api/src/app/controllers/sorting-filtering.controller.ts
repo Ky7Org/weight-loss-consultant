@@ -1,9 +1,9 @@
-import {Controller, UseFilters} from '@nestjs/common';
-import {SortingAndFilteringService} from '../services/sorting-filtering.service';
-import {PaginationDto} from '../dtos/pagination/pagination.dto';
-import {MessagePattern, Payload} from '@nestjs/microservices';
-import {SORTING_AND_FILTERING_USERS} from '../../../../common/routes/users-management-service-routes';
-import {ExceptionFilter} from '../../../../common/filters/rpc-exception.filter';
+import { Controller, UseFilters } from '@nestjs/common';
+import { SortingAndFilteringService } from '../services/sorting-filtering.service';
+import { PaginationDto } from '../dtos/pagination/pagination.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { SORTING_AND_FILTERING_USERS } from '../../../../common/routes/users-management-service-routes';
+import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 
 
 @Controller()

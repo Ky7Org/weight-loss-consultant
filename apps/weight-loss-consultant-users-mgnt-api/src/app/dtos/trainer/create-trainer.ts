@@ -1,8 +1,8 @@
-import {IsEmail, IsEmpty, IsString, MaxLength, MinLength} from 'class-validator';
+import { IsEmail, IsEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import * as LIMIT_LENGTH from '../../../../../common/constants/properties-length-limit';
 import * as ERR_MSG from '../../../../../common/constants/validation-err-message';
-import {Match} from '../../decorators/match.decorator';
-import {ApiProperty} from '@nestjs/swagger';
+import { Match } from '../../decorators/match.decorator';
+import { ApiProperty } from '@nestjs/swagger';
 
 
 export class CreateTrainerDto{

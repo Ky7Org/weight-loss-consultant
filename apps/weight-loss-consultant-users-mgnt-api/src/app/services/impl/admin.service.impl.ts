@@ -1,40 +1,32 @@
-import { HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
-import {DeleteResult, UpdateResult} from 'typeorm';
-import {AdminRepository} from '../../repositories/admin.repository';
-import {AdminEntity} from '../../entities/admin.entity';
-import {CreateAdminDto} from '../../dtos/admin/create-admin.dto';
-import {RedisCacheService} from "../redis-cache.service";
-import {ADMIN_SERVICE_FIND_ALL_KEY, ADMIN_SERVICE_VIEW_DETAIL_KEY} from "../../../../../common/redis-routes";
-import {AdminMapper} from "../../../../../common/mappers/admin.mapper";
-import {BaseService} from "../../../../../common/services/base.service";
-import {EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG} from "../../../../../common/constants/validation-err-message";
-import {constructGrpcException} from "../../../../../common/utils";
-import {UpdateAdminEntityRequest} from "../../../../../common/proto-models/users-mgnt.proto";
-import { Mapper } from '@automapper/types';
-import { InjectMapper } from '@automapper/nestjs';
-import { UpdateAdminDto } from '../../dtos/admin/update-admin.dto';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { AdminRepository } from '../../repositories/admin.repository';
+import { AdminEntity } from '../../entities/admin.entity';
+import { CreateAdminDto } from '../../dtos/admin/create-admin.dto';
+import { RedisCacheService } from '../redis-cache.service';
+import { ADMIN_SERVICE_FIND_ALL_KEY, ADMIN_SERVICE_VIEW_DETAIL_KEY } from '../../../../../common/redis-routes';
+import { AdminMapper } from '../../../../../common/mappers/admin.mapper';
+import { BaseService } from '../../../../../common/services/base.service';
+import { EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG } from '../../../../../common/constants/validation-err-message';
+import { constructGrpcException } from '../../../../../common/utils';
+import { UpdateAdminEntityRequest } from '../../../../../common/proto-models/users-mgnt.proto';
 import { AdminDto } from '../../dtos/admin/admin.dto';
 
 @Injectable()
-export class AdminService extends BaseService<AdminEntity, AdminRepository> implements OnModuleInit{
+export class AdminService extends BaseService<AdminEntity, AdminRepository> {
 
   constructor(repository: AdminRepository,
-              private readonly redisCacheService: RedisCacheService,
-              @InjectMapper() private readonly mapper: Mapper) {
+              private readonly redisCacheService: RedisCacheService) {
     super(repository);
   }
 
-  onModuleInit() {
-    this.mapper.createMap(AdminEntity, AdminDto);
-  }
-
-  async findAll(): Promise<AdminEntity[]> {
+  async findAll(): Promise<AdminDto[]> {
     let result = await this.redisCacheService.get<AdminEntity[]>(ADMIN_SERVICE_FIND_ALL_KEY);
     if (result === null) {
       result = await this.repository.find();
       await this.redisCacheService.set<AdminEntity[]>(ADMIN_SERVICE_FIND_ALL_KEY, result);
     }
-    return result;
+    return AdminMapper.mapEntitiesToDTOs(result);
   }
 
   async create(dto: CreateAdminDto): Promise<AdminEntity> {
@@ -94,6 +86,6 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> impl
         await this.redisCacheService.set<AdminEntity>(`${ADMIN_SERVICE_VIEW_DETAIL_KEY}${email}`, result);
       }
     }
-    return this.mapper.map(result, AdminDto, AdminEntity);
+    return AdminMapper.mapEntityToDTO(result);
   }
 }

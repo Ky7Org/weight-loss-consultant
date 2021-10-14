@@ -1,5 +1,5 @@
-import {BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {CustomerEntity} from './customer.entity';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { CustomerEntity } from './customer.entity';
 
 @Entity('Campaign')
 export class CampaignEntity extends BaseEntity{

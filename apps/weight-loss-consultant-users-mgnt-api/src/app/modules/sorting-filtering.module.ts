@@ -1,10 +1,10 @@
-import {AdminRepository} from '../repositories/admin.repository';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {Module} from '@nestjs/common';
-import {TrainerRepository} from '../repositories/trainer.repository';
-import {CustomerRepository} from '../repositories/customer.repository';
-import {SortingAndFilteringController} from '../controllers/sorting-filtering.controller';
-import {SortingAndFilteringService} from '../services/sorting-filtering.service';
+import { AdminRepository } from '../repositories/admin.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common';
+import { TrainerRepository } from '../repositories/trainer.repository';
+import { CustomerRepository } from '../repositories/customer.repository';
+import { SortingAndFilteringController } from '../controllers/sorting-filtering.controller';
+import { SortingAndFilteringService } from '../services/sorting-filtering.service';
 
 
 @Module({

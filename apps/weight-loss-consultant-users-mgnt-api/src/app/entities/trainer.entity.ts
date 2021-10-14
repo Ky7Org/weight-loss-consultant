@@ -1,6 +1,6 @@
-import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn} from "typeorm";
-import {PackageEntity} from "./package.entity";
-import {ProfileStyleEntity} from "./profile-trainer.entity";
+import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
+import { PackageEntity } from './package.entity';
+import { ProfileStyleEntity } from './profile-trainer.entity';
 
 
 @Entity("Trainer")

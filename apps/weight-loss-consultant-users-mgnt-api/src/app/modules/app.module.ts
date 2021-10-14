@@ -15,8 +15,6 @@ import { SearchModule } from './search.module';
 import { ProfileStyleEntity } from '../entities/profile-trainer.entity';
 import { TrainerStyleEntity } from '../entities/trainer-style.entity';
 import { ENV_FILE_PATH } from '../../../../common/constants/env-file-path';
-import { AutomapperModule } from '@automapper/nestjs';
-import { classes } from '@automapper/classes';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
