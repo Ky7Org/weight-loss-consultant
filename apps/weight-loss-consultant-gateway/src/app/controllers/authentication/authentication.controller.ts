@@ -1,12 +1,12 @@
 import { Body, Controller, HttpStatus, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { Public } from '../../auth/public-decorator';
-import { LoginRequest } from '../../auth/login.req';
+import { Public } from '../../decorators/public.decorator';
 import { LoginResponseModel } from '../../models/login-response-model';
 import { LoginRequestModel } from '../../models/login-request-model';
 import { ResetPasswordRequestModel } from '../../models/reset-password-request-model';
 import { ResetPasswordConfirmRequestModel } from '../../models/reset-password-confirm-request-model';
+import { LoginRequest } from '../../models/login.req';
 @ApiTags('Authentication')
 @ApiBearerAuth()
 @Controller(`/v1/auth`)

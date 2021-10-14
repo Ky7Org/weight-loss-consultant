@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AUTHENTICATION_SERVICE_NAME } from '../../../../../../constant';
 import { ClientProxy } from '@nestjs/microservices';
-import { LoginRequest } from '../../auth/login.req';
 import {
   CONFIRM_CHANGE_PASSWORD,
   EMAIL_PASSWORD_AUTHENTICATE_USER,
@@ -12,6 +11,7 @@ import {
 import { LoginResponseModel } from '../../models/login-response-model';
 import { ResetPasswordConfirmRequestModel } from '../../models/reset-password-confirm-request-model';
 import { ResetPasswordRequestModel } from '../../models/reset-password-request-model';
+import { LoginRequest } from '../../models/login.req';
 
 @Injectable()
 export class AuthenticationService {
