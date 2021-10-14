@@ -16,6 +16,7 @@ import {
   CUSTOMER_VIEW_DETAIL,
   TRAINER_VIEW_DETAIL
 } from '../../../../common/routes/users-management-service-routes';
+import { FirebaseAuthService } from './firebase-auth.service';
 
 export interface UserIdentity {
   email: string;
@@ -32,7 +33,8 @@ export class AuthenticationService {
   constructor(private readonly accountService: AccountService,
               @Inject(USERS_MANAGEMENT_SERVICE_NAME)
               private readonly usersManagementServiceProxy: ClientProxy,
-              private readonly jwtService: JwtService) {
+              private readonly jwtService: JwtService,
+              private readonly firebaseAuthService: FirebaseAuthService) {
   }
 
   private validateAdmin(username: string): Observable<AdminEntity> {
@@ -158,7 +160,8 @@ export class AuthenticationService {
   };
 
 
-  async loginWithFirebase(firebaseUser: any) {
+  async loginWithFirebase(firebaseUserToken: string) {
+    const firebaseUser = await this.firebaseAuthService.authenticate(firebaseUserToken);
     const realUser = await this.validateAccountWithoutPassword(firebaseUser.email);
     return {
       accessToken: this.jwtService.sign(realUser),

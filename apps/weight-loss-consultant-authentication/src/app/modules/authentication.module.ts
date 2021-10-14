@@ -10,6 +10,7 @@ import { AdminModule } from './admin.module';
 import { AccountModule } from './account.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HOST, USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT } from '../../../../../constant';
+import { FirebaseAuthService } from '../services/firebase-auth.service';
 
 @Module({
   imports: [
@@ -38,8 +39,8 @@ import { HOST, USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT } fr
       }),
       inject: [ConfigService]
     })],
-  providers: [AuthenticationService],
-  exports: [AuthenticationService]
+  providers: [AuthenticationService, FirebaseAuthService],
+  exports: [AuthenticationService, FirebaseAuthService]
 })
 export class AuthenticationModule {
 }

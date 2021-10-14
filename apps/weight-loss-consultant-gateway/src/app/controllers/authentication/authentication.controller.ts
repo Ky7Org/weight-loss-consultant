@@ -3,12 +3,10 @@ import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nes
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { Public } from '../../auth/public-decorator';
 import { LoginRequest } from '../../auth/login.req';
-import { FirebaseAuthGuard } from '../../auth/firebase-auth.guard';
 import { LoginResponseModel } from '../../models/login-response-model';
 import { LoginRequestModel } from '../../models/login-request-model';
 import { ResetPasswordRequestModel } from '../../models/reset-password-request-model';
 import { ResetPasswordConfirmRequestModel } from '../../models/reset-password-confirm-request-model';
-
 @ApiTags('Authentication')
 @ApiBearerAuth()
 @Controller(`/v1/auth`)
@@ -43,15 +41,15 @@ export class AuthenticationController {
   }
 
   @Post('login/firebase')
-  @UseGuards(FirebaseAuthGuard)
   @ApiOperation({ summary: 'Authentication account firebase' })
   @ApiResponse({
     status: HttpStatus.OK,
     type: LoginResponseModel
   })
-  async loginWithFirebase(@Request() req, @Res() res) {
+  async loginWithFirebase(@Request() req: Request, @Res() res) {
     try {
-      const result = await this.authenticationService.loginWithFirebase(req.user);
+      console.log(req.headers['authorization']);
+      const result = await this.authenticationService.loginWithFirebase(req.headers['authorization']);
       res.status(HttpStatus.OK).send(result);
     } catch ({ error }) {
       this.logger.error(error);
