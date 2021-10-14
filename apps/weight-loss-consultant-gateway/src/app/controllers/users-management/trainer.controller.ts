@@ -1,9 +1,9 @@
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { Roles } from '../../author/roles.decorator';
+import { Roles } from '../../decorators/roles.decorator';
 import { TrainerService } from '../../services/trainer.service';
 import { Role } from '../../constants/enums';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateTrainerDto } from '../../dtos/trainer/create-trainer';
 import { UpdateTrainerDto } from '../../dtos/trainer/update-trainer';
 

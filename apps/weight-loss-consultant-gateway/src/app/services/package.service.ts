@@ -13,7 +13,7 @@ import {
 } from '../../../../common/routes/packages-management-routes';
 import { CreatePackageDto } from '../dtos/package/create-package';
 import { UpdatePackageDto } from '../dtos/package/update-package';
-import { PackageEntity } from '../entities/package.enttiy';
+import { PackageEntity } from '../entities/package.entity';
 
 @Injectable()
 export class PackageService {
