@@ -40,8 +40,8 @@ export class AppController {
 
   @MessagePattern({cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER})
   @UseFilters(new ExceptionFilter())
-  async loginWithFirebase(@Payload() firebaseUser: any): Promise<any> {
-    return this.authenticationService.loginWithFirebase(firebaseUser);
+  async loginWithFirebase(@Payload() firebaseUserToken: string) {
+    return this.authenticationService.loginWithFirebase(firebaseUserToken);
   }
 
   @MessagePattern({cmd: RESET_PASSWORD})

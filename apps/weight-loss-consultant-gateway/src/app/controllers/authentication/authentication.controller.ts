@@ -51,16 +51,15 @@ export class AuthenticationController implements OnModuleInit{
   }
 
   @Post('login/firebase')
-  @UseGuards(FirebaseAuthGuard)
   @ApiOperation({ summary: 'Authentication account firebase' })
   @ApiResponse({
     status: HttpStatus.OK,
     type: LoginResponseModel
   })
-  async loginWithFirebase(@Request() req, @Res() res) {
+  async loginWithFirebase(@Request() req: Request, @Res() res) {
     try {
-      //const result = await this.authenticationService.loginWithFirebase(req.user);
-      res.status(HttpStatus.OK).send(null);
+      const result = await this.authenticationService.loginWithFirebase(req.headers['authorization']);
+      res.status(HttpStatus.OK).send(result);
     } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);

@@ -50,6 +50,17 @@ export class AdminService extends BaseService<AdminEntity, AdminRepository> {
       throw constructGrpcException(HttpStatus.CONFLICT,
         `Param: ${payload.payload.email} must match with request body email: ${payload.email}`);
     }
+    /*
+    *     const phoneAdmin = await this.repository.createQueryBuilder("a")
+      .where("a.phone = :phone" , {phone: entity.phone})
+      .getOne();
+    if (phoneAdmin) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `The phone number has been already registered, please choose another one.`
+      } as RpcExceptionModel);
+    }
+    * */
     const admin = await this.repository.createQueryBuilder("admin")
       .where("admin.phone = :phone", {phone: payload.payload.phone})
       .getOne();

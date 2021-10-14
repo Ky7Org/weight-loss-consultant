@@ -1,5 +1,5 @@
-import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn} from 'typeorm';
-import {PackageEntity} from './package.entity';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { PackageEntity } from './package.enttiy';
 
 
 @Entity("Trainer")

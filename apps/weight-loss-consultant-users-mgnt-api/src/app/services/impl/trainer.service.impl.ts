@@ -57,6 +57,15 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     if (admin) {
       throw constructGrpcException(HttpStatus.CONFLICT, `The phone number has already existed. Please choose another one.`);
     }
+    const phoneTrainer = await this.repository.createQueryBuilder("trainer")
+      .where("trainer.phone = :phone", {phone : entity.phone})
+      .getOne();
+    if (phoneTrainer) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `The phone number has been already registered, please choose another one.`
+      } as RpcExceptionModel);
+    }
     const foundTrainer = await this.repository.findOne(entity.email);
     if (foundTrainer === undefined) {
       throw constructGrpcException(HttpStatus.NOT_FOUND,

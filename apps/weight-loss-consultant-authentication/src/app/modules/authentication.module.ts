@@ -7,6 +7,7 @@ import {ClientsModule} from '@nestjs/microservices';
 import {USERS_MANAGEMENT_SERVICE_NAME} from '../../../../../constant';
 import {USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../common/grpc-services.route";
 import { JWT_CONFIG } from '../../../../common/constants/jwt';
+import { FirebaseAuthService } from '../services/firebase-auth.service';
 
 @Module({
   imports: [
@@ -27,8 +28,8 @@ import { JWT_CONFIG } from '../../../../common/constants/jwt';
       }),
       inject: [ConfigService]
     })],
-  providers: [AuthenticationService],
-  exports: [AuthenticationService]
+  providers: [AuthenticationService, FirebaseAuthService],
+  exports: [AuthenticationService, FirebaseAuthService]
 })
 export class AuthenticationModule {
 }

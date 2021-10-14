@@ -24,11 +24,17 @@ export class SortingAndFilteringService {
     return res;
   }
 
-  switchGenderForAdmin = async (genderFilter, sortBy, order, skipped, limit, page): Promise<PaginatedResultDto> => {
+  switchGenderForAdmin = async (searchValue, genderFilter, sortBy, order, skipped, limit, page): Promise<PaginatedResultDto> => {
     switch (genderFilter) {
+      //gender is empty => search all
       case "" : {
-        const totalCount = await this.adminRepository.count()
-        const result = await this.adminRepository.createQueryBuilder()
+        const totalCount = await this.adminRepository.createQueryBuilder("admin")
+          .where("admin.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("admin.email like :email", {email: `%${searchValue}%`})
+          .getCount();
+        const result = await this.adminRepository.createQueryBuilder("admin")
+          .where("admin.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("admin.email like :email", {email: `%${searchValue}%`})
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
@@ -40,12 +46,16 @@ export class SortingAndFilteringService {
       default: {
         const result = await this.adminRepository.createQueryBuilder("admin")
           .where("admin.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
+          .andWhere("admin.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("admin.email like :email", {email: `%${searchValue}%`})
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
           .getMany()
         const totalCount = await this.adminRepository.createQueryBuilder("admin")
           .where("admin.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
+          .andWhere("admin.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("admin.email like :email", {email: `%${searchValue}%`})
           .getCount();
         const res = await this.mappingResultPaginate(totalCount, page, limit, result);
         return res;
@@ -54,11 +64,17 @@ export class SortingAndFilteringService {
     }
   }
 
-  switchGenderForTrainer = async (genderFilter, sortBy, order, skipped, limit, page): Promise<PaginatedResultDto> => {
+  switchGenderForTrainer = async (searchValue, genderFilter, sortBy, order, skipped, limit, page): Promise<PaginatedResultDto> => {
     switch (genderFilter) {
+      //gender is empty => search all
       case "" : {
-        const totalCount = await this.trainerRepository.count()
+        const totalCount = await this.trainerRepository.createQueryBuilder("trainer")
+          .where("trainer.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("trainer.email like :email", {email: `%${searchValue}%`})
+          .getCount();
         const result = await this.trainerRepository.createQueryBuilder("trainer")
+          .where("trainer.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("trainer.email like :email", {email: `%${searchValue}%`})
           .leftJoinAndSelect("trainer.packages", "package")
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
@@ -72,12 +88,16 @@ export class SortingAndFilteringService {
         const result = await this.trainerRepository.createQueryBuilder("trainer")
           .leftJoinAndSelect("trainer.packages", "package")
           .where("trainer.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
+          .andWhere("trainer.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("trainer.email like :email", {email: `%${searchValue}%`})
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
           .getMany()
         const totalCount = await this.trainerRepository.createQueryBuilder("trainer")
           .where("trainer.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
+          .andWhere("trainer.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("trainer.email like :email", {email: `%${searchValue}%`})
           .leftJoinAndSelect("trainer.packages", "package")
           .getCount();
         const res = await this.mappingResultPaginate(totalCount, page, limit, result);
@@ -87,11 +107,16 @@ export class SortingAndFilteringService {
     }
   }
 
-  switchGenderForCustomer = async (genderFilter, sortBy, order, skipped, limit, page): Promise<PaginatedResultDto> => {
+  switchGenderForCustomer = async (searchValue, genderFilter, sortBy, order, skipped, limit, page): Promise<PaginatedResultDto> => {
     switch (genderFilter) {
       case "" : {
-        const totalCount = await this.customerRepository.count()
+        const totalCount = await this.customerRepository.createQueryBuilder("customer")
+          .where("customer.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("customer.email like :email", {email: `%${searchValue}%`})
+          .getCount();
         const result = await this.customerRepository.createQueryBuilder("customer")
+          .where("customer.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("customer.email like :email", {email: `%${searchValue}%`})
           .leftJoinAndSelect("customer.campaigns", "campaign")
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
@@ -103,7 +128,9 @@ export class SortingAndFilteringService {
       }
       default: {
         const result = await this.customerRepository.createQueryBuilder("customer")
-          .where("gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
+          .where("customer.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
+          .andWhere("customer.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("customer.email like :email", {email: `%${searchValue}%`})
           .leftJoinAndSelect("customer.campaigns", "campaign")
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
@@ -111,6 +138,8 @@ export class SortingAndFilteringService {
           .getMany()
         const totalCount = await this.customerRepository.createQueryBuilder("customer")
           .where("customer.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
+          .andWhere("customer.fullname like :fullname", {fullname : `%${searchValue}%`})
+          .orWhere("customer.email like :email", {email: `%${searchValue}%`})
           .leftJoinAndSelect("customer.campaigns", "campaign")
           .getCount();
         const res = await this.mappingResultPaginate(totalCount, page, limit, result);
@@ -123,6 +152,7 @@ export class SortingAndFilteringService {
   async sortingAndFiltering(payload: PaginationDto): Promise<PaginatedResultDto> {
 
     if (payload) {
+      const searchValue : string = payload.searchValue;
       const roleFilter: string = payload.roleFilter;
       const genderFilter: string = payload.genderFilter;
       const order: string = payload.order;
@@ -139,18 +169,18 @@ export class SortingAndFilteringService {
 
       switch (roleFilter) {
         case 'admin': {
-          const result = await this.switchGenderForAdmin(genderFilter, sortBy, order, skipped, limit, page);
+          const result = await this.switchGenderForAdmin(searchValue, genderFilter, sortBy, order, skipped, limit, page);
           return result;
           break;
         }
 
         case 'trainer': {
-          const result = await this.switchGenderForTrainer(genderFilter, sortBy, order, skipped, limit, page);
+          const result = await this.switchGenderForTrainer(searchValue, genderFilter, sortBy, order, skipped, limit, page);
           return result;
           break;
         }
         case 'customer': {
-          const result = await this.switchGenderForCustomer(genderFilter, sortBy, order, skipped, limit, page);
+          const result = await this.switchGenderForCustomer(searchValue, genderFilter, sortBy, order, skipped, limit, page);
           return result;
           break;
         }

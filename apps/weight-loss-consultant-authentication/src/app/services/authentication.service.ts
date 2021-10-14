@@ -12,6 +12,7 @@ import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model"
 import {AdminEntity} from "../../../../common/entities/admin.entity";
 import {CustomerEntity} from "../../../../common/entities/customer.entity";
 import {TrainerEntity} from "../../../../common/entities/trainer.entity";
+import { FirebaseAuthService } from './firebase-auth.service';
 
 export interface UserIdentity {
   email: string;
@@ -21,7 +22,7 @@ export interface UserIdentity {
 }
 
 @Injectable()
-export class AuthenticationService implements OnModuleInit {
+export class AuthenticationService {
 
   private readonly logger = new Logger(AuthenticationService.name);
 
@@ -32,7 +33,8 @@ export class AuthenticationService implements OnModuleInit {
   private customerService: CustomerService;
   private trainerService: TrainerService;
 
-  constructor(private readonly jwtService: JwtService) {
+  constructor(private readonly jwtService: JwtService,
+              private readonly firebaseAuthService: FirebaseAuthService) {
   }
 
   onModuleInit() {
@@ -160,7 +162,8 @@ export class AuthenticationService implements OnModuleInit {
   };
 
 
-  async loginWithFirebase(firebaseUser: any) {
+  async loginWithFirebase(firebaseUserToken: string) {
+    const firebaseUser = await this.firebaseAuthService.authenticate(firebaseUserToken);
     const realUser = await this.validateAccountWithoutPassword(firebaseUser.email);
     return {
       accessToken: this.jwtService.sign(realUser),

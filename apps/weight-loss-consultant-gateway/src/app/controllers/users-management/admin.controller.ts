@@ -46,10 +46,7 @@ export class AdminController implements OnModuleInit {
   @Get()
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard)
-  @UseFilters(new HttpExceptionFilter())
-  @ApiResponse({status: HttpStatus.OK, description: SWAGGER_GET_ALL_ADMINS_RESPONSE})
-  @ApiResponse({status: HttpStatus.FORBIDDEN, description: SWAGGER_GET_ALL_ADMINS_RESPONSE})
-   async getAllAdmins(@Res() resp) {
+  async getAllAdmins(@Res() res: Response) {
     try {
       const result = await unwrapGRPCResponse(this.adminService.findAll({}));
       return resp.status(HttpStatus.OK).send(result);
