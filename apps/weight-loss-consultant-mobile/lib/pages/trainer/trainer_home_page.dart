@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
+import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/trainer_sliding_up_panel.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 class TrainerHomePage extends StatefulWidget {
   const TrainerHomePage({Key? key}) : super(key: key);
@@ -19,6 +24,31 @@ class TrainerHomePage extends StatefulWidget {
 class _TrainerHomePageState extends State<TrainerHomePage> {
   int selectedIndex = 0;
   final PanelController _pc = PanelController();
+
+  AccountModel user = AccountModel(email: "", fullname: "");
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount();
+      setState(() {});
+    });
+  }
 
   Widget _phoneCard(String date, String nameTraining, String nameCustomer){
     return Card(
@@ -83,7 +113,9 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
   Widget _category(String title, String icon){
     return GestureDetector(
       onTap: (){
-
+        if (title == "Message"){
+          Navigator.pushNamed(context, RoutePath.myMessagePage);
+        }
       },
       child: SizedBox(
         height: 118,
@@ -123,7 +155,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: MainAppBar.builder("BanhsBao", context),
+        appBar: MainAppBar.builder(user.fullname, context),
         body: SlidingUpPanel(
           controller: _pc,
           panel:  TrainerCategoryPanel(),
@@ -166,7 +198,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 Wrap(
                   spacing: 10,
                   children: [
-                    _category("Training\nScedule", "training-scedule.svg"),
+                    _category("Training\nScedule", "training-schedule.svg"),
                     _category("Message", "message-icon.svg"),
                     _category("Campaign", "campaign-icon.svg"),
                   ],

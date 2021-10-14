@@ -13,7 +13,6 @@ import 'package:weight_loss_consultant_mobile/pages/components/customer_sliding_
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/services/diet_service.dart';
 import 'package:weight_loss_consultant_mobile/services/exercise_service.dart';
-import 'package:weight_loss_consultant_mobile/constants/role_enum.dart';
 
 
 
@@ -30,7 +29,7 @@ class _CustomerTodoPageState extends State<CustomerTodoPage>
   late TabController _tabController;
   List<ExerciseModel> _exercises = List.empty(growable: true);
   Map<String, List<DietModel>> _todayDiets = {};
-  AccountModel user = AccountModel(email: "", fullname: "", role: Role.undecided);
+  AccountModel user = AccountModel(email: "", fullname: "");
   static final ExerciseService _exerciseService = ExerciseService();
   static final DietService _dietService = DietService();
 
