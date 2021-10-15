@@ -17,11 +17,11 @@ import {
 } from '@nestjs/microservices';
 import {
   CONFIRM_CHANGE_PASSWORD,
-  GOOGLE_FIREBASE_AUTHENTICATE_USER,
-  RESET_PASSWORD
 } from '../../../../common/routes/authentication-routes';
 import {
-  GRPC_AUTHENTICATION_SERVICE
+  EMAIL_PASSWORD_AUTHENTICATE_USER,
+  GRPC_AUTHENTICATION_SERVICE,
+  GOOGLE_FIREBASE_AUTHENTICATE_USER, RESET_PASSWORD_USER
 } from "../../../../common/authentication-route.grpc";
 import {constructGRPCResponse} from "../../../../common/utils";
 import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
@@ -38,21 +38,21 @@ export class AppController {
               private readonly resetPasswordTokenService: ResetPasswordTokenService) {
   }
 
-  @GrpcMethod(GRPC_AUTHENTICATION_SERVICE)
+  @GrpcMethod(GRPC_AUTHENTICATION_SERVICE, EMAIL_PASSWORD_AUTHENTICATE_USER)
   @UseFilters(new ExceptionFilter())
   login(credential: LoginRequest) {
     return constructGRPCResponse(this.authenticationService.login(credential));
   }
 
-  @MessagePattern({cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER})
+  @GrpcMethod(GRPC_AUTHENTICATION_SERVICE, GOOGLE_FIREBASE_AUTHENTICATE_USER)
   @UseFilters(new ExceptionFilter())
-  async loginWithFirebase(@Payload() firebaseUserToken: string) {
-    return this.authenticationService.loginWithFirebase(firebaseUserToken);
+  async loginWithFirebase(firebaseUserToken: string) {
+    return constructGRPCResponse(this.authenticationService.loginWithFirebase(firebaseUserToken));
   }
 
-  @MessagePattern({cmd: RESET_PASSWORD})
+  @GrpcMethod(GRPC_AUTHENTICATION_SERVICE, RESET_PASSWORD_USER)
   @UseFilters(new ExceptionFilter())
-  async resetPassword(@Payload() requestModel: ResetPasswordConfirmRequestDto) {
+  async resetPassword(requestModel: ResetPasswordConfirmRequestDto) {
     const email = requestModel.email;
     try {
       const tokenDTO = await this.resetPasswordTokenService.findLatestTokenByEmail(email);
