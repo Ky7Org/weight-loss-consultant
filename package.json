@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "deploy:api": "npm run build:gateway && npm run build:users-mgnt-api && npm run build:authentication && npm run build:health-mgnt-api && npm run build:packages-mgnt-api && npm run build:health-mgnt-api && pm2 delete GATEWAY && pm2 delete AUTHENTICATION && pm2 delete USERS_MGNT_API && pm2 delete PACKAGES_MGNT_API && pm2 delete HEALTH_MGNT_API && pm2 start ./dist/apps/weight-loss-consultant-gateway/main.js --name GATEWAY && pm2 start ./dist/apps/weight-loss-consultant-users-mgnt-api/main.js --name USERS_MGNT_API && pm2 start ./dist/apps/weight-loss-consultant-authentication/main.js --name AUTHENTICATION && pm2 start ./dist/apps/weight-loss-consultant-packages-mgnt-api/main.js --name PACKAGES_MGNT_API && pm2 start ./dist/apps/weight-loss-consultant-health-mgnt-api/main.js --name HEALTH_MGNT_API",
+    "deploy:api": "npm run build:gateway && npm run build:users-mgnt-api && npm run build:authentication && npm run build:packages-mgnt-api && npm run build:health-mgnt-api",
+    "deploy:ui": "npm run build:ui && cp -R ./dist/apps/weight-loss-consultant-ui/ /var/www/",
     "build-and-start-prod:gateway": "npm run build:gateway",
     "start:ui": "nx run weight-loss-consultant-ui:serve",
     "start:gateway": "nx run weight-loss-consultant-gateway:serve",
