@@ -15,7 +15,7 @@ export class AppModule {
       imports: [
         ConfigModule.forRoot({
           isGlobal: true,
-          envFilePath: 'ENV_FILE_PATH'
+          envFilePath: ENV_FILE_PATH
         }),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
