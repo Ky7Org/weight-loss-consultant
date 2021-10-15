@@ -282,6 +282,8 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () async {
                         GoogleSignInService service = GoogleSignInService();
                         var user = await service.signInWithGoogle();
+                        print(user);
+                        print("AAAAAA ${await user.user!.getIdToken()}");
                         if (user.user!.emailVerified){
                           Navigator.pushNamedAndRemoveUntil(
                               context,
