@@ -158,7 +158,8 @@ export class AuthenticationService {
     user = await this.validateAccount(user.email, user.password);
     return {
       accessToken: this.jwtService.sign(user),
-      ...user
+      ...user,
+      password: undefined,
     };
   };
 

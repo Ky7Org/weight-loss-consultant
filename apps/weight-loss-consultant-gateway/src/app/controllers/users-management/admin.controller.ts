@@ -30,6 +30,7 @@ export const SWAGGER_UNAUTHORIZED_RESPONSE = "Invalid access token or expired";
 export const SWAGGER_GET_ALL_ADMINS_RESPONSE = "The detail of the administrator users";
 
 
+
 @ApiTags('Admin')
 @ApiBearerAuth()
 @Controller(USERS_MANAGEMENT.ADMINS_API)

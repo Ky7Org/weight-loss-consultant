@@ -15,6 +15,8 @@ import { ProfileStyleEntity } from '../entities/profile-trainer.entity';
 import { TrainerStyleEntity } from '../entities/trainer-style.entity';
 import { ENV_FILE_PATH } from '../../../../common/constants/env-file-path';
 import { PackageEntity } from '../entities/package.entity';
+import {HeathInfoEntity} from "../entities/health-info.entity";
+import {HealthCheckModule} from "./health-check.module";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -41,7 +43,8 @@ export class AppModule {
               CampaignEntity,
               PackageEntity,
               TrainerStyleEntity,
-              ProfileStyleEntity
+              ProfileStyleEntity,
+              HeathInfoEntity
             ]
           }),
           inject: [ConfigService]
@@ -51,7 +54,8 @@ export class AppModule {
         CustomerModule,
         CampaignModule,
         SortingAndFilteringModule,
-        SearchModule
+        SearchModule,
+        HealthCheckModule
       ]
     };
   }

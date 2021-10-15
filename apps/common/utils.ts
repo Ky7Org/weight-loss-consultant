@@ -43,6 +43,6 @@ export const constructGrpcException = (statusCode: number, message: string) => {
 };
 
 export const BCRYPT_CONFIG = async () => {
-  salt: await bcrypt.genSalt()
+  salt: 10
 };
 

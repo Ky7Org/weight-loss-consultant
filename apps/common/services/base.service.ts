@@ -1,4 +1,3 @@
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {BaseEntity, DeleteResult, Repository} from 'typeorm';
 import {EntityId} from 'typeorm/browser/repository/EntityId';
 import {IBaseService} from './i.base.service';
