@@ -10,7 +10,6 @@ import { CustomerMapper } from '../../../../../common/mappers/customer.mapper';
 import { BaseService } from '../../../../../common/services/base.service';
 import { EMAIL_EXISTED_ERR } from '../../../../../common/constants/validation-err-message';
 import { constructGrpcException } from '../../../../../common/utils';
-import {UpdateCustomerPayload} from "../../controllers/customer.controller";
 
 @Injectable()
 export class CustomerService extends BaseService<CustomerEntity, CustomerRepository> {
@@ -19,7 +18,6 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     super(repository);
   }
 
-  async findAll(): Promise<CustomerEntity[]> {
  /*   let result = await this.redisCacheService.get<CustomerEntity[]>(CUSTOMER_SERVICE_FIND_ALL_KEY);
     if (result === null) {
       result = await this.repository.find({

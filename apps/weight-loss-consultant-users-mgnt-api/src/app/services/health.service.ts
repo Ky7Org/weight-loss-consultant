@@ -1,12 +1,12 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import {BaseService} from "./base.service";
 import {HeathInfoEntity} from "../entities/health-info.entity";
 import {HealthRepository} from "../repositories/health-info.repository";
 import {HealthInfoMapper} from "../mappers/health-info.mapper";
 import {CustomerService} from "./impl/customer.service.impl";
 import {CreateHealthInfoDto} from "../dtos/heath-info/create-health-info.dto";
 import {UpdateHealthInfoDto} from "../dtos/heath-info/update-health-info.dto";
+import {BaseService} from "../../../../common/services/base.service";
 
 @Injectable()
 export class HealthInfoService extends BaseService<HeathInfoEntity, HealthRepository> {

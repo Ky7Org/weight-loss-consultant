@@ -14,9 +14,9 @@ import { SearchModule } from './search.module';
 import { ProfileStyleEntity } from '../entities/profile-trainer.entity';
 import { TrainerStyleEntity } from '../entities/trainer-style.entity';
 import { ENV_FILE_PATH } from '../../../../common/constants/env-file-path';
-import { PackageEntity } from '../entities/package.entity';
 import {HeathInfoEntity} from "../entities/health-info.entity";
 import {HealthCheckModule} from "./health-check.module";
+import {PackageEntity} from "../entities/package.entity";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
