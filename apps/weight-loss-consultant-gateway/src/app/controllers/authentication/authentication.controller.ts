@@ -1,15 +1,27 @@
-import {Body, Controller, HttpStatus, Logger, OnModuleInit, Post, Request, Res, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Logger,
+  OnModuleInit,
+  Post,
+  Request,
+  Res,
+  UseFilters,
+} from '@nestjs/common';
 import {ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {LoginResponseModel} from '../../models/login-response-model';
-import {LoginRequestModel} from '../../models/login-request-model';
-import {ResetPasswordRequestModel} from '../../models/reset-password-request-model';
-import {ResetPasswordConfirmRequestModel} from '../../models/reset-password-confirm-request-model';
+import {LoginResponseModel} from '../../models/login-response.model';
+import {LoginRequestModel} from '../../models/login-request.model';
+import {ResetPasswordRequestModel} from '../../models/reset-password-request.model';
+import {ResetPasswordConfirmRequestModel} from '../../models/reset-password-confirm-request.model';
 import {unwrapGRPCResponse} from "../../../../../common/utils";
 import {Client, ClientGrpc} from "@nestjs/microservices";
 import {AUTHENTICATION_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
 import {AuthenticationService} from "../../../../../common/proto-models/authentication.proto";
 import {AUTHENTICATION} from "../../../../../common/api.routes";
 import { Public } from '../../decorators/public.decorator';
+import { HttpExceptionFilter } from '../../../../../common/filters/http-exception.filter';
+import { GenericHttpException } from '../../../../../common/filters/generic-http.exception';
 
 @ApiTags('Authentication')
 @ApiBearerAuth()
@@ -28,6 +40,7 @@ export class AuthenticationController implements OnModuleInit{
   }
 
   @Post('login')
+  @UseFilters(new HttpExceptionFilter())
   @Public()
   @ApiOperation({ summary: 'Authentication account' })
   @ApiBody({
@@ -43,9 +56,8 @@ export class AuthenticationController implements OnModuleInit{
     try {
       const result = await unwrapGRPCResponse(this.authenticationService.login(req.body));
       res.status(HttpStatus.OK).send(result);
-    } catch ({ error }) {
-      this.logger.error(error);
-      res.status(error.statusCode).send(error);
+    } catch (e) {
+      throw new GenericHttpException(e);
     }
   }
 

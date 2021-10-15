@@ -16,8 +16,8 @@ import {
 } from '@nestjs/common';
 import {Roles} from '../../decorators/roles.decorator';
 import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
-import {CreateTrainerDto} from '../../dtos/trainer/create-trainer';
-import {UpdateTrainerDto} from '../../dtos/trainer/update-trainer';
+import {CreateTrainerDto} from '../../dtos/trainer/create-trainer.dto';
+import {UpdateTrainerDto} from '../../dtos/trainer/update-trainer.dto';
 import {Role} from "../../../../../common/constants/enums";
 import {USERS_MANAGEMENT} from "../../../../../common/api.routes";
 import {GenericHttpException} from "../../../../../common/filters/generic-http.exception";

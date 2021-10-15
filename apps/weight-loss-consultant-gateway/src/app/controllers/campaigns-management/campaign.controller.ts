@@ -1,8 +1,8 @@
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
-import {CreateCampaignDto} from '../../dtos/campaign/create-campaign';
-import {UpdateCampaignDto} from '../../dtos/campaign/update-campaign';
+import {CreateCampaignDto} from '../../dtos/campaign/create-campaign.dto';
+import {UpdateCampaignDto} from '../../dtos/campaign/update-campaign.dto';
 import {CAMPAIGNS_MANAGEMENT} from "../../../../../common/api.routes";
 
 @ApiTags('Campaign')

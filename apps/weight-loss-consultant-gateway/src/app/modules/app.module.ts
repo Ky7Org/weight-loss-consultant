@@ -20,6 +20,9 @@ import {SearchModule} from './users-management/search.module';
 import {SortingAndFilteringModule} from './users-management/sorting-filtering.module';
 import {USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../common/grpc-services.route";
 import {CampaignModule} from "./campaigns-management/campaign.module";
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from '../guards/roles.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -65,7 +68,15 @@ import {CampaignModule} from "./campaigns-management/campaign.module";
     ]),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard
+    },
+    {
+    provide: APP_GUARD,
+    useClass: RolesGuard
+  }],
   exports: [],
 })
 export class AppModule {}

@@ -1,19 +1,25 @@
-import {ClassSerializerInterceptor, Controller, HttpStatus, UseFilters, UseInterceptors} from '@nestjs/common';
+import {
+  Controller,
+  HttpStatus,
+  UseFilters
+} from '@nestjs/common';
 import {AuthenticationService} from '../services/authentication.service';
 import {MailService} from '../services/mail.service';
-import {ResetPasswordRequestModel} from '../models/reset-password-request-model';
 import {generateOtp} from '../utils/otp-generator';
 import {ResetPasswordTokenService} from '../services/reset-password-token.service';
 import {ResetPasswordTokenEntity} from '../entities/reset-password-token.entity';
 import {v4 as uuidv4} from 'uuid';
-import {ResetPasswordConfirmRequestModel} from '../models/reset-password-confirm-request-model';
-import {GrpcMethod, MessagePattern, Payload, RpcException} from '@nestjs/microservices';
+import {
+  GrpcMethod,
+  MessagePattern,
+  Payload,
+  RpcException
+} from '@nestjs/microservices';
 import {
   CONFIRM_CHANGE_PASSWORD,
   GOOGLE_FIREBASE_AUTHENTICATE_USER,
   RESET_PASSWORD
 } from '../../../../common/routes/authentication-routes';
-import {LoginRequest} from '../models/login.req';
 import {
   GRPC_AUTHENTICATION_SERVICE
 } from "../../../../common/authentication-route.grpc";
@@ -21,9 +27,10 @@ import {constructGRPCResponse} from "../../../../common/utils";
 import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
 import {ExceptionFilter} from "../../../../common/filters/rpc-exception.filter";
 import { RESET_PASSWORD_TOKEN_EXPIRED_TIME } from '../../../../common/constants/jwt';
+import { LoginRequest } from '../../../../common/dtos/authentication/login.req.dto';
+import { ResetPasswordConfirmRequestDto } from '../../../../common/dtos/authentication/reset-password-confirm-request.dto';
 
 @Controller()
-@UseInterceptors(ClassSerializerInterceptor)
 export class AppController {
 
   constructor(private readonly authenticationService: AuthenticationService,
@@ -34,7 +41,6 @@ export class AppController {
   @GrpcMethod(GRPC_AUTHENTICATION_SERVICE)
   @UseFilters(new ExceptionFilter())
   login(credential: LoginRequest) {
-    console.log(credential)
     return constructGRPCResponse(this.authenticationService.login(credential));
   }
 
@@ -46,7 +52,7 @@ export class AppController {
 
   @MessagePattern({cmd: RESET_PASSWORD})
   @UseFilters(new ExceptionFilter())
-  async resetPassword(@Payload() requestModel: ResetPasswordRequestModel) {
+  async resetPassword(@Payload() requestModel: ResetPasswordConfirmRequestDto) {
     const email = requestModel.email;
     try {
       const tokenDTO = await this.resetPasswordTokenService.findLatestTokenByEmail(email);
@@ -72,7 +78,7 @@ export class AppController {
 
   @MessagePattern({cmd: CONFIRM_CHANGE_PASSWORD})
   @UseFilters(new ExceptionFilter())
-  async confirmChangePassword(@Payload() requestModel: ResetPasswordConfirmRequestModel) {
+  async confirmChangePassword(@Payload() requestModel: ResetPasswordConfirmRequestDto) {
    /* try {
       const { email, otp, newPassword } = requestModel;
       const tokenDTO = await this.resetPasswordTokenService.findLatestTokenByEmail(email);

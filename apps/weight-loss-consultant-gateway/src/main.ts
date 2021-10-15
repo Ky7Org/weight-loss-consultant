@@ -9,9 +9,9 @@ import {AppModule} from './app/modules/app.module';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
-import {ENV_FILE_PATH} from './app/constant';
 import {FastifyAdapter, NestFastifyApplication} from "@nestjs/platform-fastify";
 import compression from 'fastify-compress';
+import { ENV_FILE_PATH } from '../../common/constants/enums';
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));

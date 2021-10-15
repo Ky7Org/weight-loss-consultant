@@ -3,16 +3,16 @@ import {JwtService} from '@nestjs/jwt';
 import {Client, ClientGrpc, RpcException} from '@nestjs/microservices';
 import {combineLatest, from, Observable} from 'rxjs';
 import {catchError, defaultIfEmpty, map} from 'rxjs/operators';
-import {LoginRequest} from '../models/login.req';
-import {Role} from '../constants/enums';
 import {USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../common/grpc-services.route";
 import {AdminService, CustomerService, TrainerService} from "../../../../common/proto-models/users-mgnt.proto";
-import {unwrapGRPCResponse$} from "../../../../common/utils";
+import { constructGrpcException, unwrapGRPCResponse$ } from '../../../../common/utils';
 import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
 import {AdminEntity} from "../../../../common/entities/admin.entity";
 import {CustomerEntity} from "../../../../common/entities/customer.entity";
 import {TrainerEntity} from "../../../../common/entities/trainer.entity";
 import { FirebaseAuthService } from './firebase-auth.service';
+import { Role } from '../../../../common/constants/enums';
+import * as bcrypt from 'bcrypt';
 
 export interface UserIdentity {
   email: string;
@@ -104,7 +104,8 @@ export class AuthenticationService {
     let customer : CustomerEntity;
     try {
       admin  = await this.validateAdmin(username).toPromise();
-      if (admin && admin.password === password) {
+      console.log('admin check');
+      if (admin && await bcrypt.compare(password, admin.password)) {
         console.log("admin")
         return {
           ...admin,
@@ -116,7 +117,10 @@ export class AuthenticationService {
     }
     try {
       const trainer = await this.validateTrainer(username).toPromise();
-      if (trainer && trainer.password === password) {
+      console.log('trainer chck 0');
+      //await bcrypt.compare(password, trainer.password);
+      console.log('trainer check');
+      if (trainer && await bcrypt.compare(password, trainer.password)) {
         console.log("trainer")
         return {
           ...trainer,
@@ -128,7 +132,8 @@ export class AuthenticationService {
     }
     try {
       const customer = await this.validateCustomer(username).toPromise();
-      if (customer && customer.password === password) {
+      console.log('customer check');
+      if (customer && await bcrypt.compare(password, customer.password)) {
         console.log("customer")
        return {
           ...customer,
@@ -139,20 +144,16 @@ export class AuthenticationService {
       //
     }
     if (!admin && !trainer && !customer) {
-      throw new RpcException({
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid username or password.'
-      } as RpcExceptionModel);
+      throw constructGrpcException(HttpStatus.UNAUTHORIZED, 'Invalid username or password.');
     }
   };
 
-  async login(user: LoginRequest): Promise<any> {
+  async login(user): Promise<any> {
+    //console.log(await bcrypt.hash(user.password, 7));
+
     if (user === undefined || user.email === undefined || user.email.length < 1 ||
       user.password === undefined || user.password.length < 1) {
-      throw new RpcException({
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid username or password.'
-      } as RpcExceptionModel);
+      throw constructGrpcException(HttpStatus.UNAUTHORIZED, 'Invalid username or password.');
     }
     user = await this.validateAccount(user.email, user.password);
     return {
@@ -171,3 +172,4 @@ export class AuthenticationService {
     };
   }
 }
+//      const hash = await bcrypt.hash(req.body.password, BCRYPT_CONFIG.rounds);

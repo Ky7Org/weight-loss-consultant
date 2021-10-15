@@ -21,7 +21,6 @@ export class AppModule {
     return {
       module: AppModule,
       imports: [
-
         ConfigModule.forRoot({
           isGlobal: true,
           envFilePath: ENV_FILE_PATH

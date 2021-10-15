@@ -1,3 +1,26 @@
+export const JWT_CONFIG = {
+  expireTime: "6000s"
+}
+
+export enum Role {
+  Trainer = 'trainer',
+  Customer = 'customer',
+  Admin = 'admin'
+}
+
+export const RESET_PASSWORD_TOKEN_EXPIRED_TIME = {
+  MILLISECOND: 5 * 60 * 1000,
+  SECOND: 5 * 60,
+  MINUTE: 5,
+}
+
+export const ENV_FILE_PATH = (() : string => {
+  if (process.cwd().includes("dist")){
+    return "./assets/.env"
+  }
+  return "./.env"
+})();
+
 export enum AccountStatus {
   ACTIVE = 1,
   INACTIVE = 0,
@@ -16,7 +39,7 @@ export enum PackageStatus {
   PENDING = 2
 }
 
-export enum Role {
+export enum RoleEnum {
   Customer = 'customer',
   Trainer = 'trainer',
   Admin = 'admin'

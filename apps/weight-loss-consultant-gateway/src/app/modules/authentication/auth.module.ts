@@ -1,6 +1,5 @@
 import {Module} from '@nestjs/common';
 import {JwtModule} from '@nestjs/jwt';
-import {JWT_CONFIG} from '../../constant';
 import {ConfigModule, ConfigService} from '@nestjs/config';
 import {JwtStrategy} from '../../strategies/jwt.strategy';
 import {ClientsModule} from '@nestjs/microservices';
@@ -8,6 +7,7 @@ import {AUTHENTICATION_SERVICE_NAME} from '../../../../../../constant';
 import {PassportModule} from '@nestjs/passport';
 import {AuthenticationController} from '../../controllers/authentication/authentication.controller';
 import {AUTHENTICATION_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
+import { JWT_CONFIG } from '../../../../../common/constants/enums';
 
 @Module({
   imports: [

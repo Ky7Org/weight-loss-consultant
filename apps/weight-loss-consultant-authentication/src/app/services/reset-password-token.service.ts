@@ -2,8 +2,8 @@ import {Injectable, Logger} from '@nestjs/common';
 import {ResetPasswordTokenEntity} from '../entities/reset-password-token.entity';
 import {ResetPasswordTokenRepository} from '../repositories/reset-password-token.repository';
 import {ResetPasswordTokenMapper} from '../mappers/reset-password-token.mapper';
-import {ResetPasswordTokenDTO} from '../dtos/reset-password-token.dto';
 import {BaseService} from "../../../../common/services/base.service";
+import { ResetPasswordTokenDTO } from '../../../../common/dtos/authentication/reset-password-token.dto';
 
 @Injectable()
 export class ResetPasswordTokenService extends BaseService<ResetPasswordTokenEntity, ResetPasswordTokenRepository>{

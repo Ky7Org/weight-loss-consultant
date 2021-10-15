@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
-import { AccountStatus } from '../constants/enums';
+import { AccountStatus } from '../../../../common/constants/enums';
 
 @Entity('Customer')
 export class CustomerEntity extends BaseEntity {

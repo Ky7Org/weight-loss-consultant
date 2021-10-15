@@ -15,7 +15,7 @@ import {
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
 import {CreateCustDto} from '../../dtos/customer/create-customer.dto';
-import {UpdateCustDto} from '../../dtos/customer/update-customer-dto';
+import {UpdateCustDto} from '../../dtos/customer/update-customer.dto';
 import {USERS_MANAGEMENT} from "../../../../../common/api.routes";
 import {Client, ClientGrpc} from "@nestjs/microservices";
 import {GRPC_CUSTOMER_SERVICE, USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
@@ -24,6 +24,7 @@ import {HttpExceptionFilter} from "../../../../../common/filters/http-exception.
 import {GenericHttpException} from "../../../../../common/filters/generic-http.exception";
 import {Roles} from "../../decorators/roles.decorator";
 import {Role} from "../../../../../common/constants/enums";
+import { unwrapGRPCResponse } from '../../../../../common/utils';
 
 @ApiTags('Customer')
 @ApiBearerAuth()
@@ -44,7 +45,7 @@ export class CustomerController implements OnModuleInit{
   @UseFilters(new HttpExceptionFilter())
   async index(@Res() res) {
     try {
-      const result = await this.customerService.findAll({});
+      const result = await unwrapGRPCResponse(this.customerService.findAll({}));
       res.status(HttpStatus.OK).send(result);
     } catch (e) {
       throw new GenericHttpException(e);
@@ -66,7 +67,7 @@ export class CustomerController implements OnModuleInit{
   )
   async getByEmail(@Param('email') email: string, @Res() res) {
     try {
-      const customer = await this.customerService.viewDetail({email});
+      const customer = await unwrapGRPCResponse(this.customerService.viewDetail({email}));
       res.status(HttpStatus.OK).send(customer);
     } catch (e) {
       throw new GenericHttpException(e);

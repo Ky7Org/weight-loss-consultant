@@ -2,6 +2,7 @@ import {from, lastValueFrom, Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {join} from "path";
 import {RpcException} from "@nestjs/microservices";
+import * as bcrypt from 'bcrypt';
 
 type gRPCResponseType<T> = {
   data: T;
@@ -40,3 +41,8 @@ export const constructGrpcException = (statusCode: number, message: string) => {
     })
   });
 };
+
+export const BCRYPT_CONFIG = async () => {
+  salt: await bcrypt.genSalt()
+};
+
