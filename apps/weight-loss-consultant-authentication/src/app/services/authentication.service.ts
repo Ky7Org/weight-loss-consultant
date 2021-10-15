@@ -17,6 +17,7 @@ import {
   TRAINER_VIEW_DETAIL
 } from '../../../../common/routes/users-management-service-routes';
 import { FirebaseAuthService } from './firebase-auth.service';
+import * as bcrypt from 'bcrypt';
 
 export interface UserIdentity {
   email: string;
@@ -101,7 +102,7 @@ export class AuthenticationService {
     let customer : CustomerEntity;
     try {
       admin  = await this.validateAdmin(username).toPromise();
-      if (admin && admin.password === password) {
+      if (admin && await bcrypt.compare(password, admin.password)) {
         console.log("admin")
         return {
           ...admin,
@@ -113,7 +114,7 @@ export class AuthenticationService {
     }
     try {
       const trainer = await this.validateTrainer(username).toPromise();
-      if (trainer && trainer.password === password) {
+      if (trainer && await bcrypt.compare(password, trainer.password)) {
         console.log("trainer")
         return {
           ...trainer,
@@ -125,7 +126,7 @@ export class AuthenticationService {
     }
     try {
       const customer = await this.validateCustomer(username).toPromise();
-      if (customer && customer.password === password) {
+      if (customer && await bcrypt.compare(password, customer.password)) {
         console.log("customer")
         return {
           ...customer,
@@ -155,7 +156,8 @@ export class AuthenticationService {
     user = await this.validateAccount(user.email, user.password);
     return {
       accessToken: this.jwtService.sign(user),
-      ...user
+      ...user,
+      password: undefined,
     };
   };
 
