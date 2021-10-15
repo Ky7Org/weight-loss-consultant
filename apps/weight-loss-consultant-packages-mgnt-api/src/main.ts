@@ -22,9 +22,8 @@ const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
       port: PACKAGES_MANAGEMENT_SERVICE_PORT
     }
   });
-  await app.listen(() => {
-    Logger.log(`Microservice ${PACKAGES_MANAGEMENT_SERVICE_NAME} is listening on http://${HOST}/${PACKAGES_MANAGEMENT_SERVICE_PORT}`);
-  });
+  await app.listen();
+  Logger.log(`Microservice ${PACKAGES_MANAGEMENT_SERVICE_NAME} is listening on http://${HOST}:${PACKAGES_MANAGEMENT_SERVICE_PORT}`);
 }
 
-bootstrap();
+void bootstrap();
