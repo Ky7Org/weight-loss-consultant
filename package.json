@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "deploy:api": "npm run build:gateway && npm run build:users-mgnt-api && npm run build:authentication && npm run build:packages-mgnt-api && npm run build:health-mgnt-api",
+    "deploy:ui": "npm run build:ui && cp -R ./dist/apps/weight-loss-consultant-ui/ /var/www/",
     "build-and-start-prod:gateway": "npm run build:gateway",
     "start:ui": "nx run weight-loss-consultant-ui:serve",
     "start:gateway": "nx run weight-loss-consultant-gateway:serve",
