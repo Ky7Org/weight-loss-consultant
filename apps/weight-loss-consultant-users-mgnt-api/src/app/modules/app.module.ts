@@ -16,6 +16,8 @@ import {SortingAndFilteringModule} from "./sorting-filtering.module";
 import {SearchModule} from "./search.module";
 import {ProfileStyleEntity} from "../entities/profile-trainer.entity";
 import {TrainerStyleEntity} from "../entities/trainer-style.entity";
+import {HeathInfoEntity} from "../entities/health-info.entity";
+import {HealthCheckModule} from "./health-check.module";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -42,7 +44,8 @@ export class AppModule {
               CampaignEntity,
               PackageEntity,
               TrainerStyleEntity,
-              ProfileStyleEntity
+              ProfileStyleEntity,
+              HeathInfoEntity
             ],
           }),
           inject: [ConfigService],
@@ -53,7 +56,8 @@ export class AppModule {
         CampaignModule,
         PackageModule,
         SortingAndFilteringModule,
-        SearchModule
+        SearchModule,
+        HealthCheckModule
       ],
     };
   }

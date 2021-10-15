@@ -17,10 +17,12 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     super(repository);
   }
 
-  async findAll(): Promise<CustomerEntity[] | null> {
-    return await this.repository.find({
-      relations: ["campaigns"],
-    });
+  async findAll(): Promise<CustomerEntity[] | undefined> {
+    const query = this.repository.createQueryBuilder("customer")
+      .leftJoinAndSelect("customer.campaigns", "campaign")
+      .leftJoinAndSelect("customer.healthInfos", "healthInfo")
+      .getMany();
+    return query;
   }
 
   async create(dto: CreateCustDto): Promise<CustomerEntity> {
@@ -79,31 +81,13 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
   }
 
   async viewDetail(id): Promise<CustomerEntity> {
-    return this.repository.findOne({
-      relations: ["campaigns"],
-      where: [{
-        email : `${id}`
-      }]
-    });
+    const query = this.repository.createQueryBuilder("customer")
+      .where("customer.email = :email", {email : id})
+      .leftJoinAndSelect("customer.campaigns", "campaign")
+      .leftJoinAndSelect("customer.healthInfos", "healthInfo")
+      .getOne();
+    return query;
   }
 
-  //testing
-  async getAllCustomerWithCampaignDetail(): Promise<CustomerEntity[]> {
-    const value = "c";
-    const result = this.repository.find(
-      {
-        select: ["email", "dob"],
-        where:{
-          email: Like(`%${value}%`)
-        },
-        relations: ["campaigns"],
-        order: {
-          dob: "ASC",
-          email: "DESC",
-        }
-      }
-    );
-    return result;
-  }
 
 }

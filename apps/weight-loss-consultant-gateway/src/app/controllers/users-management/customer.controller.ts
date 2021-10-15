@@ -40,6 +40,13 @@ export class CustomerController {
   async getByEmail(@Param('email') email: string, @Res() res) {
     try {
       const customer = await this.customerService.viewDetail(email);
+      if (customer === undefined) {
+        const error = {
+          statusCode : 404,
+          message: `Not found customer with email : ${email}`
+        }
+        res.status(error.statusCode).send(error);
+      }
       res.status(HttpStatus.OK).send(customer);
     } catch ({ error }) {
       this.logger.error(error);
