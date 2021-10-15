@@ -16,6 +16,8 @@ import {
   CUSTOMER_VIEW_DETAIL,
   TRAINER_VIEW_DETAIL
 } from '../../../../common/routes/users-management-service-routes';
+import { FirebaseAuthService } from './firebase-auth.service';
+import * as bcrypt from 'bcrypt';
 
 export interface UserIdentity {
   email: string;
@@ -32,7 +34,8 @@ export class AuthenticationService {
   constructor(private readonly accountService: AccountService,
               @Inject(USERS_MANAGEMENT_SERVICE_NAME)
               private readonly usersManagementServiceProxy: ClientProxy,
-              private readonly jwtService: JwtService) {
+              private readonly jwtService: JwtService,
+              private readonly firebaseAuthService: FirebaseAuthService) {
   }
 
   private validateAdmin(username: string): Observable<AdminEntity> {
@@ -94,43 +97,51 @@ export class AuthenticationService {
 
 
   async validateAccount(username: string, password: string): Promise<UserIdentity> {
-    const users = await combineLatest([this.validateAdmin(username).pipe(defaultIfEmpty(null)),
-      this.validateCustomer(username).pipe(defaultIfEmpty(null)),
-      this.validateTrainer(username).pipe(defaultIfEmpty(null))])
-      .pipe(map(([admin, customer, trainer]) => {
-        return [admin, customer, trainer];
-      }), catchError((e, u) => {
-        console.log(e);
-        throw new RpcException({
-          statusCode: HttpStatus.UNAUTHORIZED,
-          message: 'Invalid username or password.'
-        } as RpcExceptionModel);
-        return u;
-      })).toPromise();
-    let user: AdminEntity | CustomerEntity | TrainerEntity;
-    let userRole: Role;
-    if (users[0] !== undefined && users[0] !== null) {
-      user = users[0] as AdminEntity;
-      userRole = Role.Admin;
+    let admin : AdminEntity;
+    let trainer : TrainerEntity;
+    let customer : CustomerEntity;
+    try {
+      admin  = await this.validateAdmin(username).toPromise();
+      if (admin && await bcrypt.compare(password, admin.password)) {
+        console.log("admin")
+        return {
+          ...admin,
+          role: Role.Admin
+        } as UserIdentity
+      }
+    } catch (err) {
+      //
     }
-    if (users[1] !== undefined && users[1] !== null) {
-      user = users[1] as CustomerEntity;
-      userRole = Role.Customer;
+    try {
+      const trainer = await this.validateTrainer(username).toPromise();
+      if (trainer && await bcrypt.compare(password, trainer.password)) {
+        console.log("trainer")
+        return {
+          ...trainer,
+          role: Role.Trainer
+        } as UserIdentity
+      }
+    } catch (err) {
+      //
     }
-    if (users[2] !== undefined && users[2] !== null) {
-      user = users[2] as TrainerEntity;
-      userRole = Role.Trainer;
+    try {
+      const customer = await this.validateCustomer(username).toPromise();
+      if (customer && await bcrypt.compare(password, customer.password)) {
+        console.log("customer")
+        return {
+          ...customer,
+          role: Role.Customer
+        } as UserIdentity
+      }
+    } catch (err) {
+      //
     }
-    if (user.password === password) {
-      return {
-        ...user,
-        role: userRole
-      } as UserIdentity;
+    if (!admin && !trainer && !customer) {
+      throw new RpcException({
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid username or password.'
+      } as RpcExceptionModel);
     }
-    throw new RpcException({
-      statusCode: HttpStatus.UNAUTHORIZED,
-      message: 'Invalid username or password.'
-    } as RpcExceptionModel);
   };
 
   async login(user: LoginRequest): Promise<any> {
@@ -145,12 +156,14 @@ export class AuthenticationService {
     user = await this.validateAccount(user.email, user.password);
     return {
       accessToken: this.jwtService.sign(user),
-      ...user
+      ...user,
+      password: undefined,
     };
   };
 
 
-  async loginWithFirebase(firebaseUser: any) {
+  async loginWithFirebase(firebaseUserToken: string) {
+    const firebaseUser = await this.firebaseAuthService.authenticate(firebaseUserToken);
     const realUser = await this.validateAccountWithoutPassword(firebaseUser.email);
     return {
       accessToken: this.jwtService.sign(realUser),

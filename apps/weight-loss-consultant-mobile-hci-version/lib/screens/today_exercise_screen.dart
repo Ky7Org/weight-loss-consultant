@@ -41,7 +41,9 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value) {
-        _exercises = _exerciseService.getTodayExercise(user.level);
+        DateTime now = DateTime.now();
+        DateTime today = DateTime(now.year, now.month, now.day);
+        _exercises = user.scheduleModel!.data[today]!.dailyExerciseModel.exerciseList;
       });
       setState(() {});
     });
@@ -84,7 +86,7 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
                   title: _exercises[i].name,
                   descriptions: _exercises[i].details,
                   img: Image(
-                    image: NetworkImage(_exercises[i].thumbnailPath),
+                    image: AssetImage(_exercises[i].thumbnailPath),
                   ),
                 );
               }
@@ -97,7 +99,7 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
                   const Icon(Icons.menu),
                   const SizedBox(width: 20,),
                   Image(
-                    image: NetworkImage(_exercises[i].thumbnailPath),
+                    image: AssetImage(_exercises[i].thumbnailPath),
                     height: 100,
                     width: 100,
                   ),

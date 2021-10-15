@@ -50,20 +50,20 @@ class _CustomerBottomNavigatorState extends State<CustomerBottomNavigator> {
       },
       iconSize: 30,
       items: [
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           title: Text('Home'),
           icon: Icon(Icons.home_outlined),
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           title: Text('Calendar'),
           icon: Icon(Icons.calendar_today),
         ),
         BottomNavigationBarItem(
-          title: Text('Icon'),
+          title: const Text('Icon'),
           icon: Container(
             width: 50,
             height: 50,
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.PRIMARY_COLOR,
@@ -71,11 +71,11 @@ class _CustomerBottomNavigatorState extends State<CustomerBottomNavigator> {
             child: SvgPicture.asset("assets/logo/9-dots-icon.svg"),
           ),
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           title: Text('Favorites'),
           icon: Icon(Icons.mail_outline),
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           title: Text('Settings'),
           icon: Icon(Icons.settings_outlined),
         ),

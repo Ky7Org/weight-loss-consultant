@@ -1,11 +1,29 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/customer_appbar.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/utilities/constants.dart';
 
+class _UserWeightHistory{
+  DateTime datetime;
+  int weight;
+
+  _UserWeightHistory(this.datetime, this.weight);
+
+}
+
+class _UserCalHistory{
+  DateTime datetime;
+  int cal;
+
+  _UserCalHistory(this.datetime, this.cal);
+}
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({Key? key}) : super(key: key);
@@ -16,6 +34,9 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   AccountModel user = AccountModel(email: "", fullname: "");
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _textEditingController = TextEditingController();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -35,580 +56,494 @@ class _ReportScreenState extends State<ReportScreen> {
     });
   }
 
+  Widget _buildUserBodyIndexWidget(){
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const Text(
+                "Body index",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: (){
+                  showInformationDialog(context);
+                },
+                child: const Text("EDIT")
+              )
+            ],
+          ),
+          const SizedBox(height: 15,),
+          Row(
+            children: <Widget>[
+              const Text(
+                'Your weight: ',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 17
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                user.weight.toString(),
+                style: const TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                " kg",
+                style: TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15,),
+          Row(
+            children: <Widget>[
+              const Text(
+                'Your height: ',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                user.height.toString(),
+                style: const TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                " cm",
+                style: TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<_UserWeightHistory> _generateWeightDataSource(){
+    List<_UserWeightHistory> result = [];
+    for (var history in user.weightHistory){
+      DateTime dateTime = history.keys.first;
+      int weight = history[dateTime] ?? 1;
+      result.add(_UserWeightHistory(dateTime, weight));
+    }
+    return result;
+  }
+
+  Widget _buildWeightChart(){
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "Weight",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          SizedBox(height: 15,),
+          SfCartesianChart(
+            primaryXAxis: DateTimeAxis(),
+            series: <ChartSeries>[
+              // Renders spline chart
+              SplineSeries<_UserWeightHistory, DateTime>(
+                  name:'Weight',
+                  dataSource: _generateWeightDataSource(),
+                  xValueMapper: (_UserWeightHistory history, _) => history.datetime,
+                  yValueMapper: (_UserWeightHistory history, _) => history.weight,
+                  dataLabelSettings: DataLabelSettings(isVisible : true)
+              )
+            ]
+          ),
+          SizedBox(height: 20,),
+          Row(
+            children: <Widget>[
+              const SizedBox(
+                width: 5,
+              ),
+              const Text(
+                'Heaviest: ',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                user.getMaxWeight().toString(),
+                style: const TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                " kg",
+                style: TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          SizedBox(height: 10,),
+          Row(
+            children: <Widget>[
+              const SizedBox(
+                width: 5,
+              ),
+              const Text(
+                'Lightest: ',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                user.getMinWeight().toString(),
+                style: const TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                " kg",
+                style: TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<_UserCalHistory> _generateCalDataSource(){
+    List<_UserCalHistory> result = [];
+    for (var history in user.calHistory){
+      DateTime dateTime = history.keys.first;
+      int cal = history[dateTime] ?? 1;
+      result.add(_UserCalHistory(dateTime, cal));
+    }
+    return result;
+  }
+
+  Widget _buildCalChart(){
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "Calories",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          SizedBox(height: 15,),
+          SfCartesianChart(
+              primaryXAxis: DateTimeAxis(),
+              series: <ChartSeries>[
+                // Renders spline chart
+                SplineSeries<_UserCalHistory, DateTime>(
+                    name:'Weight',
+                    dataSource: _generateCalDataSource(),
+                    xValueMapper: (_UserCalHistory history, _) => history.datetime,
+                    yValueMapper: (_UserCalHistory history, _) => history.cal,
+                    dataLabelSettings: DataLabelSettings(isVisible : true)
+                )
+              ]
+          ),
+          const SizedBox(height: 20,),
+          Row(
+            children: <Widget>[
+              const Text(
+                'Today calorie: ',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                user.kcalNum.toString(),
+                style: const TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              const Text(
+                "cal",
+                style: TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 19,
+                    fontWeight: FontWeight.w300),
+              ),
+            ],
+          ),
+          SizedBox(height: 15,),
+          Row(
+            children: <Widget>[
+              const SizedBox(
+                width: 5,
+              ),
+              const Text(
+                'Average calorie: ',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                user.getAverageCal().toString(),
+                style: const TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              const Text(
+                "cal",
+                style: TextStyle(
+                    color: Color(0xFF0648F6),
+                    fontSize: 19,
+                    fontWeight: FontWeight.w300),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _calculateBMIStatus(bmi) {
+    String status = "Severely underweight";
+    for (String info in bmiData.keys) {
+      if (bmiData[info]["start"] < bmi && bmi <= bmiData[info]["end"]) {
+        return info;
+      }
+    }
+
+    if (bmi > 40){
+      return "Severely obese";
+    }
+    if (bmi < 15){
+      return "Severely underweight";
+    }
+    return status;
+  }
+
+  String _generateMessage(){
+    double bmi = user.weight / ((user.height / 100) * (user.height / 100));
+    double goal = user.weight - 21.5*((user.height / 100) * (user.height / 100));
+    String message = "You are ${goal.toStringAsFixed(1)} kg overweight";
+    String status = _calculateBMIStatus(bmi);
+    if (status == "Healthy weight"){
+      message = "You are at a perfect condition";
+    }
+    if (goal < 0 && status != "Healthy weight"){
+      message = "You are ${(goal * -1 ).toStringAsFixed(1)} kg underweight";
+    }
+    return message;
+  }
+
+  Widget _buildBMIChart(){
+    double bmi = user.weight / ((user.height / 100) * (user.height / 100));
+    List<Widget> indicators = List.empty(growable: true);
+    for(String info in bmiData.keys){
+      Widget container = Expanded(
+          flex: bmiData[info]["end"] - bmiData[info]["start"],
+          child: Container(
+            height: 50,
+            color: bmiData[info]["color"],
+          )
+      );
+      indicators.add(container);
+    }
+
+    double range = 2 * ((bmi - 15)/25) - 1;
+    if (range < -1) range = -1;
+    if (range > 1) range = 1;
+    String status = _calculateBMIStatus(bmi);
+
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "BMI(kg/m2): ${bmi.toStringAsFixed(2)}",
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const SizedBox(height: 30,),
+          Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: indicators,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment(range,0),
+                  child: Container(
+                    height: 50,
+                    width: 3,
+                    color: Colors.black,
+                  ),
+                )
+              ]
+          ),
+          const SizedBox(height: 15,),
+          Text(
+            _generateMessage(),
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: bmiData[status]["color"]
+
+            ),
+          )
+
+        ],
+      ),
+    );
+  }
+
+  Future<void> showInformationDialog(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          bool isChecked = false;
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              content: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: _textEditingController,
+                        validator: (value) {
+                          return value!.isNotEmpty ? null : "Enter any text";
+                        },
+                        decoration:
+                        InputDecoration(hintText: "Please Enter Text"),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Choice Box"),
+                          Checkbox(
+                              value: isChecked,
+                              onChanged: (checked) {
+                                setState(() {
+                                  isChecked = checked as bool;
+                                });
+                              })
+                        ],
+                      )
+                    ],
+                  )),
+              title: Text('Stateful Dialog'),
+              actions: <Widget>[
+                InkWell(
+                  child: Text('OK   '),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      // Do something like updating SharedPreferences or User Settings etc.
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
+              ],
+            );
+          });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomerAppbar.builder("Your report"),
         body: SingleChildScrollView(
-          child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 60),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            children: <Widget>[
-                              Text(
-                                user.workoutNum.toString(),
-                                style: TextStyle(
-                                    color: Color(0xFF0648F6),
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                'WORKOUT',
-                                style: TextStyle(
-                                    color: Color(0xFFB6B6B6),
-                                    fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              Text(
-                                user.kcalNum.toString(),
-                                style: TextStyle(
-                                    color: Color(0xFF0648F6),
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                'KCAL',
-                                style: TextStyle(
-                                    color: Color(0xFFB6B6B6),
-                                    fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              Text(
-                                user.minute.toString(),
-                                style: TextStyle(
-                                    color: Color(0xFF0648F6),
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                'MINUTE',
-                                style: TextStyle(
-                                    color: Color(0xFFB6B6B6),
-                                    fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      const Divider(
-                        thickness: 1,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 10, 10, 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text(
-                              'History',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                            Text(
-                              'MORE',
-                              style: TextStyle(
-                                color: Color(0xFF2D5BC7),
-                                fontSize: 18,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              children: [
-                                const Text(
-                                  'S',
-                                  style: TextStyle(
-                                      color: Color(0xFFDEDCDF),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Transform.scale(
-                                  scale: 1.5,
-                                  child: Checkbox(
-                                    value: true,
-                                    onChanged: (bool? value) {
-                                      return null;
-                                    },
-                                    activeColor: Color(0xFFDEDCDF),
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                                Text('26')
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                const Text(
-                                  'M',
-                                  style: TextStyle(
-                                      color: Color(0xFFDEDCDF),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Transform.scale(
-                                  scale: 1.5,
-                                  child: Checkbox(
-                                    value: true,
-                                    onChanged: (bool? value) {
-                                      return null;
-                                    },
-                                    activeColor: Color(0xFFDEDCDF),
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                                Text('27')
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                const Text(
-                                  'T',
-                                  style: TextStyle(
-                                      color: Color(0xFFDEDCDF),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Transform.scale(
-                                  scale: 1.5,
-                                  child: Checkbox(
-                                    value: true,
-                                    onChanged: (bool? value) {
-                                      return null;
-                                    },
-                                    activeColor: Color(0xFFDEDCDF),
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                                Text('28')
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                const Text(
-                                  'W',
-                                  style: TextStyle(
-                                      color: Color(0xFFDEDCDF),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Transform.scale(
-                                  scale: 1.5,
-                                  child: Checkbox(
-                                    value: true,
-                                    onChanged: (bool? value) {
-                                      return null;
-                                    },
-                                    activeColor: Color(0xFFDEDCDF),
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                                Text('29')
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                const Text(
-                                  'T',
-                                  style: TextStyle(
-                                      color: Color(0xFFDEDCDF),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Transform.scale(
-                                  scale: 1.5,
-                                  child: Checkbox(
-                                    value: true,
-                                    onChanged: (bool? value) {
-                                      return null;
-                                    },
-                                    activeColor: Color(0xFFDEDCDF),
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                                Text('30')
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                const Text(
-                                  'F',
-                                  style: TextStyle(
-                                      color: Color(0xFFDEDCDF),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Transform.scale(
-                                  scale: 1.5,
-                                  child: Checkbox(
-                                    value: true,
-                                    onChanged: (bool? value) {
-                                      return null;
-                                    },
-                                    activeColor: Color(0xFFDEDCDF),
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                                Text('1')
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                const Text(
-                                  'S',
-                                  style: TextStyle(
-                                      color: Color(0xFFDEDCDF),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Transform.scale(
-                                  scale: 1.5,
-                                  child: Checkbox(
-                                    value: true,
-                                    onChanged: (bool? value) {
-                                      return null;
-                                    },
-                                    activeColor: Color(0xFFDEDCDF),
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                                Text('2')
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'RECORDS',
-                            style: TextStyle(
-                              color: Color(0xFF2D5BC7),
-                              fontSize: 18,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Divider(
-                        thickness: 10,
-                        color: Color(0xFFF3F3F3),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Weight',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Icon(Icons.add, color: Color(0xFF0246FA), size: 25),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'lbs',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        'October',
-                        style: TextStyle(color: Color(0xFF9EA2A6)),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                '500',
-                                style: TextStyle(color: Color(0xFFA1A3A6)),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 9,
-                                child: Divider(
-                                  thickness: 1,
-                                )),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                '  ',
-                                style: TextStyle(color: Color(0xFFA1A3A6)),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 9,
-                                child: Divider(
-                                  thickness: 1,
-                                )),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                '300',
-                                style: TextStyle(color: Color(0xFFA1A3A6)),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 9,
-                                child: Divider(
-                                  thickness: 1,
-                                )),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                '  ',
-                                style: TextStyle(color: Color(0xFFA1A3A6)),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 9,
-                                child: Divider(
-                                  thickness: 1,
-                                )),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                '100',
-                                style: TextStyle(color: Color(0xFFA1A3A6)),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 9,
-                                child: Divider(
-                                  thickness: 1,
-                                )),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(25, 1, 20, 1),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                '  ',
-                                style: TextStyle(color: Color(0xFFA1A3A6)),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 9,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '05',
-                                      style: TextStyle(color: Color(0xFFA1A3A6)),
-                                    ),
-                                    Text(
-                                      '06',
-                                      style: TextStyle(color: Color(0xFFA1A3A6)),
-                                    ),
-                                    Text(
-                                      '07',
-                                      style: TextStyle(color: Color(0xFFA1A3A6)),
-                                    ),
-                                    Text(
-                                      '08',
-                                      style: TextStyle(color: Color(0xFFA1A3A6)),
-                                    ),
-                                    Text(
-                                      '09',
-                                      style: TextStyle(color: Color(0xFFA1A3A6)),
-                                    ),
-                                    Text(
-                                      '10',
-                                      style: TextStyle(color: Color(0xFFA1A3A6)),
-                                    ),
-                                    Text(
-                                      '11',
-                                      style: TextStyle(color: Color(0xFFA1A3A6)),
-                                    ),
-                                    Text(
-                                      '12',
-                                      style: TextStyle(color: Color(0xFFA1A3A6)),
-                                    ),
-                                  ],
-                                )),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.stop_rounded,
-                              color: Color(0xFF2D5BC7),
-                            ),
-                            Text('  Weight',
-                                style: TextStyle(color: Color(0xFF9B9B9B)))
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Current',
-                                style: TextStyle(color: Color(0xFF9B9B9B))),
-                            Text('0.00 lbs',
-                                style: TextStyle(color: Color(0xFF9B9B9B)))
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Heaviest',
-                                style: TextStyle(color: Color(0xFF9B9B9B))),
-                            Text('0.00 lbs',
-                                style: TextStyle(color: Color(0xFF9B9B9B)))
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Lightest',
-                                style: TextStyle(color: Color(0xFF9B9B9B))),
-                            Text('0.00 lbs',
-                                style: TextStyle(color: Color(0xFF9B9B9B)))
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        thickness: 10,
-                        color: Color(0xFFF3F3F3),
-                      ),
-                      Padding(padding: EdgeInsets.symmetric(vertical: 10, horizontal:20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('BMI(kg/m2)', style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),),
-                            Text(
-                              'EDIT',
-                              style: TextStyle(
-                                color: Color(0xFF2D5BC7),
-                              ),
-                            )
-                          ],
-                        ),),
-                      Divider(
-                        thickness: 1,
-                      ),
-                      Padding(padding: EdgeInsets.symmetric(vertical: 10, horizontal:20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Height', style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),),
-                            Text(
-                              'EDIT',
-                              style: TextStyle(
-                                color:
-                                Color(0xFF2D5BC7),
-                              ),
-                            )
-                          ],
-                        ),)
-                    ],
+          child: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.only(top: 20),
+              child: Column(
+                children: [
+                  _buildUserBodyIndexWidget(),
+                  const SizedBox(height: 10),
+                  const Divider(
+                    thickness: 10,
                   ),
-                )
-              ],
+                  _buildBMIChart(),
+                  const SizedBox(height: 10),
+                  const Divider(
+                    thickness: 10,
+                  ),
+                  const SizedBox(height: 10),
+                  _buildWeightChart(),
+                  const SizedBox(height: 10),
+                  const Divider(
+                    thickness: 10,
+                  ),
+                  _buildCalChart(),
+                ],
+              ),
             ),
           ),
         ));
