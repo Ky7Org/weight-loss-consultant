@@ -8,8 +8,6 @@ import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/authentication_service.dart';
-import 'package:weight_loss_consultant_mobile/services/google_login_service.dart';
-import 'package:weight_loss_consultant_mobile/utils/validator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -280,15 +278,10 @@ class _LoginPageState extends State<LoginPage> {
                     child: GestureDetector(
                       child: SvgPicture.asset('assets/logo/google-logo.svg'),
                       onTap: () async {
-                        GoogleSignInService service = GoogleSignInService();
+                        AuthenticationService service = AuthenticationService();
                         var user = await service.signInWithGoogle();
-                        print(user);
-                        print("AAAAAA ${await user.user!.getIdToken()}");
-                        if (user.user!.emailVerified){
-                          Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              RoutePath.customerHomePage,
-                                  (route) => false);
+                        if (user != null){
+                          Navigator.pushNamed(context, RoutePath.customerHomePage);
                         }
                       },
                     ),

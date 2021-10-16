@@ -70,7 +70,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                     width: 40,
                   ),
                   Text(
-                    user.fullname,
+                    user.fullname ?? "",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
@@ -245,7 +245,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         height: 5,
                       ),
                       Text(
-                        user.phone,
+                        user.phone ?? "",
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontSize: 17,
@@ -265,7 +265,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         height: 5,
                       ),
                       Text(
-                        user.email,
+                        user.email ?? "",
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontSize: 17,
@@ -305,7 +305,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         height: 5,
                       ),
                       Text(
-                        DateFormat("MMMM-dd-yyyy").format(DateTime.fromMicrosecondsSinceEpoch(int.parse(user.dob))).toString(),
+                        DateFormat("MMMM-dd-yyyy").format(DateTime.fromMicrosecondsSinceEpoch(int.parse(user.dob ?? ""))).toString(),
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontSize: 17,

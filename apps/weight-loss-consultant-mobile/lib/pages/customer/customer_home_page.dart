@@ -57,7 +57,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       //drawer: CustomerDrawer.builder(user.fullname, Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
-      appBar: MainAppBar.builder(user.fullname, context),
+      appBar: MainAppBar.builder(user.fullname ?? "", context),
       body: SlidingUpPanel(
         controller: _pc,
         panel: CategoryPanel(),

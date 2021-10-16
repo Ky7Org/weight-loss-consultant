@@ -10,14 +10,14 @@ AccountModel _$AccountModelFromJson(Map<String, dynamic> json) => AccountModel(
       email: json['email'] as String? ?? "",
       fullname: json['fullname'] as String? ?? "",
     )
-      ..role = json['role'] as String
-      ..address = json['address'] as String
-      ..phone = json['phone'] as String
-      ..gender = json['gender'] as String
-      ..status = json['status'] as int
-      ..profileImage = json['profileImage'] as String
-      ..dob = json['dob'] as String
-      ..accessToken = json['accessToken'] as String;
+      ..role = json['role'] as String?
+      ..address = json['address'] as String?
+      ..phone = json['phone'] as String?
+      ..gender = json['gender'] as String?
+      ..status = json['status'] as int?
+      ..profileImage = json['profileImage'] as String?
+      ..dob = json['dob'] as String?
+      ..accessToken = json['accessToken'] as String?;
 
 Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
     <String, dynamic>{
