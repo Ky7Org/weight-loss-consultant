@@ -155,7 +155,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: MainAppBar.builder(user.fullname, context),
+        appBar: MainAppBar.builder(user.fullname ?? "", context),
         body: SlidingUpPanel(
           controller: _pc,
           panel:  TrainerCategoryPanel(),
