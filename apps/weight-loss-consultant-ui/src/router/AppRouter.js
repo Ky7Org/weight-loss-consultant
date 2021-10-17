@@ -10,12 +10,22 @@ export default function AppRouter() {
     <Switch>
       <PublicRoute path="/auth/signin" component={Signin} exact={true} />
       <PrivateRoute path="/home" component={HomePage} exact={true} />
-      <PrivateRoute
-        path="/admin/user/manager"
-        component={ListUser}
-        exact={false}
-      />
       <Redirect exact from="/" to="/home" />
+      <PrivateRoute
+        path="/admin/user/customer"
+        component={ListUser}
+        exact={true}
+      />
+      <PrivateRoute
+        path="/admin/user/trainer"
+        component={ListUser}
+        exact={true}
+      />
+      <PrivateRoute
+        path="/admin/user/admin"
+        component={ListUser}
+        exact={true}
+      />
       <Route exact path="/page-not-found">
         <ErrorPage code={404} />
       </Route>

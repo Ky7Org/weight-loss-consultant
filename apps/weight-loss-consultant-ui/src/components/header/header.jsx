@@ -12,9 +12,7 @@ const HeaderLayout = () => {
         <Col xs={8} xl={10} />
       </Row>
       <Row>
-        <Col xs={24} xl={24}>
-          <hr />
-        </Col>
+        <Col xs={24} xl={24}></Col>
       </Row>
     </>
   );

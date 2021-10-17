@@ -1,32 +1,33 @@
 import { useMemo, useState } from 'react';
-import { Button, Table, Row, Modal, Select, Tag } from 'antd';
-import './TableUser.css';
+import { Button, Table, Row, Modal, Select, Tag, Card } from 'antd';
+import './TableUser.scss';
 import { Sorter } from '../../../utils/sorter';
+import { useSelector, useDispatch } from 'react-redux';
+import { filterActions } from '../../../states-manager/filter/filter-slice';
 import {
-  InfoCircleOutlined,
+  EditOutlined,
   CheckCircleFilled,
   CloseCircleFilled,
 } from '@ant-design/icons';
+
 const TableUser = (props) => {
+  const dispatch = useDispatch();
   const [editableColumns, setEditableColumns] = useState([
     'fullName',
+    'email',
     'action',
     'phone',
     'gender',
     'status',
   ]);
-
   const { dataEmpl } = props;
-  const [isModalShown, setIsModalShown] = useState(false);
-  const [modalOptions, setModalOptions] = useState(
-    editableColumns.slice(0, editableColumns.length - 1)
-  );
+  const { RawDataOutput } = props;
+  const [dataFilter, setDataFilter] = useState(RawDataOutput);
   const defaultColumns = [
     {
-      title: 'Name',
+      title: 'Full Name',
       dataIndex: 'fullName',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a.fullname, b.fullname),
       render(text, row) {
         return (
           <div style={{ fontWeight: 'bold', marginRight: '10px' }}>
@@ -39,16 +40,22 @@ const TableUser = (props) => {
       title: 'Email',
       dataIndex: 'email',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a.email, b.email),
       render(text, row) {
         return <>{row?.email}</>;
+      },
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'id',
+      render(text, row) {
+        return <>{row?.phone}</>;
       },
     },
     {
       title: 'Gender',
       dataIndex: 'gender',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a?.gender || '', b?.gender || ''),
       render(text, row) {
         return (
           <div>
@@ -65,25 +72,14 @@ const TableUser = (props) => {
       title: 'Address',
       dataIndex: 'address',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a?.address || '', b?.address || ''),
       render(text, row) {
         return <>{row?.address}</>;
-      },
-    },
-    {
-      title: 'Phone',
-      dataIndex: 'phone',
-      key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a?.phone || '', b?.phone || ''),
-      render(text, row) {
-        return <>{row?.phone}</>;
       },
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a?.status || '', b?.status || ''),
       render(text, row) {
         return (
           <div>
@@ -103,7 +99,7 @@ const TableUser = (props) => {
                 </div>
               </div>
             ) : (
-              <div>
+              <div div style={{ display: 'flex' }}>
                 <CloseCircleFilled
                   style={{
                     color: 'red',
@@ -120,13 +116,8 @@ const TableUser = (props) => {
     },
     {
       title: (
-        <Row justify="end">
-          <Button
-            className="secondary-button-outlined"
-            onClick={() => setIsModalShown(true)}
-          >
-            'Edit Column'
-          </Button>
+        <Row justify="end" xs={{ span: 1 }}>
+          <p>Edit profile</p>
         </Row>
       ),
       dataIndex: 'action',
@@ -135,7 +126,7 @@ const TableUser = (props) => {
           <Row justify="end">
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
-                <InfoCircleOutlined
+                <EditOutlined
                   style={{
                     fontSize: '20px',
                     color: '#ff3939',
@@ -155,62 +146,29 @@ const TableUser = (props) => {
       editableColumns.includes(column.dataIndex)
     );
   }, [editableColumns]);
-  const handleConfirmModal = () => {
-    console.log('OK');
-    setEditableColumns([...modalOptions, 'action']);
-    setIsModalShown(false);
+  const handleOnChangePaging = (input) => {
+    setDataFilter({ ...dataFilter, page: input });
+    console.log(dataFilter);
+    dispatch(filterActions.saveObjectFilter(dataFilter));
   };
-
-  const handleCancelModal = () => {
-    console.log('CANCEL');
-    setIsModalShown(false);
-    setModalOptions(editableColumns.slice(0, editableColumns.length - 1));
-  };
-
   return (
     <div className="Container">
-      <Table
-        size="large"
-        style={{ paddingTop: '10px', width: '100vw' }}
-        dataSource={dataEmpl}
-        columns={columns}
-        rowKey="email"
-        responsive={true}
-        pagination={{
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          showTotal: (total) => `${'Total'} ${total} ${'items'}`,
-          total: dataEmpl?.length || 0,
-          responsive: true,
-        }}
-        scroll={{ x: 700, y: 700 }}
-      />
-      <Modal
-        maskClosable={false}
-        title="Edit Columns"
-        visible={isModalShown}
-        onCancel={handleCancelModal}
-        onOk={handleConfirmModal}
-      >
-        <Select
-          mode="multiple"
-          defaultValue={editableColumns.slice(0, editableColumns.length - 1)}
-          value={modalOptions}
-          style={{ width: '100%' }}
-          onChange={(values) => setModalOptions(values)}
-        >
-          {defaultColumns.slice(0, defaultColumns.length - 1).map((column) => (
-            <Select.Option
-              key={column.dataIndex}
-              disabled={['fullName', 'email', 'status', 'action'].includes(
-                column.dataIndex
-              )}
-            >
-              {column.title}
-            </Select.Option>
-          ))}
-        </Select>
-      </Modal>
+      <Card>
+        <Table
+          size="large"
+          dataSource={dataEmpl}
+          columns={columns}
+          rowKey="email"
+          responsive={true}
+          pagination={{
+            onChange: handleOnChangePaging,
+            showTotal: (total) => `${'Total'} ${total} ${'items'}`,
+            total: 0,
+            responsive: true,
+          }}
+          scroll={{ x: 700, y: 700 }}
+        />
+      </Card>
     </div>
   );
 };

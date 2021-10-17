@@ -9,7 +9,7 @@ const authenticationSlice = createSlice({
     isFetching: false,
     error: false,
     isAuthUser: !!localStorage.getItem(USER_STORAGE),
-    user: currentUser.decodeInfo,
+    user: JSON.parse(localStorage.getItem(USER_STORAGE)) || {},
     status: '',
   },
   reducers: {

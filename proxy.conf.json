@@ -1,6 +1,6 @@
 {
   "/": {
-    "target": "http://localhost:5000/",
+    "target": "http://bangmaple.tech:5000",
     "secure": false
   }
 }
