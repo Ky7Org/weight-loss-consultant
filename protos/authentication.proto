@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package authentication;
+
+service AuthenticationService {
+  rpc Login(LoginRequestModel) returns (LoginResponse);
+}
+
+message LoginRequestModel {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponseModel {
+  string accessToken = 1;
+  string email = 2;
+  string fullname = 3;
+  string profileImage = 4;
+  string role = 5;
+}
+
+message LoginResponse {
+  LoginResponseModel data = 1;
+}

@@ -1,22 +1,14 @@
-import { DynamicModule } from '@nestjs/common';
+import {DynamicModule} from '@nestjs/common';
 
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { CustomerModule } from './customer.module';
-import { AppController } from '../controllers/app.controller';
-import { AuthenticationModule } from './authentication.module';
-import { TrainerModule } from './trainer.module';
-import { TrainerEntity } from '../entities/trainer.entity';
-import { CustomerEntity } from '../entities/customer.entity';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MailModule } from './mail.module';
-import { ResetPasswordTokenEntity } from '../entities/reset-password-token.entity';
-import { ResetPasswordTokenModule } from './reset-password-token.module';
-import { AccountModule } from './account.module';
-import { AdminModule } from './admin.module';
-import { AdminEntity } from '../entities/admin.entity';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {AppController} from '../controllers/app.controller';
+import {AuthenticationModule} from './authentication.module';
+import {ConfigModule, ConfigService} from '@nestjs/config';
+import {MailModule} from './mail.module';
+import {ResetPasswordTokenEntity} from '../entities/reset-password-token.entity';
+import {ResetPasswordTokenModule} from './reset-password-token.module';
 import * as Joi from 'joi';
-import { ENV_FILE_PATH } from '../../constant';
-
+import { ENV_FILE_PATH } from '../../../../common/constants/env-file-path';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -41,17 +33,13 @@ export class AppModule {
             username: configService.get('DATABASE_USER'),
             password: configService.get('DATABASE_PASSWORD'),
             database: configService.get('DATABASE_NAME'),
-            entities: [CustomerEntity, TrainerEntity, ResetPasswordTokenEntity, AdminEntity],
+            entities: [ResetPasswordTokenEntity],
           }),
           inject: [ConfigService],
         }),
-        CustomerModule,
         AuthenticationModule,
-        TrainerModule,
-        AdminModule,
         MailModule,
         ResetPasswordTokenModule,
-        AccountModule
       ],
       controllers: [AppController]
     };

@@ -1,19 +1,17 @@
-import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { CampaignService } from '../../services/campaign.service';
-import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
-import { CreateCampaignDto } from '../../dtos/campaign/create-campaign';
-import { UpdateCampaignDto } from '../../dtos/campaign/update-campaign';
+import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
+import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
+import {CreateCampaignDto} from '../../dtos/campaign/create-campaign.dto';
+import {UpdateCampaignDto} from '../../dtos/campaign/update-campaign.dto';
+import {CAMPAIGNS_MANAGEMENT} from "../../../../../common/api.routes";
 
 @ApiTags('Campaign')
 @ApiBearerAuth()
-@Controller('/v1/campaigns')
+@Controller(CAMPAIGNS_MANAGEMENT.CAMPAIGNS_API)
 export class CampaignController {
 
   private readonly logger = new Logger(CampaignController.name);
-
-  constructor(private readonly campaignService: CampaignService) {
-  }
+  private readonly campaignService: any;
 
   @Get()
   @UseGuards(JwtAuthGuard)

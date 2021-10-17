@@ -1,16 +1,5 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany, ManyToOne,
-  OneToMany,
-  PrimaryColumn,
-  PrimaryGeneratedColumn
-} from "typeorm";
-import {PackageEntity} from "./package.enttiy";
-import {TrainerEntity} from "./trainer.entity";
-import {ProfileStyleEntity} from "./profile-trainer.entity";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ProfileStyleEntity } from './profile-trainer.entity';
 // import {ProfileStyleEntity} from "./profile-trainer.entity";
 // import {TrainerStyleEntity} from "./trainer-style.entity";
 

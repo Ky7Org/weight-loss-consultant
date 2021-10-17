@@ -1,7 +1,7 @@
 import { IsEmail, IsEmpty, IsString, MaxLength, MinLength } from 'class-validator';
-import * as ERR_MSG from '../../constants/validation-err-message';
-import * as LIMIT_LENGTH from '../../constants/properties-length-limit';
-import { Match } from '../match.decorator';
+import * as LIMIT_LENGTH from '../../../../../common/constants/properties-length-limit';
+import * as ERR_MSG from '../../../../../common/constants/validation-err-message';
+import { Match } from '../../decorators/match.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 
 

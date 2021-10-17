@@ -6,7 +6,7 @@ import {HeathInfoEntity} from "./health-info.entity";
 export class CustomerEntity extends BaseEntity{
   @PrimaryColumn({ type: 'varchar', length: 320})
   email: string;
-  @Column({ type: 'varchar', length: 60 })
+  @Column({ type: 'varchar', length: 60, default: '' })
   password: string;
   @Column({ type: 'varchar', length: 200 })
   fullname: string;

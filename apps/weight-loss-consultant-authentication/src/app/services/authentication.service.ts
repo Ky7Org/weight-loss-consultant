@@ -1,22 +1,17 @@
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { AccountService } from './account.service';
-import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { AdminEntity } from '../entities/admin.entity';
-import { CustomerEntity } from '../entities/customer.entity';
-import { TrainerEntity } from '../entities/trainer.entity';
-import { combineLatest, Observable } from 'rxjs';
-import { catchError, defaultIfEmpty, map } from 'rxjs/operators';
-import { RpcExceptionModel } from '../filters/rpc-exception.model';
-import { LoginRequest } from '../models/login.req';
-import { Role } from '../constants/enums';
-import {
-  ADMIN_VIEW_DETAIL,
-  CUSTOMER_VIEW_DETAIL,
-  TRAINER_VIEW_DETAIL
-} from '../../../../common/routes/users-management-service-routes';
+import {HttpStatus, Injectable, Logger, OnModuleInit} from '@nestjs/common';
+import {JwtService} from '@nestjs/jwt';
+import {Client, ClientGrpc, RpcException} from '@nestjs/microservices';
+import {combineLatest, from, Observable} from 'rxjs';
+import {catchError, defaultIfEmpty, map} from 'rxjs/operators';
+import {USERS_MANAGEMENT_GRPC_SERVICE} from "../../../../common/grpc-services.route";
+import {AdminService, CustomerService, TrainerService} from "../../../../common/proto-models/users-mgnt.proto";
+import { constructGrpcException, unwrapGRPCResponse$ } from '../../../../common/utils';
+import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
+import {AdminEntity} from "../../../../common/entities/admin.entity";
+import {CustomerEntity} from "../../../../common/entities/customer.entity";
+import {TrainerEntity} from "../../../../common/entities/trainer.entity";
 import { FirebaseAuthService } from './firebase-auth.service';
+import { Role } from '../../../../common/constants/enums';
 import * as bcrypt from 'bcrypt';
 
 export interface UserIdentity {
@@ -31,26 +26,33 @@ export class AuthenticationService {
 
   private readonly logger = new Logger(AuthenticationService.name);
 
-  constructor(private readonly accountService: AccountService,
-              @Inject(USERS_MANAGEMENT_SERVICE_NAME)
-              private readonly usersManagementServiceProxy: ClientProxy,
-              private readonly jwtService: JwtService,
+  @Client(USERS_MANAGEMENT_GRPC_SERVICE)
+  private readonly usersManagementClient: ClientGrpc;
+
+  private adminService: AdminService;
+  private customerService: CustomerService;
+  private trainerService: TrainerService;
+
+  constructor(private readonly jwtService: JwtService,
               private readonly firebaseAuthService: FirebaseAuthService) {
   }
 
-  private validateAdmin(username: string): Observable<AdminEntity> {
-    return this.usersManagementServiceProxy
-      .send<AdminEntity, string>({ cmd: ADMIN_VIEW_DETAIL }, username);
+  onModuleInit() {
+    this.adminService = this.usersManagementClient.getService<AdminService>('AdminService');
+    this.customerService = this.usersManagementClient.getService<CustomerService>('CustomerService');
+    this.trainerService = this.usersManagementClient.getService<TrainerService>('TrainerService');
   }
 
-  private validateCustomer(username: string): Observable<CustomerEntity> {
-    return this.usersManagementServiceProxy
-      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username);
+  private validateAdmin(email: string): Observable<AdminEntity> {
+    return unwrapGRPCResponse$(this.adminService.viewDetail({email}));
   }
 
-  private validateTrainer(username: string): Observable<TrainerEntity> {
-    return this.usersManagementServiceProxy
-      .send<TrainerEntity, string>({ cmd: TRAINER_VIEW_DETAIL }, username);
+  private validateCustomer(email: string): Observable<CustomerEntity> {
+    return unwrapGRPCResponse$(this.customerService.viewDetail({email}));
+  }
+
+  private validateTrainer(email: string): Observable<TrainerEntity> {
+    return unwrapGRPCResponse$(this.trainerService.viewDetail({email}));
   }
 
   private async validateAccountWithoutPassword(username: string) {
@@ -102,6 +104,7 @@ export class AuthenticationService {
     let customer : CustomerEntity;
     try {
       admin  = await this.validateAdmin(username).toPromise();
+      console.log('admin check');
       if (admin && await bcrypt.compare(password, admin.password)) {
         console.log("admin")
         return {
@@ -114,6 +117,9 @@ export class AuthenticationService {
     }
     try {
       const trainer = await this.validateTrainer(username).toPromise();
+      console.log('trainer chck 0');
+      //await bcrypt.compare(password, trainer.password);
+      console.log('trainer check');
       if (trainer && await bcrypt.compare(password, trainer.password)) {
         console.log("trainer")
         return {
@@ -126,9 +132,10 @@ export class AuthenticationService {
     }
     try {
       const customer = await this.validateCustomer(username).toPromise();
+      console.log('customer check');
       if (customer && await bcrypt.compare(password, customer.password)) {
         console.log("customer")
-        return {
+       return {
           ...customer,
           role: Role.Customer
         } as UserIdentity
@@ -137,22 +144,17 @@ export class AuthenticationService {
       //
     }
     if (!admin && !trainer && !customer) {
-      throw new RpcException({
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid username or password.'
-      } as RpcExceptionModel);
+      throw constructGrpcException(HttpStatus.UNAUTHORIZED, 'Invalid username or password.');
     }
   };
 
-  async login(user: LoginRequest): Promise<any> {
+  async login(user): Promise<any> {
+    //console.log(await bcrypt.hash(user.password, 7));
+
     if (user === undefined || user.email === undefined || user.email.length < 1 ||
       user.password === undefined || user.password.length < 1) {
-      throw new RpcException({
-        statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid username or password.'
-      } as RpcExceptionModel);
+      throw constructGrpcException(HttpStatus.UNAUTHORIZED, 'Invalid username or password.');
     }
-
     user = await this.validateAccount(user.email, user.password);
     return {
       accessToken: this.jwtService.sign(user),
@@ -171,3 +173,4 @@ export class AuthenticationService {
     };
   }
 }
+//      const hash = await bcrypt.hash(req.body.password, BCRYPT_CONFIG.rounds);

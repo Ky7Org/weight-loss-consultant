@@ -1,23 +1,46 @@
-import { Body, Controller, HttpStatus, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthenticationService } from '../../services/authentication/authentication.service';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Logger,
+  OnModuleInit,
+  Post,
+  Request,
+  Res,
+  UseFilters,
+} from '@nestjs/common';
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {LoginResponseModel} from '../../models/login-response.model';
+import {LoginRequestModel} from '../../models/login-request.model';
+import {ResetPasswordRequestModel} from '../../models/reset-password-request.model';
+import {ResetPasswordConfirmRequestModel} from '../../models/reset-password-confirm-request.model';
+import {unwrapGRPCResponse} from "../../../../../common/utils";
+import {Client, ClientGrpc} from "@nestjs/microservices";
+import {AUTHENTICATION_GRPC_SERVICE} from "../../../../../common/grpc-services.route";
+import {AuthenticationService} from "../../../../../common/proto-models/authentication.proto";
+import {AUTHENTICATION} from "../../../../../common/api.routes";
 import { Public } from '../../decorators/public.decorator';
-import { LoginResponseModel } from '../../models/login-response-model';
-import { LoginRequestModel } from '../../models/login-request-model';
-import { ResetPasswordRequestModel } from '../../models/reset-password-request-model';
-import { ResetPasswordConfirmRequestModel } from '../../models/reset-password-confirm-request-model';
-import { LoginRequest } from '../../models/login.req';
+import { HttpExceptionFilter } from '../../../../../common/filters/http-exception.filter';
+import { GenericHttpException } from '../../../../../common/filters/generic-http.exception';
+
 @ApiTags('Authentication')
 @ApiBearerAuth()
-@Controller(`/v1/auth`)
-export class AuthenticationController {
+@Controller(AUTHENTICATION.AUTH_API)
+export class AuthenticationController implements OnModuleInit{
+
+  @Client(AUTHENTICATION_GRPC_SERVICE)
+  private readonly authenticationClient: ClientGrpc;
 
   private readonly logger = new Logger(AuthenticationController.name);
 
-  constructor(private readonly authenticationService: AuthenticationService) {
+  private authenticationService: AuthenticationService;
+
+  onModuleInit() {
+    this.authenticationService = this.authenticationClient.getService<AuthenticationService>('AuthenticationService');
   }
 
   @Post('login')
+  @UseFilters(new HttpExceptionFilter())
   @Public()
   @ApiOperation({ summary: 'Authentication account' })
   @ApiBody({
@@ -30,13 +53,11 @@ export class AuthenticationController {
     type: LoginResponseModel
   })
   async login(@Request() req, @Res() res) {
-    const dto: LoginRequest = req.body;
     try {
-      const result = await this.authenticationService.login(dto);
+      const result = await unwrapGRPCResponse(this.authenticationService.login(req.body));
       res.status(HttpStatus.OK).send(result);
-    } catch ({ error }) {
-      this.logger.error(error);
-      res.status(error.statusCode).send(error);
+    } catch (e) {
+      throw new GenericHttpException(e);
     }
   }
 
@@ -48,9 +69,8 @@ export class AuthenticationController {
   })
   async loginWithFirebase(@Request() req: Request, @Res() res) {
     try {
-      console.log(req.headers['authorization']);
-      const result = await this.authenticationService.loginWithFirebase(req.headers['authorization']);
-      res.status(HttpStatus.OK).send(result);
+     // const result = await this.authenticationService.loginWithFirebase(req.headers['authorization']);
+      res.status(HttpStatus.OK).send(null);
     } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
@@ -63,8 +83,8 @@ export class AuthenticationController {
   @ApiOperation({ summary: 'Reset password' })
   async resetPassword(@Body() body: ResetPasswordRequestModel, @Res() res) {
     try {
-      const result = await this.authenticationService.resetPassword(body);
-      res.status(HttpStatus.OK).send(result);
+      //const result = await this.authenticationService.resetPassword(body);
+      res.status(HttpStatus.OK).send(null);
     } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
@@ -76,8 +96,8 @@ export class AuthenticationController {
   @ApiOperation({ summary: 'Confirm reset password' })
   async confirmChangePassword(@Body() body: ResetPasswordConfirmRequestModel, @Res() res) {
     try {
-      const result = await this.authenticationService.confirmChangePassword(body);
-      res.status(HttpStatus.OK).send(result);
+     // const result = await this.authenticationService.confirmChangePassword(body);
+      res.status(HttpStatus.OK).send(null);
     } catch ({ error }) {
       this.logger.log(error);
       res.status(error.statusCode).send(error);
