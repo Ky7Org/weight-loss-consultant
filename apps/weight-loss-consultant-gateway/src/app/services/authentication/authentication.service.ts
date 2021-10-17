@@ -52,7 +52,7 @@ export class AuthenticationService {
 
   async loginWithFirebase(firebaseUserToken: any): Promise<any> {
     const pattern = {cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER}
-    return this.authenticationServiceProxy.send<any, any>(pattern, firebaseUser)
+    return this.authenticationServiceProxy.send<any, any>(pattern, firebaseUserToken)
       // .toPromise<any>();
       .toPromise();
     return this.authenticationServiceProxy.send<any, any>(pattern, firebaseUserToken).toPromise();
