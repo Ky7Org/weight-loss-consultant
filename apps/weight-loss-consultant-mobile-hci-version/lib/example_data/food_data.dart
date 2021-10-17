@@ -4,14 +4,14 @@ import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart
 class FoodList {
   static var wholeGrainCereal = DietModel(
       'Whole Grain Cereal',
-      '248,0 calories',
+      '100 gram',
       'https://www.youtube.com/watch?v=I3idA1MBxkI',
       'assets/diet/wholeGrainCereal.jpg',
       'Saturated fats take longer to digest and can affect the amount of oxygen your blood delivers to your muscles.',
       248);
   static var energyBar = DietModel(
       "Energy Bar",
-      "200,0 calories",
+      "1 bar",
       "https://www.youtube.com/watch?v=k-x2eFdQZas",
       "assets/diet/energyBar.jpg",
       'When you’re working out later in the day, have a small snack about an hour before you get started.'
@@ -19,7 +19,7 @@ class FoodList {
       200);
   static var grilledChicken = DietModel(
       "Grilled Chicken",
-      "226,1 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=oWXlmAeqoUE",
       "assets/diet/grilledChicken.jpg",
       "When you exercise regularly, you need more protein than people who don’t, especially after a workout."
@@ -28,7 +28,7 @@ class FoodList {
       226);
   static var blackBeanBurger = DietModel(
       "Black Bean Burger",
-      "120 calories",
+      "1 burger",
       "https://www.youtube.com/watch?v=_BJoree8urg",
       "assets/diet/blackBeanBurger.jpg",
       "Whether you sometimes try a meat-free meal or stick to a full-time vegetarian diet, you can get plenty of protein (and lots of other nutrients, including fiber) from plants. Try pinto, kidney, white, or black beans, split peas, or chickpeas."
@@ -36,7 +36,7 @@ class FoodList {
       120);
   static var peanutButter = DietModel(
       "Peanut Butter",
-      "588,4 calories",
+      "1 jar",
       "https://www.youtube.com/watch?v=P0KWc5nANKg",
       "assets/diet/peanutButter.jpg",
       "While you train for a big event, the ideal post-workout snack combines protein with carbs. Revisit your childhood with a sandwich made with 2 slices of bread and 4 tablespoons of peanut butter. Of course, now that you’re an adult, you can substitute almond butter."
@@ -44,7 +44,7 @@ class FoodList {
       588);
   static var waterAndSportsDrink = DietModel(
       "Water or a Sports Drink",
-      "0 calories",
+      "1 bottle",
       "https://www.youtube.com/watch?v=kehS5f3Fe5I",
       "assets/diet/waterAndSportsDrink.jpg",
       "Hydration is a must when you exercise. Often, water is all you need. "
@@ -55,7 +55,7 @@ class FoodList {
       0);
   static var fish = DietModel(
       "Fish",
-      "205,8 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=uNGfc0o_U8g",
       "assets/diet/fish.jpg",
       "Naturally fatty fish like salmon, mackerel, herring, lake trout, sardines, and albacore tuna are good sources of omega-3 fatty acids. They may also help keep your brain sharp, especially as you get older. The American Heart Association suggests eating two servings of fatty fish a week. A serving is 3 ounces"
@@ -63,7 +63,7 @@ class FoodList {
       205);
   static var seeds = DietModel(
       "Seeds",
-      "559 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=uqlRMGvU9os",
       "assets/diet/seeds.jpg",
       "Little pumpkin seeds, sunflower seeds, and sesame seeds pack a big punch."
@@ -71,7 +71,7 @@ class FoodList {
       559);
   static var oliveOil = DietModel(
       "Olive Oil",
-      "884,1 calories",
+      "100 ml",
       "https://www.youtube.com/watch?v=31tMLbVTrcA",
       "assets/diet/oliveOil.jpg",
       "Whether you're cooking or dressing your salad, try olive oil. It's high in good fat."
@@ -81,7 +81,7 @@ class FoodList {
       884);
   static var eggs = DietModel(
       "Eggs",
-      "155,1 calories",
+      "1 egg",
       "https://www.youtube.com/watch?v=qWAagS_MANg",
       "assets/diet/eggs.jpg",
       "Eggs are a great source of inexpensive protein. A large, hard-boiled egg has about 4.7 grams of fat,"
@@ -89,7 +89,7 @@ class FoodList {
       155);
   static var milk = DietModel(
       'Milk',
-      '42 calories',
+      '100ml',
       'https://www.youtube.com/watch?v=ydoK2QE65T0',
       'assets/diet/milk.jpg',
       "With hydrating water, muscle-healing protein, refuelling sugar and bone-healthy calcium in every glass,"
@@ -98,7 +98,7 @@ class FoodList {
       42);
   static var driedFruit = DietModel(
       "Dried Fruit",
-      "359,5 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=kjLWtgOpOL4",
       "assets/diet/driedFruit.jpg",
       "High in natural sugars, dried fruits (such as apricots, raisins and mango) give a concentrated source of carbohydrate,"
@@ -107,7 +107,7 @@ class FoodList {
       360);
   static var broccoli = DietModel(
       "Broccoli",
-      "35 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=OxLWJ3iZLyg",
       "assets/diet/broccoli.jpg",
       "With free-radical-busting antioxidants, digestion-promoting fibre, plus a whole army of vitamins and minerals,"
@@ -117,7 +117,7 @@ class FoodList {
       35);
   static var sweetPotatoes = DietModel(
       "Sweet potatoes",
-      "85,8 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=mo2mTQ6sQgc",
       "assets/diet/sweetPotatoes.jpg",
       "Mash, bake or make into pate – sweet potatoes are ultra versatile and are a healthier choice than regular potatoes,"
@@ -127,7 +127,7 @@ class FoodList {
       86);
   static var tomatoes = DietModel(
       "Tomatoes",
-      "17,7 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=48DD3kekP3E",
       "assets/diet/tomatoes.jpg",
       "As well as being loaded with vitamin C, tomatoes contain a powerful antioxidant called lycopene, which gives the fruit their"
@@ -136,7 +136,7 @@ class FoodList {
       17);
   static var bananas = DietModel(
       "Bananas",
-      "88,7 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=uUv3cby4yMI",
       "assets/diet/bananas.webp",
       "Bananas are the perfect fitness food compact, unfussy, soft to chew, and packed with nutrients. "
@@ -145,7 +145,7 @@ class FoodList {
       89);
   static var brazilNuts = DietModel(
       "Brazil nuts",
-      "655,6 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=2OjtLJ95xys",
       "assets/diet/brazilNuts.jpg",
       "All nuts are packed with vitamins, minerals and fibre, but Brazil nuts are also one of the few good sources of selenium,"
@@ -154,7 +154,7 @@ class FoodList {
       656);
   static var blueberries = DietModel(
       "Blueberries",
-      "57,4 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=-ZXaUBDSiAQ",
       "assets/diet/blueberries.jpg",
       "Blueberries earned their ‘superfood’ status a few years ago, thanks to their high level of free-radical-beating antioxidants. "
@@ -163,14 +163,14 @@ class FoodList {
       58);
   static var salmon = DietModel(
       "Salmon",
-      "208,2 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=b0ahREpQqsM",
       "assets/diet/salmon.jpg",
       "Salmon is a good source of Omega 3, a fatty acid that’s believed to keep your heart healthy and slow down the effects of memory loss.",
       208);
   static var cocoa = DietModel(
       "Cocoa",
-      "227,5 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=pn-W0DVQw8Y",
       "assets/diet/cocoa.jpg",
       "Cocoa is especially nutritious, rich in magnesium, antioxidants and amino acids."
@@ -180,7 +180,7 @@ class FoodList {
 
   static var artichokes = DietModel(
       "Artichokes",
-      "47,1 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=ygyzb8BQ0Ec",
       "assets/diet/artichokes.jpg",
       "Ghrelin is your body hormone, which is suppressed when your stomach is full, so eating satiating high-fiber and high-protein foods is a no-brainer. "
@@ -191,7 +191,7 @@ class FoodList {
       47);
   static var carrots = DietModel(
       "Carrots",
-      "41 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=xoQX8qdq1x4",
       "assets/diet/carrots.jpg",
       "Carrots are an excellent source of vitamin A, vitamin C, vitamin K, potassium, and fiber, and thats just the tip of the nutritional iceberg."
@@ -203,7 +203,7 @@ class FoodList {
       41);
   static var pickles = DietModel(
       "Pickles",
-      "10,5 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=LBvr0K-6NIY",
       "assets/diet/Pickles.jpg",
       "Pickles are low-cal, filled with fiber and covered in vinegar—which is all good news for your waistline."
@@ -217,7 +217,7 @@ class FoodList {
       10);
   static var onions = DietModel(
       "Onions",
-      "39,7 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=6WPCNqUy9ls",
       "assets/diet/onions.jpg",
       "Onions are rich in quercetin, a flavonoid that increases blood flow and activates a protein in the body that helps regulate glucose levels, torches stored fat and keeps new fat cells from forming. "
@@ -229,7 +229,7 @@ class FoodList {
       40);
   static var mushrooms = DietModel(
       "Mushrooms",
-      "22,2 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=ktrwSUhWDDE",
       "assets/diet/mushrooms.jpg",
       "Mushrooms are considered health food all-stars because they are a great source of potassium,"
@@ -241,7 +241,7 @@ class FoodList {
       22);
   static var eggPlant = DietModel(
       "Eggplant",
-      "24,9 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=5dxoqb_r1Nc",
       "assets/diet/eggPlant.jpg",
       "According to a review published in the journal Molecular Nutrition & Food Research anthocyanins,"
@@ -252,7 +252,7 @@ class FoodList {
       25);
   static var spirulina = DietModel(
       "Spirulina",
-      "289,9 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=4SkowTSjkQc",
       "assets/diet/spirulina.jpg",
       "Spirulina is a high-protein seaweed supplement thats typically dried and sold in powdered form. "
@@ -264,7 +264,7 @@ class FoodList {
       290);
   static var avocado = DietModel(
       "Avocado",
-      "160,1 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=FMGArdg4-pY",
       "assets/diet/avocado.jpg",
       "Though somewhat villainized for being high in calories, avocados are more than worthy of a role in your diet. "
@@ -279,7 +279,7 @@ class FoodList {
       161);
   static var blackSapote = DietModel(
       "Black Sapote",
-      "134 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=nMFEOPOdsyw",
       "assets/diet/blackSapote.jpg",
       "Known as the chocolate pudding fruit, black sapote tastes like … chocolate pudding. No wonder its an Eat This,Not That! "
@@ -290,7 +290,7 @@ class FoodList {
       134);
   static var kiwi = DietModel(
       "Kiwi",
-      "60,9 calories",
+      "100 gram",
       "https://www.youtube.com/watch?v=mbullSpkKSY",
       "assets/diet/kiwi.jpg",
       "Backed up and bloated? Snack on kiwi. The green fruit can help you get in tip-top shape thanks to its ability to aid digestion."

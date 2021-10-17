@@ -13,6 +13,7 @@ ExerciseModel _$ExerciseModelFromJson(Map<String, dynamic> json) =>
       json['videoPath'] as String,
       json['thumbnailPath'] as String,
       json['details'] as String,
+      json['calories'] as int,
     );
 
 Map<String, dynamic> _$ExerciseModelToJson(ExerciseModel instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$ExerciseModelToJson(ExerciseModel instance) =>
       'videoPath': instance.videoPath,
       'thumbnailPath': instance.thumbnailPath,
       'details': instance.details,
+      'calories': instance.calories,
     };

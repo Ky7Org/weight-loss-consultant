@@ -56,6 +56,8 @@ class _CustomerAddDietScreenState extends State<CustomerAddDietScreen> {
   Widget _buildItemWidget(DietModel model) {
     Widget widget = GestureDetector(
       onTap: () {
+        user.userTodayDiet.add(model);
+        saveAccount();
         CustomToast.makeToast("Add successfully");
       },
       child: Container(
@@ -85,7 +87,7 @@ class _CustomerAddDietScreenState extends State<CustomerAddDietScreen> {
                       ),
                       const SizedBox(height: 10,),
                       Text(
-                        model.unit,
+                        "${model.calories} kcal",
                         style: const TextStyle(
                             color: Colors.grey
                         ),

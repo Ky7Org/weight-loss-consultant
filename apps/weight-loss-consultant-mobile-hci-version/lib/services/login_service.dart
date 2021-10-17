@@ -1,5 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/example_data/exercise_data.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/example_data/food_data.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/exercise_model.dart';
 import 'dart:convert';
 
 import 'package:weight_loss_consultant_mobile_hci_version/services/customer_schedule_service.dart';
@@ -44,6 +48,25 @@ class LoginService {
         today.subtract(const Duration(days: 3)) : 2830
       },
     ];
+    List<DietModel> userTodayDiet = [
+      FoodList.wholeGrainCereal,
+      FoodList.blackBeanBurger,
+      FoodList.blueberries,
+      FoodList.energyBar,
+      FoodList.eggs,
+      FoodList.fish,
+      FoodList.grilledChicken,
+      FoodList.tomatoes,
+      FoodList.spirulina
+    ];
+
+    List<ExerciseModel> userTodayExercise = [
+      ExerciseList.calfStretchLeft,
+      ExerciseList.tricpesStretchRight,
+      ExerciseList.armCirclesCounterClockwise,
+      ExerciseList.sideLyingFloorStretchLeft,
+    ];
+
     if (email == "banhsbao@gmail.com") {
       AccountModel model = AccountModel(email: "banhsbao@gmail.com",
           fullname: "BanhsBao",
@@ -55,6 +78,9 @@ class LoginService {
           scheduleModel: service.generateDefaultSchedule(today, today.add(Duration(days: 3 * 30))),
           weightHistory: weightHistory,
           calHistory: dietHistory,
+          userTodayDiet: userTodayDiet,
+          userTodayExercise: userTodayExercise,
+          dailyCalorieGoal: 2119
       );
       prefs.setString("ACCOUNT", jsonEncode(model.toJson()));
       return model;
@@ -64,6 +90,9 @@ class LoginService {
         scheduleModel: service.generateDefaultSchedule(today, today.add(Duration(days: 3 * 30))),
         weightHistory: weightHistory,
         calHistory: dietHistory,
+        userTodayDiet: userTodayDiet,
+        userTodayExercise: userTodayExercise,
+        dailyCalorieGoal: 2119
     );
     prefs.setString("ACCOUNT", jsonEncode(model.toJson()));
     return model;

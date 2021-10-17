@@ -28,6 +28,9 @@ class AccountModel {
   List<Map<DateTime, int>> calHistory = [];
   List<DietModel> userCustomDietModelList = [];
   List<ExerciseModel> userCustomExerciseModelList = [];
+  List<DietModel> userTodayDiet = [];
+  List<ExerciseModel> userTodayExercise = [];
+  int dailyCalorieGoal = 0;
 
   AccountModel(
       {required this.email,
@@ -45,6 +48,9 @@ class AccountModel {
       this.weightGoal = 0,
       this.weightHistory = const [],
       this.calHistory = const [],
+      this.userTodayDiet = const [],
+      this.userTodayExercise = const [],
+      this.dailyCalorieGoal = 0,
       });
 
   factory AccountModel.fromJson(Map<String,dynamic> data) => _$AccountModelFromJson(data);
@@ -64,5 +70,17 @@ class AccountModel {
   int getAverageCal(){
     if (calHistory.isEmpty) return 0;
     return (calHistory.map((history) => history.values.first).reduce((a, b) => a + b) / calHistory.length).round();
+  }
+
+  int getTodayKcal(){
+    int dietCalorie = 0;
+    int exerciseCalorie = 0;
+    if (userTodayDiet.isNotEmpty){
+      dietCalorie = userTodayDiet.map((e) => e.calories).toList().reduce((a,b) => a+b);
+    }
+    if (userTodayExercise.isNotEmpty){
+      exerciseCalorie = userTodayExercise.map((e) => e.calories).toList().reduce((a,b) => a+b);
+    }
+    return dietCalorie - exerciseCalorie;
   }
 }

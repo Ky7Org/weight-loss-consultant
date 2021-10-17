@@ -20,7 +20,6 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
 
   List<ExerciseModel> _exercises = List.empty(growable: true);
   AccountModel user = AccountModel(email: "", fullname: "");
-  static final ExerciseService _exerciseService = new ExerciseService();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -59,7 +58,7 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
             decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
+                  colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
                   image: NetworkImage("https://images.unsplash.com/photo-1598632640487-6ea4a4e8b963?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1738&q=80"),
                 )
             ),

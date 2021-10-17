@@ -2,14 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/customer_appbar.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/customer_drawer.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/components/expandable_fab.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/example_data/exercise_data.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/example_data/food_data.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/exercise_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -43,7 +41,10 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
   @override
   void initState() {
     super.initState();
-    initAccount();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount();
+      setState(() {});
+    });
   }
 
   @override
@@ -66,10 +67,9 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
           width: double.infinity,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              image: DecorationImage(
+              image: const DecorationImage(
                 fit: BoxFit.cover,
-                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(1), BlendMode.dstATop),
-                image: NetworkImage("https://images.unsplash.com/photo-1615911217285-a44fb0b6e324?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1740&q=80"),
+                image: AssetImage("assets/images/gym.jpeg"),
               )
           ),
           child: const Center(
@@ -102,10 +102,9 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
           width: double.infinity,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              image: DecorationImage(
+              image: const DecorationImage(
                 fit: BoxFit.cover,
-                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(1), BlendMode.dstATop),
-                image: NetworkImage("https://images.unsplash.com/photo-1542866789-bb9c9d086a5d?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Njl8fGZvb2R8ZW58MHwwfDB8YmxhY2t8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
+                image: AssetImage("assets/images/food.jpeg")
               )
           ),
           child: const Center(
@@ -138,13 +137,12 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
           width: double.infinity,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              image: DecorationImage(
+              image: const DecorationImage(
                 fit: BoxFit.cover,
-                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(1), BlendMode.dstATop),
-                image: NetworkImage("https://images.unsplash.com/photo-1510936111840-65e151ad71bb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1780&q=80"),
+                image: AssetImage("assets/images/note.jpg"),
               )
           ),
-          child: Center(
+          child: const Center(
             child: Text('Your report',
               style: TextStyle(
                   color: Colors.white,
@@ -159,7 +157,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
   }
 
   Widget _buildProgressBar(){
-    return Container(
+    return SizedBox(
       height: 200,
       child: SfRadialGauge(
           axes: <RadialAxis>[
@@ -175,17 +173,17 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                     widget: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text(
-                          "2,119",
-                          style: TextStyle(
+                          (user.dailyCalorieGoal - user.getTodayKcal()).toString(),
+                          style: const TextStyle(
                               fontSize: 17,
                             color: Colors.white,
                             fontWeight: FontWeight.w900
                           ),
                         ),
-                          SizedBox(height: 5,),
-                          Text(
+                          const SizedBox(height: 5,),
+                          const Text(
                             "kcal \n Remaining",
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -197,9 +195,9 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                       ),
                     ))
               ],
-              pointers: const [
+              pointers: [
                 RangePointer(
-                  value: 40,
+                  value: (user.getTodayKcal() * 100 / user.dailyCalorieGoal),
                   cornerStyle: CornerStyle.bothCurve,
                   width: 0.2,
                   sizeUnit: GaugeSizeUnit.factor,
@@ -220,7 +218,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
   Widget _buildYourProgress(){
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 30),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Color(0xFF478DE0),
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
       ),
@@ -240,15 +238,15 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Column(
-                children: const [
-                  Text("675",
-                    style: TextStyle(
+                children: [
+                  Text(user.getTodayKcal().toString(),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 30,
                       fontWeight: FontWeight.w700
                     ),
                   ),
-                  Text("today kcal",
+                  const Text("today kcal",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -258,15 +256,16 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                 ],
               ),
               Column(
-                children: const [
-                  Text("2,119",
-                    style: TextStyle(
+                children: [
+                  Text(
+                    user.dailyCalorieGoal.toString(),
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 30,
                         fontWeight: FontWeight.w700
                     ),
                   ),
-                  Text("Daily kcal Goal",
+                  const Text("Daily kcal Goal",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -466,25 +465,37 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
 
   List<Widget> _getCustomerTodayExerciseList(){
     List<Widget> result = List.empty(growable: true);
-    for (int i = 0; i < 5; i ++){
-      Widget widget = Container(
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        child: Row(children: [
-          const SizedBox(width: 20,),
-          SizedBox(
-            width: 150,
-            child: Text(
-              ExerciseList.listExercise[i].name,
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-              )
-            ),
-          ),
-          const Spacer(),
-          Text(ExerciseList.listExercise[i].unit),
-          const SizedBox(width: 20,)
-        ])
+    for (int i = 0; i < user.userTodayExercise.length ; i++){
+      ExerciseModel model = user.userTodayExercise[i];
+      Widget widget = Dismissible(
+          key: UniqueKey(),
+          onDismissed: (direction) {
+            // Remove the item from the data source.
+            setState(() {
+              user.userTodayExercise.removeAt(i);
+              saveAccount();
+            });
+          },
+          background: Container(color: Colors.red),
+          child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Row(children: [
+                const SizedBox(width: 20,),
+                SizedBox(
+                  width: 150,
+                  child: Text(
+                      model.name,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      )
+                  ),
+                ),
+                const Spacer(),
+                Text("${model.calories} kcal"),
+                const SizedBox(width: 20,)
+              ])
+          )
       );
       result.add(widget);
     };
@@ -493,15 +504,26 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
 
   List<Widget> _getCustomerTodayDietList(){
     List<Widget> result = List.empty(growable: true);
-    for (int i = 0; i < 5; i ++){
-      Widget widget = Container(
+    for (int i = 0; i < user.userTodayDiet.length ; i++){
+      DietModel model = user.userTodayDiet[i];
+      Widget widget = Dismissible(
+          key: UniqueKey(),
+          onDismissed: (direction) {
+            // Remove the item from the data source.
+            setState(() {
+              user.userTodayDiet.removeAt(i);
+              saveAccount();
+            });
+          },
+          background: Container(color: Colors.red),
+          child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Row(children: [
             const SizedBox(width: 20,),
             SizedBox(
-              width: 150,
+              width: 200,
               child: Text(
-                  FoodList.listFood[i].name,
+                  model.name,
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w500,
@@ -509,10 +531,12 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
               ),
             ),
             const Spacer(),
-            Text(FoodList.listFood[i].unit),
+            Text("${model.calories} kcal"),
             const SizedBox(width: 20,)
           ])
+      )
       );
+
       result.add(widget);
     };
     return result;
@@ -547,7 +571,12 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                     child: IconButton(
                         padding: EdgeInsets.zero,
                         onPressed: (){
-                          Navigator.pushNamed(context, RoutePath.customerAddWorkoutScreen);
+                          Navigator.pushNamed(context, RoutePath.customerAddWorkoutScreen).then((value) {
+                            initAccount();
+                            setState(() {
+
+                            });
+                          });
                         },
                         icon: const Icon(Icons.add)
                     ),
@@ -594,7 +623,12 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                         child: IconButton(
                             padding: EdgeInsets.zero,
                             onPressed: (){
-                              Navigator.pushNamed(context, RoutePath.customerAddDietScreen);
+                              Navigator.pushNamed(context, RoutePath.customerAddDietScreen).then((value) {
+                                initAccount();
+                                setState(() {
+
+                                });
+                              });
                             },
                             icon: const Icon(Icons.add)
                         ),
@@ -612,6 +646,38 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
     );
   }
 
+  Widget _buildWarning(){
+    String message = "Warning: you have exceeded today goal";
+    Widget widget = Container();
+    if (user.getTodayKcal() > user.dailyCalorieGoal){
+      widget = Container(
+        height: 50,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        color: Colors.redAccent,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.warning_amber_outlined,
+              color: Colors.white,
+            ),
+            const SizedBox(width: 10,),
+            Text(
+                message,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600
+                )
+            )
+
+          ],
+        ),
+      );
+    }
+    return widget;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -623,33 +689,39 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
         drawer: CustomerDrawer.builder(context, user.fullname, Image.asset("assets/images/miku.png")),
         appBar: CustomerAppbar.builder("HOME PAGE"),
         floatingActionButton: _buildFabExpandable(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildYourProgress(),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(width: double.infinity,),
-                    _buildBalanceDietCard(),
-                    const SizedBox(height: 10,),
-                    _buildWorkoutListCard(),
-                    const SizedBox(height: 10,),
-                    _buildDietListCard(),
-                    const SizedBox(height: 20,),
-                    _buildTodayExerciseCard(),
-                    const SizedBox(height: 20,),
-                    _buildTodayDietCard(),
-                    const SizedBox(height: 20,),
-                    _buildYourReportCard(),
-                  ],
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+              children: [
+                SizedBox(height: user.getTodayKcal() > user.dailyCalorieGoal ? 50 : 0,),
+                _buildYourProgress(),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(width: double.infinity,),
+                      _buildBalanceDietCard(),
+                      const SizedBox(height: 10,),
+                      _buildWorkoutListCard(),
+                      const SizedBox(height: 10,),
+                      _buildDietListCard(),
+                      const SizedBox(height: 20,),
+                      _buildTodayExerciseCard(),
+                      const SizedBox(height: 20,),
+                      _buildTodayDietCard(),
+                      const SizedBox(height: 20,),
+                      _buildYourReportCard(),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
           ),
+            ),
+            _buildWarning(),
+          ],
         ),
       ),
     );

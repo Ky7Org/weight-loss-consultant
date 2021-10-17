@@ -261,9 +261,7 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
   Widget _buildLegend(){
     return Card(
       child: Container(
-        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-        height: 150,
-        width: 350,
+        padding: const EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 20),
         child: Column(
           children: [
             Text(
@@ -276,7 +274,7 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
             ),
             const SizedBox(height: 20,),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Column(children: [
                   Container(
@@ -293,6 +291,12 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Text(
+                    "0 kcal",
+                    style: TextStyle(
+                      fontSize: 15,
                     ),
                   )
                 ],),
@@ -312,6 +316,12 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
+                  ),
+                  const Text(
+                    "500 kcal",
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
                   )
                 ],),
                 Column(children: [
@@ -330,6 +340,12 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
+                  ),
+                  const Text(
+                    "700 kcal",
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
                   )
                 ],),
                 Column(children: [
@@ -347,6 +363,12 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Text(
+                    "900 cal",
+                    style: TextStyle(
+                      fontSize: 15,
                     ),
                   )
                 ],),

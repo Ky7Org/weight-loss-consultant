@@ -9,14 +9,15 @@ class ExerciseModel{
   String videoPath;
   String thumbnailPath;
   String details;
+  int calories;
 
 
   ExerciseModel(
-      this.name, this.unit, this.videoPath, this.thumbnailPath, this.details);
+      this.name, this.unit, this.videoPath, this.thumbnailPath, this.details, this.calories);
 
   @override
   String toString() {
-    return "{name: $name; unit: $unit; videoPath: $videoPath; thumbnailPath: $thumbnailPath; details: $details}";
+    return "{name: $name; unit: $unit; videoPath: $videoPath; thumbnailPath: $thumbnailPath; details: $details; calories: $calories}";
   }
 
   factory ExerciseModel.fromJson(Map<String,dynamic> data) => _$ExerciseModelFromJson(data);
