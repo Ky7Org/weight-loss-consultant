@@ -46,17 +46,15 @@ export class SortingAndFilteringService {
       }
       default: {
         const result = await this.adminRepository.createQueryBuilder("admin")
-          .where("admin.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
-          .andWhere("admin.fullname like :fullname", {fullname : `%${searchValue}%`})
-          .orWhere("admin.email like :email", {email: `%${searchValue}%`})
+          .where("admin.gender = :gender AND (admin.fullname like :fullname)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, fullname : `%${searchValue}%`})
+          .orWhere("admin.gender = :gender AND (admin.email like :email)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, email: `%${searchValue}%`})
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
           .getMany()
         const totalCount = await this.adminRepository.createQueryBuilder("admin")
-          .where("admin.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
-          .andWhere("admin.fullname like :fullname", {fullname : `%${searchValue}%`})
-          .orWhere("admin.email like :email", {email: `%${searchValue}%`})
+          .where("admin.gender = :gender AND (admin.fullname like :fullname)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, fullname : `%${searchValue}%`})
+          .orWhere("admin.gender = :gender AND (admin.email like :email)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, email: `%${searchValue}%`})
           .getCount();
         const res = await this.mappingResultPaginate(totalCount, page, limit, result);
         return res;
@@ -88,18 +86,16 @@ export class SortingAndFilteringService {
       default: {
         const result = await this.trainerRepository.createQueryBuilder("trainer")
           .leftJoinAndSelect("trainer.packages", "package")
-          .where("trainer.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
-          .andWhere("trainer.fullname like :fullname", {fullname : `%${searchValue}%`})
-          .orWhere("trainer.email like :email", {email: `%${searchValue}%`})
+          .where("trainer.gender = :gender AND (trainer.fullname like :fullname)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, fullname : `%${searchValue}%`})
+          .orWhere("trainer.gender = :gender AND (trainer.email like :email)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, email: `%${searchValue}%`})
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
           .getMany()
         const totalCount = await this.trainerRepository.createQueryBuilder("trainer")
-          .where("trainer.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
-          .andWhere("trainer.fullname like :fullname", {fullname : `%${searchValue}%`})
-          .orWhere("trainer.email like :email", {email: `%${searchValue}%`})
           .leftJoinAndSelect("trainer.packages", "package")
+          .where("trainer.gender = :gender AND (trainer.fullname like :fullname)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, fullname : `%${searchValue}%`})
+          .orWhere("trainer.gender = :gender AND (trainer.email like :email)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, email: `%${searchValue}%`})
           .getCount();
         const res = await this.mappingResultPaginate(totalCount, page, limit, result);
         return res;
@@ -129,18 +125,16 @@ export class SortingAndFilteringService {
       }
       default: {
         const result = await this.customerRepository.createQueryBuilder("customer")
-          .where("customer.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
-          .andWhere("customer.fullname like :fullname", {fullname : `%${searchValue}%`})
-          .orWhere("customer.email like :email", {email: `%${searchValue}%`})
+          .where("customer.gender = :gender AND (customer.fullname like :fullname)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, fullname : `%${searchValue}%`})
+          .orWhere("customer.gender = :gender AND (customer.email like :email)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, email: `%${searchValue}%`})
           .leftJoinAndSelect("customer.campaigns", "campaign")
           .orderBy(sortBy, order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(limit)
           .getMany()
         const totalCount = await this.customerRepository.createQueryBuilder("customer")
-          .where("customer.gender = :gender", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE})
-          .andWhere("customer.fullname like :fullname", {fullname : `%${searchValue}%`})
-          .orWhere("customer.email like :email", {email: `%${searchValue}%`})
+          .where("customer.gender = :gender AND (customer.fullname like :fullname)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, fullname : `%${searchValue}%`})
+          .orWhere("customer.gender = :gender AND (customer.email like :email)", {gender: genderFilter === "1" ? Gender.MALE : Gender.FEMALE, email: `%${searchValue}%`})
           .leftJoinAndSelect("customer.campaigns", "campaign")
           .getCount();
         const res = await this.mappingResultPaginate(totalCount, page, limit, result);
