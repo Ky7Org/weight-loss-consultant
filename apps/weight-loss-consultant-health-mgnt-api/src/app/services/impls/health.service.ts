@@ -39,7 +39,7 @@ export class HealthInfoService extends BaseService<HeathInfoEntity, HealthReposi
       throw new NotFoundException(`Not found customer with email: ${customerEmail}`)
     }
     const existHealthInfo = await this.viewDetail(dto.id);
-    if (existHealthInfo.length === 0) {
+    if (existHealthInfo) {
       throw new NotFoundException(`Not found health info with id: ${id}`)
     }
     const entity: HeathInfoEntity = await HealthInfoMapper.mapUpdateHealthDtoToEntity(dto, cust);
@@ -49,19 +49,18 @@ export class HealthInfoService extends BaseService<HeathInfoEntity, HealthReposi
 
   async delete(id): Promise<DeleteResult> {
     const existHealthInfo = await this.viewDetail(id);
-    if (existHealthInfo.length === 0) {
+    if (existHealthInfo) {
       throw new NotFoundException(`Not found health info with id: ${id}`)
     }
     return await this.repository.delete(id);
   }
 
-  async viewDetail(id): Promise<HeathInfoEntity[]> {
-    return await this.repository.find({
-      relations: ["customer"],
-      where: [{
-        id: `${id}`
-      }],
-    })
+  async viewDetail(id): Promise<HeathInfoEntity> {
+    const query = this.repository.createQueryBuilder("health")
+      .where("health.id = :id", {id: id})
+      .leftJoinAndSelect("health.customer", "campaign")
+      .getOne();
+    return query;
   }
 
   async getHealthInfoDetailsWithCustomer(): Promise<HeathInfoEntity[] | null> {

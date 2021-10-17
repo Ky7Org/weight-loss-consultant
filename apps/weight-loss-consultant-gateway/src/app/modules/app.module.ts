@@ -21,7 +21,6 @@ import { AdminModule } from './admin.module';
 import { CampaignModule } from './campaign.module';
 import { CustomerModule } from './customer.module';
 import { AuthenticationModule } from './auth.module';
-import { AppJwtModule } from '../auth/auth.module';
 import * as Joi from 'joi';
 import { ENV_FILE_PATH } from '../constant';
 import { SearchModule } from './search.module';
@@ -32,7 +31,6 @@ export class AppModule {
     return {
       module: AppModule,
       imports: [
-        AppJwtModule,
         TrainerModule,
         PackageModule,
         AdminModule,

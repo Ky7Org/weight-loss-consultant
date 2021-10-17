@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/constants/enums.dart';
 import 'package:weight_loss_consultant_mobile/constants/form_error_messages.dart';
+import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
-import 'package:weight_loss_consultant_mobile/services/login_service.dart';
-import 'package:weight_loss_consultant_mobile/utils/validator.dart';
-
+import 'package:weight_loss_consultant_mobile/services/authentication_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -28,6 +28,59 @@ class _LoginPageState extends State<LoginPage> {
     _passwordVisible = false;
   }
 
+  void _showLoginError() {
+    showDialog(
+        context: context,
+        builder: (ctx) => Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                SizedBox(
+                  height: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+                    child: Column(children: [
+                      const Center(
+                          child: Text(
+                        "Wrong email or password",
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                        ),
+                      )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      RaisedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        color: Colors.redAccent,
+                        child: const Text(
+                          'Okay',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ]),
+                  ),
+                ),
+                const Positioned(
+                    top: -35,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.redAccent,
+                      radius: 40,
+                      child: Icon(
+                        Icons.warning,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    )),
+              ],
+            )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +91,8 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(width: double.infinity),
-              Align(
+              const SizedBox(width: double.infinity),
+              const Align(
                 alignment: Alignment.topLeft,
                 child: Image(
                   image: AssetImage("assets/logo/app-logo.png"),
@@ -47,44 +100,43 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                 child: Align(
                     alignment: Alignment.topLeft,
-                    child: Container(
+                    child: SizedBox(
                       width: 200,
                       child: Text(
                         "Welcome back!",
                         style: TextStyle(
                             fontSize: 36,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.PRIMARY_WORD_COLOR
-                        ),
+                            color: AppColors.PRIMARY_WORD_COLOR),
                       ),
-                    )
-                ),
+                    )),
               ),
               Form(
                   key: _formKey,
                   child: Column(
                     children: [
                       Container(
-                        padding:
-                        EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                        margin:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 20),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 0),
                         decoration: BoxDecoration(
                             color: AppColors.INPUT_COLOR,
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
                           controller: _email,
                           validator: (email) {
-                            if (Validator.isEmailValid(email as String))
+                            /*if (Validator.isEmailValid(email as String))
                               return null;
                             else
-                              return FormErrorMessage.emailInvalid;
+                              return FormErrorMessage.emailInvalid;*/
                           },
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(fontSize: 30),
+                          style: const TextStyle(fontSize: 30),
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             border: InputBorder.none,
@@ -93,30 +145,32 @@ class _LoginPageState extends State<LoginPage> {
                                 fontSize: 15,
                                 color: AppColors.PRIMARY_WORD_COLOR,
                                 fontWeight: FontWeight.bold),
-                            errorStyle: TextStyle(height: 0.1),
+                            errorStyle: const TextStyle(height: 0.1),
                           ),
                         ),
                       ),
                       Container(
-                        padding:
-                        EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                        margin:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 20),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 0),
                         decoration: BoxDecoration(
                             color: AppColors.INPUT_COLOR,
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20))),
                         child: TextFormField(
-                          validator: (password){
-                            if (!password!.isEmpty)
+                          controller: _password,
+                          validator: (password) {
+                            if (password!.isNotEmpty) {
                               return null;
-                            else
+                            } else {
                               return FormErrorMessage.passwordInvalid;
+                            }
                           },
                           obscureText: !_passwordVisible,
                           enableSuggestions: false,
                           autocorrect: false,
-                          style: TextStyle(fontSize: 30),
+                          style: const TextStyle(fontSize: 30),
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
                               icon: Icon(
@@ -146,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                       Container(
                         height: 64,
                         width: double.infinity,
-                        margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                        margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
                         child: RaisedButton(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.0),
@@ -156,17 +210,37 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState?.save();
-                              LoginService service = LoginService(
-                                email: _email.text,
-                                password: _password.text,
-                              );
-                              dynamic result = await service.login();
-                              if (result != null) {
-                                Navigator.pushNamedAndRemoveUntil(context, RoutePath.customerHomePage, (route) => false);
+                              AuthenticationService service =
+                                  AuthenticationService();
+                              String email = _email.text;
+                              String password = _password.text;
+                              AccountModel? user =
+                                  await service.login(email, password);
+                              if (user == null) {
+                                _showLoginError();
+                                return;
+                              }
+                              if (user.status == AccountStatus.active.value) {
+                                if (user.role == Role.customer.value) {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      RoutePath.customerHomePage,
+                                      (route) => false);
+                                } else if (user.role == Role.trainer.value) {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      RoutePath.trainerHomePage,
+                                      (route) => false);
+                                } else {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      RoutePath.trainerHomePage,
+                                      (route) => false);
+                                }
                               }
                             }
                           },
-                          child: Text(
+                          child: const Text(
                             "Sign in",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -177,36 +251,40 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   )),
               InkWell(
-                  child: new Text(
-                      "Forget password?",
+                  child: Text(
+                    "Forget password?",
                     style: TextStyle(
-                      fontSize: 15,
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.bold
-                    ),
+                        fontSize: 15,
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.bold),
                   ),
                   onTap: () {
                     Navigator.pushNamed(context, RoutePath.recoverPasswordPage);
-                  }
-              ),
-              SizedBox(
+                  }),
+              const SizedBox(
                 height: 40,
               ),
-              Text(
-                  "Connect with your social account",
+              Text("Connect with your social account",
                   style: TextStyle(
-                      color: HexColor("#B6C5D1"),
-                  )
-              ),
-              SizedBox(
+                    color: HexColor("#B6C5D1"),
+                  )),
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset('assets/logo/google-logo.svg'),
-                  SizedBox(
-                    width: 40,
+                  Expanded(
+                    child: GestureDetector(
+                      child: SvgPicture.asset('assets/logo/google-logo.svg'),
+                      onTap: () async {
+                        AuthenticationService service = AuthenticationService();
+                        var user = await service.signInWithGoogle();
+                        if (user != null){
+                          Navigator.pushNamed(context, RoutePath.customerHomePage);
+                        }
+                      },
+                    ),
                   ),
                   SvgPicture.asset('assets/logo/facebook-logo.svg'),
                 ],

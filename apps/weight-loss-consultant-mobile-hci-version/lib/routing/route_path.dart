@@ -7,4 +7,18 @@ class RoutePath{
   static const String todayExerciseScreen = "/todayExercise";
   static const String todayDietScreen = "/todayDiet";
   static const String customerReportScreen = "/report";
+  static const String yourInformationScreen = "/yourInformation";
+  static const String yourGoalScreen = "/yourGoal";
+  static const String yourMethodScreen = '/yourMethod';
+  static const String customerCalendar = "/customerCalendar";
+  static const String customerTodoPage = "/customerTodo";
+  static const String yourAbilityPage = "/yourAbility";
+  static const String yourDailyDietGoalScreen = "/yourDailyDietGoal";
+  static const String yourWorkoutRoutineScreen = "/yourWorkoutRoutine";
+  static const String customerAddWorkoutScreen = "/customerAddWorkout";
+  static const String customerAddDietScreen = "/customerAddDiet";
+  static const String customerAddCustomActivity = "/addCustomActivity";
+  static const String customerAddCustomFood = "/addCustomFood";
+
+
 }

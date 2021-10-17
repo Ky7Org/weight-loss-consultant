@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weight_loss_consultant_mobile/constants/role_enum.dart';
+import 'package:weight_loss_consultant_mobile/constants/enums.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
@@ -18,7 +19,7 @@ class CustomerDetailPage extends StatefulWidget {
 
 class _CustomerDetailPageState extends State<CustomerDetailPage> {
   final _formKey = GlobalKey<FormState>();
-  AccountModel user = AccountModel(email: "", fullname: "", role: Role.undecided);
+  AccountModel user = AccountModel(email: "", fullname: "");
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -69,7 +70,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                     width: 40,
                   ),
                   Text(
-                    user.fullname,
+                    user.fullname ?? "",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
@@ -92,7 +93,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                       color: AppColors.PRIMARY_WORD_COLOR,
                     )),
                     TextSpan(
-                      text: 'SAI GON',
+                      text: user.address,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w900,
@@ -244,7 +245,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         height: 5,
                       ),
                       Text(
-                        '+1 456 876 323',
+                        user.phone ?? "",
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontSize: 17,
@@ -264,7 +265,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         height: 5,
                       ),
                       Text(
-                        user.email,
+                        user.email ?? "",
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontSize: 17,
@@ -284,7 +285,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         height: 5,
                       ),
                       Text(
-                        'Male',
+                        user.gender == "1" ? "male" : "female",
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontSize: 17,
@@ -304,7 +305,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         height: 5,
                       ),
                       Text(
-                        '23 August 1992',
+                        DateFormat("MMMM-dd-yyyy").format(DateTime.fromMicrosecondsSinceEpoch(int.parse(user.dob ?? ""))).toString(),
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontSize: 17,

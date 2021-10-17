@@ -20,7 +20,6 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
   Map<String, List<DietModel>> _todayDiets = {};
   AccountModel user = AccountModel(email: "", fullname: "");
 
-  static final DietService _dietService = DietService();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -41,7 +40,9 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value) {
-        _todayDiets = _dietService.getTodayDiet(user.level);
+        DateTime now = DateTime.now();
+        DateTime today = DateTime(now.year, now.month, now.day);
+        _todayDiets = user.scheduleModel!.data[today]!.dailyDietModel.dietMap;
       });
       setState(() {});
     });
@@ -86,7 +87,7 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
                   title: dietList[i].name,
                   descriptions: dietList[i].details,
                   img: Image(
-                    image: NetworkImage(dietList[i].thumbnailPath),
+                    image: AssetImage(dietList[i].thumbnailPath),
                   ),
                 );
               }
@@ -99,7 +100,7 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
                   const Icon(Icons.menu),
                   const SizedBox(width: 20,),
                   Image(
-                    image: NetworkImage(dietList[i].thumbnailPath),
+                    image: AssetImage(dietList[i].thumbnailPath),
                     height: 100,
                     width: 100,
                   ),
