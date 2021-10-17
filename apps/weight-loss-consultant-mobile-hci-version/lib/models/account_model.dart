@@ -83,4 +83,14 @@ class AccountModel {
     }
     return dietCalorie - exerciseCalorie;
   }
+
+  void addWeightHistory(Map<DateTime, int> newHistory){
+    for (Map<DateTime, int> history in weightHistory ){
+      if (history.entries.first.key.compareTo(newHistory.entries.first.key) == 0){
+        history[history.entries.first.key] = newHistory.entries.first.value;
+        return;
+      }
+    }
+    weightHistory.add(newHistory);
+  }
 }
