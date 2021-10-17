@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/toast.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/example_data/exercise_data.dart';
@@ -55,6 +54,8 @@ class _CustomerAddWorkoutScreenState extends State<CustomerAddWorkoutScreen> {
   Widget _buildItemWidget(ExerciseModel model) {
     Widget widget = GestureDetector(
       onTap: () {
+        user.userTodayExercise.add(model);
+        saveAccount();
         CustomToast.makeToast("Add successfully");
       },
       child: Container(
@@ -86,7 +87,7 @@ class _CustomerAddWorkoutScreenState extends State<CustomerAddWorkoutScreen> {
                   )),
             ),
             const Spacer(),
-            Text(model.unit),
+            Text("${model.calories.toString()} kcal"),
             const SizedBox(width: 20,)
 
           ])),
@@ -242,7 +243,7 @@ class _CustomerAddWorkoutScreenState extends State<CustomerAddWorkoutScreen> {
         key: globalKey,
         appBar: _buildAppBar(),
         backgroundColor: Colors.transparent,
-        floatingActionButton: Container(
+        floatingActionButton: SizedBox(
           width: 300.0,
           child: FloatingActionButton.extended(
             onPressed: (){
@@ -254,7 +255,7 @@ class _CustomerAddWorkoutScreenState extends State<CustomerAddWorkoutScreen> {
               });
             },
             icon: const Icon(Icons.add),
-            label: Text("ADD CUSTOM ACTIVITY"),
+            label: const Text("ADD CUSTOM ACTIVITY"),
 
           ),
         ),
@@ -275,7 +276,7 @@ class _CustomerAddWorkoutScreenState extends State<CustomerAddWorkoutScreen> {
             Flexible(
               child: searchresult.isNotEmpty || _controller.text.isNotEmpty ?
               _buildSearchList() : _buildAllList()),
-            SizedBox(height: 70,)
+            const SizedBox(height: 70,)
           ],
         ),
       ),

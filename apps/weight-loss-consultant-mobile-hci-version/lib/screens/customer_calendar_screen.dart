@@ -55,6 +55,8 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
         Padding(
           padding: const EdgeInsets.all(5),
           child: Container(
+              width: 30,
+              height: 30,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.white,
@@ -78,13 +80,18 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
     bool isToday = DateTime.now().day.toString() == day;
     return Container(
       child: Stack(children: [
-        Padding(
-          padding: const EdgeInsets.all(5),
-          child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: HexColor("#C4C4C4"),
-              )
+        Align(
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: HexColor("#C4C4C4"),
+                )
+            ),
           ),
         ),
         Center(
@@ -104,13 +111,18 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
     bool isToday = DateTime.now().day.toString() == day;
     return Container(
       child: Stack(children: [
-        Padding(
-          padding: const EdgeInsets.all(5),
-          child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: HexColor("#00AC63"),
-              )
+        Align(
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: HexColor("#00AC63"),
+                )
+            ),
           ),
         ),
         Center(
@@ -130,14 +142,19 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
     bool isToday = DateTime.now().day.toString() == day;
     return Container(
       child: Stack(children: [
-        Padding(
-          padding: const EdgeInsets.all(5),
-          child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: HexColor("#00A7DC"),
-              )
+        Align(
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: HexColor("#00A7DC"),
+                )
 
+            ),
           ),
         ),
         Center(
@@ -157,13 +174,18 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
     bool isToday = DateTime.now().day.toString() == day;
     return Container(
       child: Stack(children: [
-        Padding(
-          padding: const EdgeInsets.all(5),
-          child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: HexColor("#FAA61A"),
-              )
+        Align(
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: HexColor("#FAA61A"),
+                )
+            ),
           ),
         ),
         Center(
@@ -205,6 +227,128 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
     return _buildDefaultCell(details.date.day.toString());
   }
 
+  Widget _buildLegend(){
+    return Card(
+      child: Container(
+        padding: const EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 20),
+        child: Column(
+          children: [
+            Text(
+              "Exercise Intensity",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.grey.shade900,
+              ),
+            ),
+            const SizedBox(height: 20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(children: [
+                  Container(
+                    width: 30.0,
+                    height: 30.0,
+                    decoration: BoxDecoration(
+                      color: HexColor("#C4C4C4"),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(height: 5,),
+                  const Text(
+                    "Free",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Text(
+                    "0 kcal",
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  )
+                ],),
+                Column(children: [
+                  Container(
+                    width: 30.0,
+                    height: 30.0,
+                    decoration: BoxDecoration(
+                      color: HexColor("#00AC63"),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(height: 5,),
+                  const Text(
+                    "Light",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Text(
+                    "500 kcal",
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  )
+                ],),
+                Column(children: [
+                  Container(
+                    width: 30.0,
+                    height: 30.0,
+                    decoration: BoxDecoration(
+                      color: HexColor("#00A7DC"),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(height: 5,),
+                  const Text(
+                    "Medium",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Text(
+                    "700 kcal",
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  )
+                ],),
+                Column(children: [
+                  Container(
+                    width: 30.0,
+                    height: 30.0,
+                    decoration: BoxDecoration(
+                      color: HexColor("#FAA61A"),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(height: 5,),
+                  const Text(
+                    "Intense",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Text(
+                    "900 kcal",
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  )
+                ],),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -239,107 +383,15 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
                         showTrailingAndLeadingDates: false,
                     ),
                     onTap: (calendarTapDetails) {
-                      if (calendarTapDetails == null) return;
                       DateTime date = calendarTapDetails.date as DateTime;
                       Navigator.pushNamed(context, RoutePath.customerTodoPage, arguments: date);
                     },
                   ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                height: 200,
-                child: Column(
-                  children: [
-                    Text(
-                      "Exercise Intensity",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.grey.shade900,
-                      ),
-                    ),
-                    const SizedBox(height: 20,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(children: [
-                          Container(
-                            width: 30.0,
-                            height: 30.0,
-                            decoration: BoxDecoration(
-                              color: HexColor("#C4C4C4"),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(height: 5,),
-                          const Text(
-                            "Free",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ],),
-                        Column(children: [
-                          Container(
-                            width: 30.0,
-                            height: 30.0,
-                            decoration: BoxDecoration(
-                              color: HexColor("#00AC63"),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(height: 5,),
-                          const Text(
-                            "Light",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ],),
-                        Column(children: [
-                          Container(
-                            width: 30.0,
-                            height: 30.0,
-                            decoration: BoxDecoration(
-                              color: HexColor("#00A7DC"),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(height: 5,),
-                          const Text(
-                            "Medium",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ],),
-                        Column(children: [
-                          Container(
-                            width: 30.0,
-                            height: 30.0,
-                            decoration: BoxDecoration(
-                              color: HexColor("#FAA61A"),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(height: 5,),
-                          const Text(
-                            "Intense",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ],),
-                      ],
-                    )
-                  ],
-                ),
-              )
+              const SizedBox(height: 20,),
+              _buildLegend(),
+              const SizedBox(height: 100,),
             ],
           ),
         ),
