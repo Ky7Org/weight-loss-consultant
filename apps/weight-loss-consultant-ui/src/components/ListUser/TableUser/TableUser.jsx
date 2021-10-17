@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Button, Table, Row, Modal, Select, Tag, Card } from 'antd';
 import './TableUser.scss';
-import { Sorter } from '../../../utils/sorter';
+import { useEffect } from 'react';
+import Avatar from '@mui/material/Avatar';
 import { useSelector, useDispatch } from 'react-redux';
 import { filterActions } from '../../../states-manager/filter/filter-slice';
 import {
@@ -12,21 +13,61 @@ import {
 
 const TableUser = (props) => {
   const dispatch = useDispatch();
-  const [editableColumns, setEditableColumns] = useState([
-    'fullName',
+  const { dataEmpl } = props;
+  const { currentRole } = props;
+  const customerField = [
     'email',
-    'action',
+    'fullname',
+    'address',
     'phone',
     'gender',
     'status',
-  ]);
-  const { dataEmpl } = props;
+    'dob',
+    'action',
+  ];
+  const adminField = [
+    'email',
+    'fullname',
+    'address',
+    'phone',
+    'gender',
+    'status',
+    'dob',
+    'action',
+  ];
+  const trainerField = [
+    'email',
+    'fullname',
+    'address',
+    'phone',
+    'gender',
+    'status',
+    'dob',
+    'yearOfExp',
+    'rating',
+    'action',
+  ];
+  const [editableColumns, setEditableColumns] = useState([]);
+  useEffect(() => {
+    if (currentRole === 'trainer') {
+      setEditableColumns(trainerField);
+    } else if (currentRole === 'customer') {
+      setEditableColumns(customerField);
+    } else if (currentRole === 'admin') {
+      setEditableColumns(adminField);
+    }
+  }, [currentRole]);
+
+  const [isModalShown, setIsModalShown] = useState(false);
   const { RawDataOutput } = props;
   const [dataFilter, setDataFilter] = useState(RawDataOutput);
+  const [modalOptions, setModalOptions] = useState(
+    editableColumns.slice(0, editableColumns.length - 1)
+  );
   const defaultColumns = [
     {
       title: 'Full Name',
-      dataIndex: 'fullName',
+      dataIndex: 'fullname',
       key: 'id',
       render(text, row) {
         return (
@@ -34,6 +75,14 @@ const TableUser = (props) => {
             {row?.fullname}
           </div>
         );
+      },
+    },
+    {
+      title: 'Avatar',
+      dataIndex: 'profileImage',
+      key: 'id',
+      render(text, row) {
+        return <Avatar alt="Remy Sharp" src={row?.profileImage} />;
       },
     },
     {
@@ -77,6 +126,14 @@ const TableUser = (props) => {
       },
     },
     {
+      title: 'yearOfExp',
+      dataIndex: 'yearOfExp',
+      key: 'id',
+      render(text, row) {
+        return <>{row?.yearOfExp}</>;
+      },
+    },
+    {
       title: 'Status',
       dataIndex: 'status',
       key: 'id',
@@ -115,9 +172,22 @@ const TableUser = (props) => {
       },
     },
     {
+      title: 'Rating',
+      dataIndex: 'rating',
+      key: 'id',
+      render(text, row) {
+        return <>{row?.rating}</>;
+      },
+    },
+    {
       title: (
-        <Row justify="end" xs={{ span: 1 }}>
-          <p>Edit profile</p>
+        <Row justify="end">
+          <Button
+            className="secondary-button-outlined"
+            onClick={() => setIsModalShown(true)}
+          >
+            Edit Column
+          </Button>
         </Row>
       ),
       dataIndex: 'action',
@@ -148,8 +218,16 @@ const TableUser = (props) => {
   }, [editableColumns]);
   const handleOnChangePaging = (input) => {
     setDataFilter({ ...dataFilter, page: input });
-    console.log(dataFilter);
     dispatch(filterActions.saveObjectFilter(dataFilter));
+  };
+  const handleConfirmModal = () => {
+    setEditableColumns([...modalOptions, 'action']);
+    setIsModalShown(false);
+  };
+
+  const handleCancelModal = () => {
+    setIsModalShown(false);
+    setModalOptions(editableColumns.slice(0, editableColumns.length - 1));
   };
   return (
     <div className="Container">
@@ -160,15 +238,36 @@ const TableUser = (props) => {
           columns={columns}
           rowKey="email"
           responsive={true}
-          pagination={{
-            onChange: handleOnChangePaging,
-            showTotal: (total) => `${'Total'} ${total} ${'items'}`,
-            total: 0,
-            responsive: true,
-          }}
-          scroll={{ x: 700, y: 700 }}
+          pagination={false}
+          scroll={{ x: 700, y: 400 }}
         />
       </Card>
+      <Modal
+        maskClosable={false}
+        title="Edit Columns"
+        visible={isModalShown}
+        onCancel={handleCancelModal}
+        onOk={handleConfirmModal}
+      >
+        <Select
+          mode="multiple"
+          defaultValue={editableColumns.slice(0, editableColumns.length - 1)}
+          value={modalOptions}
+          style={{ width: '100%' }}
+          onChange={(values) => setModalOptions(values)}
+        >
+          {defaultColumns.slice(0, defaultColumns.length - 1).map((column) => (
+            <Select.Option
+              key={column.dataIndex}
+              disabled={['fullName', 'email', 'status', 'action'].includes(
+                column.dataIndex
+              )}
+            >
+              {column.title}
+            </Select.Option>
+          ))}
+        </Select>
+      </Modal>
     </div>
   );
 };

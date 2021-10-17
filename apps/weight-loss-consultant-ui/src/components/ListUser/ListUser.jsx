@@ -1,16 +1,25 @@
 import { useHistory, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { Row, Col, Spin, Collapse, Radio, Select, Button } from 'antd';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import {
+  Row,
+  Col,
+  Spin,
+  Collapse,
+  Radio,
+  Select,
+  Button,
+  Pagination,
+} from 'antd';
 import { getUserAPI } from '../../services/admin';
 import TableUser from './TableUser/TableUser';
 import Search from 'antd/lib/input/Search';
 import Paper from '@mui/material/Paper';
 import { FilterOutlined } from '@ant-design/icons';
+import { debounce } from 'debounce';
 const { Panel } = Collapse;
 const { Option } = Select;
 const ListUser = () => {
   const [dataEmpl, setDataEmpl] = useState([]);
-  const [currentGender, setCurrentGender] = useState(['1']);
   const [loading, setLoading] = useState(false);
   const [isButtonDownDisabled] = useState(false);
   const [messageError] = useState(null);
@@ -20,13 +29,13 @@ const ListUser = () => {
     location.pathname.lastIndexOf('/') + 1
   );
   const [dataFilter, setDataFilter] = useState({
-    roleFilter: '1',
-    genderFilter: 'Male',
-    page: 1,
+    roleFilter: 'customer',
     limit: 10,
+    order: 'ASC',
     sortBy: '',
-    order: '',
+    page: 1,
     searchValue: '',
+    genderFilter: '',
   });
   const [listSortBy, setListSortBy] = useState(['email', 'fullname']);
   const fetchAPIGetUser = (input) => {
@@ -34,9 +43,12 @@ const ListUser = () => {
     setLoading(true);
     api
       .then(({ data }) => {
+        console.log(data);
+        if (listSortBy.length < 3) {
+          setListSortBy(Object.keys(data.data[1]));
+        }
         setDataEmpl(data);
       })
-
       .finally((x) => {
         setLoading(false);
       });
@@ -49,11 +61,16 @@ const ListUser = () => {
   const onNavigation = (id) => {
     history.push(`/admin/user/update/${id}`);
   };
-  const handleSearch = (value) => {
-    console.log(value);
+  const searchInDebount = useCallback(
+    debounce((value) => fetchAPIGetUser(value), [500])
+  );
+  const handleSearch = (e) => {
+    setDataFilter({ ...dataFilter, searchValue: e.target.value });
+    searchInDebount(dataFilter);
   };
-  const handleClickFilter = () => {
-    console.log('Clicked');
+  const handleSearchEnter = (value) => {
+    setDataFilter({ ...dataFilter, searchValue: value });
+    searchInDebount(dataFilter);
   };
   const genExtra = () => (
     <FilterOutlined
@@ -72,6 +89,25 @@ const ListUser = () => {
   const handleChangeSortBy = (value) => {
     setDataFilter({ ...dataFilter, sortBy: value });
   };
+  const handleClearFilter = () => {
+    setDataFilter({
+      roleFilter: 'customer',
+      limit: 10,
+      order: 'ASC',
+      sortBy: '',
+      page: 1,
+      searchValue: '',
+      genderFilter: '',
+    });
+    fetchAPIGetUser(dataFilter);
+  };
+  const handleFillterButton = () => {
+    fetchAPIGetUser(dataFilter);
+  };
+  const handeOnChangePage = (value) => {
+    setDataFilter({ ...dataFilter, page: value });
+    fetchAPIGetUser(dataFilter);
+  };
   return (
     <div className="Container">
       <Row justify="center">
@@ -87,12 +123,13 @@ const ListUser = () => {
           </h1>
 
           <div style={{ display: 'flex', width: '33%', paddingBottom: '10px' }}>
-            <Search onSearch={handleSearch} placeholder={'Search user'} />
+            <Search
+              onChange={handleSearch}
+              onSearch={handleSearchEnter}
+              placeholder={'Search user'}
+            />
           </div>
-          <Collapse
-            onChange={handleClickFilter}
-            style={{ marginBottom: '20px', width: '60%' }}
-          >
+          <Collapse style={{ marginBottom: '20px', width: '60%' }}>
             <Panel header="Filter" key="1" extra={genExtra()}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>
@@ -152,7 +189,7 @@ const ListUser = () => {
                     <Select
                       style={{ width: 120 }}
                       placeholder="Order by"
-                      defaultValue={dataFilter.order}
+                      defaultValue="ASC"
                       onChange={handleChangeOrderBy}
                     >
                       <Option value="DESC">Z to A</Option>
@@ -169,17 +206,19 @@ const ListUser = () => {
                       fontSize: '12px',
                     }}
                   >
-                    Clear Filter
+                    Filter Action
                   </div>
                   <div>
                     <Button
                       type="primary"
                       danger
-                      onClick={() => {
-                        console.log(dataFilter);
-                      }}
+                      onClick={handleClearFilter}
+                      style={{ marginRight: '15px' }}
                     >
                       Clear
+                    </Button>
+                    <Button type="primary" onClick={handleFillterButton}>
+                      Filter
                     </Button>
                   </div>
                 </div>
@@ -189,11 +228,27 @@ const ListUser = () => {
           <Spin spinning={loading}>
             <Paper elevation={2}>
               <TableUser
-                dataEmpl={dataEmpl}
+                currentRole={searchRole}
+                dataEmpl={dataEmpl.data}
                 onNavigation={(id) => onNavigation(id)}
                 isButtonDownDisabled={isButtonDownDisabled}
                 messageError={messageError}
               />
+              <div
+                style={{
+                  padding: '10px',
+                  display: 'flex',
+                  flexFlow: 'row-reverse',
+                }}
+              >
+                <Pagination
+                  showTotal={(total) => `Total ${total} accounts  `}
+                  defaultCurrent={dataEmpl.page}
+                  total={dataEmpl.totalCount}
+                  onChange={handeOnChangePage}
+                  showSizeChanger={false}
+                />
+              </div>
             </Paper>
           </Spin>
         </Col>

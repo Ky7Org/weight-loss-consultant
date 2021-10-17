@@ -43,11 +43,9 @@ const Signin = (props) => {
     signInAPI({ email: values.email, password: values.password })
       .then((res) => {
         if (values.remember) {
-          console.log(values);
           cookie.set(REMEMBER, values);
         }
         actions.setSubmitting(false);
-        console.log(res);
         dispatch(SigninHandler(res.data));
       })
       .catch((err) => {
