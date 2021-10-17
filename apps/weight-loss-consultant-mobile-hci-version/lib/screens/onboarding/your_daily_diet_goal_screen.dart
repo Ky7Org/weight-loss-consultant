@@ -34,6 +34,7 @@ class _YourDailyDietGoalScreenState extends State<YourDailyDietGoalScreen> {
 
   Widget _buildPieChart(){
     return Card(
+      elevation: 5,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -330,16 +331,18 @@ class _YourDailyDietGoalScreenState extends State<YourDailyDietGoalScreen> {
         //color: Color(0xFF8AB9F3),
       ),
       child: Scaffold(
-        appBar: CustomerAppbar.builder("YOUR DAILY GOAL"),
+        appBar: CustomerAppbar.builder("YOUR DAILY NUTRITION GOAL"),
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(5),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 100,),
                 _buildPieChart(),
                 const SizedBox(height: 10,),
-                _buildWhatYouNeedTodo(),
+                //_buildWhatYouNeedTodo(),
                 _buildLNextBtn(),
                 const SizedBox(height: 20,),
               ],

@@ -199,7 +199,8 @@ class _CustomerAddCustomActivityScreenState extends State<CustomerAddCustomActiv
               _kcalController.text + " kcal",
               "",
               "assets/exercise/pushUps.jpg",
-              "Your custom activity"
+              "Your custom activity",
+              int.parse(_kcalController.text),
             );
             user.userCustomExerciseModelList.insert(0, model);
             saveAccount();

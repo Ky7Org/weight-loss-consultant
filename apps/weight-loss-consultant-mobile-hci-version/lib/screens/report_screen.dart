@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/customer_appbar.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/utilities/constants.dart';
 
 class _UserWeightHistory{
@@ -16,6 +15,10 @@ class _UserWeightHistory{
 
   _UserWeightHistory(this.datetime, this.weight);
 
+  @override
+  String toString() {
+    return "_UserWeightHistory{datetime: $datetime, weight: $weight}";
+  }
 }
 
 class _UserCalHistory{
@@ -36,7 +39,8 @@ class _ReportScreenState extends State<ReportScreen> {
   AccountModel user = AccountModel(email: "", fullname: "");
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _weightEditingController = TextEditingController();
+  final TextEditingController _heightEditingController = TextEditingController();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,6 +49,11 @@ class _ReportScreenState extends State<ReportScreen> {
       Map<String, dynamic> userMap = jsonDecode(userJSON);
       user = AccountModel.fromJson(userMap);
     }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
   }
 
   @override
@@ -73,7 +82,13 @@ class _ReportScreenState extends State<ReportScreen> {
               const Spacer(),
               TextButton(
                 onPressed: (){
-                  showInformationDialog(context);
+                  showInformationDialog(context).then((value) {
+                    initAccount().then((value){
+                      setState(() {
+
+                      });
+                    });
+                  });
                 },
                 child: const Text("EDIT")
               )
@@ -151,6 +166,7 @@ class _ReportScreenState extends State<ReportScreen> {
       int weight = history[dateTime] ?? 1;
       result.add(_UserWeightHistory(dateTime, weight));
     }
+    print(result);
     return result;
   }
 
@@ -464,49 +480,78 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Future<void> showInformationDialog(BuildContext context) async {
+    _weightEditingController.text = "${user.weight}";
+    _heightEditingController.text = "${user.height}";
     return await showDialog(
         context: context,
+
         builder: (context) {
-          bool isChecked = false;
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
+              insetPadding: EdgeInsets.zero,
               content: Form(
                   key: _formKey,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Weight",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600
+                          ),
+                        ),
+                      ),
                       TextFormField(
-                        controller: _textEditingController,
+                        controller: _weightEditingController,
                         validator: (value) {
                           return value!.isNotEmpty ? null : "Enter any text";
                         },
-                        decoration:
-                        InputDecoration(hintText: "Please Enter Text"),
+                        decoration: const InputDecoration(hintText: "Please Enter Text"),
+                        keyboardType: TextInputType.number,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Choice Box"),
-                          Checkbox(
-                              value: isChecked,
-                              onChanged: (checked) {
-                                setState(() {
-                                  isChecked = checked as bool;
-                                });
-                              })
-                        ],
-                      )
+                      const SizedBox(height: 20,),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Height",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600
+                          ),
+                        ),
+                      ),
+                      TextFormField(
+                        controller: _heightEditingController,
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          return value!.isNotEmpty ? null : "Enter any text";
+                        },
+                        decoration: const InputDecoration(hintText: "Please Enter Text"),
+                      ),
                     ],
                   )),
-              title: Text('Stateful Dialog'),
               actions: <Widget>[
                 InkWell(
-                  child: Text('OK   '),
+                  child: const Text('OK   '),
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
-                      // Do something like updating SharedPreferences or User Settings etc.
+                      user.height = int.parse(_heightEditingController.text);
+                      user.weight = int.parse(_weightEditingController.text);
+                      DateTime now = DateTime.now();
+                      DateTime today = DateTime(now.year, now.month, now.day);
+                      user.addWeightHistory({today: user.weight});
+                      saveAccount();
                       Navigator.of(context).pop();
                     }
+                  },
+                ),
+                InkWell(
+                  child: const Text('Cancel   '),
+                  onTap: () {
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
