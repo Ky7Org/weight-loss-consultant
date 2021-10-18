@@ -77,6 +77,7 @@ class _CustomerTodoPageState extends State<CustomerTodoPage>
                   img: Image(
                     image: AssetImage(_exercises[i].thumbnailPath),
                   ),
+                  videoPath: _exercises[i].videoPath,
                 );
               }
           );
@@ -141,6 +142,7 @@ class _CustomerTodoPageState extends State<CustomerTodoPage>
                   img: Image(
                     image: AssetImage(dietList[i].thumbnailPath),
                   ),
+                  videoPath: dietList[i].videoPath,
                 );
               }
           );
