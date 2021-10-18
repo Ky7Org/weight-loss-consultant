@@ -87,6 +87,7 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
                   img: Image(
                     image: AssetImage(_exercises[i].thumbnailPath),
                   ),
+                  videoPath: _exercises[i].videoPath,
                 );
               }
           );

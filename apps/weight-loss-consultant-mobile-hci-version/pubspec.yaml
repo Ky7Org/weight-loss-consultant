@@ -47,7 +47,7 @@ dependencies:
   flutter_datetime_picker: ^1.5.1
   syncfusion_flutter_charts: ^19.3.44+1
   flutter_speed_dial: ^4.4.0+2
-
+  url_launcher: ^6.0.12
 dev_dependencies:
   flutter_test:
     sdk: flutter
