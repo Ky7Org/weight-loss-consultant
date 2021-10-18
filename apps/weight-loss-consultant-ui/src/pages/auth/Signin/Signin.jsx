@@ -46,7 +46,6 @@ const Signin = (props) => {
           cookie.set(REMEMBER, values);
         }
         actions.setSubmitting(false);
-        console.log(res);
         dispatch(SigninHandler(res.data));
       })
       .catch((err) => {

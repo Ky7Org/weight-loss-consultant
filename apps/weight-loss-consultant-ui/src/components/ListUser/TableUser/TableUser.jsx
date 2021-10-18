@@ -1,32 +1,74 @@
 import { useMemo, useState } from 'react';
-import { Button, Table, Row, Modal, Select, Tag } from 'antd';
-import './TableUser.css';
-import { Sorter } from '../../../utils/sorter';
+import { Button, Table, Row, Modal, Select, Tag, Card } from 'antd';
+import './TableUser.scss';
+import { useEffect } from 'react';
+import Avatar from '@mui/material/Avatar';
+import { useSelector, useDispatch } from 'react-redux';
+import { filterActions } from '../../../states-manager/filter/filter-slice';
 import {
-  InfoCircleOutlined,
+  EditOutlined,
   CheckCircleFilled,
   CloseCircleFilled,
 } from '@ant-design/icons';
+
 const TableUser = (props) => {
-  const [editableColumns, setEditableColumns] = useState([
-    'fullName',
-    'action',
+  const dispatch = useDispatch();
+  const { dataEmpl } = props;
+  const { currentRole } = props;
+  const customerField = [
+    'email',
+    'fullname',
+    'address',
     'phone',
     'gender',
     'status',
-  ]);
+    'dob',
+    'action',
+  ];
+  const adminField = [
+    'email',
+    'fullname',
+    'address',
+    'phone',
+    'gender',
+    'status',
+    'dob',
+    'action',
+  ];
+  const trainerField = [
+    'email',
+    'fullname',
+    'address',
+    'phone',
+    'gender',
+    'status',
+    'dob',
+    'yearOfExp',
+    'rating',
+    'action',
+  ];
+  const [editableColumns, setEditableColumns] = useState([]);
+  useEffect(() => {
+    if (currentRole === 'trainer') {
+      setEditableColumns(trainerField);
+    } else if (currentRole === 'customer') {
+      setEditableColumns(customerField);
+    } else if (currentRole === 'admin') {
+      setEditableColumns(adminField);
+    }
+  }, [currentRole]);
 
-  const { dataEmpl } = props;
   const [isModalShown, setIsModalShown] = useState(false);
+  const { RawDataOutput } = props;
+  const [dataFilter, setDataFilter] = useState(RawDataOutput);
   const [modalOptions, setModalOptions] = useState(
     editableColumns.slice(0, editableColumns.length - 1)
   );
   const defaultColumns = [
     {
-      title: 'Name',
-      dataIndex: 'fullName',
+      title: 'Full Name',
+      dataIndex: 'fullname',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a.fullname, b.fullname),
       render(text, row) {
         return (
           <div style={{ fontWeight: 'bold', marginRight: '10px' }}>
@@ -36,19 +78,33 @@ const TableUser = (props) => {
       },
     },
     {
+      title: 'Avatar',
+      dataIndex: 'profileImage',
+      key: 'id',
+      render(text, row) {
+        return <Avatar alt="Remy Sharp" src={row?.profileImage} />;
+      },
+    },
+    {
       title: 'Email',
       dataIndex: 'email',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a.email, b.email),
       render(text, row) {
         return <>{row?.email}</>;
+      },
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'id',
+      render(text, row) {
+        return <>{row?.phone}</>;
       },
     },
     {
       title: 'Gender',
       dataIndex: 'gender',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a?.gender || '', b?.gender || ''),
       render(text, row) {
         return (
           <div>
@@ -65,25 +121,22 @@ const TableUser = (props) => {
       title: 'Address',
       dataIndex: 'address',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a?.address || '', b?.address || ''),
       render(text, row) {
         return <>{row?.address}</>;
       },
     },
     {
-      title: 'Phone',
-      dataIndex: 'phone',
+      title: 'yearOfExp',
+      dataIndex: 'yearOfExp',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a?.phone || '', b?.phone || ''),
       render(text, row) {
-        return <>{row?.phone}</>;
+        return <>{row?.yearOfExp}</>;
       },
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'id',
-      sorter: (a, b) => Sorter.TEXT(a?.status || '', b?.status || ''),
       render(text, row) {
         return (
           <div>
@@ -103,7 +156,7 @@ const TableUser = (props) => {
                 </div>
               </div>
             ) : (
-              <div>
+              <div div style={{ display: 'flex' }}>
                 <CloseCircleFilled
                   style={{
                     color: 'red',
@@ -119,13 +172,21 @@ const TableUser = (props) => {
       },
     },
     {
+      title: 'Rating',
+      dataIndex: 'rating',
+      key: 'id',
+      render(text, row) {
+        return <>{row?.rating}</>;
+      },
+    },
+    {
       title: (
         <Row justify="end">
           <Button
             className="secondary-button-outlined"
             onClick={() => setIsModalShown(true)}
           >
-            'Edit Column'
+            Edit Column
           </Button>
         </Row>
       ),
@@ -135,7 +196,7 @@ const TableUser = (props) => {
           <Row justify="end">
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
-                <InfoCircleOutlined
+                <EditOutlined
                   style={{
                     fontSize: '20px',
                     color: '#ff3939',
@@ -155,36 +216,32 @@ const TableUser = (props) => {
       editableColumns.includes(column.dataIndex)
     );
   }, [editableColumns]);
+  const handleOnChangePaging = (input) => {
+    setDataFilter({ ...dataFilter, page: input });
+    dispatch(filterActions.saveObjectFilter(dataFilter));
+  };
   const handleConfirmModal = () => {
-    console.log('OK');
     setEditableColumns([...modalOptions, 'action']);
     setIsModalShown(false);
   };
 
   const handleCancelModal = () => {
-    console.log('CANCEL');
     setIsModalShown(false);
     setModalOptions(editableColumns.slice(0, editableColumns.length - 1));
   };
-
   return (
     <div className="Container">
-      <Table
-        size="large"
-        style={{ paddingTop: '10px', width: '100vw' }}
-        dataSource={dataEmpl}
-        columns={columns}
-        rowKey="email"
-        responsive={true}
-        pagination={{
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          showTotal: (total) => `${'Total'} ${total} ${'items'}`,
-          total: dataEmpl?.length || 0,
-          responsive: true,
-        }}
-        scroll={{ x: 700, y: 700 }}
-      />
+      <Card>
+        <Table
+          size="large"
+          dataSource={dataEmpl}
+          columns={columns}
+          rowKey="email"
+          responsive={true}
+          pagination={false}
+          scroll={{ x: 700, y: 400 }}
+        />
+      </Card>
       <Modal
         maskClosable={false}
         title="Edit Columns"
