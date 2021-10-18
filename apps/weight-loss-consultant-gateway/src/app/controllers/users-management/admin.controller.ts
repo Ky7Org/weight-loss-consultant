@@ -21,7 +21,7 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {
   }
 
-  @Get()
+  @Post(`/filter`)
   @UseGuards(JwtAuthGuard)
   async getAllAdmins(@Res() res: Response, @Body() payload: PaginationDto) {
     try {
