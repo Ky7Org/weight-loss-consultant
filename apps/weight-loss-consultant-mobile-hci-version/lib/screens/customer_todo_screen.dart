@@ -108,7 +108,7 @@ class _CustomerTodoPageState extends State<CustomerTodoPage>
                         ),
                         const SizedBox(height: 10,),
                         Text(
-                            _exercises[i].unit,
+                            "${_exercises[i].calories} kcal",
                             style: const TextStyle(
                               color: Colors.grey,
                             )
@@ -172,7 +172,7 @@ class _CustomerTodoPageState extends State<CustomerTodoPage>
                         ),
                         const SizedBox(height: 10,),
                         Text(
-                          dietList[i].unit,
+                          "${dietList[i].calories} kcal",
                           style: const TextStyle(
                               color: Colors.grey
                           ),
