@@ -74,9 +74,22 @@ const WelcomePage = (props) => {
                       <a style={{ color: 'white' }}> Home Page </a>
                     </NavLink>
                   </Menu.Item>
-                  <Menu.Item key="/admin/user/manager" icon={<TableOutlined />}>
-                    <NavLink to="/admin/user/manager">
-                      <a style={{ color: 'white' }}> User Manager </a>
+                  <Menu.Item
+                    key="/admin/user/customer"
+                    icon={<TableOutlined />}
+                  >
+                    <NavLink to="/admin/user/customer">
+                      <a style={{ color: 'white' }}>Customer </a>
+                    </NavLink>
+                  </Menu.Item>
+                  <Menu.Item key="/admin/user/trainer" icon={<TableOutlined />}>
+                    <NavLink to="/admin/user/trainer">
+                      <a style={{ color: 'white' }}>Trainer </a>
+                    </NavLink>
+                  </Menu.Item>
+                  <Menu.Item key="/admin/user/admin" icon={<TableOutlined />}>
+                    <NavLink to="/admin/user/admin">
+                      <a style={{ color: 'white' }}>Admin </a>
                     </NavLink>
                   </Menu.Item>
                   <Menu.Item
@@ -84,7 +97,7 @@ const WelcomePage = (props) => {
                     icon={<SolutionOutlined />}
                   >
                     <NavLink to="/admin/user/contract">
-                      <a style={{ color: 'white' }}> User Contract </a>
+                      <a style={{ color: 'white' }}>Contract </a>
                     </NavLink>
                   </Menu.Item>
                   <Menu.Item
@@ -92,7 +105,7 @@ const WelcomePage = (props) => {
                     icon={<CreditCardOutlined />}
                   >
                     <NavLink to="/admin/user/payment">
-                      <a style={{ color: 'white' }}> User Payment</a>
+                      <a style={{ color: 'white' }}>Payment</a>
                     </NavLink>
                   </Menu.Item>
                   <Menu.Item
@@ -100,7 +113,7 @@ const WelcomePage = (props) => {
                     icon={<WarningOutlined />}
                   >
                     <NavLink to="/admin/user/report">
-                      <a style={{ color: 'white' }}> User Report</a>
+                      <a style={{ color: 'white' }}>Report</a>
                     </NavLink>
                   </Menu.Item>
                   <hr className="sider__lineDivider" />

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import * as cookie from 'js-cookie';
 import { TOKEN_KEY } from '../constants/AppConstants';
-import { REACT_APP_API_URL, CITY_URL_PUBLIC } from '../constants/AppPort';
 export const CallAPI = (
   endpoint,
   method = 'GET',
@@ -17,7 +16,6 @@ export const CallAPI = (
       };
 
   token = cookie.get(TOKEN_KEY);
-
   if (token && token !== 'undefined') {
     headers.Authorization = `Bearer ${token}`;
   }
