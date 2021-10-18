@@ -25,6 +25,7 @@ import {HttpExceptionFilter} from "../../../../../common/filters/http-exception.
 import {GenericHttpException} from "../../../../../common/filters/generic-http.exception";
 import {Roles} from "../../decorators/roles.decorator";
 import {Role} from "../../../../../common/constants/enums";
+import {PaginationDto} from "../../dtos/pagination/pagination.dto";
 
 export const SWAGGER_UNAUTHORIZED_RESPONSE = "Invalid access token or expired";
 export const SWAGGER_GET_ALL_ADMINS_RESPONSE = "The detail of the administrator users";
@@ -44,12 +45,13 @@ export class AdminController implements OnModuleInit {
     this.adminService = this.adminServiceClient.getService<AdminService>(GRPC_ADMIN_SERVICE);
   }
 
-  @Get()
+  @Get("filter")
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard)
-  async getAllAdmins(@Res() res) {
+  async getAllAdmins(@Res() res, @Body() payload: PaginationDto) {
     try {
-      const result = await unwrapGRPCResponse(this.adminService.findAll({}));
+      console.log(payload);
+      const result = await unwrapGRPCResponse(this.adminService.findAll(payload));
       return res.status(HttpStatus.OK).send(result);
     } catch (error) {
       throw new GenericHttpException(error);

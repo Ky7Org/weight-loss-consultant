@@ -1,5 +1,6 @@
 import {Observable} from "rxjs";
 import {ApiProperty} from "@nestjs/swagger";
+import {PaginationDto} from "../dtos/pagination/pagination.dto";
 
 export class AdminEntity {
   email?: string;
@@ -20,7 +21,7 @@ export type EmailBody = {
 }
 
 export interface AdminService {
-  findAll(data: object): Observable<AdminEntitiesResponse>;
+  findAll(data: PaginationDto): Observable<AdminEntitiesResponse>;
 
   viewDetail(data: EmailBody): Observable<AdminEntityResponse>;
 

@@ -53,7 +53,15 @@ message CustomerEntityViewDetailRequest {
   string email = 1;
 }
 
-message AdminEntitiesRequest {}
+message AdminEntitiesRequest {
+  string roleFilter = 1;
+  string genderFilter = 2;
+  string page = 3;
+  string limit= 4;
+  string sortBy = 5;
+  string order = 6;
+  string searchValue = 7;
+}
 message CustomerEntitiesRequest {}
 
 message AdminEntityResponse {
