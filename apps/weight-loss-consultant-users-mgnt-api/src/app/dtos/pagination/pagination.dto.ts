@@ -15,4 +15,10 @@ export class PaginationDto {
   order? : string;
   @ApiProperty()
   searchValue? : string;
+  @ApiProperty()
+  status? : string; //if no status is select, default is empty string
+  @ApiProperty()
+  rating? : string;
+  @ApiProperty()
+  yearOfExp? : string; //if no yearOfExp is select, default is empty string
 }
