@@ -22,7 +22,7 @@ export class CampaignService {
 
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[]> {
     return this.usersManagementServiceProxy
-      .send<CampaignEntity[], void>({cmd: FIND_ALL_CAMPAIGNS}, null)
+      .send<CampaignEntity[], Record<string, unknown> >({cmd: FIND_ALL_CAMPAIGNS}, {})
       .toPromise();
   }
 

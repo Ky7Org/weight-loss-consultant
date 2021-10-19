@@ -43,6 +43,6 @@ export class HealthCheckController {
   @MessagePattern({ cmd: DELETE_HEALTH_INFO_BY_ID })
   @UseFilters(new ExceptionFilter())
   async delete(@Payload() id: number) {
-    return this.healthService.delete(id);
+    return this.healthService.del(id);
   }
 }
