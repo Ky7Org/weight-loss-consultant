@@ -223,6 +223,7 @@ export class SortingAndFilteringService {
               status: `%${payload.status}%`,
             })
           .leftJoinAndSelect("customer.campaigns", "campaign")
+          .leftJoinAndSelect("customer.healthInfos", "healthInfo")
           .orderBy(payload.sortBy, payload.order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(payload.limit)
@@ -252,6 +253,7 @@ export class SortingAndFilteringService {
               status: `%${payload.status}%`
             })
           .leftJoinAndSelect("customer.campaigns", "campaign")
+          .leftJoinAndSelect("customer.healthInfos", "healthInfo")
           .orderBy(payload.sortBy, payload.order === "ASC" ? "ASC" : "DESC")
           .offset(skipped)
           .limit(payload.limit)
@@ -275,7 +277,6 @@ export class SortingAndFilteringService {
               fullname: `%${payload.searchValue}%`,
               status: `%${payload.status}%`
             })
-          .leftJoinAndSelect("customer.campaigns", "campaign")
           .getCount();
         const res = await this.mappingResultPaginate(totalCount, payload.page, payload.limit, result);
         return res;

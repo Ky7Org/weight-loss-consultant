@@ -5,6 +5,7 @@ import {HealthInfoService} from "../../services/health.service";
 import {CreateHealthInfoDto} from "../../dtos/heath-info/create-health-info.dto";
 import {UpdateHealthInfoDto} from "../../dtos/heath-info/update-health-info.dto";
 
+
 @Controller(`/v1/healths`)
 export class HealthCheckController {
 
@@ -42,13 +43,6 @@ export class HealthCheckController {
   async getByID(@Param('id') id: number, @Res() res) {
     try {
       const healthInfo = await this.healthService.viewDetail(id);
-      if (healthInfo === undefined) {
-        const error = {
-          statusCode : 404,
-          message : `Not found health info with id: ${id}`
-        }
-        res.status(error.statusCode).send(error);
-      }
       res.status(200).send(healthInfo);
     } catch ({error}) {
       this.logger.error(error);
