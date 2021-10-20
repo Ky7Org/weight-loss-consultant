@@ -19,3 +19,6 @@ export const SCHEDULING_SERVICE_PORT = 5005;
 
 export const CAMPAIGN_MANAGEMENT_SERVICE_NAME = "campaign_management_service";
 export const CAMPAIGN_MANAGEMENT_SERVICE_PORT = 5006;
+
+export const CONTRACT_MANAGEMENT_SERVICE_NAME = "contract_management_service";
+export const CONTRACT_MANAGEMENT_SERVICE_PORT = 5007;
