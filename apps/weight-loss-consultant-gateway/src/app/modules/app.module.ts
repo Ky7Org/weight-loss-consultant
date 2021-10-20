@@ -5,6 +5,8 @@ import { HealthCheckModule } from './health-check.module';
 import {
   AUTHENTICATION_SERVICE_NAME,
   AUTHENTICATION_SERVICE_PORT,
+  CAMPAIGN_MANAGEMENT_SERVICE_NAME, CAMPAIGN_MANAGEMENT_SERVICE_PORT,
+  CONTRACT_MANAGEMENT_SERVICE_NAME, CONTRACT_MANAGEMENT_SERVICE_PORT,
   HEALTH_MANAGEMENT_SERVICE_NAME,
   HEALTH_MANAGEMENT_SERVICE_PORT,
   HOST,
@@ -25,6 +27,7 @@ import * as Joi from 'joi';
 import { ENV_FILE_PATH } from '../constant';
 import { SearchModule } from './search.module';
 import { SortingAndFilteringModule } from './sorting-filtering.module';
+import {ContractModule} from "./contract.module";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -40,6 +43,7 @@ export class AppModule {
         HealthCheckModule,
         SearchModule,
         SortingAndFilteringModule,
+        ContractModule,
         ClientsModule.register([
           {
             name: AUTHENTICATION_SERVICE_NAME,
@@ -79,6 +83,22 @@ export class AppModule {
             options: {
               host: HOST,
               port: SCHEDULING_SERVICE_PORT,
+            }
+          },
+          {
+            name: CONTRACT_MANAGEMENT_SERVICE_NAME,
+            transport: Transport.TCP,
+            options: {
+              host: HOST,
+              port: CONTRACT_MANAGEMENT_SERVICE_PORT,
+            }
+          },
+          {
+            name: CAMPAIGN_MANAGEMENT_SERVICE_NAME,
+            transport: Transport.TCP,
+            options: {
+              host: HOST,
+              port: CAMPAIGN_MANAGEMENT_SERVICE_PORT,
             }
           }
         ]),

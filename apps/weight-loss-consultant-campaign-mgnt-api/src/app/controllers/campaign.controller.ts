@@ -1,7 +1,6 @@
 import { Body, Controller, UseFilters } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateCampaignDto } from '../dtos/campaign/create-campaign';
-import { CampaignService } from '../services/impl/campaign.service.impl';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   CREATE_CAMPAIGN,
@@ -12,6 +11,7 @@ import {
 } from '../../../../common/routes/campaigns-management-routes';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { UpdateCampaignPayloadType } from '../../../../common/dtos/update-campaign-dto.payload';
+import {CampaignService} from "../services/campaign.service";
 
 @ApiTags('Campaign')
 @ApiBearerAuth()
@@ -24,6 +24,7 @@ export class CampaignController {
   @MessagePattern({cmd: FIND_ALL_CAMPAIGNS})
   @UseFilters(new ExceptionFilter())
   async index() {
+    console.log("campaign controller - campaign service")
     return this.campaignService.getCampaignDetailsWithCustomer();
   }
 
