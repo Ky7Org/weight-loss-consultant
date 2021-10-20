@@ -52,9 +52,10 @@ class _CustomerAddWorkoutScreenState extends State<CustomerAddWorkoutScreen> {
 
 
   Widget _buildItemWidget(ExerciseModel model) {
-    Widget widget = GestureDetector(
+    Widget widget = InkWell(
       onTap: () {
         user.userTodayExercise.add(model);
+        user.userTodayCustomExercise.add(model);
         saveAccount();
         CustomToast.makeToast("Add successfully");
       },

@@ -19,6 +19,8 @@ class RoutePath{
   static const String customerAddDietScreen = "/customerAddDiet";
   static const String customerAddCustomActivity = "/addCustomActivity";
   static const String customerAddCustomFood = "/addCustomFood";
+  static const String customerTodayDoneExerciseScreen = "/customerTodayDoneExerciseScreen";
+  static const String customerTodayDoneDietScreen = "/customerTodayDoneDiet";
 
 
 }

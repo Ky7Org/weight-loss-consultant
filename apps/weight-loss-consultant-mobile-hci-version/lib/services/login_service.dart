@@ -67,9 +67,9 @@ class LoginService {
       ExerciseList.sideLyingFloorStretchLeft,
     ];
 
-    if (email == "banhsbao@gmail.com") {
-      AccountModel model = AccountModel(email: "banhsbao@gmail.com",
-          fullname: "BanhsBao",
+    if (email == "tien@gmail.com") {
+      AccountModel model = AccountModel(email: "tien@gmail.com",
+          fullname: "Natton",
           isFirstTime: false,
           level: 2,
           kcalNum: 10,
@@ -78,9 +78,8 @@ class LoginService {
           scheduleModel: service.generateDefaultSchedule(today, today.add(Duration(days: 3 * 30))),
           weightHistory: weightHistory,
           calHistory: dietHistory,
-          userTodayDiet: userTodayDiet,
-          userTodayExercise: userTodayExercise,
-          dailyCalorieGoal: 2119
+          userTodayDiet: [],
+          userTodayExercise: [],
       );
       prefs.setString("ACCOUNT", jsonEncode(model.toJson()));
       return model;
@@ -90,9 +89,8 @@ class LoginService {
         scheduleModel: service.generateDefaultSchedule(today, today.add(Duration(days: 3 * 30))),
         weightHistory: weightHistory,
         calHistory: dietHistory,
-        userTodayDiet: userTodayDiet,
-        userTodayExercise: userTodayExercise,
-        dailyCalorieGoal: 2119
+        userTodayDiet: [],
+        userTodayExercise: [],
     );
     prefs.setString("ACCOUNT", jsonEncode(model.toJson()));
     return model;

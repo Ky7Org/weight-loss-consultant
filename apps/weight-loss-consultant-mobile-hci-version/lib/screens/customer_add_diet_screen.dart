@@ -54,9 +54,10 @@ class _CustomerAddDietScreenState extends State<CustomerAddDietScreen> {
 
 
   Widget _buildItemWidget(DietModel model) {
-    Widget widget = GestureDetector(
+    Widget widget = InkWell(
       onTap: () {
         user.userTodayDiet.add(model);
+        user.userTodayCustomDiet.add(model);
         saveAccount();
         CustomToast.makeToast("Add successfully");
       },
@@ -169,7 +170,7 @@ class _CustomerAddDietScreenState extends State<CustomerAddDietScreen> {
         color: Colors.white,
       );
       appBarTitle = const Text(
-        "ADD DIET",
+        "ADD FOOD",
         style: TextStyle(color: Colors.white),
       );
       _isSearching = false;
