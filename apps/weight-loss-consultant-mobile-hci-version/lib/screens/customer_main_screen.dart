@@ -157,6 +157,14 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
   }
 
   Widget _buildProgressBar(){
+    String message = "kcal \n remaining";
+    String kcal = (user.dailyCalorieGoal - user.getTodayKcal()).toString();
+    if (user.dailyCalorieGoal - user.getTodayKcal() < 0){
+      message = "kcal \n extra consumed";
+      kcal = (user.getTodayKcal() - user.dailyCalorieGoal).toString();
+    }
+
+
     return SizedBox(
       height: 200,
       child: SfRadialGauge(
@@ -175,7 +183,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                          (user.dailyCalorieGoal - user.getTodayKcal()).toString(),
+                          kcal,
                           style: const TextStyle(
                               fontSize: 17,
                             color: Colors.white,
@@ -183,10 +191,10 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                           ),
                         ),
                           const SizedBox(height: 5,),
-                          const Text(
-                            "kcal \n Remaining",
+                          Text(
+                            message,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 13
                             ),
@@ -265,7 +273,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                         fontWeight: FontWeight.w700
                     ),
                   ),
-                  const Text("Daily kcal Goal",
+                  const Text("daily kcal goal",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -285,7 +293,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
     return SpeedDial(
       spacing: 10,
       spaceBetweenChildren: 10,
-      backgroundColor: Color(0xFF478DE0),
+      backgroundColor: const Color(0xFF478DE0),
       icon: Icons.add,
       children: [
         SpeedDialChild(
@@ -293,7 +301,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
             Icons.fastfood,
             color: Colors.white,
           ),
-          backgroundColor: Color(0xFF478DE0),
+          backgroundColor: const Color(0xFF478DE0),
           label: "Add diet",
           onTap: (){
             Navigator.pushNamed(context, RoutePath.customerAddDietScreen);
@@ -342,7 +350,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
       ),
       elevation: 10,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(
           children: [
             const Align(
@@ -649,7 +657,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
   Widget _buildWarning(){
     String message = "Warning: you have exceeded today goal";
     Widget widget = Container();
-    if (user.getTodayKcal() > user.dailyCalorieGoal){
+    if (user.getTodayKcal() > user.dailyCalorieGoal + 100){
       widget = Container(
         height: 50,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -659,6 +667,33 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
           children: [
             const Icon(
               Icons.warning_amber_outlined,
+              color: Colors.white,
+            ),
+            const SizedBox(width: 10,),
+            Text(
+                message,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600
+                )
+            )
+
+          ],
+        ),
+      );
+    }
+    else if (user.getTodayKcal() > user.dailyCalorieGoal && user.getTodayKcal() < user.dailyCalorieGoal + 100){
+      String message = "You've reached your daily goal ";
+      widget = Container(
+        height: 50,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        color: Colors.green,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.star,
               color: Colors.white,
             ),
             const SizedBox(width: 10,),
