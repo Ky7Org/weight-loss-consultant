@@ -21,6 +21,7 @@ export class CampaignController {
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   async index(@Res() res) {
     try {
+      console.log("campaing controller - gateway")
       const result = await this.campaignService.getCampaignDetailsWithCustomer();
       res.status(200).send(result);
     } catch ({ error }) {

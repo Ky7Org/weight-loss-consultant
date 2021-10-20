@@ -1,6 +1,5 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CustomerEntity } from './customer.entity';
-import {ContractEntity} from "./contract.entity";
 
 @Entity('Campaign')
 export class CampaignEntity extends BaseEntity{
@@ -19,8 +18,5 @@ export class CampaignEntity extends BaseEntity{
 
   @ManyToOne(() => CustomerEntity, customer => customer.campaigns)
   customer : CustomerEntity;
-
-  @ManyToOne(() => ContractEntity, contract => contract.campaign)
-  contracts : ContractEntity[];
 
 }
