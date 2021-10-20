@@ -1,19 +1,30 @@
-import {ConflictException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
+import {ConflictException, HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import {HeathInfoEntity} from "../../entities/health-info.entity";
-import {BaseService} from "../base.service";
 import {HealthRepository} from "../../repositories/health-info.repository";
 import {HealthInfoMapper} from "../../mappers/health-info.mapper";
-import {CustomerService} from "./customer.service.impl";
 import {CreateHealthInfoDto} from "../../dtos/heath-info/create-health-info.dto";
 import {UpdateHealthInfoDto} from "../../dtos/heath-info/update-health-info.dto";
-import {RpcException} from "@nestjs/microservices";
+import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {RpcExceptionModel} from "../../../../../common/filters/rpc-exception.model";
+import {USERS_MANAGEMENT_SERVICE_NAME} from "../../../../../../constant";
+import {Observable} from "rxjs";
+import {CustomerEntity} from "../../entities/customer.entity";
+import {CUSTOMER_VIEW_DETAIL} from "../../../../../common/routes/users-management-service-routes";
 
 @Injectable()
-export class HealthInfoService extends BaseService<HeathInfoEntity, HealthRepository> {
-  constructor(repository: HealthRepository, private mapper: HealthInfoMapper, private customerService: CustomerService) {
-    super(repository);
+export class HealthInfoService
+{
+  constructor(private readonly repository: HealthRepository,
+              private mapper: HealthInfoMapper,
+              @Inject(USERS_MANAGEMENT_SERVICE_NAME)
+              private readonly usersManagementServiceProxy : ClientProxy
+  ) {
+  }
+
+  private validateCustomer(email : string) : Observable<CustomerEntity> {
+    return this.usersManagementServiceProxy
+      .send<CustomerEntity, string>({cmd: CUSTOMER_VIEW_DETAIL}, email);
   }
 
   async findAll(): Promise<HeathInfoEntity[] | null> {
@@ -22,7 +33,7 @@ export class HealthInfoService extends BaseService<HeathInfoEntity, HealthReposi
 
   async create(dto: CreateHealthInfoDto): Promise<HeathInfoEntity | null> {
     const custEmail = dto.customerEmail;
-    const findCust = await this.customerService.findById(custEmail);
+    const findCust = await this.validateCustomer(custEmail).toPromise();
     if (findCust === undefined) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -40,12 +51,12 @@ export class HealthInfoService extends BaseService<HeathInfoEntity, HealthReposi
         message: `Param id: ${id} must match with id in request body: ${dto.id}`
       } as RpcExceptionModel);
     }
-    const customerEmail = dto.customerEmail;
-    const cust = await this.customerService.findById(customerEmail);
-    if (cust === undefined) {
+    const custEmail = dto.customerEmail;
+    const findCust = await this.validateCustomer(custEmail).toPromise();
+    if (findCust === undefined) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
-        message: `Not found customer with email: ${customerEmail}`
+        message: `Not found customer with email: ${custEmail}`
       } as RpcExceptionModel);
     }
     const existHealthInfo = await this.viewDetail(dto.id);
@@ -55,7 +66,7 @@ export class HealthInfoService extends BaseService<HeathInfoEntity, HealthReposi
         message: `Not found health info with id: ${id}`
       } as RpcExceptionModel);
     }
-    const entity: HeathInfoEntity = await HealthInfoMapper.mapUpdateHealthDtoToEntity(dto, cust);
+    const entity: HeathInfoEntity = await HealthInfoMapper.mapUpdateHealthDtoToEntity(dto, findCust);
     return await this.repository.update(id, entity);
 
   }

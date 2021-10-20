@@ -7,6 +7,7 @@ import {CustomerEntity} from "../entities/customer.entity";
 import {HealthCheckModule} from "./health-check.module";
 import {CampaignEntity} from "../entities/campaign.entity";
 import { ENV_FILE_PATH } from '../constants/env-file-path';
+import {HealthCheckController} from "../controllers/health-info.controller";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -36,6 +37,7 @@ export class AppModule {
         }),
         HealthCheckModule,
       ],
+      controllers: [HealthCheckController]
     };
   }
 }
