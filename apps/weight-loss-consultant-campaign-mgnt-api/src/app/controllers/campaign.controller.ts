@@ -24,7 +24,6 @@ export class CampaignController {
   @MessagePattern({cmd: FIND_ALL_CAMPAIGNS})
   @UseFilters(new ExceptionFilter())
   async index() {
-    console.log("campaign controller - campaign service")
     return this.campaignService.getCampaignDetailsWithCustomer();
   }
 

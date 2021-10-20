@@ -3,7 +3,7 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {Observable} from "rxjs";
 import {CustomerEntity} from "../entities/customer.entity";
-import {VIEW_DETAIL_CUSTOMER} from "../../../../common/routes/users-management-service-routes";
+import {CUSTOMER_VIEW_DETAIL, VIEW_DETAIL_CUSTOMER} from "../../../../common/routes/users-management-service-routes";
 import {RpcExceptionModel} from "../../../../weight-loss-consultant-authentication/src/app/filters/rpc-exception.model";
 import {CampaignMapper} from "../mappers/campaign.mapper";
 import {CampaignRepository} from "../repositories/campaign.repository";
@@ -19,7 +19,6 @@ export class CampaignService {
     private readonly campaignMapper: CampaignMapper,
     @Inject(USERS_MANAGEMENT_SERVICE_NAME)
     private readonly usersManagementServiceProxy : ClientProxy,
-    // private customerService: CustomerService
   ) {
   }
 
@@ -27,9 +26,9 @@ export class CampaignService {
     return await this.repository.find();
   }
 
-  private validateCustomer (email: string) : Observable<CustomerEntity> {
-    return this.usersManagementServiceProxy.
-    send<CustomerEntity, string>({VIEW_DETAIL_CUSTOMER}, email);
+  private validateCustomer(username: string): Observable<CustomerEntity> {
+    return this.usersManagementServiceProxy
+      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username);
   }
 
   async create(dto: CreateCampaignDto): Promise<CampaignEntity> {
@@ -46,7 +45,6 @@ export class CampaignService {
   }
 
   async edit(dto: UpdateCampaignDto, id: number): Promise<UpdateResult> {
-
     if (id != dto.id) {
       throw new RpcException({
         statusCode: HttpStatus.CONFLICT,
@@ -91,7 +89,6 @@ export class CampaignService {
   }
 
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[] | null> {
-    console.log("campaign service - campaign service")
     return await this.repository.find({relations: ["customer"]})
   }
 }
