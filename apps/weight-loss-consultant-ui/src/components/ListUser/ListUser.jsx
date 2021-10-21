@@ -36,6 +36,9 @@ const ListUser = () => {
     page: 1,
     searchValue: '',
     genderFilter: '',
+    status: '',
+    rating: '',
+    yearOfExp: '',
   });
   const [listSortBy, setListSortBy] = useState(['email', 'fullname']);
   const fetchAPIGetUser = (input) => {
@@ -43,7 +46,6 @@ const ListUser = () => {
     setLoading(true);
     api
       .then(({ data }) => {
-        console.log(data);
         if (listSortBy.length < 3) {
           setListSortBy(Object.keys(data.data[1]));
         }
@@ -83,6 +85,9 @@ const ListUser = () => {
   const handleChangeGender = (value) => {
     setDataFilter({ ...dataFilter, genderFilter: value.target.value });
   };
+  const handleChangeStatus = (value) => {
+    setDataFilter({ ...dataFilter, status: value.target.value });
+  };
   const handleChangeOrderBy = (value) => {
     setDataFilter({ ...dataFilter, order: value });
   };
@@ -98,6 +103,9 @@ const ListUser = () => {
       page: 1,
       searchValue: '',
       genderFilter: '',
+      status: '',
+      rating: '',
+      yearOfExp: '',
     });
     fetchAPIGetUser(dataFilter);
   };
@@ -196,6 +204,26 @@ const ListUser = () => {
                       <Option value="ASC">A to Z</Option>
                     </Select>
                   </div>
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontWeight: 'bold',
+                      textTransform: 'uppercase',
+                      color: '#161d4f',
+                      fontSize: '12px',
+                    }}
+                  >
+                    {searchRole} Status
+                  </div>
+                  <Radio.Group
+                    onChange={handleChangeStatus}
+                    value={dataFilter.status}
+                  >
+                    <Radio.Button value="0">InActive</Radio.Button>
+                    <Radio.Button value="1">Active</Radio.Button>
+                    <Radio.Button value="2">Peding</Radio.Button>
+                  </Radio.Group>
                 </div>
                 <div>
                   <div

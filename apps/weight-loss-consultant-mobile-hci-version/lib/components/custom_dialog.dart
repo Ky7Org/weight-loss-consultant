@@ -1,15 +1,22 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:io' show Platform;
+
+
 
 class CustomDialogBox extends StatefulWidget {
   final String title, descriptions;
   final Image img;
+  final String videoPath;
 
-  CustomDialogBox({Key? key,
+  const CustomDialogBox({Key? key,
     required this.title,
     required this.descriptions,
-    required this.img}) : super(key: key);
+    required this.img,
+    required this.videoPath,
+  }) : super(key: key);
 
   @override
   _CustomDialogBoxState createState() => _CustomDialogBoxState();
@@ -32,7 +39,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
               shape: BoxShape.rectangle,
               color: Colors.white,
               borderRadius: BorderRadius.circular(6),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(color: Colors.black,offset: Offset(0,5),
                     blurRadius: 8
                 ),
@@ -46,37 +53,66 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     image: DecorationImage(
-                      image: this.widget.img.image,
+                      image: widget.img.image,
                       fit: BoxFit.cover,
 
                     )
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
                     Text(
                       widget.title,
-                      style: TextStyle(fontSize: 22,fontWeight: FontWeight.w600)
+                      style: const TextStyle(fontSize: 22,fontWeight: FontWeight.w600)
                     ),
-                    SizedBox(height: 15,),
+                    const SizedBox(height: 15,),
                     Text(
                       widget.descriptions,
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                       textAlign: TextAlign.center,),
-                    SizedBox(height: 22,),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: FlatButton(
+                    const SizedBox(height: 22,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FlatButton(
+                            onPressed: () async {
+                              if (Platform.isIOS) {
+                                  String youtubePath = widget.videoPath.replaceAll("https", "youtube");
+                                  if (await canLaunch(youtubePath)) {
+                                    await launch(youtubePath, forceSafariVC: true);
+                                  } else {
+                                    if (await canLaunch(widget.videoPath)) {
+                                      await launch(widget.videoPath);
+                                    } else {
+                                      throw 'Could not launch https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw';
+                                    }
+                                  }
+                              } else {
+                                if (await canLaunch(widget.videoPath)) {
+                                  await launch(widget.videoPath);
+                                } else {
+                                  throw 'Could not launch ${widget.videoPath}';
+                                }
+                              }
+                            },
+                            child: const Text(
+                              "Watch video",
+                              style: TextStyle(fontSize: 18),
+                            )
+                        ),
+                        FlatButton(
                           onPressed: (){
                             Navigator.of(context).pop();
                           },
-                          child: Text(
+                          child: const Text(
                             "Close",
                             style: TextStyle(fontSize: 18),
                           )
                       ),
+
+                    ]
                     ),
                   ],
                 ),

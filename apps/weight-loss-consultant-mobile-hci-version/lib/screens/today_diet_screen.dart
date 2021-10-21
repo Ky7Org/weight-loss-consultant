@@ -89,6 +89,7 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
                   img: Image(
                     image: AssetImage(dietList[i].thumbnailPath),
                   ),
+                  videoPath: dietList[i].videoPath,
                 );
               }
           );
