@@ -14,12 +14,7 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "accessToken": "NTU5MzZkNTgtMGY0MC00YjVjLWIwZDMtMTg4ZTBmM2Y0MzRjfHJlYWQtd3JpdGU="
       }
     }
@@ -33,13 +28,28 @@
     ]
   },
   "projects": {
+    "weight-loss-consultant-applied-mgnt-api": {
+      "tags": []
+    },
     "weight-loss-consultant-authentication": {
+      "tags": []
+    },
+    "weight-loss-consultant-campaign-mgnt-api": {
+      "tags": []
+    },
+    "weight-loss-consultant-contract-mgnt-api": {
       "tags": []
     },
     "weight-loss-consultant-gateway": {
       "tags": []
     },
     "weight-loss-consultant-health-mgnt-api": {
+      "tags": []
+    },
+    "weight-loss-consultant-mobile": {
+      "tags": []
+    },
+    "weight-loss-consultant-mobile-hci-version": {
       "tags": []
     },
     "weight-loss-consultant-packages-mgnt-api": {
@@ -53,15 +63,7 @@
     },
     "weight-loss-consultant-users-mgnt-api": {
       "tags": []
-    },
-    "weight-loss-consultant-mobile": {
-      "tags": []
-    },
-    "weight-loss-consultant-mobile-hci-version": {
-      "tags": []
     }
   },
-  "plugins": [
-    "@nxrocks/nx-flutter"
-  ]
+  "plugins": ["@nxrocks/nx-flutter"]
 }
