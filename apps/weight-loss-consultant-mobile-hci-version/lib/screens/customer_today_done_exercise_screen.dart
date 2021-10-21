@@ -77,7 +77,7 @@ class _CustomerTodayDoneExerciseState extends State<CustomerTodayDoneExercise> {
     }
     return const Align(
       alignment: Alignment.topLeft,
-      child: Text("Todo List Exercise",
+      child: Text("To-do List Exercise",
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
@@ -162,8 +162,8 @@ class _CustomerTodayDoneExerciseState extends State<CustomerTodayDoneExercise> {
     if (labelProgress < 20){
       labelProgress = 20;
     }
-    if (labelProgress > 290){
-      labelProgress = 290;
+    if (labelProgress > 280){
+      labelProgress = 280;
     }
     return Column(
       children: [

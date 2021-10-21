@@ -15,4 +15,31 @@ class UserDailyTask{
 
   Map<String,dynamic> toJson() => _$UserDailyTaskToJson(this);
 
+  int getOverallGoal(){
+    int dietCalorie = 0;
+    int exerciseCalorie = 0;
+    dailyDietModel.dietMap.forEach((key, value) {
+      dietCalorie += value.map((e) => e.calories).toList().reduce((a,b) => a+b);
+    });
+    if (dailyExerciseModel.exerciseList.isNotEmpty){
+      exerciseCalorie = dailyExerciseModel.exerciseList.map((e) => e.calories).toList().reduce((a,b) => a+b);
+    }
+    return dietCalorie - exerciseCalorie;
+  }
+
+  int getExerciseGoal(){
+    int exerciseCalorie = 0;
+    if (dailyExerciseModel.exerciseList.isNotEmpty){
+      exerciseCalorie = dailyExerciseModel.exerciseList.map((e) => e.calories).toList().reduce((a,b) => a+b);
+    }
+    return exerciseCalorie;
+  }
+
+  int getDietGoal(){
+    int dietCalorie = 0;
+    dailyDietModel.dietMap.forEach((key, value) {
+      dietCalorie += value.map((e) => e.calories).toList().reduce((a,b) => a+b);
+    });
+    return dietCalorie;
+  }
 }

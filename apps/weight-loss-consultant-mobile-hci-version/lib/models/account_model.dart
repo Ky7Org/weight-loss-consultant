@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:weight_loss_consultant_mobile_hci_version/models/customer_history_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/customer_schedule_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart';
@@ -33,6 +34,7 @@ class AccountModel {
   int dailyCalorieGoal = 0;
   List<ExerciseModel> userTodayCustomExercise = [];
   List<DietModel> userTodayCustomDiet = [];
+  List<CustomerHistoryModel> userHistory = [];
 
   AccountModel(
       {required this.email,
@@ -52,6 +54,7 @@ class AccountModel {
       this.calHistory = const [],
       this.userTodayDiet = const [],
       this.userTodayExercise = const [],
+      this.userHistory = const [],
       }){
   }
 

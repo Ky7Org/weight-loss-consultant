@@ -23,7 +23,7 @@ class _CustomerAddWorkoutScreenState extends State<CustomerAddWorkoutScreen> {
   );
 
   Widget appBarTitle = const Text(
-    "ADD WORKOUT",
+    "Add workout",
     style: TextStyle(color: Colors.white),
   );
   final globalKey = GlobalKey<ScaffoldState>();
@@ -98,7 +98,7 @@ class _CustomerAddWorkoutScreenState extends State<CustomerAddWorkoutScreen> {
 
   PreferredSize _buildAppBar() {
     return PreferredSize(
-        preferredSize: const Size.fromHeight(100),
+        preferredSize: const Size.fromHeight(70),
         child: AppBar(
           title: appBarTitle,
           flexibleSpace: Container(
@@ -164,7 +164,7 @@ class _CustomerAddWorkoutScreenState extends State<CustomerAddWorkoutScreen> {
         color: Colors.white,
       );
       appBarTitle = const Text(
-        "ADD WORKOUT",
+        "Add workout",
         style: TextStyle(color: Colors.white),
       );
       _isSearching = false;
@@ -267,13 +267,12 @@ class _CustomerAddWorkoutScreenState extends State<CustomerAddWorkoutScreen> {
           children: [
             const SizedBox(height: 20,),
             const Text(
-              "Weightloss workouts",
+              "Weight-loss exercises",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20
               ),
             ),
-            const SizedBox(height: 20,),
             Flexible(
               child: searchresult.isNotEmpty || _controller.text.isNotEmpty ?
               _buildSearchList() : _buildAllList()),

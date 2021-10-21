@@ -2,6 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/example_data/exercise_data.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/example_data/food_data.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/customer_history_model.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/models/customer_schedule_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/exercise_model.dart';
 import 'dart:convert';
@@ -48,38 +50,76 @@ class LoginService {
         today.subtract(const Duration(days: 3)) : 2830
       },
     ];
-    List<DietModel> userTodayDiet = [
-      FoodList.wholeGrainCereal,
-      FoodList.blackBeanBurger,
-      FoodList.blueberries,
-      FoodList.energyBar,
-      FoodList.eggs,
-      FoodList.fish,
-      FoodList.grilledChicken,
-      FoodList.tomatoes,
-      FoodList.spirulina
-    ];
 
-    List<ExerciseModel> userTodayExercise = [
-      ExerciseList.calfStretchLeft,
-      ExerciseList.tricpesStretchRight,
-      ExerciseList.armCirclesCounterClockwise,
-      ExerciseList.sideLyingFloorStretchLeft,
-    ];
+
 
     if (email == "tien@gmail.com") {
-      AccountModel model = AccountModel(email: "tien@gmail.com",
+      List<CustomerHistoryModel> userHistory = [];
+      CustomerScheduleModel scheduleModel = service.generateDefaultSchedule(today.subtract(Duration(days: 3)), today.add(Duration(days: 3 * 30)));
+
+      List<DietModel> listDiet = [];
+      List<ExerciseModel> listExercise = [];
+      CustomerHistoryModel historyModel;
+      scheduleModel.data[today.subtract(Duration(days: 3))]!.dailyDietModel.dietMap.forEach((key, value) {
+        listDiet.addAll(value);
+      });
+      listExercise = List<ExerciseModel>.from(scheduleModel.data[today.subtract(Duration(days: 3))]!.dailyExerciseModel.exerciseList);
+      historyModel = CustomerHistoryModel(
+          dateTime: today.subtract(Duration(days: 3)),
+          userExerciseList: listExercise,
+          userDietList: listDiet);
+      userHistory.add(historyModel);
+
+      listDiet = [];
+      listExercise = [];
+      historyModel;
+      scheduleModel.data[today.subtract(Duration(days: 2))]!.dailyDietModel.dietMap.forEach((key, value) {
+        listDiet.addAll(value);
+      });
+      listExercise = List<ExerciseModel>.from(scheduleModel.data[today.subtract(Duration(days: 2))]!.dailyExerciseModel.exerciseList);
+      listExercise.removeAt(1);
+      listExercise.removeAt(1);
+      historyModel = CustomerHistoryModel(
+          dateTime: today.subtract(Duration(days: 2)),
+          userExerciseList: listExercise,
+          userDietList: listDiet);
+      userHistory.add(historyModel);
+
+      listDiet = [];
+      listExercise = [];
+      historyModel;
+      scheduleModel.data[today.subtract(Duration(days: 1))]!.dailyDietModel.dietMap.forEach((key, value) {
+        listDiet.addAll(value);
+      });
+      listExercise = List<ExerciseModel>.from(scheduleModel.data[today.subtract(Duration(days: 1))]!.dailyExerciseModel.exerciseList);
+      listExercise.add(ExerciseList.sumoSquatCalfRaisesWithWall);
+      listExercise.add(ExerciseList.wideArmPushUps);
+      historyModel = CustomerHistoryModel(
+          dateTime: today.subtract(Duration(days: 1)),
+          userExerciseList: listExercise,
+          userDietList: listDiet);
+      userHistory.add(historyModel);
+
+
+
+
+        AccountModel model = AccountModel(email: "tien@gmail.com",
           fullname: "Natton",
           isFirstTime: false,
           level: 2,
           kcalNum: 10,
           workoutNum: 10,
           minute: 150,
-          scheduleModel: service.generateDefaultSchedule(today, today.add(Duration(days: 3 * 30))),
+          scheduleModel: scheduleModel,
           weightHistory: weightHistory,
           calHistory: dietHistory,
           userTodayDiet: [],
           userTodayExercise: [],
+          userHistory: userHistory,
+          startDate: today.subtract(Duration(days: 3)),
+          endDate: today.add(Duration(days: 3 * 30)),
+          weight: 80,
+          height: 170,
       );
       prefs.setString("ACCOUNT", jsonEncode(model.toJson()));
       return model;
@@ -91,6 +131,8 @@ class LoginService {
         calHistory: dietHistory,
         userTodayDiet: [],
         userTodayExercise: [],
+      weight: 80,
+      height: 170,
     );
     prefs.setString("ACCOUNT", jsonEncode(model.toJson()));
     return model;

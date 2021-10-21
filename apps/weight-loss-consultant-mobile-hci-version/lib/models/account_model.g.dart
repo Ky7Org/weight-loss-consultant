@@ -47,6 +47,11 @@ AccountModel _$AccountModelFromJson(Map<String, dynamic> json) => AccountModel(
               ?.map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      userHistory: (json['userHistory'] as List<dynamic>?)
+              ?.map((e) =>
+                  CustomerHistoryModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     )
       ..userCustomDietModelList =
           (json['userCustomDietModelList'] as List<dynamic>)
@@ -93,4 +98,5 @@ Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
       'dailyCalorieGoal': instance.dailyCalorieGoal,
       'userTodayCustomExercise': instance.userTodayCustomExercise,
       'userTodayCustomDiet': instance.userTodayCustomDiet,
+      'userHistory': instance.userHistory,
     };

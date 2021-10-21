@@ -68,7 +68,7 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
     return PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppBar(
-          title: Text('Suggestion Diet'),
+          title: Text('Suggestion diet'),
           leadingWidth: 30,
           flexibleSpace: Container(
             decoration: BoxDecoration(

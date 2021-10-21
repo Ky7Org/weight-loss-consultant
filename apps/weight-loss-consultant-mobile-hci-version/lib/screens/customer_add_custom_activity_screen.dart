@@ -69,7 +69,7 @@ class _CustomerAddCustomActivityScreenState extends State<CustomerAddCustomActiv
 
   PreferredSize _buildAppBar(){
     return PreferredSize(
-        preferredSize: const Size.fromHeight(100),
+        preferredSize: const Size.fromHeight(70),
         child: AppBar(
           title: const Text('Add custom activity'),
           flexibleSpace: Container(
@@ -372,9 +372,6 @@ class _CustomerAddCustomActivityScreenState extends State<CustomerAddCustomActiv
                         height: 30.0,
                       ),
                       _buildCategory(),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
                       _buildAddBtn(),
                     ],
                   ),

@@ -5,6 +5,8 @@ import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_add_c
 import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_add_diet_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_add_workout_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_calendar_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_history_detail_screen.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_history_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_main_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_today_done_diet_screen.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/screens/customer_today_done_exercise_screen.dart';
@@ -121,6 +123,17 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (_){
           return const CustomerTodayDoneDietScreen();
         });
+      case RoutePath.customerHistoryScreen:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerHistoryScreen();
+        });
+      case RoutePath.customerHistoryDetailScreen:
+        if (args is DateTime){
+          return MaterialPageRoute(builder: (_){
+            return CustomerHistoryDetailScreen(date: args,);
+          });
+        }
+        return _errorRoute();
       default:
        return _errorRoute();
     }

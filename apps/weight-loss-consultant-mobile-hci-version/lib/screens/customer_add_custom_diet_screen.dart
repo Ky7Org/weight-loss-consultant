@@ -109,7 +109,7 @@ class _CustomerAddCustomDietScreenState extends State<CustomerAddCustomDietScree
 
   PreferredSize _buildAppBar(){
     return PreferredSize(
-        preferredSize: const Size.fromHeight(100),
+        preferredSize: const Size.fromHeight(70),
         child: AppBar(
           title: const Text('Add custom food'),
           flexibleSpace: Container(

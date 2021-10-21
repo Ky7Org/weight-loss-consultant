@@ -25,7 +25,7 @@ class _CustomerAddDietScreenState extends State<CustomerAddDietScreen> {
   );
 
   Widget appBarTitle = const Text(
-    "ADD DIET",
+    "Add diet",
     style: TextStyle(color: Colors.white),
   );
   final globalKey = GlobalKey<ScaffoldState>();
@@ -104,7 +104,7 @@ class _CustomerAddDietScreenState extends State<CustomerAddDietScreen> {
 
   PreferredSize _buildAppBar() {
     return PreferredSize(
-        preferredSize: const Size.fromHeight(100),
+        preferredSize: const Size.fromHeight(70),
         child: AppBar(
           title: appBarTitle,
           flexibleSpace: Container(
@@ -170,7 +170,7 @@ class _CustomerAddDietScreenState extends State<CustomerAddDietScreen> {
         color: Colors.white,
       );
       appBarTitle = const Text(
-        "ADD FOOD",
+        "Add food",
         style: TextStyle(color: Colors.white),
       );
       _isSearching = false;
@@ -251,7 +251,7 @@ class _CustomerAddDietScreenState extends State<CustomerAddDietScreen> {
         appBar: _buildAppBar(),
         backgroundColor: Colors.transparent,
         floatingActionButton: Container(
-          width: 300.0,
+          width: 350.0,
           child: FloatingActionButton.extended(
             onPressed: (){
               Navigator.pushNamed(context, RoutePath.customerAddCustomFood).then((value){
@@ -271,16 +271,16 @@ class _CustomerAddDietScreenState extends State<CustomerAddDietScreen> {
           children: [
             const SizedBox(height: 20,),
             const Text(
-              "Weightloss food",
+              "Weight-loss food",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20
               ),
             ),
-            const SizedBox(height: 20,),
             Flexible(
                 child: searchresult.isNotEmpty || _controller.text.isNotEmpty ?
-                _buildSearchList() : _buildAllList())
+                _buildSearchList() : _buildAllList()),
+            const SizedBox(height: 70,)
           ],
         ),
       ),

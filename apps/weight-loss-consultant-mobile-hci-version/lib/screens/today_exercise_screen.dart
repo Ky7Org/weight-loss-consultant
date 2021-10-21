@@ -68,7 +68,7 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
     return PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppBar(
-          title: const Text('Suggestion Exercise'),
+          title: const Text('Suggestion exercises'),
           leadingWidth: 30,
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -206,8 +206,8 @@ class _TodayExerciseScreenState extends State<TodayExerciseScreen> {
     if (labelProgress < 20){
       labelProgress = 20;
     }
-    if (labelProgress > 290){
-      labelProgress = 290;
+    if (labelProgress > 280){
+      labelProgress = 280;
     }
     return Column(
       children: [

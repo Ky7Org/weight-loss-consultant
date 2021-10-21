@@ -50,7 +50,7 @@ class _CustomerTodayDoneDietScreenState extends State<CustomerTodayDoneDietScree
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
-                  image: const NetworkImage("https://images.unsplash.com/photo-1598632640487-6ea4a4e8b963?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1738&q=80"),
+                  image: const AssetImage("assets/images/food.jpeg"),
                 )
             ),
           ),
@@ -76,7 +76,7 @@ class _CustomerTodayDoneDietScreenState extends State<CustomerTodayDoneDietScree
     }
     return const Align(
       alignment: Alignment.topLeft,
-      child: Text("Todo List Food",
+      child: Text("To-do list diet",
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
