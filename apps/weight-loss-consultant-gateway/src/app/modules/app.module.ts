@@ -3,6 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule } from '@nestjs/config';
 import { HealthCheckModule } from './health-check.module';
 import {
+  APPLIED_MANAGEMENT_SERVICE_NAME, APPLIED_MANAGEMENT_SERVICE_PORT,
   AUTHENTICATION_SERVICE_NAME,
   AUTHENTICATION_SERVICE_PORT,
   CAMPAIGN_MANAGEMENT_SERVICE_NAME, CAMPAIGN_MANAGEMENT_SERVICE_PORT,
@@ -28,6 +29,8 @@ import { ENV_FILE_PATH } from '../constant';
 import { SearchModule } from './search.module';
 import { SortingAndFilteringModule } from './sorting-filtering.module';
 import {ContractModule} from "./contract.module";
+import {AppliedModule} from "./apply.module";
+
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -44,6 +47,7 @@ export class AppModule {
         SearchModule,
         SortingAndFilteringModule,
         ContractModule,
+        AppliedModule,
         ClientsModule.register([
           {
             name: AUTHENTICATION_SERVICE_NAME,
@@ -99,6 +103,14 @@ export class AppModule {
             options: {
               host: HOST,
               port: CAMPAIGN_MANAGEMENT_SERVICE_PORT,
+            }
+          },
+          {
+            name: APPLIED_MANAGEMENT_SERVICE_NAME,
+            transport: Transport.TCP,
+            options: {
+              host: HOST,
+              port: APPLIED_MANAGEMENT_SERVICE_PORT,
             }
           }
         ]),
