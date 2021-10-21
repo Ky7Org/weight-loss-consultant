@@ -48,6 +48,7 @@ dependencies:
   syncfusion_flutter_charts: ^19.3.44+1
   flutter_speed_dial: ^4.4.0+2
   url_launcher: ^6.0.12
+  path_provider: ^2.0.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
