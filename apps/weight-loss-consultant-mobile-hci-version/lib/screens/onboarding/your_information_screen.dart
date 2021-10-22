@@ -45,7 +45,6 @@ class _YourInformationScreenState extends State<YourInformationScreen> {
     double goal = weight - 21.5*((height / 100) * (height / 100));
     message = "You are ${goal.toStringAsFixed(1)} kg overweight";
     String status = _calculateBMIStatus();
-    print(status);
     if (status == "Healthy weight"){
       message = "You are at a perfect condition";
     }

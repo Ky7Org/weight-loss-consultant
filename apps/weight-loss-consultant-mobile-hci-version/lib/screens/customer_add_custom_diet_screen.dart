@@ -1,12 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/exercise_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/utilities/app_color.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/utilities/constants.dart';
+import 'package:path/path.dart';
+
 
 class CustomerAddCustomDietScreen extends StatefulWidget {
   const CustomerAddCustomDietScreen({Key? key}) : super(key: key);
@@ -20,6 +25,8 @@ class _CustomerAddCustomDietScreenState extends State<CustomerAddCustomDietScree
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _kcalController = TextEditingController();
+  ImagePicker picker = ImagePicker();
+  var _image;
 
   AccountModel user = AccountModel(email: "", fullname: "");
 
@@ -38,6 +45,57 @@ class _CustomerAddCustomDietScreenState extends State<CustomerAddCustomDietScree
     prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
   }
 
+  Future getImage(String method) async {
+    var source = method == "camera"
+        ? ImageSource.camera
+        : ImageSource.gallery;
+    XFile? image  = await picker.pickImage(source: source);
+    setState(() {
+      _image = File(image!.path);
+    });
+  }
+
+  Widget _buildImagePlaceHolder(){
+    print(_image != null );
+    return Column(
+      children: [
+        Container(
+          width: 150,
+          height: 150,
+          decoration: const BoxDecoration(
+              color: Colors.grey
+          ),
+          child: _image != null ?
+          Image.file(_image,
+            width: 150.0,
+            height: 150.0,
+            fit: BoxFit.fitHeight,
+          )
+              : Container(
+            decoration: const BoxDecoration(
+                color: Colors.grey),
+            width: 150,
+            height: 150,
+            child: Icon(
+              Icons.camera_alt,
+              color: Colors.grey[800],
+            ),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: (){ getImage("camera");},
+              icon: const Icon(Icons.camera_alt_outlined),),
+            IconButton(
+              onPressed: (){ getImage("gallery"); },
+              icon: const Icon(Icons.folder_open_outlined),),
+          ],
+        )
+      ],
+    );
+  }
 
   @override
   void initState() {
@@ -51,7 +109,7 @@ class _CustomerAddCustomDietScreenState extends State<CustomerAddCustomDietScree
 
   PreferredSize _buildAppBar(){
     return PreferredSize(
-        preferredSize: const Size.fromHeight(100),
+        preferredSize: const Size.fromHeight(70),
         child: AppBar(
           title: const Text('Add custom food'),
           flexibleSpace: Container(
@@ -196,17 +254,18 @@ class _CustomerAddCustomDietScreenState extends State<CustomerAddCustomDietScree
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState?.save();
+            String path = await saveImage();
             DietModel model = DietModel(
               _nameController.text.toUpperCase(),
               _kcalController.text + " kcal",
               "",
-              "assets/diet/default.jpeg",
+              path,
               "Your custom activity",
               int.parse(_kcalController.text),
             );
             user.userCustomDietModelList.insert(0, model);
             saveAccount();
-            Navigator.pop(context);
+            Navigator.pop(this.context);
           }
         },
         padding: const EdgeInsets.all(15.0),
@@ -226,6 +285,14 @@ class _CustomerAddCustomDietScreenState extends State<CustomerAddCustomDietScree
         ),
       ),
     );
+  }
+
+  Future<String> saveImage() async {
+    if (_image == null) return "assets/diet/default.jpeg";
+    final String path = (await getApplicationDocumentsDirectory()).path;
+    var fileName = basename(_image.path);
+    final File localImage = await _image.copy('$path/$fileName');
+    return '$path/$fileName';
   }
 
   @override
@@ -249,6 +316,10 @@ class _CustomerAddCustomDietScreenState extends State<CustomerAddCustomDietScree
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    _buildImagePlaceHolder(),
                     const SizedBox(height: 30.0),
                     _buildNameTF(),
                     const SizedBox(

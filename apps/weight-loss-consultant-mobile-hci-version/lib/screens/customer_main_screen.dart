@@ -21,6 +21,7 @@ class CustomerMainScreen extends StatefulWidget {
 
 class _CustomerMainScreenState extends State<CustomerMainScreen> {
   AccountModel user = AccountModel(email: "", fullname: "");
+  int progressChartType = 0;
 
 
   Future<void> initAccount() async {
@@ -52,10 +53,100 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
     saveAccount().then((value) => super.deactivate());
   }
 
+  Widget _buildExerciseRecordCard(){
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, RoutePath.customerTodayDoneExerciseScreen).then((value) {
+          initAccount().then((value){
+            setState(() {
+
+            });
+          });
+        });
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 10,
+        child: Container(
+          height: 150,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              image: const DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage("https://images.unsplash.com/photo-1499438075715-fc23ef376ab9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1642&q=80"),
+              )
+          ),
+          child: const Center(
+            child: Text('Your activities today',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 25
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDietRecordCard(){
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, RoutePath.customerTodayDoneDietScreen).then((value){
+          initAccount().then((value) {
+            setState(() {
+
+            });
+          });
+        });
+
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 10,
+        child: Container(
+          height: 150,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              image: const DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage("https://images.unsplash.com/photo-1590643515786-250b0b9e8000?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1740&q=80"),
+              )
+          ),
+          child: const Center(
+            child: Text('Your diet today',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 25
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildTodayExerciseCard(){
     return GestureDetector(
       onTap: (){
-        Navigator.pushNamed(context, RoutePath.todayExerciseScreen);
+        Navigator.pushNamed(context, RoutePath.todayExerciseScreen).then((value){
+          initAccount().then((value) {
+            setState(() {
+
+            });
+          });
+        });
+
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -90,7 +181,14 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
   Widget _buildTodayDietCard(){
     return GestureDetector(
       onTap: (){
-        Navigator.pushNamed(context, RoutePath.todayDietScreen);
+        Navigator.pushNamed(context, RoutePath.todayDietScreen).then((value){
+          initAccount().then((value) {
+            setState(() {
+
+            });
+          });
+        });
+
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -125,7 +223,13 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
   Widget _buildYourReportCard(){
     return GestureDetector(
       onTap: (){
-        Navigator.pushNamed(context, RoutePath.customerReportScreen);
+        Navigator.pushNamed(context, RoutePath.customerReportScreen).then((value){
+          initAccount().then((value) {
+            setState(() {
+
+            });
+          });
+        });
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -158,10 +262,10 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
 
   Widget _buildProgressBar(){
     String message = "kcal \n remaining";
-    String kcal = (user.dailyCalorieGoal - user.getTodayKcal()).toString();
-    if (user.dailyCalorieGoal - user.getTodayKcal() < 0){
+    String kcal = (user.getUserTodayDietCalorieGoal() - user.getTodayDietKcal()).toString();
+    if (user.getUserTodayDietCalorieGoal() - user.getTodayDietKcal() < 0){
       message = "kcal \n extra consumed";
-      kcal = (user.getTodayKcal() - user.dailyCalorieGoal).toString();
+      kcal = (user.getTodayDietKcal() - user.getUserTodayDietCalorieGoal()).toString();
     }
 
 
@@ -205,7 +309,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
               ],
               pointers: [
                 RangePointer(
-                  value: (user.getTodayKcal() * 100 / user.dailyCalorieGoal),
+                  value: (user.getTodayDietKcal() * 100 / user.getUserTodayDietCalorieGoal()),
                   cornerStyle: CornerStyle.bothCurve,
                   width: 0.2,
                   sizeUnit: GaugeSizeUnit.factor,
@@ -223,70 +327,579 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
     );
   }
 
-  Widget _buildYourProgress(){
+  Widget _buildExerciseProgressBar(){
+    String message = "kcal \n remaining";
+    String kcal = (user.getUserTodayExerciseCalorieGoal() - user.getTodayExerciseKcal()).toString();
+    if (user.getUserTodayExerciseCalorieGoal() - user.getTodayExerciseKcal() < 0){
+      message = "kcal \n extra burned";
+      kcal = (user.getTodayExerciseKcal() - user.getUserTodayExerciseCalorieGoal()).toString();
+    }
+
+
+    return SizedBox(
+      height: 200,
+      child: SfRadialGauge(
+          axes: <RadialAxis>[
+            RadialAxis(
+              minimum: 0,
+              maximum: 100,
+              showLabels: false,
+              showTicks: false,
+              annotations: [
+                GaugeAnnotation(
+                    positionFactor: 0.1,
+                    angle: 90,
+                    widget: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            kcal,
+                            style: const TextStyle(
+                                fontSize: 17,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900
+                            ),
+                          ),
+                          const SizedBox(height: 5,),
+                          Text(
+                            message,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13
+                            ),
+                          )
+                        ],
+                      ),
+                    ))
+              ],
+              pointers: [
+                RangePointer(
+                  value: (user.getTodayExerciseKcal() * 100 / user.getUserTodayExerciseCalorieGoal()),
+                  cornerStyle: CornerStyle.bothCurve,
+                  width: 0.2,
+                  sizeUnit: GaugeSizeUnit.factor,
+                  color: Colors.orange,
+                )
+              ],
+              axisLineStyle: const AxisLineStyle(
+                thickness: 0.2,
+                cornerStyle: CornerStyle.bothCurve,
+                color: Colors.white,
+                thicknessUnit: GaugeSizeUnit.factor,
+              ),
+            ),
+          ]),
+    );
+  }
+
+  Widget buildProgress(){
+    double indicatorProgress =  (user.getTodayExerciseKcal() / user.getUserTodayExerciseCalorieGoal()) * 350 - 10;
+    if (indicatorProgress < 0){
+      indicatorProgress = 0;
+    }
+    if (indicatorProgress > 330){
+      indicatorProgress = 330;
+    }
+
+    double labelProgress = (user.getTodayExerciseKcal() / user.getUserTodayExerciseCalorieGoal()) * 350 - 10;
+    if (labelProgress < 20){
+      labelProgress = 20;
+    }
+    if (labelProgress > 290){
+      labelProgress = 290;
+    }
+    return Column(
+      children: [
+        const Text("Your exercise goal",
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 10,),
+        Stack(
+          children: [
+            const SizedBox(height: 70,),
+            Positioned(
+                top: 0,
+                left: labelProgress - 20,
+                child: Text(
+                  "${user.getTodayExerciseKcal()} kcal",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+
+                  ),
+                )
+            ),
+            Positioned(
+                top: 13,
+                left: indicatorProgress,
+                child: const Icon(Icons.arrow_drop_down_sharp, color: Colors.white,)
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 30),
+              height: 20,
+              width: 700,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: LinearProgressIndicator(
+
+                  value: user.getTodayExerciseKcal() / user.getUserTodayExerciseCalorieGoal(),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
+                  backgroundColor: Colors.grey.shade400,
+                ),
+              ),
+            ),
+
+            const Positioned(
+                top: 55,
+                child: Text(
+                  "0 kcal",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                )
+            ),
+            Positioned(
+                top: 55,
+                right: 0,
+                child: Text(
+                  "${user.getUserTodayExerciseCalorieGoal()} kcal",
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                )
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildYourDietProgress(){
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 30),
       decoration: const BoxDecoration(
-          color: Color(0xFF478DE0),
+          color: Colors.green,
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
       ),
-      child: Column(
+      child: Stack(
         children: [
-          const Text(
-            "TODAY PROGRESS",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w700
-            ),
-          ),
-          const SizedBox(height: 20,),
-          _buildProgressBar(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Column(
             children: [
-              Column(
+              const Text(
+                "TODAY DIET PROGRESS",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700
+                ),
+              ),
+              const SizedBox(height: 20,),
+              _buildProgressBar(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(user.getTodayKcal().toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700
-                    ),
+                  Column(
+                    children: [
+                      Text(user.getTodayDietKcal().toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w700
+                        ),
+                      ),
+                      const Text("today kcal",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500
+                        ),
+                      )
+                    ],
                   ),
-                  const Text("today kcal",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500
-                    ),
+                  Column(
+                    children: [
+                      Text(
+                        user.getUserTodayDietCalorieGoal().toString(),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w700
+                        ),
+                      ),
+                      const Text("daily kcal goal",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),
-              Column(
+            ],
+          ),
+          Positioned(
+            top: 100,
+              right: 10,
+              child: Column(
                 children: [
-                  Text(
-                    user.dailyCalorieGoal.toString(),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w700
-                    ),
+                  IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+                      onPressed: (){
+                        setState(() {
+                          progressChartType = 2;
+                        });
+                      },
                   ),
-                  const Text("daily kcal goal",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500
-                    ),
-                  ),
+                  const Text(
+                    "exercise",
+                    style: TextStyle(color: Colors.white),
+                  )
                 ],
               )
-            ],
+          ),
+          Positioned(
+              top: 100,
+              left: 10,
+              child: Column(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                    onPressed: (){
+                      setState(() {
+                        progressChartType = 0;
+                      });
+                    },
+                  ),
+                  const Text(
+                    "overall",
+                    style: TextStyle(color: Colors.white),
+                  )
+                ],
+              )
           ),
         ],
       )
     );
+  }
+
+  Widget _buildYourExerciseProgress(){
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 30),
+        decoration: BoxDecoration(
+          color: Colors.pinkAccent.shade700,
+          borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
+        ),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                const Text(
+                  "TODAY EXERCISE PROGRESS",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700
+                  ),
+                ),
+                const SizedBox(height: 20,),
+                _buildExerciseProgressBar(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        Text(user.getTodayExerciseKcal().toString(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w700
+                          ),
+                        ),
+                        const Text("today kcal",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500
+                          ),
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          user.getUserTodayExerciseCalorieGoal().toString(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w700
+                          ),
+                        ),
+                        const Text("daily kcal goal",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            ),
+            Positioned(
+                top: 100,
+                left: 10,
+                child: Column(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                      onPressed: (){
+                        setState(() {
+                          progressChartType = 1;
+                        });
+                      },
+                    ),
+                    const Text(
+                      "diet",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                )
+            ),
+            Positioned(
+                top: 100,
+                right: 10,
+                child: Column(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+                      onPressed: (){
+                        setState(() {
+                          progressChartType = 0;
+                        });
+                      },
+                    ),
+                    const Text(
+                      "overall",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                )
+            ),
+          ],
+        )
+    );
+  }
+
+  Widget _buildGeneralProgressBar(){
+    String message = "kcal \n remaining";
+    String kcal = (user.getUserTodayOverallCalorieGoal() - user.getTodayKcal()).toString();
+    if (user.getUserTodayOverallCalorieGoal() - user.getTodayKcal() < 0){
+      message = "kcal \n extra consumed";
+      kcal = (user.getTodayKcal() - user.getUserTodayOverallCalorieGoal()).toString();
+    }
+
+
+    return SizedBox(
+      height: 200,
+      child: SfRadialGauge(
+          axes: <RadialAxis>[
+            RadialAxis(
+              minimum: 0,
+              maximum: 100,
+              showLabels: false,
+              showTicks: false,
+              annotations: [
+                GaugeAnnotation(
+                    positionFactor: 0.1,
+                    angle: 90,
+                    widget: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            kcal,
+                            style: const TextStyle(
+                                fontSize: 17,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900
+                            ),
+                          ),
+                          const SizedBox(height: 5,),
+                          Text(
+                            message,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13
+                            ),
+                          )
+                        ],
+                      ),
+                    ))
+              ],
+              pointers: [
+                RangePointer(
+                  value: (user.getTodayKcal() * 100 / user.getUserTodayOverallCalorieGoal()),
+                  cornerStyle: CornerStyle.bothCurve,
+                  width: 0.2,
+                  sizeUnit: GaugeSizeUnit.factor,
+                  color: Colors.orange,
+                )
+              ],
+              axisLineStyle: const AxisLineStyle(
+                thickness: 0.2,
+                cornerStyle: CornerStyle.bothCurve,
+                color: Colors.white,
+                thicknessUnit: GaugeSizeUnit.factor,
+              ),
+            ),
+          ]),
+    );
+  }
+
+  Widget _buildYourGeneralProgress(){
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 30),
+        decoration: const BoxDecoration(
+          color: Color(0xFF478DE0),
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
+        ),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                const Text(
+                  "TODAY OVERALL PROGRESS",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700
+                  ),
+                ),
+                const SizedBox(height: 20,),
+                _buildGeneralProgressBar(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        Text(user.getTodayKcal().toString(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w700
+                          ),
+                        ),
+                        const Text("today kcal",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500
+                          ),
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          user.getUserTodayOverallCalorieGoal().toString(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w700
+                          ),
+                        ),
+                        const Text("daily kcal goal",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            ),
+            Positioned(
+                top: 100,
+                left: 10,
+                child: Column(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                      onPressed: (){
+                        setState(() {
+                          progressChartType = 2;
+                        });
+                      },
+                    ),
+                    const Text(
+                      "exercise",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                )
+            ),
+            Positioned(
+                top: 100,
+                right: 10,
+                child: Column(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+                      onPressed: (){
+                        setState(() {
+                          progressChartType = 1;
+                        });
+                      },
+                    ),
+                    const Text(
+                      "diet",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                )
+            ),
+          ],
+        )
+    );
+  }
+
+  Widget _buildYourProgress(){
+    switch (progressChartType){
+      case 0:
+        return _buildYourGeneralProgress();
+      case 1:
+        return _buildYourDietProgress();
+      case 2:
+        return _buildYourExerciseProgress();
+    }
+    return _buildYourGeneralProgress();
   }
 
   Widget _buildFabExpandable(){
@@ -304,7 +917,14 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
           backgroundColor: const Color(0xFF478DE0),
           label: "Add diet",
           onTap: (){
-            Navigator.pushNamed(context, RoutePath.customerAddDietScreen);
+            Navigator.pushNamed(context, RoutePath.customerAddDietScreen).then((value) {
+              initAccount().then((value){
+                setState(() {
+
+                });
+              });
+            });
+
           }
         ),
         SpeedDialChild(
@@ -315,352 +935,31 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
             label: "Add workout",
             backgroundColor: Color(0xFF478DE0),
             onTap: (){
-              Navigator.pushNamed(context, RoutePath.customerAddWorkoutScreen);
+              Navigator.pushNamed(context, RoutePath.customerAddWorkoutScreen).then((value){
+                initAccount().then((value){
+                  setState(() {
+
+                  });
+                });
+              });
+
             }
         ),
       ],
     );
-    /*return ExpandableFab(
-      distance: 112.0,
-      children: [
-        ActionButton(
-          onPressed: (){
-            Navigator.pushNamed(context, RoutePath.customerAddDietScreen);
-          },
-          icon: const Icon(Icons.fastfood),
-        ),
-        ActionButton(
-          onPressed: (){
-            Navigator.pushNamed(context, RoutePath.customerAddWorkoutScreen);
-          },
-          icon: const Icon(Icons.downhill_skiing),
-        ),
-        ActionButton(
-          onPressed: (){},
-          icon: const Icon(Icons.event_note_outlined),
-        ),
-      ],
-    );*/
   }
 
-  Widget _buildBalanceDietCard(){
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      elevation: 10,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Column(
-          children: [
-            const Align(
-              alignment: Alignment(-1, 1),
-              child: Text(
-                "Balance Diet",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-            const SizedBox(height: 10,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Protein",
-                      style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    const SizedBox(height: 4,),
-                    const Text(
-                      "30/105 g",
-                      style: TextStyle(
-                        color: Colors.grey
-                      )
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      height: 10,
-                      width: 70,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        child: LinearProgressIndicator(
-                          value: 0.7,
-                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.cyan),
-                          backgroundColor: Colors.grey.shade100,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Carb",
-                      style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    const SizedBox(height: 4,),
-                    const Text(
-                        "109/264 g",
-                        style: TextStyle(
-                            color: Colors.grey,
-                        )
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      height: 10,
-                      width: 70,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        child: LinearProgressIndicator(
-                          value: 0.4,
-                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
-                          backgroundColor: Colors.grey.shade100,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Fat",
-                      style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    const SizedBox(height: 4,),
-                    const Text(
-                        "12/79 g",
-                        style: TextStyle(
-                            color: Colors.grey
-                        )
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      height: 10,
-                      width: 70,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        child: LinearProgressIndicator(
-                          value: 0.2,
-                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
-                          backgroundColor: Colors.grey.shade100,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
 
-  List<Widget> _getCustomerTodayExerciseList(){
-    List<Widget> result = List.empty(growable: true);
-    for (int i = 0; i < user.userTodayExercise.length ; i++){
-      ExerciseModel model = user.userTodayExercise[i];
-      Widget widget = Dismissible(
-          key: UniqueKey(),
-          onDismissed: (direction) {
-            // Remove the item from the data source.
-            setState(() {
-              user.userTodayExercise.removeAt(i);
-              saveAccount();
-            });
-          },
-          background: Container(color: Colors.red),
-          child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              child: Row(children: [
-                const SizedBox(width: 20,),
-                SizedBox(
-                  width: 150,
-                  child: Text(
-                      model.name,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                      )
-                  ),
-                ),
-                const Spacer(),
-                Text("${model.calories} kcal"),
-                const SizedBox(width: 20,)
-              ])
-          )
-      );
-      result.add(widget);
-    };
-    return result;
-  }
 
-  List<Widget> _getCustomerTodayDietList(){
-    List<Widget> result = List.empty(growable: true);
-    for (int i = 0; i < user.userTodayDiet.length ; i++){
-      DietModel model = user.userTodayDiet[i];
-      Widget widget = Dismissible(
-          key: UniqueKey(),
-          onDismissed: (direction) {
-            // Remove the item from the data source.
-            setState(() {
-              user.userTodayDiet.removeAt(i);
-              saveAccount();
-            });
-          },
-          background: Container(color: Colors.red),
-          child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 5),
-          child: Row(children: [
-            const SizedBox(width: 20,),
-            SizedBox(
-              width: 200,
-              child: Text(
-                  model.name,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  )
-              ),
-            ),
-            const Spacer(),
-            Text("${model.calories} kcal"),
-            const SizedBox(width: 20,)
-          ])
-      )
-      );
 
-      result.add(widget);
-    };
-    return result;
-  }
-
-  Widget _buildWorkoutListCard(){
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      elevation: 10,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                const Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    "Your activities today",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: SizedBox(
-                    height: 20,
-                    child: IconButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: (){
-                          Navigator.pushNamed(context, RoutePath.customerAddWorkoutScreen).then((value) {
-                            initAccount();
-                            setState(() {
-
-                            });
-                          });
-                        },
-                        icon: const Icon(Icons.add)
-                    ),
-                  ),
-                )
-              ]
-            ),
-            const SizedBox(height: 10,),
-            Column(
-              children: _getCustomerTodayExerciseList(),
-            )
-          ],
-        ),
-      )
-    );
-  }
-
-  Widget _buildDietListCard(){
-    return Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        elevation: 10,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-          child: Column(
-            children: [
-              Stack(
-                  children: [
-                    const Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(
-                        "Your diet today",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: SizedBox(
-                        height: 20,
-                        child: IconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: (){
-                              Navigator.pushNamed(context, RoutePath.customerAddDietScreen).then((value) {
-                                initAccount();
-                                setState(() {
-
-                                });
-                              });
-                            },
-                            icon: const Icon(Icons.add)
-                        ),
-                      ),
-                    )
-                  ]
-              ),
-              const SizedBox(height: 10,),
-              Column(
-                children: _getCustomerTodayDietList(),
-              )
-            ],
-          ),
-        )
-    );
-  }
 
   Widget _buildWarning(){
-    String message = "Warning: you have exceeded today goal";
+    String message = "Warning: you have exceeded calorie's limit";
     Widget widget = Container();
-    if (user.getTodayKcal() > user.dailyCalorieGoal + 100){
+    if (user.getTodayKcal() > user.getUserTodayOverallCalorieGoal() + 100){
       widget = Container(
         height: 50,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
         color: Colors.redAccent,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -683,8 +982,8 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
         ),
       );
     }
-    else if (user.getTodayKcal() > user.dailyCalorieGoal && user.getTodayKcal() < user.dailyCalorieGoal + 100){
-      String message = "You've reached your daily goal ";
+    else if (user.getTodayKcal() > user.getUserTodayOverallCalorieGoal() && user.getTodayKcal() < user.getUserTodayOverallCalorieGoal() + 100){
+      String message = "You've reached your daily goal";
       widget = Container(
         height: 50,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -729,7 +1028,7 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
             SingleChildScrollView(
               child: Column(
               children: [
-                SizedBox(height: user.getTodayKcal() > user.dailyCalorieGoal ? 50 : 0,),
+                SizedBox(height: user.getTodayKcal() > user.getUserTodayOverallCalorieGoal() ? 50 : 0,),
                 _buildYourProgress(),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -738,17 +1037,17 @@ class _CustomerMainScreenState extends State<CustomerMainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(width: double.infinity,),
-                      _buildBalanceDietCard(),
                       const SizedBox(height: 10,),
-                      _buildWorkoutListCard(),
-                      const SizedBox(height: 10,),
-                      _buildDietListCard(),
-                      const SizedBox(height: 20,),
                       _buildTodayExerciseCard(),
                       const SizedBox(height: 20,),
                       _buildTodayDietCard(),
                       const SizedBox(height: 20,),
+                      _buildExerciseRecordCard(),
+                      const SizedBox(height: 20,),
+                      _buildDietRecordCard(),
+                      const SizedBox(height: 20,),
                       _buildYourReportCard(),
+
                     ],
                   ),
                 ),

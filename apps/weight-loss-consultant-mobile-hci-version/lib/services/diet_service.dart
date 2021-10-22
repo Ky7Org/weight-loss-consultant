@@ -23,7 +23,7 @@ class DietService{
     i = 0;
     while (i < 5){
       var element = FoodList.listFood[_random.nextInt(FoodList.listFood.length)];
-      if (lunchDiets.contains(element)) continue;
+      if (lunchDiets.contains(element) || breakfastDiets.contains(element)) continue;
       lunchDiets.add(element);
       i++;
     }
@@ -33,7 +33,7 @@ class DietService{
     i = 0;
     while (i < 5){
       var element = FoodList.listFood[_random.nextInt(FoodList.listFood.length)];
-      if (dinnerDiets.contains(element)) continue;
+      if (dinnerDiets.contains(element) || lunchDiets.contains(element) || breakfastDiets.contains(element)) continue;
       dinnerDiets.add(element);
       i++;
     }
@@ -60,7 +60,7 @@ class DietService{
     i = 0;
     while (i < 5){
       var element = FoodList.listFood[_random.nextInt(FoodList.listFood.length)];
-      if (lunchDiets.contains(element)) continue;
+      if (lunchDiets.contains(element) || breakfastDiets.contains(element)) continue;
       lunchDiets.add(element);
       i++;
     }
@@ -70,7 +70,7 @@ class DietService{
     i = 0;
     while (i < 5){
       var element = FoodList.listFood[_random.nextInt(FoodList.listFood.length)];
-      if (dinnerDiets.contains(element)) continue;
+      if (dinnerDiets.contains(element) || lunchDiets.contains(element) || breakfastDiets.contains(element)) continue;
       dinnerDiets.add(element);
       i++;
     }
@@ -97,7 +97,7 @@ class DietService{
     i = 0;
     while (i < 5){
       var element = FoodList.listFood[_random.nextInt(FoodList.listFood.length)];
-      if (lunchDiets.contains(element)) continue;
+      if (lunchDiets.contains(element) || breakfastDiets.contains(element)) continue;
       lunchDiets.add(element);
       i++;
     }
@@ -107,7 +107,7 @@ class DietService{
     i = 0;
     while (i < 5){
       var element = FoodList.listFood[_random.nextInt(FoodList.listFood.length)];
-      if (dinnerDiets.contains(element)) continue;
+      if (dinnerDiets.contains(element) || lunchDiets.contains(element) || breakfastDiets.contains(element)) continue;
       dinnerDiets.add(element);
       i++;
     }
