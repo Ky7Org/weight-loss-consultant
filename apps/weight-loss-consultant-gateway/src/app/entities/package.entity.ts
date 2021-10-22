@@ -3,6 +3,7 @@ import { TrainerEntity } from './trainer.entity';
 import {ContractEntity} from "./contract.entity";
 import {AppliedEntity} from "../../../../weight-loss-consultant-applied-mgnt-api/src/app/entities/applied.entity";
 
+
 @Entity('Package')
 export class PackageEntity extends BaseEntity{
   @PrimaryGeneratedColumn()
@@ -31,4 +32,5 @@ export class PackageEntity extends BaseEntity{
 
   @OneToMany(() => AppliedEntity, applied => applied.package)
   applies: AppliedEntity[];
+
 }
