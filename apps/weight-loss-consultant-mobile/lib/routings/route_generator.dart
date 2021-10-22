@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/upcoming_training_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/others/chat_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_home_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/my_message_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/others/ending_phone.dart';
 import 'package:weight_loss_consultant_mobile/pages/others/initial_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/others/setting_screen_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/others/video_call_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/register/register_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_detail_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/authentication/login_page.dart';
@@ -87,6 +90,18 @@ class RouteGenerator{
       case RoutePath.trainerHomePage:
         return MaterialPageRoute(builder: (_){
           return const TrainerHomePage();
+        });
+      case RoutePath.upcomingTrainingPage:
+        return MaterialPageRoute(builder: (_){
+          return const UpcomingTrainingPage();
+        });
+      case RoutePath.videoCallPage:
+        return MaterialPageRoute(builder: (_){
+          return const VideoCallPage();
+        });
+      case RoutePath.endCallPage:
+        return MaterialPageRoute(builder: (_){
+          return const EndingCallPage();
         });
       default:
         return _errorRoute();
