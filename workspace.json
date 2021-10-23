@@ -54,7 +54,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-authentication": {
       "root": "apps/weight-loss-consultant-authentication",
@@ -107,7 +108,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-campaign-mgnt-api": {
       "root": "apps/weight-loss-consultant-campaign-mgnt-api",
@@ -162,7 +164,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-contract-mgnt-api": {
       "root": "apps/weight-loss-consultant-contract-mgnt-api",
@@ -217,7 +220,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-gateway": {
       "root": "apps/weight-loss-consultant-gateway",
@@ -268,7 +272,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-health-mgnt-api": {
       "root": "apps/weight-loss-consultant-health-mgnt-api",
@@ -321,7 +326,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-mobile": {
       "root": "apps/weight-loss-consultant-mobile",
@@ -447,7 +453,8 @@
             "cwd": "apps/weight-loss-consultant-mobile"
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-mobile-hci-version": {
       "root": "apps/weight-loss-consultant-mobile-hci-version",
@@ -573,7 +580,8 @@
             "cwd": "apps/weight-loss-consultant-mobile-hci-version"
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-packages-mgnt-api": {
       "root": "apps/weight-loss-consultant-packages-mgnt-api",
@@ -628,7 +636,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-scheduling-api": {
       "root": "apps/weight-loss-consultant-scheduling-api",
@@ -681,7 +690,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-ui": {
       "root": "apps/weight-loss-consultant-ui",
@@ -761,7 +771,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "weight-loss-consultant-ui-e2e": {
       "root": "apps/weight-loss-consultant-ui-e2e",
@@ -843,27 +854,8 @@
             "passWithNoTests": true
           }
         }
-      }
-    }
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/nest"
-  },
-  "defaultProject": "weight-loss-consultant-gateway",
-  "generators": {
-    "@nrwl/react": {
-      "application": {
-        "style": "scss",
-        "linter": "eslint",
-        "babel": true
       },
-      "component": {
-        "style": "scss"
-      },
-      "library": {
-        "style": "scss",
-        "linter": "eslint"
-      }
+      "tags": []
     }
   }
 }

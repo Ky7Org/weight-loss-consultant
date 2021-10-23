@@ -27,43 +27,25 @@
       }
     ]
   },
-  "projects": {
-    "weight-loss-consultant-applied-mgnt-api": {
-      "tags": []
-    },
-    "weight-loss-consultant-authentication": {
-      "tags": []
-    },
-    "weight-loss-consultant-campaign-mgnt-api": {
-      "tags": []
-    },
-    "weight-loss-consultant-contract-mgnt-api": {
-      "tags": []
-    },
-    "weight-loss-consultant-gateway": {
-      "tags": []
-    },
-    "weight-loss-consultant-health-mgnt-api": {
-      "tags": []
-    },
-    "weight-loss-consultant-mobile": {
-      "tags": []
-    },
-    "weight-loss-consultant-mobile-hci-version": {
-      "tags": []
-    },
-    "weight-loss-consultant-packages-mgnt-api": {
-      "tags": []
-    },
-    "weight-loss-consultant-scheduling-api": {
-      "tags": []
-    },
-    "weight-loss-consultant-ui": {
-      "tags": []
-    },
-    "weight-loss-consultant-users-mgnt-api": {
-      "tags": []
+  "plugins": ["@nxrocks/nx-flutter"],
+  "cli": {
+    "defaultCollection": "@nrwl/nest"
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "scss",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "scss"
+      },
+      "library": {
+        "style": "scss",
+        "linter": "eslint"
+      }
     }
   },
-  "plugins": ["@nxrocks/nx-flutter"]
+  "defaultProject": "weight-loss-consultant-gateway"
 }
