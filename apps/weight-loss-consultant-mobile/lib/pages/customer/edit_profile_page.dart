@@ -49,8 +49,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ],
       ),
       style: ButtonStyle(
-          // maximumSize:
-          //     MaterialStateProperty.all<Size>(Size(20, 20)),
           backgroundColor:
               MaterialStateProperty.all<Color>(const Color(0xFFFF3939)),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -347,7 +345,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 errorStyle: const TextStyle(height: 0.1),
                               ),
                             ),
-                            Row(
+                            Row (
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 _illnessWidget('Asthma'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_create_campaign.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/upcoming_training_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/others/chat_page.dart';
@@ -17,6 +18,8 @@ import 'package:weight_loss_consultant_mobile/pages/authentication/recorver_pass
 import 'package:weight_loss_consultant_mobile/pages/authentication/reset_password_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/register/trainer_register_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/register/register_sucessful_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/create_packages_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/no_packages_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_home_page.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
@@ -27,7 +30,7 @@ class RouteGenerator{
     switch (settings.name){
       case RoutePath.initialPage:
         return MaterialPageRoute(builder: (_){
-          return const InitialPage();
+          return const CreatePackages();
         });
       case RoutePath.getStartedPage:
         return MaterialPageRoute(builder: (_){

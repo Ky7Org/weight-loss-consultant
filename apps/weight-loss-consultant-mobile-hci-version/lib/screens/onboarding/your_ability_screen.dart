@@ -209,32 +209,34 @@ class _YourAbilityScreenState extends State<YourAbilityScreen> {
       child: Scaffold(
         appBar: CustomerAppbar.builder("YOUR ABILITY"),
         backgroundColor: Colors.transparent,
-        body: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              _buildTitleWidget(),
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 30.0),
-                    _buildBeginnerCard(),
-                    const SizedBox(height: 30.0),
-                    _buildIntermediateCard(),
-                    const SizedBox(height: 30.0),
-                    _buildAdvancedCard(),
-                    const SizedBox(height: 30.0),
-                    _buildLNextBtn(),
-                  ],
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-            ],
+                _buildTitleWidget(),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 30.0),
+                      _buildBeginnerCard(),
+                      const SizedBox(height: 30.0),
+                      _buildIntermediateCard(),
+                      const SizedBox(height: 30.0),
+                      _buildAdvancedCard(),
+                      const SizedBox(height: 30.0),
+                      _buildLNextBtn(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
