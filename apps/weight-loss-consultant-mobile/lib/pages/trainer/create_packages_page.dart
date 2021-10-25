@@ -15,8 +15,10 @@ class _CreatePackagesState extends State<CreatePackages> {
   final TextEditingController _exercisePlan = TextEditingController();
   final TextEditingController _dietPlan = TextEditingController();
   final TextEditingController _titles = TextEditingController();
-  final TextEditingController _numberOfDay = TextEditingController();
   final TextEditingController _fee = TextEditingController();
+  final TextEditingController _schedule = TextEditingController();
+
+  String dropdownValue = '2 days';
 
   Widget _multiInput(
       String label, String hint, TextEditingController controller) {
@@ -123,6 +125,53 @@ class _CreatePackagesState extends State<CreatePackages> {
     );
   }
 
+  Widget _dropdown(){
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+          color: AppColors.INPUT_COLOR,
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child:  Column(
+        children: [
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Total number of days to meet',
+              style: TextStyle(
+                  color: Color(0xFF0D3F67),
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          DropdownButton<String>(
+            value: dropdownValue,
+            icon: const Icon(Icons.arrow_drop_down_sharp),
+            iconSize: 24,
+            elevation: 16,
+            isExpanded: true,
+            style: const TextStyle(color: Color(0xFF0D3F67), fontWeight: FontWeight.w400, fontSize: 15),
+            underline: const SizedBox(),
+            onChanged: (String? newValue) {
+              setState(() {
+                dropdownValue = newValue!;
+              });
+            },
+            items: <String>['2 days', '3 days', '4 days', '5 days']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,12 +204,12 @@ class _CreatePackagesState extends State<CreatePackages> {
                         false,
                         Icons.ac_unit,
                         _titles),
-                    _singleInput("Total number of days to meet", "2 days", true,
-                        false, Icons.keyboard_arrow_down, _numberOfDay),
+                    _dropdown(),
                     _multiInput("Exercise Plan", "Do what?", _exercisePlan),
                     _multiInput("Diet Plan", "Eat what?", _dietPlan),
                     _singleInput("Training Fee", "000.00", false, true,
                         Icons.attach_money, _fee),
+                    _multiInput("Schedule description", "Your description...", _schedule),
                     const SizedBox(
                       height: 20,
                     ),

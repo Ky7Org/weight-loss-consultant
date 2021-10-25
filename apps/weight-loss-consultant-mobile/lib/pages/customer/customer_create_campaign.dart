@@ -14,10 +14,12 @@ class CreateCampaignPage extends StatefulWidget {
 class _CreateCampaignPageState extends State<CreateCampaignPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _weightTarget = TextEditingController();
+  final TextEditingController _medicalHistory = TextEditingController();
+  final TextEditingController _description = TextEditingController();
   final TextEditingController _currentWeight = TextEditingController();
-  final TextEditingController _yourTarget = TextEditingController();
-  final TextEditingController _dayOfTraining = TextEditingController();
-  final TextEditingController _habbit = TextEditingController();
+  final TextEditingController _habit = TextEditingController();
+
+  String dropdownValue = '2 days';
 
   Widget _title(String title) {
     return Text(title,
@@ -128,37 +130,51 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     );
   }
 
-  Widget _illness(String label) {
-    return ElevatedButton(
-      onPressed: () {
-        return ;
-      },
-      child: Row(
+  Widget _dropdown(){
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+          color: AppColors.INPUT_COLOR,
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child:  Column(
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w900,
-                color: Color(0xffffffff)),
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'How many day per week you can spend for training',
+              style: TextStyle(
+                  color: Color(0xFF0D3F67),
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
-          const SizedBox(
-            width: 5,
+          DropdownButton<String>(
+            value: dropdownValue,
+            icon: const Icon(Icons.arrow_drop_down_sharp),
+            iconSize: 24,
+            elevation: 16,
+            isExpanded: true,
+            style: const TextStyle(color: Color(0xFF0D3F67), fontWeight: FontWeight.w400, fontSize: 15),
+            underline: const SizedBox(),
+            onChanged: (String? newValue) {
+              setState(() {
+                dropdownValue = newValue!;
+              });
+            },
+            items: <String>['2 days', '3 days', '4 days', '5 days']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
           ),
-          const Icon(
-            Icons.highlight_remove,
-            size: 20,
-          )
         ],
       ),
-      style: ButtonStyle(
-          backgroundColor:
-          MaterialStateProperty.all<Color>(const Color(0xFFFF3939)),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ))),
     );
+
+
   }
 
   @override
@@ -176,49 +192,15 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
               children: [
                 Align(
                   alignment: Alignment.topLeft,
-                  child: _title('Choose illness'),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _illness('over weight'),
-                    _illness('heart attack'),
-                    _illness('broke leg'),
-                  ],
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: GestureDetector(
-                    child: Row(
-                      children: [
-                        Icon(Icons.add, color: AppColors.PRIMARY_COLOR,),
-                        Text(
-                          'Add Symptom',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.PRIMARY_COLOR
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
                   child: _title('Fill the Forms'),
                 ),
+                _singleInput("Your medical history", "E,g: I'm addicted to cigarettes ", _medicalHistory, TextInputType.text, Icons.add, false),
                 _singleInput("Your target weight", "E,g: My head feel dizzy", _weightTarget, TextInputType.text, Icons.add, false),
                 _singleInput("Your current weight", "70 kilograms", _currentWeight, TextInputType.text, Icons.add, false),
-                _singleInput("Your target", "50 kilograms", _yourTarget, TextInputType.text, Icons.add, false),
-                _singleInput("How many day per week you can spend for training", "2 days", _dayOfTraining, TextInputType.text, Icons.keyboard_arrow_down, true),
-                _multiInput("Your habits", "When i woke up i feel like...", _habbit),
+                _dropdown(),
+                _multiInput("Your habits", "When i woke up i feel like...", _habit),
+                _multiInput("Your description", "Your description...", _description),
+
                 const SizedBox(
                   height: 30,
                 ),
