@@ -23,4 +23,10 @@ class ExerciseModel{
   factory ExerciseModel.fromJson(Map<String,dynamic> data) => _$ExerciseModelFromJson(data);
 
   Map<String,dynamic> toJson() => _$ExerciseModelToJson(this);
+
+  @override
+  bool operator ==(other) {
+    return (other is ExerciseModel)
+        && other.name == name;
+  }
 }

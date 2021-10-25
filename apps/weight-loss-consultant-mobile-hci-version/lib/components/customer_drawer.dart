@@ -21,6 +21,11 @@ class CustomerDrawer {
       "route": RoutePath.customerCalendar,
     },
     {
+      "text": "History",
+      "icon": Icons.bubble_chart,
+      "route": RoutePath.customerHistoryScreen,
+    },
+    {
       "text": "Settings",
       "icon": Icons.settings,
     },
@@ -101,8 +106,7 @@ class CustomerDrawer {
                 horizontalTitleGap: 0,
                 title: Text(
                   navigation[index-1]["text"],
-                  style: TextStyle(
-                      //color: AppColors.PRIMARY_WORD_COLOR,
+                  style: const TextStyle(
                       fontSize: 20
                   ),
                 ),

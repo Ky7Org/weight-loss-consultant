@@ -286,7 +286,6 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                   ),
-                  SvgPicture.asset('assets/logo/facebook-logo.svg'),
                 ],
               )
             ],

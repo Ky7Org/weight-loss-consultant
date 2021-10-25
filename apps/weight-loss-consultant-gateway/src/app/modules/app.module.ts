@@ -31,6 +31,7 @@ import { SortingAndFilteringModule } from './sorting-filtering.module';
 import {ContractModule} from "./contract.module";
 import {AppliedModule} from "./apply.module";
 
+
 export class AppModule {
   static forRoot(settings): DynamicModule {
     return {

@@ -14,10 +14,10 @@ class DailyExerciseModel{
     if (exerciseList.isEmpty){
       return DailyExerciseIntensity.rest;
     }
-    if (exerciseList.length <=5 ) {
+    if (exerciseList.length <7 ) {
       return DailyExerciseIntensity.light;
     }
-    if (exerciseList.length <= 10){
+    if (exerciseList.length < 8){
       return DailyExerciseIntensity.medium;
     }
     return DailyExerciseIntensity.intense;

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:weight_loss_consultant_mobile_hci_version/models/customer_history_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/customer_schedule_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart';
@@ -31,6 +32,9 @@ class AccountModel {
   List<DietModel> userTodayDiet = [];
   List<ExerciseModel> userTodayExercise = [];
   int dailyCalorieGoal = 0;
+  List<ExerciseModel> userTodayCustomExercise = [];
+  List<DietModel> userTodayCustomDiet = [];
+  List<CustomerHistoryModel> userHistory = [];
 
   AccountModel(
       {required this.email,
@@ -50,8 +54,9 @@ class AccountModel {
       this.calHistory = const [],
       this.userTodayDiet = const [],
       this.userTodayExercise = const [],
-      this.dailyCalorieGoal = 0,
-      });
+      this.userHistory = const [],
+      }){
+  }
 
   factory AccountModel.fromJson(Map<String,dynamic> data) => _$AccountModelFromJson(data);
 
@@ -84,6 +89,22 @@ class AccountModel {
     return dietCalorie - exerciseCalorie;
   }
 
+  int getTodayExerciseKcal(){
+    int exerciseCalorie = 0;
+    if (userTodayExercise.isNotEmpty){
+      exerciseCalorie = userTodayExercise.map((e) => e.calories).toList().reduce((a,b) => a+b);
+    }
+    return exerciseCalorie;
+  }
+
+  int getTodayDietKcal(){
+    int dietCalorie = 0;
+    if (userTodayDiet.isNotEmpty){
+      dietCalorie = userTodayDiet.map((e) => e.calories).toList().reduce((a,b) => a+b);
+    }
+    return dietCalorie;
+  }
+
   void addWeightHistory(Map<DateTime, int> newHistory){
     for (Map<DateTime, int> history in weightHistory ){
       if (history.entries.first.key.compareTo(newHistory.entries.first.key) == 0){
@@ -93,4 +114,33 @@ class AccountModel {
     }
     weightHistory.add(newHistory);
   }
+
+  int getUserTodayExerciseCalorieGoal(){
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+    List<ExerciseModel> exercises = scheduleModel!.data[today]!.dailyExerciseModel.exerciseList;
+    int result = 0;
+    if (exercises.isEmpty) return 0;
+    result = exercises.map((model) => model.calories).reduce((a,b) => a+b);
+    return result;
+  }
+
+  int getUserTodayDietCalorieGoal(){
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+    Map<String,List<DietModel>> dietMap  = scheduleModel!.data[today]!.dailyDietModel.dietMap;
+    int result = 0;
+    dietMap.forEach((key, value) {
+      if (value.isEmpty) return;
+      result += value.map((e) => e.calories).reduce((a,b) => a+b);
+    });
+    return result;
+  }
+
+  int getUserTodayOverallCalorieGoal(){
+    return getUserTodayDietCalorieGoal() - getUserTodayExerciseCalorieGoal();
+  }
+
+
+
 }

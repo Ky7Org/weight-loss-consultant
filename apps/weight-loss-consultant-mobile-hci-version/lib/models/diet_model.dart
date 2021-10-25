@@ -22,4 +22,10 @@ class DietModel {
   factory DietModel.fromJson(Map<String,dynamic> data) => _$DietModelFromJson(data);
 
   Map<String,dynamic> toJson() => _$DietModelToJson(this);
+
+  @override
+  bool operator ==(other) {
+    return (other is DietModel)
+        && other.name == name;
+  }
 }

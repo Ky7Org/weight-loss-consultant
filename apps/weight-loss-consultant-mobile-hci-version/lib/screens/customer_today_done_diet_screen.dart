@@ -2,27 +2,19 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/components/custom_dialog.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/components/toast.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
 
-
-class TodayDietScreen extends StatefulWidget {
-  const TodayDietScreen({Key? key}) : super(key: key);
+class CustomerTodayDoneDietScreen extends StatefulWidget {
+  const CustomerTodayDoneDietScreen({Key? key}) : super(key: key);
 
   @override
-  _TodayDietScreenState createState() => _TodayDietScreenState();
+  _CustomerTodayDoneDietScreenState createState() => _CustomerTodayDoneDietScreenState();
 }
 
-class _TodayDietScreenState extends State<TodayDietScreen> {
-
-  Map<String, dynamic> _todayDiets = {};
+class _CustomerTodayDoneDietScreenState extends State<CustomerTodayDoneDietScreen> {
   AccountModel user = AccountModel(email: "", fullname: "");
-  List<String> selectedDiet = List.empty(growable: true);
-
-
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -43,24 +35,8 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value) {
-        resetSelectedDiet();
         setState(() {});
       });
-    });
-  }
-
-  resetSelectedDiet(){
-    DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
-    _todayDiets = user.scheduleModel!.data[today]!.dailyDietModel.dietMap;
-    _todayDiets.forEach((key, value) {
-      for (DietModel model in value){
-        if (user.userTodayDiet.contains(model)){
-          selectedDiet.add(model.name);
-        } else {
-          selectedDiet.remove(model.name);
-        }
-      }
     });
   }
 
@@ -68,14 +44,13 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
     return PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: AppBar(
-          title: Text('Suggestion diet'),
-          leadingWidth: 30,
+          title: const Text('Today diet record'),
           flexibleSpace: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
-                  image: const NetworkImage("https://images.unsplash.com/photo-1542866789-bb9c9d086a5d?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Njl8fGZvb2R8ZW58MHwwfDB8YmxhY2t8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"),
+                  image: const AssetImage("assets/images/food.jpeg"),
                 )
             ),
           ),
@@ -86,136 +61,92 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
               fontWeight: FontWeight.w600
           ),
           backgroundColor: Colors.transparent,
-          actions: [
-            TextButton(
-              child: const Text(
-                "Your record",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600
-                ),
-              ),
-              onPressed: (){
-                Navigator.pushNamed(context, RoutePath.customerTodayDoneDietScreen).then((value) {
-                  initAccount().then((value){
-                    resetSelectedDiet();
-                    setState(() {
-
-                    });
-                  });
-                });
-              },
-            ),
-          ],
         )
     );
   }
 
-  List<Widget> _buildListDiet(List<DietModel>? dietList){
-    List<Widget> list = List.empty(growable: true);
-    if (dietList == null){
-      return list;
+  Widget _buildDietTitle(){
+    int count = 0;
+    for (int i=0; i<user.userTodayDiet.length; i++){
+      if (user.userTodayCustomDiet.contains(user.userTodayDiet[i])) continue;
+      count++;
     }
-    for (int i=0; i< dietList.length; i++){
-      Widget widget = GestureDetector(
-        onTap: (){
-          showDialog(context: context,
-              builder: (BuildContext context){
-                return CustomDialogBox(
-                  title: dietList[i].name,
-                  descriptions: dietList[i].details,
-                  img: Image(
-                    image: AssetImage(dietList[i].thumbnailPath),
-                  ),
-                  videoPath: dietList[i].videoPath,
-                );
-              }
-          );
-        },
-        child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            child: Row(
-                children: [
-                  Checkbox(
-                      value: selectedDiet.contains(dietList[i].name),
-                      onChanged: (bool? value){
-                        if (value == null) return;
-                        if (value){
-                          selectedDiet.add(dietList[i].name);
-                          user.userTodayDiet.add(dietList[i]);
-                          saveAccount();
-                          CustomToast.makeToast("Add successfully");
-                        } else {
-                          user.userTodayDiet.remove(dietList[i]);
-                          saveAccount();
-                          selectedDiet.remove(dietList[i].name);
-                        }
-                        setState(() {
+    if (count == 0 ){
+      return Container();
+    }
+    return const Align(
+      alignment: Alignment.topLeft,
+      child: Text("To-do list diet",
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
 
-                        });
-                      }
-                  ),
-                  const SizedBox(width: 20,),
-                  Image(
-                    image: AssetImage(dietList[i].thumbnailPath),
-                    height: 100,
-                    width: 100,
-                  ),
-                  const SizedBox(width: 20,),
-                  Column(
+  Widget _buildCardItem(DietModel model){
+    return Dismissible(
+      key: UniqueKey(),
+      onDismissed: (direction) {
+        // Remove the item from the data source.
+        setState(() {
+          user.userTodayDiet.remove(model);
+          user.userTodayCustomDiet.remove(model);
+          saveAccount();
+        });
+      },
+      background: Container(color: Colors.red),
+      child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: Row(
+              children: [
+                const Icon(Icons.menu),
+                const SizedBox(width: 20,),
+                Image(
+                  image: AssetImage(model.thumbnailPath),
+                  height: 100,
+                  width: 100,
+                ),
+                const SizedBox(width: 20,),
+                Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         width: 150,
                         child: Text(
-                          dietList[i].name,
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w900,
-                          ),
+                            model.name,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w900,
+                            )
                         ),
                       ),
                       const SizedBox(height: 10,),
                       Text(
-                        "${dietList[i].calories} kcal",
-                        style: const TextStyle(
-                            color: Colors.grey
-                        ),
+                          "${model.calories} kcal",
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          )
                       ),
                     ]
-                  )
-                ]
-            )
-        ),
-      );
+                )
+              ]
+          )
+      ),
+    );
+  }
+
+  List<Widget> _buildListDiet(){
+    List<Widget> list = List.empty(growable: true);
+
+    for (int i=0; i < user.userTodayDiet.length; i++){
+      if (user.userTodayCustomDiet.contains(user.userTodayDiet[i])) continue;
+      Widget widget = _buildCardItem(user.userTodayDiet[i]);
       list.add(widget);
       list.add(const Divider(thickness: 1,));
     }
     return list;
-  }
-
-
-  List<Widget> _buildListTodayDiet(){
-    List<Widget> periodDiets = List.empty(growable: true);
-    for (String period in _todayDiets.keys){
-      Widget periodWidget = Column(
-        children: [
-          const SizedBox(height: 10,),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Text(period,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),),
-          ),
-          ..._buildListDiet(_todayDiets[period]),
-        ],
-      );
-      periodDiets.add(periodWidget);
-    }
-    return periodDiets;
   }
 
   Widget buildProgress(){
@@ -304,6 +235,31 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
     );
   }
 
+  Widget _buildCustomDietTitle(){
+    if (user.userTodayCustomDiet.isEmpty ){
+      return Container();
+    }
+    return const Align(
+      alignment: Alignment.topLeft,
+      child: Text("Your additional diet",
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildListCustomDiet(){
+    List<Widget> list = List.empty(growable: true);
+    for (int i=0; i < user.userTodayCustomDiet.length; i++){
+      Widget widget = _buildCardItem(user.userTodayCustomDiet[i]);
+      list.add(widget);
+      list.add(const Divider(thickness: 1,));
+    }
+    return list;
+  }
+
   Widget _buildCongratulationMessage(){
     Widget widget = Container();
     if (user.getTodayDietKcal() >= user.getUserTodayDietCalorieGoal() && user.getTodayDietKcal() < user.getUserTodayDietCalorieGoal() + 100){
@@ -360,23 +316,50 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
 
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
+      floatingActionButton: SizedBox(
+        width: 350.0,
+        child: FloatingActionButton.extended(
+          onPressed: (){
+            Navigator.pushNamed(context, RoutePath.customerAddDietScreen).then((value){
+              initAccount().then((value){
+                setState(() {
+                });
+              });
+            });
+          },
+          icon: const Icon(Icons.add),
+          label: const Text("ADD NEW FOOD"),
+
+        ),
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  SizedBox(height: user.getTodayDietKcal() >= user.getUserTodayDietCalorieGoal() ? 50 : 0,),
-                  buildProgress(),
-                  const SizedBox(height: 10,),
-                  ..._buildListTodayDiet(),
-                ],
-              ),
+            child: Column(
+              children: [
+                SizedBox(height: user.getTodayDietKcal() >= user.getUserTodayDietCalorieGoal() ? 50 : 0,),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      buildProgress(),
+                      const SizedBox(height: 20,),
+                      _buildCustomDietTitle(),
+                      ..._buildListCustomDiet(),
+                      const SizedBox(height: 20,),
+                      _buildDietTitle(),
+                      ..._buildListDiet(),
+                      const SizedBox(height: 100,)
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           _buildCongratulationMessage(),
@@ -384,6 +367,4 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
       ),
     );
   }
-
-
 }

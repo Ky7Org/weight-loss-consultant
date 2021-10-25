@@ -23,5 +23,7 @@ export const CAMPAIGN_MANAGEMENT_SERVICE_PORT = 5006;
 export const CONTRACT_MANAGEMENT_SERVICE_NAME = "contract_management_service";
 export const CONTRACT_MANAGEMENT_SERVICE_PORT = 5007;
 
+
 export const APPLIED_MANAGEMENT_SERVICE_NAME = "applied_management_service";
 export const APPLIED_MANAGEMENT_SERVICE_PORT = 5008;
+

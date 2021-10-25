@@ -398,38 +398,40 @@ class _YourGoalScreenState extends State<YourGoalScreen> {
       child: Scaffold(
         appBar: CustomerAppbar.builder("YOUR GOAL"),
         backgroundColor: Colors.transparent,
-        body: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              _buildTitleWidget(),
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 30.0),
-                    _buildWeightTF(),
-                    const SizedBox(
-                      height: 30.0,
-                    ),
-                    _buildStartDateTF(),
-                    const SizedBox(
-                      height: 30.0,
-                    ),
-                    _buildEndDateTF(),
-                    const SizedBox(
-                      height: 30.0,
-                    ),
-                    _buildLNextBtn(),
-                  ],
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-            ],
+                _buildTitleWidget(),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 30.0),
+                      _buildWeightTF(),
+                      const SizedBox(
+                        height: 30.0,
+                      ),
+                      _buildStartDateTF(),
+                      const SizedBox(
+                        height: 30.0,
+                      ),
+                      _buildEndDateTF(),
+                      const SizedBox(
+                        height: 30.0,
+                      ),
+                      _buildLNextBtn(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

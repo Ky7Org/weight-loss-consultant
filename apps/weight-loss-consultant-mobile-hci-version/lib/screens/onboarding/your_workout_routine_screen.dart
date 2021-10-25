@@ -265,18 +265,26 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
         child: Column(
           children: [
             Text(
-              "Exercise Intensity",
+              "Daily energy intake",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
                 color: Colors.grey.shade900,
               ),
             ),
+            Text(
+              "(exercise + diet)",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: Colors.grey.shade900,
+              ),
+            ),
             const SizedBox(height: 20,),
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Column(children: [
+                Row(children: [
                   Container(
                     width: 30.0,
                     height: 30.0,
@@ -285,22 +293,17 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(width: 10,),
                   const Text(
-                    "Free",
+                    "Diet: 2000 kcal - Exercise: 400 kcal",
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const Text(
-                    "0 kcal",
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  )
                 ],),
-                Column(children: [
+                const SizedBox(height: 10,),
+                Row(children: [
                   Container(
                     width: 30.0,
                     height: 30.0,
@@ -309,22 +312,17 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(width: 10,),
                   const Text(
-                    "Light",
+                    "Diet: 2100 kcal - Exercise: 500 kcal",
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const Text(
-                    "500 kcal",
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  )
                 ],),
-                Column(children: [
+                const SizedBox(height: 10,),
+                Row(children: [
                   Container(
                     width: 30.0,
                     height: 30.0,
@@ -333,22 +331,17 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(width: 10,),
                   const Text(
-                    "Medium",
+                    "Diet: 2200 kcal - Exercise: 550 kcal",
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const Text(
-                    "700 kcal",
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  )
                 ],),
-                Column(children: [
+                const SizedBox(height: 10,),
+                Row(children: [
                   Container(
                     width: 30.0,
                     height: 30.0,
@@ -357,20 +350,14 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(height: 5,),
+                  const SizedBox(width: 10,),
                   const Text(
-                    "Intense",
+                    "Diet: 2200 kcal - Exercise: 600 kcal",
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const Text(
-                    "900 cal",
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  )
                 ],),
               ],
             )
@@ -397,7 +384,7 @@ class _YourWorkoutRoutineScreenState extends State<YourWorkoutRoutineScreen> {
         ),
       ),
       child: Scaffold(
-        appBar: CustomerAppbar.builder("YOUR WORKOUT ROUTINE"),
+        appBar: CustomerAppbar.builder("YOUR DAILY CALORIES"),
         backgroundColor: Colors.transparent,
         body: SafeArea(
           child: Column(
