@@ -13,14 +13,35 @@ export class UpdateContractDto {
     minimum: 1,
     type: Number,
   })
-  total: number;
+  totalPrice: number;
 
   @ApiProperty({
     description: 'Date of contract purchase',
     minimum: 1,
     type: Number,
   })
-  dateOfPurchase: number;
+  timeOfApproved: number;
+
+  @ApiProperty({
+    description: 'Date of expired purchase',
+    minimum: 1,
+    type: Number,
+  })
+  timeOfExpired: number;
+
+  @ApiProperty({
+    description: 'Date of create purchase',
+    minimum: 1,
+    type: Number,
+  })
+  timeOfCreate: number;
+
+  @ApiProperty({
+    description: 'Status of purchase',
+    minimum: 1,
+    type: Number,
+  })
+  status: number;
 
   @ApiProperty({
     description: 'Payment method of contract',

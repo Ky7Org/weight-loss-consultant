@@ -26,7 +26,7 @@ import {CampaignService} from "../services/campaign.service";
   exports: [
     CampaignService, CampaignMapper
   ],
-  // controllers: [CampaignController]
+  controllers: [CampaignController]
 })
 export class CampaignModule {
 

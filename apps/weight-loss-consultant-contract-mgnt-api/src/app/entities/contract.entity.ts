@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {CampaignEntity} from "./campaign.entity";
 import {PackageEntity} from "./package.enttiy";
 
@@ -7,9 +7,15 @@ export class ContractEntity extends BaseEntity{
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ type: 'float'})
-  total: number;
+  totalPrice: number;
   @Column({ type: 'float'})
-  dateOfPurchase: number;
+  timeOfApproved: number;
+  @Column({ type: 'float'})
+  timeOfExpired: number;
+  @Column({ type: 'float'})
+  timeOfCreate: number;
+  @Column({ type: 'int'})
+  status: number;
   @Column({ type: 'varchar', length: 1000 })
   paymentMethod: string;
 

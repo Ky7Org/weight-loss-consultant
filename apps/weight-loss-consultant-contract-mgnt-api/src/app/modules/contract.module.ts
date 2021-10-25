@@ -2,13 +2,7 @@ import { Module } from '@nestjs/common';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {ContractRepository} from "../repositories/health-info.repository";
 import {ContractMapper} from "../mappers/health-info.mapper";
-import {CampaignRepository} from "../repositories/campaign.repository";
-import { PackageRepository } from '../repositories/package.repository';
 import {ContractService} from "../services/impls/contract.service";
-import {CampaignService} from "../services/impls/campaign.service.impl";
-import {PackageService} from "../services/impls/package.service.impl";
-import {ContractController} from "../controllers/contract.controller";
-import {Connection} from "typeorm";
 import {ClientsModule, Transport} from "@nestjs/microservices";
 import {
   CAMPAIGN_MANAGEMENT_SERVICE_NAME,
@@ -16,13 +10,12 @@ import {
   HOST,
   PACKAGES_MANAGEMENT_SERVICE_NAME, PACKAGES_MANAGEMENT_SERVICE_PORT
 } from "../../../../../constant";
+import {ContractController} from "../controllers/contract.controller";
 
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      // CampaignRepository,
-      // PackageRepository,
       ContractRepository
     ]),
     ClientsModule.register([
@@ -46,14 +39,11 @@ import {
   ],
   providers: [
     ContractService, ContractMapper,
-    // CampaignService,
-    // PackageService
   ],
   exports: [
     ContractService, ContractMapper,
-    // CampaignService, PackageService
   ],
-  // controllers: [ContractController]
+  controllers: [ContractController]
 })
 
 export class ContractModule {

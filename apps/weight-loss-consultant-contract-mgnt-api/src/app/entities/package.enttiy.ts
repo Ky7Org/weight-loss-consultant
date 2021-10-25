@@ -1,5 +1,4 @@
 import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import {CampaignEntity} from "../../../../weight-loss-consultant-health-mgnt-api/src/app/entities/campaign.entity";
 import {ContractEntity} from "./contract.entity";
 
 @Entity('Package')
@@ -22,7 +21,7 @@ export class PackageEntity extends BaseEntity{
   @Column({type: 'varchar', nullable: false})
   dietPlan: string;
 
-  @ManyToOne(() => ContractEntity, contract => contract.campaign)
-  contracts : ContractEntity[];
+  @OneToMany(() => ContractEntity, contract => contract.package)
+  contracts : PackageEntity[];
 
 }
