@@ -83,60 +83,65 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                     )
                 ),
               ),
-              Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                              margin: const EdgeInsets.only(bottom: 10),
-                              child: Text(
-                                "16:00 Nov 30, 2021",
-                                style: TextStyle(
-                                    color: HexColor("#6B48FF"),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w900
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                  color: HexColor("#F0F3F6"),
-                                  borderRadius: const BorderRadius.all(Radius.circular(5))
-                              ),
-                            ),
-                            Container(
+              GestureDetector(
+                onTap: (){
+                  Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
+                },
+                child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                                 margin: const EdgeInsets.only(bottom: 10),
                                 child: Text(
-                                  "Cardio Training",
+                                  "16:00 Nov 30, 2021",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.PRIMARY_WORD_COLOR,
-                                      fontSize: 20
+                                      color: HexColor("#6B48FF"),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w900
                                   ),
-                                )),
-                            Text("Dr. Bang Ngo", style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w800,
-                                color: HexColor("#B6C5D1")
-                            ),)
-                          ],
+                                ),
+                                decoration: BoxDecoration(
+                                    color: HexColor("#F0F3F6"),
+                                    borderRadius: const BorderRadius.all(Radius.circular(5))
+                                ),
+                              ),
+                              Container(
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  child: Text(
+                                    "Cardio Training",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.PRIMARY_WORD_COLOR,
+                                        fontSize: 20
+                                    ),
+                                  )),
+                              Text("Dr. Bang Ngo", style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                  color: HexColor("#B6C5D1")
+                              ),)
+                            ],
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        iconSize: 48,
-                        onPressed: (){},
-                        icon: SvgPicture.asset("assets/icon/call-icon.svg"),
-                      )
-                    ],
+                        IconButton(
+                          iconSize: 48,
+                          onPressed: (){},
+                          icon: SvgPicture.asset("assets/icon/call-icon.svg"),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

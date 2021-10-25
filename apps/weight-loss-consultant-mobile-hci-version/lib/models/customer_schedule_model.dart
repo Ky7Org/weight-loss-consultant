@@ -20,5 +20,6 @@ class CustomerScheduleModel {
 
   Map<String,dynamic> toJson() => _$CustomerScheduleModelToJson(this);
 
+
 }
 

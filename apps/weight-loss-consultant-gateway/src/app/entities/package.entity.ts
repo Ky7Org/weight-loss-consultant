@@ -1,5 +1,8 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { TrainerEntity } from './trainer.entity';
+import {ContractEntity} from "./contract.entity";
+import {AppliedEntity} from "./applied.entity";
+
 
 @Entity('Package')
 export class PackageEntity extends BaseEntity{
@@ -23,5 +26,11 @@ export class PackageEntity extends BaseEntity{
 
   @ManyToOne(() => TrainerEntity, trainer => trainer.packages)
   trainer : TrainerEntity;
+
+  @ManyToOne(() => ContractEntity, contract => contract.campaign)
+  contracts : ContractEntity[];
+
+  @OneToMany(() => AppliedEntity, applied => applied.package)
+  applies: AppliedEntity[];
 
 }
