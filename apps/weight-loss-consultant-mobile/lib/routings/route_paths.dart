@@ -17,5 +17,7 @@ class RoutePath{
   static const String upcomingTrainingPage = "/upcomingTraining";
   static const String videoCallPage = "/videoCall";
   static const String endCallPage = "/endCall";
+  static const String createCampaignPage = "/createCampaign";
+
 
 }

@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
-import 'package:weight_loss_consultant_mobile/constants/enums.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_sliding_up_panel.dart';

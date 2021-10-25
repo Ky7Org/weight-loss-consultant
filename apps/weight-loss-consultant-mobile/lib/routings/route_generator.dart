@@ -106,6 +106,10 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (_){
           return const EndingCallPage();
         });
+      case RoutePath.createCampaignPage:
+        return MaterialPageRoute(builder: (_){
+          return const CreateCampaignPage();
+        });
       default:
         return _errorRoute();
 
