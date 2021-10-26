@@ -22,5 +22,6 @@ class RoutePath{
   static const String createPackagesPage = "/createPackage";
   static const String editProfilePage = "/editProfile";
   static const String customerCampaignPage = "/customerCampaign";
+  static const String trainerPackagePage = "/trainerPackagePage";
 
 }

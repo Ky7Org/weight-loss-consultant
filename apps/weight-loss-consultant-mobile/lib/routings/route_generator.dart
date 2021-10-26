@@ -23,6 +23,7 @@ import 'package:weight_loss_consultant_mobile/pages/register/register_sucessful_
 import 'package:weight_loss_consultant_mobile/pages/trainer/create_packages_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/no_packages_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_home_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_package_page.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 
@@ -127,6 +128,10 @@ class RouteGenerator{
       case RoutePath.customerCampaignPage:
         return MaterialPageRoute(builder: (_){
           return const CustomerCampaignPage();
+        });
+      case RoutePath.trainerPackagePage:
+        return MaterialPageRoute(builder: (_){
+          return const TrainerPackagePage();
         });
       default:
         return _errorRoute();

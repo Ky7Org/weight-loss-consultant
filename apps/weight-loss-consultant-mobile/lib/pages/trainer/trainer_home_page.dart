@@ -165,7 +165,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
           controller: _pc,
           panel:  TrainerCategoryPanel(),
           minHeight: 0,
-          maxHeight: 400,
+          maxHeight: 200,
           body: Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             child: ListView(
