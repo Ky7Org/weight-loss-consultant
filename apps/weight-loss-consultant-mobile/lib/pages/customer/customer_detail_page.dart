@@ -319,7 +319,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                         height: 5,
                       ),
                       Text(
-                        DateFormat("MMMM-dd-yyyy").format(DateTime.fromMicrosecondsSinceEpoch(int.parse(user.dob ?? DateTime.now().millisecond.toString()))).toString(),
+                        DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(user.dob ?? DateTime.now().millisecond.toString()))).toString(),
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontSize: 17,

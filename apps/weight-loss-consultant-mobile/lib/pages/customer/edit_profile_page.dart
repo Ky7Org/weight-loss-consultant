@@ -323,7 +323,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           false,
                           true,
                           Icons.calendar_today_outlined,
-                          DateFormat("MMMM-dd-yyyy").format(DateTime.fromMicrosecondsSinceEpoch(int.parse(user.dob ?? ""))).toString(),
+                          DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(user.dob ?? ""))).toString(),
                           true
                       ),
 

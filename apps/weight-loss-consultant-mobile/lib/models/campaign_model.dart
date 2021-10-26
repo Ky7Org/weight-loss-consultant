@@ -10,8 +10,19 @@ class CampaignModel{
   late String? startDate;
   late String? endDate;
   late String? feedback;
+  late int? targetWeight;
+  late int? currentWeight;
+  late int? spendTimeForTraining;
 
-  CampaignModel(this.id, this.description, this.status, this.startDate, this.endDate, this.feedback);
+  CampaignModel(this.id,
+      this.description,
+      this.status,
+      this.startDate,
+      this.endDate,
+      this.feedback,
+      this.targetWeight,
+      this.currentWeight,
+      this.spendTimeForTraining);
 
   factory CampaignModel.fromJson(Map<String,dynamic> data) => _$CampaignModelFromJson(data);
 
