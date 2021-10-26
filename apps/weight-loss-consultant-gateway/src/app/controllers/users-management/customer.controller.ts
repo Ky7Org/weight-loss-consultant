@@ -7,7 +7,7 @@ import { UpdateCustDto } from '../../dtos/customer/update-customer-dto';
 
 @ApiTags('Customer')
 @ApiBearerAuth()
-@Controller('/v1/customers')
+@Controller()
 export class CustomerController {
 
   private readonly logger: Logger = new Logger(CustomerController.name);
@@ -26,7 +26,25 @@ export class CustomerController {
     }
   }
 
-  @Get(':email')
+  @Get('/tienAPI/:email')
+  async getDetail(@Param('email') email: string, @Res() res) {
+    try {
+      const customer = await this.customerService.viewDetail(email);
+      if (customer === undefined) {
+        const error = {
+          statusCode : 404,
+          message: `Not found customer with email : ${email}`
+        }
+        res.status(error.statusCode).send(error);
+      }
+      res.status(HttpStatus.OK).send(customer);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Get('/v1/customers:email')
   @ApiResponse({status: HttpStatus.OK, description: 'Customer details has shown below:'})
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
   @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Email not found'})
@@ -54,7 +72,7 @@ export class CustomerController {
     }
   }
 
-  @Post()
+  @Post('/v1/customers')
   @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: CreateCustDto
@@ -72,7 +90,7 @@ export class CustomerController {
     }
   }
 
-  @Put(':email')
+  @Put('/v1/customers:email')
   @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: UpdateCustDto
@@ -97,7 +115,7 @@ export class CustomerController {
     }
   }
 
-  @Delete(':email')
+  @Delete('/v1/customers:email')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({status: HttpStatus.OK, description: 'The customer information has been successfully deleted.'})
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
