@@ -8,9 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 
-
-import 'package:weight_loss_consultant_mobile/models/account_model.dart';
-
 class AuthenticationService {
 
   AuthenticationService();

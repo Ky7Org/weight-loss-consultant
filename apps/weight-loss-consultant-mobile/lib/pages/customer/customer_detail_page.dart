@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 import '../../constants/app_colors.dart';
 
@@ -75,9 +76,14 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                       color: AppColors.PRIMARY_WORD_COLOR,
                     ),
                   ),
-                  const Icon(
-                    Icons.create_outlined,
-                    color: Color(0xffFF3939),
+                  IconButton(
+                    onPressed: (){
+                      Navigator.pushNamed(context, RoutePath.editProfilePage);
+                    },
+                    icon: const Icon(
+                      Icons.create_outlined,
+                      color: Color(0xffFF3939),
+                    ),
                   )
                 ],
               ),

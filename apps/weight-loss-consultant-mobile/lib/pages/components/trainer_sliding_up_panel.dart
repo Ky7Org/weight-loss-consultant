@@ -26,6 +26,8 @@ class TrainerCategoryPanel extends StatelessWidget {
     {
       "text": "Package",
       "imageName": "package-icon.svg",
+      "route": RoutePath.noPackagePage,
+
     },
     {
       "text": "Calendar",

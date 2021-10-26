@@ -18,6 +18,9 @@ class RoutePath{
   static const String videoCallPage = "/videoCall";
   static const String endCallPage = "/endCall";
   static const String createCampaignPage = "/createCampaign";
+  static const String noPackagePage = "/noPackage";
+  static const String createPackagesPage = "/createPackage";
+  static const String editProfilePage = "/editProfile";
 
 
 }

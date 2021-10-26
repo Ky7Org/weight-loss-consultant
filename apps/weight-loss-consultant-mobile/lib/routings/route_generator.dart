@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_create_campaign.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/edit_profile_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/upcoming_training_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/others/chat_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
@@ -30,7 +31,7 @@ class RouteGenerator{
     switch (settings.name){
       case RoutePath.initialPage:
         return MaterialPageRoute(builder: (_){
-          return const CreatePackages();
+          return const InitialPage();
         });
       case RoutePath.getStartedPage:
         return MaterialPageRoute(builder: (_){
@@ -109,6 +110,18 @@ class RouteGenerator{
       case RoutePath.createCampaignPage:
         return MaterialPageRoute(builder: (_){
           return const CreateCampaignPage();
+        });
+      case RoutePath.noPackagePage:
+        return MaterialPageRoute(builder: (_){
+          return const NoPackagesPage();
+        });
+      case RoutePath.createPackagesPage:
+        return MaterialPageRoute(builder: (_){
+          return const CreatePackagesPage();
+        });
+      case RoutePath.editProfilePage:
+        return MaterialPageRoute(builder: (_){
+          return const EditProfilePage();
         });
       default:
         return _errorRoute();

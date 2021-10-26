@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 
-class CreatePackages extends StatefulWidget {
-  const CreatePackages({Key? key}) : super(key: key);
+class CreatePackagesPage extends StatefulWidget {
+  const CreatePackagesPage({Key? key}) : super(key: key);
 
   @override
-  _CreatePackagesState createState() => _CreatePackagesState();
+  _CreatePackagesPageState createState() => _CreatePackagesPageState();
 }
 
-class _CreatePackagesState extends State<CreatePackages> {
+class _CreatePackagesPageState extends State<CreatePackagesPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _exercisePlan = TextEditingController();
   final TextEditingController _dietPlan = TextEditingController();
@@ -215,23 +215,20 @@ class _CreatePackagesState extends State<CreatePackages> {
                     ),
                     FlatButton(
                       height: 64,
+                      minWidth: MediaQuery.of(context).size.width,
                       color: AppColors.PRIMARY_COLOR,
                       onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          SizedBox(),
-                          Text(
-                            'Create Package',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
-                          ),
-                          Icon(Icons.arrow_forward, color: Colors.white, size: 24,)
-                        ],
+                      child: const Text(
+                        'Create Package',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
                       ),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18)
                       ),
-                    )
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                   ],
                 ),
               )
