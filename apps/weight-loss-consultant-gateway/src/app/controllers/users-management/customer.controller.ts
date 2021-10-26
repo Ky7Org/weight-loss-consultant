@@ -29,7 +29,7 @@ export class CustomerController {
   @Get('/tienAPI/:email')
   async getDetail(@Param('email') email: string, @Res() res) {
     try {
-      const customer = await this.customerService.viewDetail(email);
+      const customer = await this.customerService.viewDetailSpecial(email);
       if (customer === undefined) {
         const error = {
           statusCode : 404,
