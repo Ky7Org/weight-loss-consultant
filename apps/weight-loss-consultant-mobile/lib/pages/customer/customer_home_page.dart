@@ -61,7 +61,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         controller: _pc,
         panel: CategoryPanel(),
         minHeight: 0,
-        maxHeight: 400,
+        maxHeight: 200,
         body: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: ListView(

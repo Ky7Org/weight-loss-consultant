@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_create_campaign.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/edit_profile_page.dart';
@@ -122,6 +123,10 @@ class RouteGenerator{
       case RoutePath.editProfilePage:
         return MaterialPageRoute(builder: (_){
           return const EditProfilePage();
+        });
+      case RoutePath.customerCampaignPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerCampaignPage();
         });
       default:
         return _errorRoute();

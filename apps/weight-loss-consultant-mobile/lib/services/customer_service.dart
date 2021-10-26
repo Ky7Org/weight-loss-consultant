@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:weight_loss_consultant_mobile/constants/api_constant.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
 
 
 class CustomerService{
@@ -23,4 +24,10 @@ class CustomerService{
     }
     return false;
   }
+
+  Future<CampaignModel?> getCustomerCampaign(String email) async {
+
+  }
+
+
 }
