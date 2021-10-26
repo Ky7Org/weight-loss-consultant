@@ -11,6 +11,7 @@ import 'package:weight_loss_consultant_mobile/constants/enums.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -337,9 +338,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             user.dob = Timestamp.fromDate(DateFormat("MMMM-dd-yyyy").parse(_dob.text)).millisecondsSinceEpoch.toString();
                             user.gender = _gender == "Female" ? Gender.female.value.toString() : Gender.male.value.toString();
                             saveAccount();
-                            if (user.role == Role.trainer.value || user.role == Role.admin.value){
+                            if (user.role == Role.trainer.value){
                               TrainerService trainerService = TrainerService();
                               bool result =  await trainerService.updateTrainerProfile(user);
+                              if (result){
+                                CustomToast.makeToast("Save successfully");
+                              } else {
+                                CustomToast.makeToast("Some thing went wrong! Try again");
+                              }
+                            } else if (user.role == Role.customer.value){
+                              CustomerService customerService = CustomerService();
+                              bool result =  await customerService.updateCustomerProfile(user);
                               if (result){
                                 CustomToast.makeToast("Save successfully");
                               } else {
