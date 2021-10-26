@@ -11,4 +11,10 @@ export class CreateCampaignDto {
   endDate?: number;
   @ApiProperty()
   feedback?: string;
+  @ApiProperty()
+  targetWeight?: number;
+  @ApiProperty()
+  currentWeight?: number;
+  @ApiProperty()
+  spendTimeForTraining?: number;
 }

@@ -4,7 +4,6 @@ import { PackageRepository } from '../repositories/package.repository';
 import { PackageService } from '../services/impls/package.service.impl';
 import { PackageMapper } from '../mappers/package.mapper';
 import { PackageController } from '../controllers/package.controller';
-import { TrainerMapper } from '../mappers/trainer.mapper';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HOST, USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT } from '../../../../../constant';
 
@@ -20,9 +19,9 @@ import { HOST, USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT } fr
       }
     }]),
     TypeOrmModule.forFeature([PackageRepository])],
-  providers: [PackageService, PackageMapper, TrainerMapper],
+  providers: [PackageService, PackageMapper],
   exports: [
-    PackageService, PackageMapper, TrainerMapper
+    PackageService, PackageMapper
   ],
   controllers: [PackageController]
 })
