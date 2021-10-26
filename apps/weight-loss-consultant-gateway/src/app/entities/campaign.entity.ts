@@ -1,5 +1,7 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { CustomerEntity } from './customer.entity';
+import {ContractEntity} from "./contract.entity";
+import {AppliedEntity} from "./applied.entity";
 
 @Entity('Campaign')
 export class CampaignEntity extends BaseEntity{
@@ -15,8 +17,19 @@ export class CampaignEntity extends BaseEntity{
   endDate: number;
   @Column({ type: 'varchar', length: 1000 })
   feedback: string;
-
+  @Column({ type: 'float'})
+  targetWeight: number;
+  @Column({ type: 'float'})
+  currentWeight: number;
+  @Column({ type: 'float'})
+  spendTimeForTraining: number;
   @ManyToOne(() => CustomerEntity, customer => customer.campaigns)
   customer : CustomerEntity;
+
+  @ManyToOne(() => ContractEntity, contract => contract.campaign)
+  contracts : ContractEntity[];
+
+  @OneToMany(() => AppliedEntity, applied => applied.campaign)
+  applies: AppliedEntity[];
 
 }

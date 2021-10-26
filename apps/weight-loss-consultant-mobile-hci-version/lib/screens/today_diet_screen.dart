@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/components/custom_dialog.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/components/toast.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile_hci_version/models/diet_model.dart';
-import 'package:weight_loss_consultant_mobile_hci_version/services/diet_service.dart';
+import 'package:weight_loss_consultant_mobile_hci_version/routing/route_path.dart';
 
 
 class TodayDietScreen extends StatefulWidget {
@@ -17,8 +18,10 @@ class TodayDietScreen extends StatefulWidget {
 
 class _TodayDietScreenState extends State<TodayDietScreen> {
 
-  Map<String, List<DietModel>> _todayDiets = {};
+  Map<String, dynamic> _todayDiets = {};
   AccountModel user = AccountModel(email: "", fullname: "");
+  List<String> selectedDiet = List.empty(growable: true);
+
 
 
   Future<void> initAccount() async {
@@ -40,19 +43,33 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value) {
-        DateTime now = DateTime.now();
-        DateTime today = DateTime(now.year, now.month, now.day);
-        _todayDiets = user.scheduleModel!.data[today]!.dailyDietModel.dietMap;
+        resetSelectedDiet();
+        setState(() {});
       });
-      setState(() {});
+    });
+  }
+
+  resetSelectedDiet(){
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+    _todayDiets = user.scheduleModel!.data[today]!.dailyDietModel.dietMap;
+    _todayDiets.forEach((key, value) {
+      for (DietModel model in value){
+        if (user.userTodayDiet.contains(model)){
+          selectedDiet.add(model.name);
+        } else {
+          selectedDiet.remove(model.name);
+        }
+      }
     });
   }
 
   PreferredSize _buildAppBar(){
     return PreferredSize(
-        preferredSize: Size.fromHeight(100),
+        preferredSize: const Size.fromHeight(70),
         child: AppBar(
-          title: Text('Today Diet'),
+          title: Text('Suggestion diet'),
+          leadingWidth: 30,
           flexibleSpace: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
@@ -69,6 +86,28 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
               fontWeight: FontWeight.w600
           ),
           backgroundColor: Colors.transparent,
+          actions: [
+            TextButton(
+              child: const Text(
+                "Your record",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600
+                ),
+              ),
+              onPressed: (){
+                Navigator.pushNamed(context, RoutePath.customerTodayDoneDietScreen).then((value) {
+                  initAccount().then((value){
+                    resetSelectedDiet();
+                    setState(() {
+
+                    });
+                  });
+                });
+              },
+            ),
+          ],
         )
     );
   }
@@ -98,7 +137,25 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: Row(
                 children: [
-                  const Icon(Icons.menu),
+                  Checkbox(
+                      value: selectedDiet.contains(dietList[i].name),
+                      onChanged: (bool? value){
+                        if (value == null) return;
+                        if (value){
+                          selectedDiet.add(dietList[i].name);
+                          user.userTodayDiet.add(dietList[i]);
+                          saveAccount();
+                          CustomToast.makeToast("Add successfully");
+                        } else {
+                          user.userTodayDiet.remove(dietList[i]);
+                          saveAccount();
+                          selectedDiet.remove(dietList[i].name);
+                        }
+                        setState(() {
+
+                        });
+                      }
+                  ),
                   const SizedBox(width: 20,),
                   Image(
                     image: AssetImage(dietList[i].thumbnailPath),
@@ -121,7 +178,7 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
                       ),
                       const SizedBox(height: 10,),
                       Text(
-                        dietList[i].unit,
+                        "${dietList[i].calories} kcal",
                         style: const TextStyle(
                             color: Colors.grey
                         ),
@@ -161,49 +218,169 @@ class _TodayDietScreenState extends State<TodayDietScreen> {
     return periodDiets;
   }
 
+  Widget buildProgress(){
+    double indicatorProgress =  (user.getTodayDietKcal() / user.getUserTodayDietCalorieGoal()) * 350 - 10;
+    if (indicatorProgress < 0){
+      indicatorProgress = 0;
+    }
+    if (indicatorProgress > 330){
+      indicatorProgress = 330;
+    }
+
+    double labelProgress = (user.getTodayDietKcal() / user.getUserTodayDietCalorieGoal()) * 350 - 10;
+    if (labelProgress < 20){
+      labelProgress = 20;
+    }
+    if (labelProgress > 290){
+      labelProgress = 290;
+    }
+    return Column(
+      children: [
+        const Text("Your diet goal",
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 25,
+          ),
+        ),
+        const SizedBox(height: 10,),
+        Stack(
+          children: [
+            const SizedBox(height: 70,),
+            Positioned(
+                top: 0,
+                left: labelProgress - 20,
+                child: Text(
+                  "${user.getTodayDietKcal()} kcal",
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600
+                  ),
+                )
+            ),
+            Positioned(
+                top: 13,
+                left: indicatorProgress,
+                child: const Icon(Icons.arrow_drop_down_sharp)
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 30),
+              height: 20,
+              width: 700,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: LinearProgressIndicator(
+
+                  value: user.getTodayDietKcal() / user.getUserTodayDietCalorieGoal(),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
+                  backgroundColor: Colors.grey.shade400,
+                ),
+              ),
+            ),
+
+            const Positioned(
+                top: 55,
+                child: Text(
+                  "0 kcal",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600
+                  ),
+                )
+            ),
+            Positioned(
+                top: 55,
+                right: 0,
+                child: Text(
+                  "${user.getUserTodayDietCalorieGoal()} kcal",
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600
+                  ),
+                )
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCongratulationMessage(){
+    Widget widget = Container();
+    if (user.getTodayDietKcal() >= user.getUserTodayDietCalorieGoal() && user.getTodayDietKcal() < user.getUserTodayDietCalorieGoal() + 100){
+      widget = Container(
+        height: 50,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        color: Colors.green,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(
+              Icons.star,
+              color: Colors.white,
+            ),
+            SizedBox(width: 10,),
+            Text(
+                "You've reach your goal today",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600
+                )
+            )
+          ],
+        ),
+      );
+    }
+    else if (user.getTodayDietKcal() >= user.getUserTodayDietCalorieGoal() + 100){
+      widget = Container(
+        height: 50,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        color: Colors.redAccent,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(
+              Icons.warning_amber_outlined,
+              color: Colors.white,
+            ),
+            SizedBox(width: 10,),
+            Text(
+                "Warning: you have exceeded today's limit",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600
+                )
+            )
+          ],
+        ),
+      );
+    }
+    return widget;
+
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              /*Row(
-                children:const [
-                  Icon(
-                    Icons.label_outline,
-                    color: Colors.blueAccent,
-                  ),
-                  SizedBox(width: 5,),
-                  Text(
-                    "20 mins",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15
-                    )
-                  ),
-                  Icon(
-                      Icons.remove
-                  ),
-                  Text(
-                    "16 workouts",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15
-                    )
-                  ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  SizedBox(height: user.getTodayDietKcal() >= user.getUserTodayDietCalorieGoal() ? 50 : 0,),
+                  buildProgress(),
+                  const SizedBox(height: 10,),
+                  ..._buildListTodayDiet(),
                 ],
               ),
-              const Divider(thickness: 1,),*/
-              Column(
-                children: _buildListTodayDiet(),
-              )
-            ],
+            ),
           ),
-        ),
+          _buildCongratulationMessage(),
+        ],
       ),
     );
   }

@@ -17,7 +17,7 @@ class GenericAppBar{
       iconTheme: IconThemeData(
         color: AppColors.PRIMARY_WORD_COLOR,
       ),
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(30),
         ),

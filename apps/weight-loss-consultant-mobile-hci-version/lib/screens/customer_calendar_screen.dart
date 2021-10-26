@@ -234,10 +234,18 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
         child: Column(
           children: [
             Text(
-              "Exercise Intensity",
+              "Daily energy intake",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
+                color: Colors.grey.shade900,
+              ),
+            ),
+            Text(
+              "(exercise + diet)",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
                 color: Colors.grey.shade900,
               ),
             ),
@@ -263,7 +271,7 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
                     ),
                   ),
                   const Text(
-                    "0 kcal",
+                    "2100 kcal",
                     style: TextStyle(
                       fontSize: 15,
                     ),
@@ -287,7 +295,7 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
                     ),
                   ),
                   const Text(
-                    "500 kcal",
+                    "2000 kcal",
                     style: TextStyle(
                       fontSize: 15,
                     ),
@@ -311,7 +319,7 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
                     ),
                   ),
                   const Text(
-                    "700 kcal",
+                    "1900 kcal",
                     style: TextStyle(
                       fontSize: 15,
                     ),
@@ -335,7 +343,7 @@ class _CustomerCalendarScreenState extends State<CustomerCalendarScreen> {
                     ),
                   ),
                   const Text(
-                    "900 kcal",
+                    "1800 kcal",
                     style: TextStyle(
                       fontSize: 15,
                     ),

@@ -51,60 +51,65 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
   }
 
   Widget _phoneCard(String date, String nameTraining, String nameCustomer){
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Container(
-        padding: EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    margin: EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      date,
-                      style: TextStyle(
-                          color: HexColor("#FF3939"),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w900
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                        color: HexColor("#F0F3F6"),
-                        borderRadius: BorderRadius.all(Radius.circular(5))
-                    ),
-                  ),
-                  Container(
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
+      },
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Container(
+          padding: EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       margin: EdgeInsets.only(bottom: 10),
                       child: Text(
-                        nameTraining,
+                        date,
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontSize: 20
+                            color: HexColor("#FF3939"),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w900
                         ),
-                      )),
-                  Text(nameCustomer, style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
-                      color: HexColor("#B6C5D1")
-                  ),)
-                ],
+                      ),
+                      decoration: BoxDecoration(
+                          color: HexColor("#F0F3F6"),
+                          borderRadius: BorderRadius.all(Radius.circular(5))
+                      ),
+                    ),
+                    Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          nameTraining,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.PRIMARY_WORD_COLOR,
+                              fontSize: 20
+                          ),
+                        )),
+                    Text(nameCustomer, style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: HexColor("#B6C5D1")
+                    ),)
+                  ],
+                ),
               ),
-            ),
-            IconButton(
-              iconSize: 48,
-              onPressed: (){},
-              icon: SvgPicture.asset("assets/icon/call-icon.svg"),
-            )
-          ],
+              IconButton(
+                iconSize: 48,
+                onPressed: (){},
+                icon: SvgPicture.asset("assets/icon/call-icon.svg"),
+              )
+            ],
+          ),
         ),
       ),
     );
