@@ -29,7 +29,7 @@ export class CustomerController {
   @Get('/tienAPI/:email')
   async getDetail(@Param('email') email: string, @Res() res) {
     try {
-      const customer = await this.customerService.viewDetail(email);
+      const customer = await this.customerService.viewDetailSpecial(email);
       if (customer === undefined) {
         const error = {
           statusCode : 404,
@@ -43,6 +43,8 @@ export class CustomerController {
       res.status(error.statusCode).send(error);
     }
   }
+
+
 
   @Get('/v1/customers/:email')
   @ApiResponse({status: HttpStatus.OK, description: 'Customer details has shown below:'})
@@ -90,6 +92,7 @@ export class CustomerController {
     }
   }
 
+
   @Put('/v1/customers/:email')
   @UseGuards(JwtAuthGuard)
   @ApiBody({
@@ -114,6 +117,7 @@ export class CustomerController {
       res.status(error.statusCode).send(error);
     }
   }
+
 
   @Delete('/v1/customers/:email')
   @UseGuards(JwtAuthGuard)

@@ -75,6 +75,7 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@types/lodash": "^4.14.175",
     "antd": "^4.16.13",
+    "antd-country-phone-input": "^4.1.1",
     "aws-sdk": "^2.985.0",
     "axios": "^0.21.4",
     "bcrypt": "^5.0.1",
@@ -120,6 +121,7 @@
     "typeorm": "^0.2.38",
     "use-breakpoint": "^2.0.2",
     "uuid": "^8.3.2",
+    "world_countries_lists": "^2.3.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {
