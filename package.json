@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "banhsbao":"nx run-many --target=serve  --all --parallel --maxParallel=10",
     "deploy:api": "npm run build:gateway && npm run build:users-mgnt-api && npm run build:authentication && npm run build:packages-mgnt-api && npm run build:health-mgnt-api",
     "deploy:ui": "npm run build:ui && cp -R ./dist/apps/weight-loss-consultant-ui/ /var/www/",
     "build-and-start-prod:gateway": "npm run build:gateway",
