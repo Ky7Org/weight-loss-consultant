@@ -44,6 +44,7 @@ export class CustomerController {
     }
   }
 
+
   @Get('/v1/customers/:email')
   @ApiResponse({status: HttpStatus.OK, description: 'Customer details has shown below:'})
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
@@ -90,6 +91,7 @@ export class CustomerController {
     }
   }
 
+
   @Put('/v1/customers/:email')
   @UseGuards(JwtAuthGuard)
   @ApiBody({
@@ -114,6 +116,7 @@ export class CustomerController {
       res.status(error.statusCode).send(error);
     }
   }
+
 
   @Delete('/v1/customers/:email')
   @UseGuards(JwtAuthGuard)
