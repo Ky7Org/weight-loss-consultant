@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "banhsbao":"nx run-many --target=serve  --all --parallel --maxParallel=10",
     "deploy:api": "npm run build:gateway && npm run build:users-mgnt-api && npm run build:authentication && npm run build:packages-mgnt-api && npm run build:health-mgnt-api",
     "deploy:ui": "npm run build:ui && cp -R ./dist/apps/weight-loss-consultant-ui/ /var/www/",
     "build-and-start-prod:gateway": "npm run build:gateway",
@@ -65,6 +66,7 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@types/lodash": "^4.14.175",
     "antd": "^4.16.13",
+    "antd-country-phone-input": "^4.1.1",
     "aws-sdk": "^2.985.0",
     "axios": "^0.21.4",
     "bcrypt": "^5.0.1",
@@ -110,6 +112,7 @@
     "typeorm": "^0.2.38",
     "use-breakpoint": "^2.0.2",
     "uuid": "^8.3.2",
+    "world_countries_lists": "^2.3.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {
