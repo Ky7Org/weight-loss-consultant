@@ -3,7 +3,6 @@ import { TrainerEntity } from './trainer.entity';
 import {ContractEntity} from "./contract.entity";
 import {AppliedEntity} from "./applied.entity";
 
-
 @Entity('Package')
 export class PackageEntity extends BaseEntity{
   @PrimaryGeneratedColumn()
@@ -24,6 +23,9 @@ export class PackageEntity extends BaseEntity{
   @Column({type: 'varchar', nullable: false})
   dietPlan: string;
 
+  @Column({type: 'float', nullable: false})
+  spendTimeToTraining: string;
+
   @ManyToOne(() => TrainerEntity, trainer => trainer.packages)
   trainer : TrainerEntity;
 
@@ -32,5 +34,4 @@ export class PackageEntity extends BaseEntity{
 
   @OneToMany(() => AppliedEntity, applied => applied.package)
   applies: AppliedEntity[];
-
 }

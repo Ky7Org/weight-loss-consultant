@@ -6,6 +6,7 @@ import { RpcExceptionModel } from './rpc-exception.model';
 @Catch(RpcException)
 export class ExceptionFilter extends BaseRpcExceptionFilter {
   catch(e: RpcException, host: ArgumentsHost): Observable<RpcExceptionModel> {
+    console.log(e)
     return throwError(e);
   }
 }

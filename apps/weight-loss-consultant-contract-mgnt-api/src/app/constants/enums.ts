@@ -31,3 +31,9 @@ export enum Gender {
   MALE = 1,
   FEMALE = 2
 }
+
+export enum ContractStatus {
+  ACTIVE = 1,
+  INACTIVE = 2,
+  PENDING_FOR_PAYMENT =3
+}

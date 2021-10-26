@@ -19,7 +19,6 @@ export class CampaignService {
     private readonly campaignMapper: CampaignMapper,
     @Inject(USERS_MANAGEMENT_SERVICE_NAME)
     private readonly usersManagementServiceProxy : ClientProxy,
-    // private customerService: CustomerService
   ) {
   }
 
@@ -91,7 +90,6 @@ export class CampaignService {
   }
 
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[] | null> {
-    console.log("campaign service - campaign service")
     return await this.repository.find({relations: ["customer"]})
   }
 }

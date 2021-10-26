@@ -6,14 +6,11 @@ import {ContractRepository} from "../../repositories/health-info.repository";
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {RpcExceptionModel} from "../../../../../common/filters/rpc-exception.model";
 import {ContractMapper} from "../../mappers/health-info.mapper";
-import {PackageService} from "./package.service.impl";
-import {CampaignService} from "./campaign.service.impl";
 import {CreateContractDto} from "../../dtos/contract/create-health-info.dto";
 import {UpdateContractDto} from "../../dtos/contract/update-health-info.dto";
 import {
   CAMPAIGN_MANAGEMENT_SERVICE_NAME,
   PACKAGES_MANAGEMENT_SERVICE_NAME,
-  USERS_MANAGEMENT_SERVICE_NAME
 } from "../../../../../../constant";
 import {CampaignEntity} from "../../entities/campaign.entity";
 import {Observable} from "rxjs";
@@ -23,22 +20,21 @@ import {FIND_PACKAGE_BY_ID} from "../../../../../common/routes/packages-manageme
 
 @Injectable()
 export class ContractService
-  // extends BaseService<ContractEntity, ContractRepository>
 {
   constructor(private readonly repository: ContractRepository,
               private readonly mapper: ContractMapper,
               @Inject(CAMPAIGN_MANAGEMENT_SERVICE_NAME)
               private readonly campaignServiceManagementProxy : ClientProxy,
-              // private readonly campaignService: CampaignService,
               @Inject(PACKAGES_MANAGEMENT_SERVICE_NAME)
               private readonly packageServiceManagementProxy: ClientProxy
-              // private readonly packageService : PackageService
   ) {
-    // super(repository);
   }
 
   async findAll(): Promise<ContractEntity[] | null> {
-    return await this.repository.find();
+    return await this.repository.createQueryBuilder("contract")
+      .leftJoinAndSelect("contract.campaign", "campaign")
+      .leftJoinAndSelect("contract.package", "package")
+      .getMany();
   }
 
   private validateCampaign(id: number) : Observable<CampaignEntity> {
