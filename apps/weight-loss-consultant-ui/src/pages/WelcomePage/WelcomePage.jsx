@@ -74,37 +74,28 @@ const WelcomePage = (props) => {
                       <a style={{ color: 'white' }}> Home Page </a>
                     </NavLink>
                   </Menu.Item>
-                  <Menu.Item
-                    key="/admin/user/customer"
-                    icon={<TableOutlined />}
-                  >
-                    <NavLink to="/admin/user/customer">
+                  <Menu.Item key="/user/customer" icon={<TableOutlined />}>
+                    <NavLink to="/user/customer">
                       <a style={{ color: 'white' }}>Customer </a>
                     </NavLink>
                   </Menu.Item>
-                  <Menu.Item key="/admin/user/trainer" icon={<TableOutlined />}>
-                    <NavLink to="/admin/user/trainer">
+                  <Menu.Item key="/user/trainer" icon={<TableOutlined />}>
+                    <NavLink to="/user/trainer">
                       <a style={{ color: 'white' }}>Trainer </a>
                     </NavLink>
                   </Menu.Item>
-                  <Menu.Item key="/admin/user/admin" icon={<TableOutlined />}>
-                    <NavLink to="/admin/user/admin">
+                  <Menu.Item key="/user/admin" icon={<TableOutlined />}>
+                    <NavLink to="/user/admin">
                       <a style={{ color: 'white' }}>Admin </a>
                     </NavLink>
                   </Menu.Item>
-                  <Menu.Item
-                    key="/admin/user/contract"
-                    icon={<SolutionOutlined />}
-                  >
-                    <NavLink to="/admin/user/contract">
+                  <Menu.Item key="/user/contract" icon={<SolutionOutlined />}>
+                    <NavLink to="/user/contract">
                       <a style={{ color: 'white' }}>Contract </a>
                     </NavLink>
                   </Menu.Item>
-                  <Menu.Item
-                    key="/admin/user/payment"
-                    icon={<CreditCardOutlined />}
-                  >
-                    <NavLink to="/admin/user/payment">
+                  <Menu.Item key="/user/payment" icon={<CreditCardOutlined />}>
+                    <NavLink to="/user/payment">
                       <a style={{ color: 'white' }}>Payment</a>
                     </NavLink>
                   </Menu.Item>
