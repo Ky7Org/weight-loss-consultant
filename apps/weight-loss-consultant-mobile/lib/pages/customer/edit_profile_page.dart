@@ -1,9 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/constants/enums.dart';
+import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -13,50 +23,45 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+
+  AccountModel user = AccountModel(email: "", fullname: "");
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
+
+
+
   final _formKey = GlobalKey<FormState>();
   var _gender = "Female";
   String regionPrefix = "+1";
-  var regionPrefixList = ["+1", "+2", "+3", "+4", "+5", "+6", "+7"];
 
   final TextEditingController _phoneNumber = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _dob = TextEditingController();
-  final TextEditingController _illness = TextEditingController();
-  final TextEditingController _record = TextEditingController();
-  final TextEditingController _emergencyContact = TextEditingController();
 
-  Widget _illnessWidget(String name) {
-    return ElevatedButton(
-      onPressed: () {
-        return null;
-      },
-      child: Row(
-        children: [
-          Text(
-            name,
-            style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w900,
-                color: Color(0xffffffff)),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          const Icon(
-            Icons.highlight_remove,
-            size: 20,
-          )
-        ],
-      ),
-      style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.all<Color>(const Color(0xFFFF3939)),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ))),
-    );
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount().then((value) {
+        setState(() {
+
+        });
+      });
+    });
   }
+
 
   Widget _inputWidget(
     TextEditingController controller,
@@ -68,7 +73,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     bool haveDropdown,
     bool haveSuffixIcon,
     IconData icon,
+    String initialValue,
+    bool isEditable,
   ) {
+    controller.text = initialValue;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       height: 64,
@@ -127,6 +135,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           ? const EdgeInsets.only(left: 5)
                           : const EdgeInsets.only(left: 0),
                       child: TextFormField(
+                        enabled: isEditable,
                         controller: controller,
                         keyboardType: TextInputType.phone,
                         style: const TextStyle(fontSize: 15),
@@ -206,28 +215,35 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: Column(
                     children: [
                       _inputWidget(
-                          _phoneNumber,
-                          TextInputType.phone,
-                          "Phone Number",
-                          "000 - 0000 - 0000",
-                          () {},
-                          regionPrefixList,
-                          true,
-                          false,
-                          Icons.add),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      _inputWidget(
                           _email,
                           TextInputType.emailAddress,
                           'Email',
                           'E,g: yourname@gmail.com',
-                          () {},
+                              () {},
                           [],
                           false,
                           false,
-                          Icons.add),
+                          Icons.add,
+                          user.email ?? "",
+                          false
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      _inputWidget(
+                          _phoneNumber,
+                          TextInputType.phone,
+                          "Phone Number",
+                          "000 - 0000 - 0000",
+                              () {},
+                          [],
+                          false,
+                          false,
+                          Icons.add,
+                          user.phone ?? "",
+                          true
+                      ),
+
                       const SizedBox(
                         height: 15,
                       ),
@@ -305,69 +321,33 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           [],
                           false,
                           true,
-                          Icons.calendar_today_outlined),
-                      const SizedBox(
-                        height: 25,
+                          Icons.calendar_today_outlined,
+                          DateFormat("MMMM-dd-yyyy").format(DateTime.fromMicrosecondsSinceEpoch(int.parse(user.dob ?? ""))).toString(),
+                          true
                       ),
-                      _title('Campaign Info'),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 0, horizontal: 20),
 
-                        height: 110,
-                        decoration: const BoxDecoration(
-                            color: Color(0xFFF0F3F6),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              controller: _illness,
-                              keyboardType: TextInputType.datetime,
-                              style: const TextStyle(fontSize: 15),
-                              decoration: InputDecoration(
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.always,
-                                border: InputBorder.none,
-                                labelText: 'Illness',
-                                labelStyle: TextStyle(
-                                    fontSize: 13,
-                                    color: AppColors.PRIMARY_WORD_COLOR,
-                                    fontWeight: FontWeight.bold),
-                                hintText: "E,g: Asthma",
-                                hintStyle: const TextStyle(
-                                    color: Color(0xFFB6C5D1),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15),
-                                errorStyle: const TextStyle(height: 0.1),
-                              ),
-                            ),
-                            Row (
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                _illnessWidget('Asthma'),
-                                _illnessWidget('Low Blood Sugar')
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      _inputWidget(_record, TextInputType.text, "Upload your Campaign Record", "Pdf or Doc files allowed", (){}, [], false, true, Icons.attach_file),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      _inputWidget(_emergencyContact, TextInputType.phone, "Emergency Contact", "000 - 0000 - 0000", (){}, regionPrefixList, true, false, Icons.add),
                       const SizedBox(
                         height: 25,
                       ),
                       ElevatedButton(
-                        onPressed: () => null,
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()){
+                            _formKey.currentState?.save();
+                            user.phone = _phoneNumber.text;
+                            user.dob = Timestamp.fromDate(DateFormat("MMMM-dd-yyyy").parse(_dob.text)).millisecondsSinceEpoch.toString();
+                            user.gender = _gender == "Female" ? Gender.female.value.toString() : Gender.male.value.toString();
+                            saveAccount();
+                            if (user.role == Role.trainer.value || user.role == Role.admin.value){
+                              TrainerService trainerService = TrainerService();
+                              bool result =  await trainerService.updateTrainerProfile(user);
+                              if (result){
+                                CustomToast.makeToast("Save successfully");
+                              } else {
+                                CustomToast.makeToast("Some thing went wrong! Try again");
+                              }
+                            }
+                          }
+                        },
                         child: const Text(
                           'Save',
                           style: TextStyle(

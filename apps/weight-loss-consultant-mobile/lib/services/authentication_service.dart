@@ -17,6 +17,8 @@ class AuthenticationService {
     var response = await http.post(url, body: {'email': email, 'password': password});
     if (response.statusCode == 200){
       AccountModel accountModel = AccountModel.fromJson(jsonDecode(response.body));
+      accountModel.password = password;
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("ACCOUNT", jsonEncode(accountModel.toJson()));
       return accountModel;

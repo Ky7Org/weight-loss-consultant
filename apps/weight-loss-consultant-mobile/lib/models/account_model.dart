@@ -16,6 +16,7 @@ class AccountModel{
   late String? profileImage;
   late String? dob;
   late String? accessToken;
+  late String? password;
 
 
   AccountModel({this.email = "", this.fullname = ""});
@@ -26,6 +27,6 @@ class AccountModel{
 
   @override
   String toString() {
-    return 'AccountModel{email: $email, fullname: $fullname, role: $role, address: $address, phone: $phone, gender: $gender, status: $status, profileImage: $profileImage, dob: $dob}';
+    return 'AccountModel{email: $email, fullname: $fullname, role: $role, address: $address, phone: $phone, gender: $gender, status: $status, profileImage: $profileImage, dob: $dob, password: $password}';
   }
 }

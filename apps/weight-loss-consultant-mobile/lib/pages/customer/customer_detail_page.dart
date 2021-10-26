@@ -78,7 +78,11 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                   ),
                   IconButton(
                     onPressed: (){
-                      Navigator.pushNamed(context, RoutePath.editProfilePage);
+                      Navigator.pushNamed(context, RoutePath.editProfilePage).then((value){
+                        setState(() {
+
+                        });
+                      });
                     },
                     icon: const Icon(
                       Icons.create_outlined,
@@ -231,7 +235,13 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                                                 BorderRadius.circular(20.0),
                                             side: const BorderSide(
                                                 color: Colors.red)))),
-                                onPressed: () => null),
+                                onPressed: (){
+                                  Navigator.pushNamed(context, RoutePath.editProfilePage).then((value){
+                                    setState(() {
+
+                                    });
+                                  });
+                                }),
                           )
                         ],
                       ),
@@ -310,164 +320,6 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                       ),
                       Text(
                         DateFormat("MMMM-dd-yyyy").format(DateTime.fromMicrosecondsSinceEpoch(int.parse(user.dob ?? ""))).toString(),
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const Divider(height: 15, thickness: 2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                              flex: 7,
-                              child: Text('Campain Info',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: AppColors.PRIMARY_WORD_COLOR,
-                                    fontWeight: FontWeight.w800,
-                                  ))),
-                          Expanded(
-                            flex: 3,
-                            child: TextButton(
-                                child: Text("Change".toUpperCase(),
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w800,
-                                        color: Color(0xffFF3939))),
-                                style: ButtonStyle(
-                                    padding: MaterialStateProperty.all<EdgeInsets>(
-                                        const EdgeInsets.fromLTRB(6, 5, 10, 6)),
-                                    foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            const Color(0xffFF3939)),
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            side: const BorderSide(
-                                                color: Colors.red)))),
-                                onPressed: () => null),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Illness',
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          OutlinedButton(
-                            onPressed: () {
-                              return null;
-                            },
-                            child: const Text(
-                              'Migraine',
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xffFF3939)),
-                            ),
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        const Color(0xFFF0F3F6)),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ))),
-                          ),
-                          OutlinedButton(
-                            onPressed: () {
-                              return null;
-                            },
-                            child: const Text(
-                              'Asthma',
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xffFF3939)),
-                            ),
-                            style: ButtonStyle(
-                                backgroundColor:
-                                MaterialStateProperty.all<Color>(
-                                    const Color(0xFFF0F3F6)),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ))),
-                          ),
-                          OutlinedButton(
-                            onPressed: () {
-                              return null;
-                            },
-                            child: const Text(
-                              'Low Blood Sugar',
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xffFF3939)),
-                            ),
-                            style: ButtonStyle(
-                                backgroundColor:
-                                MaterialStateProperty.all<Color>(
-                                    const Color(0xFFF0F3F6)),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ))),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        'Campaign Record',
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        'My Campaign.pdf',
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Emergency Contact',
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        '+1 453 2872 2873',
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontSize: 17,
