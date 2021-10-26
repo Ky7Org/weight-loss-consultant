@@ -24,6 +24,9 @@ import 'package:weight_loss_consultant_mobile/pages/trainer/create_packages_page
 import 'package:weight_loss_consultant_mobile/pages/trainer/no_packages_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_home_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_package_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_campaign_detail_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_list_campaign_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_list_package_page.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 
@@ -132,6 +135,18 @@ class RouteGenerator{
       case RoutePath.trainerPackagePage:
         return MaterialPageRoute(builder: (_){
           return const TrainerPackagePage();
+        });
+      case RoutePath.trainerViewCampaignDetailPage:
+        return MaterialPageRoute(builder: (_){
+          return const TrainerViewCampaignDetailPage();
+        });
+      case RoutePath.trainerViewListCampaignPage:
+        return MaterialPageRoute(builder: (_){
+          return const TrainerViewListCampaignPage();
+        });
+      case RoutePath.trainerViewListPackagePage:
+        return MaterialPageRoute(builder: (_){
+          return const TrainerViewListPackagePage();
         });
       default:
         return _errorRoute();

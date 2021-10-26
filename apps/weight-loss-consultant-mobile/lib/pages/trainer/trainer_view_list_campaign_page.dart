@@ -4,19 +4,22 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
-class TrainerViewListCampaign extends StatefulWidget {
-  const TrainerViewListCampaign({Key? key}) : super(key: key);
+class TrainerViewListCampaignPage extends StatefulWidget {
+  const TrainerViewListCampaignPage({Key? key}) : super(key: key);
 
   @override
-  _TrainerViewListCampaignState createState() =>
-      _TrainerViewListCampaignState();
+  _TrainerViewListCampaignPageState createState() =>
+      _TrainerViewListCampaignPageState();
 }
 
-class _TrainerViewListCampaignState extends State<TrainerViewListCampaign> {
+class _TrainerViewListCampaignPageState extends State<TrainerViewListCampaignPage> {
   Widget _campaign(String date, String currentWeight, String targetWeight, String customerName) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, RoutePath.trainerViewCampaignDetailPage);
+      },
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(

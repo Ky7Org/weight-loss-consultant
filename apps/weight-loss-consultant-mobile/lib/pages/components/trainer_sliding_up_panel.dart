@@ -17,6 +17,7 @@ class TrainerCategoryPanel extends StatelessWidget {
     {
       "text": "Available\nCampaign",
       "imageName": "customers-compaign.svg",
+      "route": RoutePath.trainerViewListCampaignPage,
 
     },
     /*{
