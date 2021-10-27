@@ -16,7 +16,7 @@ import { CreateCustDto } from '../dtos/customer/create-customer.dto';
 @Injectable()
 export class CustomerService {
 
-  constructor(@Inject(USERS_MANAGEMENT_SERVICE_NAME) private readonly usersManagementService: ClientProxy) {}
+  private readonly usersManagementService: ClientProxy;
 
   async findAll(): Promise<CustomerEntity[]> {
     const pattern = {cmd: GET_ALL_CUSTOMER};

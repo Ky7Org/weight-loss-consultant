@@ -3,18 +3,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HOST, USERS_MANAGEMENT_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_PORT } from '../../../../../constant';
 import { SearchController } from '../controllers/users-management/search.controller';
 import { SearchService } from '../services/search.service';
+import {KAFKA_USERS_MANAGEMENT_SERVICE} from "../../../../common/kafka-utils";
 
 
 @Module({
-  imports: [ClientsModule.register([
-    {
-      name: USERS_MANAGEMENT_SERVICE_NAME,
-      transport: Transport.TCP,
-      options: {
-        host: HOST,
-        port: USERS_MANAGEMENT_SERVICE_PORT
-      }
-    }])],
+  imports: [ClientsModule.register([KAFKA_USERS_MANAGEMENT_SERVICE])],
   controllers: [SearchController],
   providers: [SearchService],
   exports: [SearchService]

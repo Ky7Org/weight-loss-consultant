@@ -1,4 +1,11 @@
-import { Controller, HttpStatus, UseFilters } from '@nestjs/common';
+import {
+  BadRequestException,
+  ClassSerializerInterceptor,
+  Controller,
+  HttpStatus,
+  UseFilters,
+  UseInterceptors
+} from '@nestjs/common';
 import { AuthenticationService } from '../services/authentication.service';
 import { CustomerService } from '../services/customer.service';
 import { MailService } from '../services/mail.service';
@@ -23,8 +30,10 @@ import { ExceptionFilter } from '../filters/rpc-exception.filter';
 import { LoginRequest } from '../models/login.req';
 import { LoginResponse } from '../models/login.res';
 import { RpcExceptionModel } from '../filters/rpc-exception.model';
+import {IKafkaMessage} from "../../../../common/kafka-message.model";
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class AppController {
 
   constructor(private customerService: CustomerService,
@@ -35,19 +44,20 @@ export class AppController {
               private readonly accountService: AccountService) {
   }
 
-  @MessagePattern({cmd: EMAIL_PASSWORD_AUTHENTICATE_USER})
+  @MessagePattern('authentication.login')
   @UseFilters(new ExceptionFilter())
-  async login(@Payload() credential: LoginRequest): Promise<LoginResponse> {
-    return this.authenticationService.login(credential);
+  async login(@Payload() message: IKafkaMessage<LoginRequest>): Promise<LoginResponse> {
+    throw new BadRequestException();
+    return this.authenticationService.login(message.value);
   }
 
-  @MessagePattern({cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER})
+ // @MessagePattern({cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER})
   @UseFilters(new ExceptionFilter())
   async loginWithFirebase(@Payload() firebaseUserToken: string) {
     return this.authenticationService.loginWithFirebase(firebaseUserToken);
   }
 
-  @MessagePattern({cmd: RESET_PASSWORD})
+//  @MessagePattern({cmd: RESET_PASSWORD})
   @UseFilters(new ExceptionFilter())
   async resetPassword(@Payload() requestModel: ResetPasswordRequestModel) {
     const email = requestModel.email;
@@ -73,7 +83,7 @@ export class AppController {
     await this.mailService.sendOTPEmail(requestModel.email, otp);
   }
 
-  @MessagePattern({cmd: CONFIRM_CHANGE_PASSWORD})
+//  @MessagePattern({cmd: CONFIRM_CHANGE_PASSWORD})
   @UseFilters(new ExceptionFilter())
   async confirmChangePassword(@Payload() requestModel: ResetPasswordConfirmRequestModel) {
     try {

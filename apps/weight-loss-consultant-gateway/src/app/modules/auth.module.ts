@@ -8,18 +8,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JWT_CONFIG } from '../constant';
 import { JwtStrategy } from '../strategies/jwt.strategy';
+import { KAFKA_AUTHENTICATION_SERVICE } from 'apps/common/kafka-utils';
 
 
 @Module({
-  imports: [ClientsModule.register([
-    {
-      name: AUTHENTICATION_SERVICE_NAME,
-      transport: Transport.TCP,
-      options: {
-        host: HOST,
-        port: AUTHENTICATION_SERVICE_PORT,
-      }
-    }]),
+  imports: [ClientsModule.register([KAFKA_AUTHENTICATION_SERVICE]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

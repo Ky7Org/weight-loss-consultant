@@ -7,7 +7,7 @@ import { PaginationDto } from '../dtos/pagination/pagination.dto';
 
 @Injectable()
 export class SortingAndFilteringService {
-  constructor(@Inject(USERS_MANAGEMENT_SERVICE_NAME) private readonly usersManagementProxy: ClientProxy) {}
+  private readonly usersManagementProxy: ClientProxy;
 
   async sortingAndFiltering(payload: PaginationDto): Promise<PaginatedResultDto> {
     return this.usersManagementProxy.send<PaginatedResultDto, PaginationDto>

@@ -8,7 +8,7 @@ import { PaginationDto } from '../dtos/pagination/pagination.dto';
 
 @Injectable()
 export class SearchService {
-  constructor(@Inject(USERS_MANAGEMENT_SERVICE_NAME) private readonly usersManagementProxy: ClientProxy) {}
+  private readonly usersManagementProxy: ClientProxy;
 
   async search(pagination: PaginationDto, search: string): Promise<PaginatedResultDto> {
     return this.usersManagementProxy.send<PaginatedResultDto, SearchPaginationPayloadType>

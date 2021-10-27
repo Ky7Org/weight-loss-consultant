@@ -13,14 +13,19 @@ import { ENV_FILE_PATH } from './constant';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AUTHENTICATION_SERVICE_NAME, AUTHENTICATION_SERVICE_PORT, HOST } from '../../../constant';
 import * as admin from 'firebase-admin';
+import {KAFKA_BROKER_ENDPOINT_1, KAFKA_CLIENT_ID, KAFKA_CONSUMER_GROUP_ID} from "../../common/kafka-utils";
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule.forRoot(settings), {
-    transport: Transport.TCP,
+    transport: Transport.KAFKA,
     options: {
-      host: HOST,
-      port: AUTHENTICATION_SERVICE_PORT
+      consumer: {
+        groupId: KAFKA_CONSUMER_GROUP_ID,
+      },
+      client: {
+        brokers: [KAFKA_BROKER_ENDPOINT_1],
+      }
     }
   });
 

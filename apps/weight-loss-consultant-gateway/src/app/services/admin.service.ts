@@ -17,10 +17,7 @@ import {PaginationDto} from "../dtos/pagination/pagination.dto";
 @Injectable()
 export class AdminService {
 
-  constructor(
-    @Inject(USERS_MANAGEMENT_SERVICE_NAME)
-    private readonly usersManagementService: ClientProxy,
-  ) {}
+  private readonly usersManagementService: ClientProxy;
 
   async getAllAdmins(payload: PaginationDto): Promise<AdminEntity[]> {
     const pattern = { cmd: GET_ALL_ADMINS };
