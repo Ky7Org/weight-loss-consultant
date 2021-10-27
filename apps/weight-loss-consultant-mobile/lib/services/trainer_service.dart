@@ -103,6 +103,28 @@ class TrainerService{
     return models;
   }
 
+  Future<List<PackageModel>> getAppliedPackage(int campaignId, AccountModel user) async{
+    var url = Uri.parse(ApiConstant.getAppliedPackageApi + "/$campaignId}");
+    List<PackageModel> models = [];
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      Iterable list = json.decode(response.body);
+      for (var item in list){
+        PackageModel model = PackageModel.fromJson(item);
+        models.add(model);
+      }
+    }
+    return models;
+  }
+
+
+
   Future<bool> applyPackageToCampaign(int packageID, int campaignID, AccountModel model) async {
     var url = Uri.parse(ApiConstant.applyPackageToCampaignApi);
     Map<String, dynamic> data = {};

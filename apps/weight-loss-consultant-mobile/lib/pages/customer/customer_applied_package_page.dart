@@ -48,7 +48,7 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        listCampaign = service.getAllPackage(user);
+        listCampaign = service.getAppliedPackage(widget.campaignId ?? 0, user);
         setState(() {});
       });
     });

@@ -16,4 +16,5 @@ class ApiConstant{
   static const String getTrainerPackageApi = routePath + "/api/v1/trainers/viewDetailSpecial";
   static const String createPackageApi = routePath + "/api/v1/packages";
   static const String getPackageDetailApi = routePath + "/api/v1/packages";
+  static const String getAppliedPackageApi = routePath + "/api/v1/applies/getAppliedPackages";
 }
