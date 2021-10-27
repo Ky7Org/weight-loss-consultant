@@ -2,17 +2,20 @@ import { useMemo, useState } from 'react';
 import { Button, Table, Row, Modal, Select, Tag, Card } from 'antd';
 import './TableUser.scss';
 import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import { useSelector, useDispatch } from 'react-redux';
 import { filterActions } from '../../../states-manager/filter/filter-slice';
 import {
-  EditOutlined,
   CheckCircleFilled,
   CloseCircleFilled,
+  UserOutlined,
 } from '@ant-design/icons';
 
 const TableUser = (props) => {
+  const history = useHistory();
   const dispatch = useDispatch();
+  const { currentSearchRole } = props;
   const { dataEmpl } = props;
   const { currentRole } = props;
   const customerField = [
@@ -64,6 +67,12 @@ const TableUser = (props) => {
   const [modalOptions, setModalOptions] = useState(
     editableColumns.slice(0, editableColumns.length - 1)
   );
+  const handleNavigateProfile = (value) => {
+    history.push({
+      pathname: `/user/update/${value}`,
+      state: { currentSearchRole },
+    });
+  };
   const defaultColumns = [
     {
       title: 'Full Name',
@@ -196,12 +205,13 @@ const TableUser = (props) => {
           <Row justify="end">
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
-                <EditOutlined
+                <UserOutlined
                   style={{
                     fontSize: '20px',
                     color: '#ff3939',
                     marginRight: '30px',
                   }}
+                  onClick={() => handleNavigateProfile(row.email)}
                 />
               </div>
             </div>

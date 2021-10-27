@@ -10,6 +10,7 @@ import {RpcException} from '@nestjs/microservices';
 import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
 
 import {UpdateCustomerPayload} from "../../controllers/customer.controller";
+import { getManager } from 'typeorm';
 
 @Injectable()
 export class CustomerService extends BaseService<CustomerEntity, CustomerRepository> {
@@ -86,6 +87,35 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
       .leftJoinAndSelect("customer.campaigns", "campaign")
       .leftJoinAndSelect("customer.healthInfos", "healthInfo")
       .getOne();
+    const sql = this.repository.createQueryBuilder("customer")
+      .where("customer.email = :email", {email : id})
+      .leftJoinAndSelect("customer.campaigns", "campaign")
+      .leftJoinAndSelect("customer.healthInfos", "healthInfo")
+      .getSql();
+    console.log(sql)
+    return query;
+  }
+
+  async viewOnlyCampaignsOfCustomer(customerEmail: string) : Promise<any>  {
+    const entityManager = getManager();
+    const query = entityManager.query(
+    `SELECT \`campaign\`.\`id\`               AS \`id\`,
+              \`campaign\`.\`description\`          AS \`description\`,
+              \`campaign\`.\`status\`               AS \`status\`,
+              \`campaign\`.\`startDate\`            AS \`startDate\`,
+              \`campaign\`.\`endDate\`              AS \`endDate\`,
+              \`campaign\`.\`feedback\`             AS \`feedback\`,
+              \`campaign\`.\`targetWeight\`         AS \`targetWeight\`,
+              \`campaign\`.\`currentWeight\`        AS \`currentWeight\`,
+              \`campaign\`.\`spendTimeForTraining\` AS \`spendTimeForTraining\`,
+              \`campaign\`.\`customerEmail\`        AS \`customerEmail\`
+       FROM \`Customer\` \`customer\`
+              LEFT JOIN \`Campaign\` \`campaign\` ON \`campaign\`.\`customerEmail\` = \`customer\`.\`email\`
+              LEFT JOIN \`HealthInformation\` \`healthInfo\`
+                        ON \`healthInfo\`.\`customerEmail\` = \`customer\`.\`email\`
+       WHERE \`customer\`.\`email\` = ?
+      `,[customerEmail]
+    )
     return query;
   }
 

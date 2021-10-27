@@ -6,7 +6,7 @@ import {
   DELETE_CUSTOMER,
   GET_ALL_CUSTOMER,
   UPDATE_CUSTOMER,
-  VIEW_DETAIL_CUSTOMER
+  VIEW_DETAIL_CUSTOMER, VIEW_DETAIL_SPECIAL
 } from '../../../../common/routes/users-management-service-routes';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
@@ -29,6 +29,12 @@ export class CustomerService {
     const pattern = {cmd: VIEW_DETAIL_CUSTOMER};
     const payload = email;
     // return this.usersManagementService.send(pattern, payload).toPromise<CustomerEntity>();
+    return this.usersManagementService.send(pattern, payload).toPromise();
+  }
+
+  async viewDetailSpecial(email: string) : Promise<any>{
+    const pattern = {cmd: VIEW_DETAIL_SPECIAL}
+    const payload = email;
     return this.usersManagementService.send(pattern, payload).toPromise();
   }
 
