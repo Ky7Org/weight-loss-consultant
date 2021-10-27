@@ -2,15 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
-class TrainerViewListPackage extends StatefulWidget {
-  const TrainerViewListPackage({Key? key}) : super(key: key);
+class TrainerViewListPackagePage extends StatefulWidget {
+  const TrainerViewListPackagePage({Key? key}) : super(key: key);
 
   @override
-  _TrainerViewListPackageState createState() => _TrainerViewListPackageState();
+  _TrainerViewListPackagePageState createState() => _TrainerViewListPackagePageState();
 }
 
-class _TrainerViewListPackageState extends State<TrainerViewListPackage> {
+class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage> {
   // List<Widget> _listPackage(List<PackageModel>? listPackage) {
   //   List<Widget> list = List.empty(growable: true);
   //   if (listPackage == null) {
@@ -166,14 +167,16 @@ class _TrainerViewListPackageState extends State<TrainerViewListPackage> {
                   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ",
                   "2 days",
                   '69.0'),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               FlatButton(
                 height: 64,
                 color: AppColors.PRIMARY_COLOR,
-                onPressed: () {},
-                child: Text(
+                onPressed: () {
+                  Navigator.pushNamed(context, RoutePath.createPackagesPage);
+                },
+                child: const Text(
                   'Add Custom Package',
                   style: TextStyle(
                       color: Colors.white,

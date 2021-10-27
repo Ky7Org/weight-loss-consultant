@@ -6,26 +6,28 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 
-class CreateCampaignPage extends StatefulWidget {
-  const CreateCampaignPage({Key? key}) : super(key: key);
+class CustomerUpdateCampaignPage extends StatefulWidget {
+  late int? campaignID;
+  CustomerUpdateCampaignPage({Key? key, this.campaignID}) : super(key: key);
 
   @override
-  _CreateCampaignPageState createState() => _CreateCampaignPageState();
+  _CustomerUpdateCampaignPageState createState() => _CustomerUpdateCampaignPageState();
 }
 
-class _CreateCampaignPageState extends State<CreateCampaignPage> {
+class _CustomerUpdateCampaignPageState extends State<CustomerUpdateCampaignPage> {
 
   AccountModel user = AccountModel(email: "", fullname: "");
+  late CampaignModel? campaignModel;
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _weightTarget = TextEditingController();
   final TextEditingController _description = TextEditingController();
   final TextEditingController _currentWeight = TextEditingController();
-  final TextEditingController _habit = TextEditingController();
 
   String dropdownValue = '1 day';
   int spendTimeForTraining = 1;
@@ -50,7 +52,16 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        setState(() {});
+        CustomerService service = CustomerService();
+        service.getCampaignById(widget.campaignID ?? 0, user).then((value) {
+          campaignModel = value;
+          _description.text = campaignModel!.description ?? "";
+          _weightTarget.text = campaignModel!.targetWeight.toString();
+          _currentWeight.text = campaignModel!.currentWeight.toString();
+
+
+          setState(() {});
+        });
       });
     });
   }
@@ -98,10 +109,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   decoration: InputDecoration(
                     suffixIcon: haveSuffixIcon
                         ? Icon(
-                            icon,
-                            color: const Color(0xFF0D3F67),
-                            size: 20,
-                          )
+                      icon,
+                      color: const Color(0xFF0D3F67),
+                      size: 20,
+                    )
                         : const SizedBox(),
                     border: InputBorder.none,
                     hintText: hint,
@@ -259,18 +270,14 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()){
                       _formKey.currentState?.save();
-                      int targetWeight = int.parse(_weightTarget.text);
-                      int currentWeight = int.parse(_currentWeight.text);
+                      campaignModel!.description = _description.text;
+                      campaignModel!.targetWeight = int.parse(_weightTarget.text);
+                      campaignModel!.currentWeight = int.parse(_currentWeight.text);
+                      campaignModel!.spendTimeForTraining = spendTimeForTraining;
                       CustomerService service = CustomerService();
-                      bool result = await service.createCampaign(
-                          targetWeight: targetWeight,
-                          currentWeight: currentWeight,
-                          description: _description.text,
-                          spendTimeForTraining: spendTimeForTraining,
-                          user: user
-                      );
+                      bool result = await service.updateCampaign(campaignModel, user);
                       if (result){
-                        CustomToast.makeToast("Create successfully");
+                        CustomToast.makeToast("Update successfully");
                       } else {
                         CustomToast.makeToast("Some thing went wrong! Try again");
                       }
@@ -278,7 +285,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   },
                   minWidth: 300,
                   child: const Text(
-                    'Create campaign',
+                    'Update campaign',
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
                   ),
                   shape: RoundedRectangleBorder(

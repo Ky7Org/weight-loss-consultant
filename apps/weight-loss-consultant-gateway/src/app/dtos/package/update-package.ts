@@ -17,4 +17,6 @@ export class UpdatePackageDto {
   dietPlan?: string;
   @ApiProperty()
   spendTimeToTraining?: number;
+  @ApiProperty()
+  name?: string;
 }
