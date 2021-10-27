@@ -24,7 +24,8 @@ class TrainerViewListCampaignPage extends StatefulWidget {
 
 class _TrainerViewListCampaignPageState extends State<TrainerViewListCampaignPage> {
 
-  late Future<List<CustomerCampaignModel>> listCampaign;
+
+  Future<List<CustomerCampaignModel>>? listCampaign;
   AccountModel user = AccountModel(email: "", fullname: "");
   TrainerService service = TrainerService();
 
@@ -56,7 +57,7 @@ class _TrainerViewListCampaignPageState extends State<TrainerViewListCampaignPag
   Widget _campaign(int id, String date, String currentWeight, String targetWeight, String customerName) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RoutePath.trainerViewCampaignDetailPage);
+        Navigator.pushNamed(context, RoutePath.trainerViewCampaignDetailPage, arguments: id);
       },
       child: Card(
         elevation: 5,
@@ -247,15 +248,6 @@ class _TrainerViewListCampaignPageState extends State<TrainerViewListCampaignPag
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GenericAppBar.builder("List Campaigns"),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: HexColor("#FF3939"),
-        onPressed: (){
-
-        },
-        label: const Text("Add new campaign"),
-        icon: const Icon(Icons.add),
-      ),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         margin: const EdgeInsets.only(top: 20),
