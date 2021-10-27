@@ -26,5 +26,6 @@ class RoutePath{
   static const String trainerViewCampaignDetailPage = "/trainerViewCampaignDetailPage";
   static const String trainerViewListCampaignPage = "/trainerViewListCampaignPage";
   static const String trainerViewListPackagePage = "/trainerViewListPackagePage";
+  static const String customerUpdateCampaignPage = "/customerUpdateCampaign";
 
 }

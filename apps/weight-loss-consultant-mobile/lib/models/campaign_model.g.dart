@@ -8,7 +8,7 @@ part of 'campaign_model.dart';
 
 CampaignModel _$CampaignModelFromJson(Map<String, dynamic> json) =>
     CampaignModel(
-      json['id'] as String?,
+      json['id'] as int?,
       json['description'] as String?,
       json['status'] as int?,
       json['startDate'] as String?,

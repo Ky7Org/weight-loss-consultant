@@ -4,7 +4,7 @@ part "campaign_model.g.dart";
 
 @JsonSerializable()
 class CampaignModel{
-  late String? id;
+  late int? id;
   late String? description;
   late int? status;
   late String? startDate;

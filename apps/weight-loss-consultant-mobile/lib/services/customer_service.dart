@@ -26,22 +26,16 @@ class CustomerService{
   }
 
   Future<List<CampaignModel>> getCustomerCampaign(String email) async {
-    /*var url = Uri.parse(ApiConstant.getCustomerCampaignApi + "/$email");
+    var url = Uri.parse(ApiConstant.getCustomerCampaignApi + "/$email");
     List<CampaignModel> models = [];
     var response = await http.get(url);
     if (response.statusCode == 200){
-      models = (json.decode(response.body) as List).map((i) =>
-          CampaignModel.fromJson(i)).toList();
+      Iterable list = json.decode(response.body);
+      for (var item in list){
+        CampaignModel model = CampaignModel.fromJson(item);
+        models.add(model);
+      }
     }
-    return models;*/
-    List<CampaignModel> models = [];
-    models.add(CampaignModel("123", "Tien dep trai", 1, "1635265120677", "1640883600000", "I want to meet female trainer", 60, 45, 3));
-    models.add(CampaignModel("123", "Tien dep trai", 1, "1635265120677", "1640883600000", "I want to meet female trainer", 60, 45, 3));
-    models.add(CampaignModel("123", "Tien dep trai", 1, "1635265120677", "1640883600000", "I want to meet female trainer", 60, 45, 3));
-    models.add(CampaignModel("123", "Tien dep trai", 1, "1635265120677", "1640883600000", "I want to meet female trainer", 60, 45, 3));
-    models.add(CampaignModel("123", "Tien dep trai", 1, "1635265120677", "1640883600000", "I want to meet female trainer", 60, 45, 3));
-    models.add(CampaignModel("123", "Tien dep trai", 1, "1635265120677", "1640883600000", "I want to meet female trainer", 60, 45, 3));
-    models.add(CampaignModel("123", "Tien dep trai", 1, "1635265120677", "1640883600000", "I want to meet female trainer", 60, 45, 3));
     return models;
   }
 
@@ -50,12 +44,82 @@ class CustomerService{
         int currentWeight = 0,
         int spendTimeForTraining = 0,
         String description = "",
+        AccountModel? user,
       }) async {
     Map<String, dynamic> data = {};
+    data["customerEmail"] = user!.email ?? "";
+    data["description"] = description;
+    data["startDate"] = DateTime.now().millisecondsSinceEpoch.toString();
+    data["endDate"] = "0";
+    data["feedback"] = "";
+    data["targetWeight"] = targetWeight;
+    data["currentWeight"] = currentWeight;
+    data["spendTimeForTraining"] = spendTimeForTraining;
+    var url = Uri.parse(ApiConstant.createCampaignApi);
+    var response = await http.post(
+      url,
+      body: json.encode(data),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 201){
+      return true;
+    }
+    return false;
+  }
 
+  Future<bool> deleteCampaign(int campaignId, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.deleteCampaignApi + "/$campaignId");
+    var response = await http.delete(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
 
+  Future<CampaignModel?> getCampaignById(int campaignId, AccountModel user) async{
+    var url = Uri.parse(ApiConstant.deleteCampaignApi + "/$campaignId");
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      return CampaignModel.fromJson(jsonDecode(response.body));
+    }
+  }
 
+  Future<bool> updateCampaign(CampaignModel? model, AccountModel user) async {
+    if (model == null){
       return false;
+    }
+    var url = Uri.parse(ApiConstant.updateCampaignApi + "/${model.id}");
+    Map<String, dynamic> data = model.toJson();
+    data["customerEmail"] = user.email;
+    var response = await http.put(
+      url,
+      body: json.encode(data),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
   }
 
 

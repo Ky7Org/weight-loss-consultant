@@ -10,6 +10,7 @@ import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 
@@ -51,9 +52,14 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
     });
   }
 
-  Widget _campaign(String date, String currentWeight, String targetWeight, String description) {
+  Widget _campaign(int id, String date, String currentWeight, String targetWeight, String description) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+          Navigator.pushNamed(context, RoutePath.customerUpdateCampaignPage, arguments: id).then((value){
+            listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+            setState(() {});
+          });
+      },
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(
@@ -61,111 +67,121 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
         ),
         child: Container(
           padding: const EdgeInsets.all(20),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 10),
-                            margin: const EdgeInsets.only(bottom: 10),
-                            child: Text(
-                              date,
-                              style: TextStyle(
-                                  color: HexColor("#FF3939"),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w900),
-                            ),
-                            decoration: BoxDecoration(
-                                color: HexColor("#F0F3F6"),
-                                borderRadius:
-                                const BorderRadius.all(Radius.circular(5))),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Current Weight',
-                            style: TextStyle(
-                                color: AppColors.PRIMARY_WORD_COLOR,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 13),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            currentWeight,
-                            style: TextStyle(
-                                color: AppColors.PRIMARY_WORD_COLOR,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 13),
-
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Target Weight',
-                            style: TextStyle(
-                                color: AppColors.PRIMARY_WORD_COLOR,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 13),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            targetWeight,
-                            style: TextStyle(
-                                color: AppColors.PRIMARY_WORD_COLOR,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 13),
-
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text:"Description: ",
-                              style: TextStyle(
-                                  color: AppColors.PRIMARY_WORD_COLOR,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 13),
-                            ),
-                            TextSpan(
-                              text: description,
-                              style: TextStyle(
-                                  color: AppColors.PRIMARY_WORD_COLOR,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 13),
-                            )
-                          ]
-                        )
-                      )
-
-                    ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 5, horizontal: 10),
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      date,
+                      style: TextStyle(
+                          color: HexColor("#FF3939"),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w900),
+                    ),
+                    decoration: BoxDecoration(
+                        color: HexColor("#F0F3F6"),
+                        borderRadius:
+                        const BorderRadius.all(Radius.circular(5))),
                   ),
+                  IconButton(
+                      onPressed: () async {
+                        bool result = await customerService.deleteCampaign(id, user);
+                        if (result){
+                          CustomToast.makeToast("Delete successfully");
+                        } else {
+                          CustomToast.makeToast("Some thing went wrong! Try again");
+                        }
+                        setState(() {
+                          listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+                        });
+                      },
+                      icon: Icon(
+                        Icons.highlight_remove_outlined,
+                        color: HexColor("#FF3939"),
+                      )
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Current Weight',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    currentWeight,
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13),
+
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Target Weight',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    targetWeight,
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13),
+
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text:"Description: ",
+                      style: TextStyle(
+                          color: AppColors.PRIMARY_WORD_COLOR,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 13),
+                    ),
+                    TextSpan(
+                      text: description,
+                      style: TextStyle(
+                          color: AppColors.PRIMARY_WORD_COLOR,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13),
+                    )
+                  ]
+                )
               )
+
             ],
           ),
         ),
@@ -178,6 +194,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
     for (CampaignModel model in data){
       var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
       var widget = _campaign(
+          model.id ?? 0,
           date,
           model.currentWeight.toString(),
           model.targetWeight.toString(),

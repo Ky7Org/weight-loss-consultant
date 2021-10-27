@@ -5,4 +5,8 @@ class ApiConstant{
   static const String updateTrainerApi = routePath + "/api/v1/trainers";
   static const String updateCustomerApi = routePath + "/api/v1/customers";
   static const String getCustomerCampaignApi = routePath + "/api/tienAPI";
+  static const String createCampaignApi = routePath + "/api/v1/campaigns";
+  static const String deleteCampaignApi = routePath + "/api/v1/campaigns";
+  static const String getCampaignApi = routePath + "/api/v1/campaigns";
+  static const String updateCampaignApi = routePath + "/api/v1/campaigns";
 }
