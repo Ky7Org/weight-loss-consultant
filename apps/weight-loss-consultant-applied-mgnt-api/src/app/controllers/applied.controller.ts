@@ -7,7 +7,7 @@ import {
   CREATE_APPLY,
   DELETE_APPLY_BY_ID,
   FIND_ALL_APPLIES,
-  FIND_APPLY_BY_ID,
+  FIND_APPLY_BY_ID, GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
   UPDATE_APPLY_BY_ID, UpdateApplyPayloadType
 } from "../../../../common/routes/applies-management-routes";
 import {CreateAppliedDto} from "../dtos/applied/create_applied_dto";
@@ -50,5 +50,11 @@ export class AppliedController {
   @UseFilters(new ExceptionFilter())
   async delete(@Payload() id: number) {
     return this.appliedService.del(id);
+  }
+
+  @MessagePattern({cmd: GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID})
+  @UseFilters(new ExceptionFilter())
+  async getPackages(@Payload() id: number) {
+    return this.appliedService.getAppliedPackagesByCampaignID(id);
   }
 }
