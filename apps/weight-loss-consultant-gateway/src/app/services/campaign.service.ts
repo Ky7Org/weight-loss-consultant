@@ -6,7 +6,7 @@ import {
   CREATE_CAMPAIGN,
   DELETE_CAMPAIGN_BY_ID,
   FIND_ALL_CAMPAIGNS,
-  FIND_CAMPAIGN_BY_ID,
+  FIND_CAMPAIGN_BY_ID, GET_AVAILABLE_CAMPAIGNS,
   UPDATE_CAMPAIGN_BY_ID
 } from '../../../../common/routes/campaigns-management-routes';
 import { CampaignEntity } from '../entities/campaign.entity';
@@ -25,6 +25,12 @@ export class CampaignService {
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[]> {
     return this.campaignManagementServiceProxy
       .send<CampaignEntity[], Record<string, unknown> >({cmd: FIND_ALL_CAMPAIGNS}, {})
+      .toPromise();
+  }
+
+  async getAvailableCampaigns(): Promise<CampaignEntity[]> {
+    return this.campaignManagementServiceProxy
+      .send<CampaignEntity[], Record<string, unknown> >({cmd: GET_AVAILABLE_CAMPAIGNS}, {})
       .toPromise();
   }
 

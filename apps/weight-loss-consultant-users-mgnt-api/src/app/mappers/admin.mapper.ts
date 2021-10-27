@@ -30,7 +30,6 @@ static async mapCreateAdminDTOToEntity(dto: CreateAdminDto): Promise<AdminEntity
     }
     const entity = new AdminEntity();
     entity.email = dto.email;
-    entity.password = dto.password;
     entity.fullname = dto.fullname;
     entity.address = dto.address;
     entity.phone = dto.phone;

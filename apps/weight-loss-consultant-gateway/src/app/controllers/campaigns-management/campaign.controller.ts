@@ -21,8 +21,21 @@ export class CampaignController {
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   async index(@Res() res) {
     try {
-      console.log("campaing controller - gateway")
       const result = await this.campaignService.getCampaignDetailsWithCustomer();
+      res.status(200).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Get('/available')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: HttpStatus.OK, description: 'The campaigns has shown below.' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  async getAvaiableCampaigns(@Res() res) {
+    try {
+      const result = await this.campaignService.getAvailableCampaigns();
       res.status(200).send(result);
     } catch ({ error }) {
       this.logger.error(error);

@@ -15,6 +15,15 @@ export class CampaignEntity extends BaseEntity{
   endDate: number;
   @Column({ type: 'varchar', length: 1000 })
   feedback: string;
+  @Column({ type: 'float'})
+  targetWeight: number;
+  @Column({ type: 'float'})
+  currentWeight: number;
+  @Column({ type: 'float'})
+  spendTimeForTraining: number;
+
+  @Column({type: 'varchar'})
+  customerEmail: string;
 
   @OneToMany(() => ContractEntity, contract => contract.campaign)
   contracts : ContractEntity[];

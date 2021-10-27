@@ -1,9 +1,9 @@
-import {ConflictException, HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
+import { HttpStatus, Inject, Injectable} from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {Observable} from "rxjs";
 import {CustomerEntity} from "../entities/customer.entity";
-import {VIEW_DETAIL_CUSTOMER, CUSTOMER_VIEW_DETAIL} from "../../../../common/routes/users-management-service-routes";
+import {CUSTOMER_VIEW_DETAIL, VIEW_DETAIL_CUSTOMER} from "../../../../common/routes/users-management-service-routes";
 import {CampaignMapper} from "../mappers/campaign.mapper";
 import {CampaignRepository} from "../repositories/campaign.repository";
 import {CampaignEntity} from "../entities/campaign.entity";
@@ -45,7 +45,6 @@ export class CampaignService {
   }
 
   async edit(dto: UpdateCampaignDto, id: number): Promise<UpdateResult> {
-
     if (id != dto.id) {
       throw new RpcException({
         statusCode: HttpStatus.CONFLICT,
@@ -86,10 +85,18 @@ export class CampaignService {
   async viewDetail(id): Promise<CampaignEntity> {
     return await this.repository.createQueryBuilder("campaign")
       .where("campaign.id = :id", {id: id})
+      .leftJoinAndSelect("campaign.customer", "customer")
       .getOne();
   }
 
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[] | null> {
     return await this.repository.find({relations: ["customer"]})
+  }
+
+  async getAvailCampaigns() : Promise<CampaignEntity[]> {
+    return this.repository.createQueryBuilder("campaign")
+      .leftJoinAndSelect("campaign.customer", "customer")
+      .where("campaign.status = :status", {status : 1})
+      .getMany();
   }
 }

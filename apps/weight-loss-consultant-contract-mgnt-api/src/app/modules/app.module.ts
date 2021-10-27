@@ -28,7 +28,6 @@ export class AppModule {
           imports: [ConfigModule],
           useFactory: (configService: ConfigService) => ({
             type: 'mysql',
-            //logging: ["query"],
             host: configService.get('DATABASE_HOST'),
             port: configService.get<number>('DATABASE_PORT'),
             username: configService.get('DATABASE_USER'),
@@ -37,7 +36,7 @@ export class AppModule {
             entities: [
               CampaignEntity,
               PackageEntity,
-              ContractEntity
+              ContractEntity,
             ],
           }),
           inject: [ConfigService],
