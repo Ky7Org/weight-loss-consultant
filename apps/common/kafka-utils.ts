@@ -32,3 +32,27 @@ export const KAFKA_USERS_MANAGEMENT_SERVICE = {
     }
   }
 } as ClientProviderOptions;
+
+export const KAFKA_AUTHENTICATION_MESSAGE_PATTERN = {
+  login: 'authentication.login',
+  resetPassword: 'authentication.reset-password',
+  confirmResetPassword: 'authentication.reset-password.confirm',
+  validateAccount: 'authentication.validate-account',
+  loginWithFirebase: 'authentication.firebase.login',
+}
+
+export const KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN = {
+  customers: {
+    getAllCustomers: 'users.customers.getAll',
+    getByEmail: 'users.customers.getByEmail',
+    getSpecial: 'users.customers.getSpecial',
+    create: 'users.customers.create',
+    update: 'users.customers.update',
+    delete: 'users.customers.delete',
+  },
+  getAllAdmins: 'users.get-all-admins',
+  getByEmail: 'users.get-by-email',
+  update: 'users.update',
+  delete: 'users.delete',
+  create: 'users.create',
+};

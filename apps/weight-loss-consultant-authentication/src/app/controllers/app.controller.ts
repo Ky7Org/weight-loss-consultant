@@ -1,36 +1,30 @@
 import {
-  BadRequestException,
   ClassSerializerInterceptor,
   Controller,
   HttpStatus,
   UseFilters,
   UseInterceptors
 } from '@nestjs/common';
-import { AuthenticationService } from '../services/authentication.service';
-import { CustomerService } from '../services/customer.service';
-import { MailService } from '../services/mail.service';
-import { ResetPasswordRequestModel } from '../models/reset-password-request-model';
-import { generateOtp } from '../utils/otp-generator';
-import { ResetPasswordTokenService } from '../services/reset-password-token.service';
-import { ResetPasswordTokenEntity } from '../entities/reset-password-token.entity';
-import { v4 as uuidv4 } from 'uuid';
-import { ResetPasswordConfirmRequestModel } from '../models/reset-password-confirm-request-model';
-import { AccountDTO } from '../dtos/acount.dto';
-import { AccountService } from '../services/account.service';
-import { RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status } from '../../constant';
-import { TrainerService } from '../services/trainer.service';
-import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
-import {
-  CONFIRM_CHANGE_PASSWORD,
-  EMAIL_PASSWORD_AUTHENTICATE_USER,
-  GOOGLE_FIREBASE_AUTHENTICATE_USER,
-  RESET_PASSWORD
-} from '../../../../common/routes/authentication-routes';
-import { ExceptionFilter } from '../filters/rpc-exception.filter';
-import { LoginRequest } from '../models/login.req';
-import { LoginResponse } from '../models/login.res';
-import { RpcExceptionModel } from '../filters/rpc-exception.model';
+import {AuthenticationService} from '../services/authentication.service';
+import {CustomerService} from '../services/customer.service';
+import {MailService} from '../services/mail.service';
+import {ResetPasswordRequestModel} from '../models/reset-password-request-model';
+import {generateOtp} from '../utils/otp-generator';
+import {ResetPasswordTokenService} from '../services/reset-password-token.service';
+import {ResetPasswordTokenEntity} from '../entities/reset-password-token.entity';
+import {v4 as uuidv4} from 'uuid';
+import {ResetPasswordConfirmRequestModel} from '../models/reset-password-confirm-request-model';
+import {AccountDTO} from '../dtos/acount.dto';
+import {AccountService} from '../services/account.service';
+import {RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status} from '../../constant';
+import {TrainerService} from '../services/trainer.service';
+import {MessagePattern, Payload, RpcException} from '@nestjs/microservices';
+import {ExceptionFilter} from '../filters/rpc-exception.filter';
+import {LoginRequest} from '../models/login.req';
+import {LoginResponse} from '../models/login.res';
+import {RpcExceptionModel} from '../filters/rpc-exception.model';
 import {IKafkaMessage} from "../../../../common/kafka-message.model";
+import {KAFKA_AUTHENTICATION_MESSAGE_PATTERN} from "../../../../common/kafka-utils";
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -44,23 +38,22 @@ export class AppController {
               private readonly accountService: AccountService) {
   }
 
-  @MessagePattern('authentication.login')
+  @MessagePattern(KAFKA_AUTHENTICATION_MESSAGE_PATTERN.login)
   @UseFilters(new ExceptionFilter())
   async login(@Payload() message: IKafkaMessage<LoginRequest>): Promise<LoginResponse> {
-    throw new BadRequestException();
     return this.authenticationService.login(message.value);
   }
 
- // @MessagePattern({cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER})
+  @MessagePattern(KAFKA_AUTHENTICATION_MESSAGE_PATTERN.loginWithFirebase)
   @UseFilters(new ExceptionFilter())
-  async loginWithFirebase(@Payload() firebaseUserToken: string) {
-    return this.authenticationService.loginWithFirebase(firebaseUserToken);
+  async loginWithFirebase(@Payload() firebaseUserToken: IKafkaMessage<string>) {
+    return this.authenticationService.loginWithFirebase(firebaseUserToken.value);
   }
 
-//  @MessagePattern({cmd: RESET_PASSWORD})
+  @MessagePattern(KAFKA_AUTHENTICATION_MESSAGE_PATTERN.resetPassword)
   @UseFilters(new ExceptionFilter())
-  async resetPassword(@Payload() requestModel: ResetPasswordRequestModel) {
-    const email = requestModel.email;
+  async resetPassword(@Payload() requestModel: IKafkaMessage<ResetPasswordRequestModel>) {
+    const email = requestModel.value.email;
     try {
       const tokenDTO = await this.resetPasswordTokenService.findLatestTokenByEmail(email);
       if (tokenDTO.expiredTime > new Date().getTime()) {
@@ -75,19 +68,19 @@ export class AppController {
     const otp = generateOtp();
     const tokenEntity = new ResetPasswordTokenEntity();
     tokenEntity.id = uuidv4();
-    tokenEntity.email = requestModel.email;
+    tokenEntity.email = email;
     tokenEntity.otp = otp;
     tokenEntity.createdTime = new Date().getTime();
     tokenEntity.expiredTime = tokenEntity.createdTime + RESET_PASSWORD_TOKEN_EXPIRED_TIME.MILLISECOND;
     await this.resetPasswordTokenService.store(tokenEntity);
-    await this.mailService.sendOTPEmail(requestModel.email, otp);
+    await this.mailService.sendOTPEmail(email, otp);
   }
 
-//  @MessagePattern({cmd: CONFIRM_CHANGE_PASSWORD})
+ @MessagePattern(KAFKA_AUTHENTICATION_MESSAGE_PATTERN.confirmResetPassword)
   @UseFilters(new ExceptionFilter())
-  async confirmChangePassword(@Payload() requestModel: ResetPasswordConfirmRequestModel) {
+  async confirmChangePassword(@Payload() requestModel: IKafkaMessage<ResetPasswordConfirmRequestModel>) {
     try {
-      const { email, otp, newPassword } = requestModel;
+      const {email, otp, newPassword} = requestModel.value;
       const tokenDTO = await this.resetPasswordTokenService.findLatestTokenByEmail(email);
       if (tokenDTO.otp !== otp) {
         throw new RpcException({
@@ -102,14 +95,14 @@ export class AppController {
         } as RpcExceptionModel);
       }
       const account: AccountDTO = await this.accountService.findAccountByEmail(email);
-      if (account.status !== Status.ACTIVE){
+      if (account.status !== Status.ACTIVE) {
         throw new RpcException({
           statusCode: HttpStatus.BAD_REQUEST,
           message: 'This account is inactivated'
         } as RpcExceptionModel);
       }
-      this.accountService.updatePassword(account, newPassword);
-      this.resetPasswordTokenService.update(tokenDTO.id, {isInvalidated: true})
+      await this.accountService.updatePassword(account, newPassword);
+      await this.resetPasswordTokenService.update(tokenDTO.id, {isInvalidated: true})
     } catch (e) {
       throw new RpcException({
         statusCode: HttpStatus.BAD_REQUEST,

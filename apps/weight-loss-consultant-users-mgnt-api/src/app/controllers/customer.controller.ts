@@ -3,16 +3,10 @@ import { CustomerService } from '../services/impl/customer.service.impl';
 import { CreateCustDto } from '../dtos/customer/create-customer.dto';
 import { UpdateCustDto } from '../dtos/customer/update-customer-dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import {
-  CREATE_CUSTOMER,
-  DELETE_CUSTOMER,
-  GET_ALL_CUSTOMER,
-  UPDATE_CUSTOMER,
-  VIEW_DETAIL_CUSTOMER, VIEW_DETAIL_SPECIAL
-} from '../../../../common/routes/users-management-service-routes';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
+import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN} from "../../../../common/kafka-utils";
 
 export type UpdateCustomerPayload = {
   email: string;
@@ -25,39 +19,39 @@ export class CustomerController {
   constructor(private readonly customerService: CustomerService) {
   }
 
-  @MessagePattern({ cmd: GET_ALL_CUSTOMER })
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.getAllCustomers)
   @UseFilters(new ExceptionFilter())
-  async index(): Promise<CustomerEntity[]> {
+  index(): Promise<CustomerEntity[]> {
     return this.customerService.findAll();
   }
 
-  @MessagePattern({ cmd: VIEW_DETAIL_CUSTOMER })
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.getByEmail)
   @UseFilters(new ExceptionFilter())
-  async getByEmail(@Payload() email: string): Promise<CustomerEntity> {
+  getByEmail(@Payload() email: string): Promise<CustomerEntity> {
     return this.customerService.viewDetail(email);
   }
 
-  @MessagePattern({ cmd: VIEW_DETAIL_SPECIAL })
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.getSpecial)
   @UseFilters(new ExceptionFilter())
-  async getSpecial(@Payload() email: string) : Promise<any>{
+  getSpecial(@Payload() email: string) {
     return this.customerService.viewOnlyCampaignsOfCustomer(email);
   }
 
-  @MessagePattern({ cmd: CREATE_CUSTOMER })
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.create)
   @UseFilters(new ExceptionFilter())
-  async create(@Payload() dto: CreateCustDto): Promise<CustomerEntity> {
+  create(@Payload() dto: CreateCustDto): Promise<CustomerEntity> {
     return this.customerService.create(dto);
   }
 
-  @MessagePattern({ cmd: UPDATE_CUSTOMER })
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.update)
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() payload: UpdateCustomerPayload): Promise<UpdateResult> {
+  update(@Payload() payload: UpdateCustomerPayload): Promise<UpdateResult> {
     return this.customerService.edit(payload);
   }
 
-  @MessagePattern({ cmd: DELETE_CUSTOMER })
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.delete)
   @UseFilters(new ExceptionFilter())
-  async delete(@Payload() email): Promise<DeleteResult> {
+  delete(@Payload() email): Promise<DeleteResult> {
     return this.customerService.delete(email);
   }
 

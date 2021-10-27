@@ -8,7 +8,7 @@ import {
   PrimaryColumn,
   PrimaryGeneratedColumn
 } from "typeorm";
-import {PackageEntity} from "./package.enttiy";
+import {PackageEntity} from "./package.entity";
 import {TrainerEntity} from "./trainer.entity";
 import {TrainerStyleEntity} from "./trainer-style.entity";
 

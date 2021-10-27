@@ -1,5 +1,5 @@
 import {BaseEntity, Column, Entity, Index, JoinTable, ManyToMany, OneToMany, PrimaryColumn} from "typeorm";
-import {PackageEntity} from "./package.enttiy";
+import {PackageEntity} from "./package.entity";
 import {TrainerStyleEntity} from "./trainer-style.entity";
 import {ProfileStyleEntity} from "./profile-trainer.entity";
 

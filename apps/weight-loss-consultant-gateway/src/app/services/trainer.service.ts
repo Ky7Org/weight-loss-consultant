@@ -16,6 +16,7 @@ import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
 
 @Injectable()
 export class TrainerService {
+
   private readonly usersManagementProxy: ClientProxy;
 
   async findAll(): Promise<TrainerEntity[]> {

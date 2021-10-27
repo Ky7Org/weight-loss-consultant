@@ -1,62 +1,56 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
-import { ClientProxy } from '@nestjs/microservices';
-import {
-  CREATE_ADMIN,
-  DELETE_ADMIN,
-  GET_ADMIN_BY_EMAIL,
-  GET_ALL_ADMINS,
-  UPDATE_ADMIN
-} from '../../../../common/routes/users-management-service-routes';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {Client, ClientKafka, ClientProxy} from '@nestjs/microservices';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AdminEntity } from '../entities/admin.entity';
 import { UpdateAdminDto } from '../dtos/admin/update-admin.dto';
 import { CreateAdminDto } from '../dtos/admin/create-admin.dto';
 import {PaginationDto} from "../dtos/pagination/pagination.dto";
+import {
+  KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN,
+  KAFKA_USERS_MANAGEMENT_SERVICE,
+} from "../../../../common/kafka-utils";
+import {lastValueFrom} from "rxjs";
 
 @Injectable()
-export class AdminService {
+export class AdminService implements OnModuleInit, OnModuleDestroy {
 
-  private readonly usersManagementService: ClientProxy;
+  @Client(KAFKA_USERS_MANAGEMENT_SERVICE)
+  private readonly client: ClientKafka;
 
-  async getAllAdmins(payload: PaginationDto): Promise<AdminEntity[]> {
-    const pattern = { cmd: GET_ALL_ADMINS };
-    // const payload = {};
-    return this.usersManagementService.send(pattern, payload)
-      // .toPromise<AdminEntity[]>();
-      .toPromise();
+  async onModuleInit() {
+    for (const [key, value] of Object.entries(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN)) {
+      this.client.subscribeToResponseOf(value);
+    }
+    await this.client.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.client.close();
+  }
+
+  getAllAdmins(payload: PaginationDto): Promise<AdminEntity[]> {
+    return lastValueFrom(this.client
+      .send(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.getAllAdmins, payload));
   }
 
   async getByEmail(email: string): Promise<AdminEntity> {
-    const pattern = { cmd: GET_ADMIN_BY_EMAIL };
-    const payload = email;
-    return this.usersManagementService.send(pattern, payload)
-      // .toPromise<AdminEntity>();
-      .toPromise();
+    return lastValueFrom(this.client
+      .send(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.getByEmail, email));
   }
 
   async update(email: string, dto: UpdateAdminDto): Promise<UpdateResult> {
-    const pattern = { cmd: UPDATE_ADMIN };
-    const payload = {email, dto};
-    return this.usersManagementService.send(pattern, payload)
-      // .toPromise<UpdateResult>();
-      .toPromise();
+    return lastValueFrom(this.client
+      .send(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.update, {email, dto}));
   }
 
   async delete(email: string): Promise<DeleteResult> {
-    const pattern = {cmd: DELETE_ADMIN };
-    const payload = email;
-    return this.usersManagementService.send(pattern, payload)
-      // .toPromise<DeleteResult>();
-      .toPromise();
+    return lastValueFrom(this.client
+      .send(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.delete, email));
   }
 
   async create(dto: CreateAdminDto): Promise<AdminEntity> {
-    const pattern = {cmd: CREATE_ADMIN }
-    const payload = dto;
-    return this.usersManagementService.send(pattern, payload)
-      // .toPromise<AdminEntity>();
-      .toPromise();
+    return lastValueFrom(this.client
+      .send(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.create, dto));
   }
 }
 

@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import {BadRequestException, HttpStatus, Inject, Injectable, Logger} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AccountService } from './account.service';
 import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
