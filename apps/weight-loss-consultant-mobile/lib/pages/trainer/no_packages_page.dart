@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 class NoPackagesPage extends StatefulWidget {
   const NoPackagesPage({Key? key}) : super(key: key);
@@ -14,6 +16,7 @@ class _NoPackagesPageState extends State<NoPackagesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: GenericAppBar.builder('Your package'),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -65,7 +68,7 @@ class _NoPackagesPageState extends State<NoPackagesPage> {
             child: GestureDetector(
               child: SvgPicture.asset("assets/fake-image/add-button.svg"),
               onTap: (){
-                print('Ahihi');
+                Navigator.pushNamed(context, RoutePath.createPackagesPage);
               },
             ),
           )

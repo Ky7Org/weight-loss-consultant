@@ -1,16 +1,16 @@
-import {ConflictException, HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
+import { HttpStatus, Inject, Injectable} from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {Observable} from "rxjs";
 import {CustomerEntity} from "../entities/customer.entity";
-import {VIEW_DETAIL_CUSTOMER} from "../../../../common/routes/users-management-service-routes";
-import {RpcExceptionModel} from "../../../../weight-loss-consultant-authentication/src/app/filters/rpc-exception.model";
+import {CUSTOMER_VIEW_DETAIL, VIEW_DETAIL_CUSTOMER} from "../../../../common/routes/users-management-service-routes";
 import {CampaignMapper} from "../mappers/campaign.mapper";
 import {CampaignRepository} from "../repositories/campaign.repository";
 import {CampaignEntity} from "../entities/campaign.entity";
 import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
 import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
 import {USERS_MANAGEMENT_SERVICE_NAME} from "../../../../../constant";
+import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
 
 @Injectable()
 export class CampaignService {
@@ -26,9 +26,9 @@ export class CampaignService {
     return await this.repository.find();
   }
 
-  private validateCustomer (email: string) : Observable<CustomerEntity> {
-    return this.usersManagementServiceProxy.
-    send<CustomerEntity, string>({VIEW_DETAIL_CUSTOMER}, email);
+  private validateCustomer(username: string): Observable<CustomerEntity> {
+    return this.usersManagementServiceProxy
+      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username);
   }
 
   async create(dto: CreateCampaignDto): Promise<CampaignEntity> {
@@ -45,7 +45,6 @@ export class CampaignService {
   }
 
   async edit(dto: UpdateCampaignDto, id: number): Promise<UpdateResult> {
-
     if (id != dto.id) {
       throw new RpcException({
         statusCode: HttpStatus.CONFLICT,
@@ -86,6 +85,7 @@ export class CampaignService {
   async viewDetail(id): Promise<CampaignEntity> {
     const result = await this.repository.createQueryBuilder("campaign")
       .where("campaign.id = :id", {id: id})
+      .leftJoinAndSelect("campaign.customer", "customer")
       .getOne();
     if (!result) {
       throw new RpcException({
