@@ -42,9 +42,9 @@ export class PackageController {
     try {
       const result = await this.packageService.viewDetail(id);
       res.status(HttpStatus.OK).send(result);
-    } catch ({ error }) {
+    }  catch ({ error }) {
       this.logger.error(error);
-      res.status(error.status).send(error);
+      res.status(error.statusCode).send(error);
     }
   }
 

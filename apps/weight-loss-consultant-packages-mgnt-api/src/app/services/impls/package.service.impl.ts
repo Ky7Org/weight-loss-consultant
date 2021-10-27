@@ -1,7 +1,6 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { PackageEntity } from '../../entities/package.enttiy';
-import { PackageRepository } from '../../repositories/package.repository';
 import { PackageMapper } from '../../mappers/package.mapper';
 import { CreatePackageDto } from '../../dtos/package/create-package';
 import { UpdatePackageDto } from '../../dtos/package/update-package';
@@ -9,8 +8,10 @@ import { BaseService } from '../base.service';
 import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../../constant';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { TrainerEntity } from '../../entities/trainer.entity';
-import { GET_TRAINER_BY_EMAIL } from '../../../../../common/routes/users-management-service-routes';
+import { TRAINER_VIEW_DETAIL} from '../../../../../common/routes/users-management-service-routes';
 import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
+import {Observable} from "rxjs";
+import {PackageRepository} from "../../repositories/package.repository";
 
 @Injectable()
 export class PackageService extends BaseService<PackageEntity, PackageRepository> {
@@ -21,15 +22,18 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
     super(repository);
   }
 
+  private validateTrainer(username: string): Observable<TrainerEntity> {
+    return this.usersManagementServiceProxy
+      .send<TrainerEntity, string>({ cmd: TRAINER_VIEW_DETAIL }, username);
+  }
+
   async findAll(): Promise<PackageEntity[]> {
     return this.repository.find();
   }
 
   async create(dto: CreatePackageDto): Promise<PackageEntity> {
     const trainerEmail = dto.trainerEmail;
-    const findTrainer = await this.usersManagementServiceProxy
-      .send<TrainerEntity, string>({cmd: GET_TRAINER_BY_EMAIL}, trainerEmail)
-      .toPromise();
+    const findTrainer = await this.validateTrainer(trainerEmail).toPromise();
     if (findTrainer === undefined) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -47,15 +51,12 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
         message: `Param id: ${id} must match with id in request body: ${dto.id}`
       } as RpcExceptionModel);
     }
-    const trainerEmail = dto.trainerEmail;
-    const trainer = await this.usersManagementServiceProxy
-      .send<TrainerEntity, string>({cmd: GET_TRAINER_BY_EMAIL}, trainerEmail)
-      .toPromise();
+    const findTrainer = await this.validateTrainer(dto.trainerEmail).toPromise();
 
-    if (trainer === undefined) {
+    if (findTrainer === undefined) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
-        message: `Not found trainer with email: ${trainerEmail}`
+        message: `Not found trainer with email: ${dto.trainerEmail}`
       } as RpcExceptionModel);
     }
     const existedPackage = await this.viewDetail(dto.id);
@@ -64,7 +65,7 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
         statusCode: HttpStatus.NOT_FOUND,
         message: `Not found package with id: ${id}`
       } as RpcExceptionModel);    }
-    const entity: PackageEntity = await PackageMapper.mapUpdatePackageDtoToEntity(dto, trainer);
+    const entity: PackageEntity = await PackageMapper.mapUpdatePackageDtoToEntity(dto, findTrainer);
     return this.repository.update(id, entity);
   }
 
@@ -80,12 +81,17 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
   }
 
   async viewDetail(id): Promise<PackageEntity> {
-    return this.repository.findOne({
-      relations: ["trainer"],
-      where: [{
-        id: `${id}`
-      }],
-    });
+    const result = await this.repository.createQueryBuilder("p")
+      .leftJoinAndSelect("p.trainer", "trainer")
+      .where("p.id = :id", {id : id})
+      .getOne();
+    if (!result) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found package with id: ${id}`
+      } as RpcExceptionModel);
+    }
+    return result;
   }
 
   async getPackageDetailsWithTrainer(): Promise<PackageEntity[] | null> {
