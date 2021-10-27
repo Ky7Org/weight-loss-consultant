@@ -38,7 +38,7 @@ class _MyMessagesPageState extends State<MyMessagesPage>
         Navigator.pushNamed(context, RoutePath.chatPage);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: 10),
         height: 109,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -56,7 +56,7 @@ class _MyMessagesPageState extends State<MyMessagesPage>
           children: [
             Row(
               children: [
-                Expanded(
+                const Expanded(
                     flex: 2,
                     child: CircleAvatar(
                       backgroundImage:
@@ -73,14 +73,14 @@ class _MyMessagesPageState extends State<MyMessagesPage>
                           children: [
                             Text(
                               name,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Color(0xFF0D3F67),
                                   fontSize: 19,
                                   fontWeight: FontWeight.w700),
                             ),
                             Text(
                               date,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Color(0xFFFF3939),
                                   backgroundColor: Color(0xFFF0F3F6),
                                   fontWeight: FontWeight.w900,
@@ -88,7 +88,7 @@ class _MyMessagesPageState extends State<MyMessagesPage>
                             ),
                           ],
                         ),
-                        Padding(
+                        const Padding(
                           padding: EdgeInsets.only(top: 10),
                           child: Text(
                             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ...',
@@ -164,7 +164,7 @@ class _MyMessagesPageState extends State<MyMessagesPage>
                       ],
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   Expanded(
                     child: TabBarView(
                       controller: _tabController,
@@ -177,7 +177,7 @@ class _MyMessagesPageState extends State<MyMessagesPage>
                             _buildMessage('Tien Truong', "Ahiihii", "20 Jan")
                           ],
                         ),
-                        Center(
+                        const Center(
                           child: Text(
                             'My Trainer',
                             style: TextStyle(

@@ -9,36 +9,38 @@ class TrainerCategoryPanel extends StatelessWidget {
   }) : super(key: key);
 
   final List<Map> categories = [
-    {
+    /*{
       "text": "Training\nSchedule",
       "imageName": "training-scedule.svg",
       "route": RoutePath.customerTodoPage,
-    },
+    },*/
     {
-      "text": "Customers\nCampaign",
+      "text": "Available\nCampaign",
       "imageName": "customers-compaign.svg",
-      "route": RoutePath.myMessagePage,
+      "route": RoutePath.trainerViewListCampaignPage,
+
     },
-    {
+    /*{
       "text": "Campaign",
       "imageName": "campaign-icon.svg",
-    },
+    },*/
     {
       "text": "Package",
       "imageName": "package-icon.svg",
+      "route": RoutePath.trainerPackagePage,
     },
-    {
+    /*{
       "text": "Calendar",
       "imageName": "calendar-icon.svg",
-    },
-    {
+    },*/
+    /*{
       "text": "Tutorial",
       "imageName": "tutorial-icon.svg",
-    },
-    {
+    },*/
+    /*{
       "text": "Payment",
       "imageName": "payment-icon.svg",
-    },
+    },*/
     {
       "text": "Profile",
       "imageName": "profile-icon.svg",
