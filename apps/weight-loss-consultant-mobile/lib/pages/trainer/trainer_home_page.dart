@@ -128,7 +128,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
         child: Card(
           elevation: 15,
           child: Container(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: Column(
               children: [
                 SvgPicture.asset("assets/panel-image/category/$icon"),
@@ -165,7 +165,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
           controller: _pc,
           panel:  TrainerCategoryPanel(),
           minHeight: 0,
-          maxHeight: 400,
+          maxHeight: 200,
           body: Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             child: ListView(
@@ -203,7 +203,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 Wrap(
                   spacing: 10,
                   children: [
-                    _category("Training\nScedule", "training-schedule.svg"),
+                    _category("Training\nSchedule", "training-schedule.svg"),
                     _category("Message", "message-icon.svg"),
                     _category("Campaign", "campaign-icon.svg"),
                   ],
