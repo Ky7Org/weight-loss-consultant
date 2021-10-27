@@ -32,7 +32,6 @@ export class TrainerMapper {
     }
     const entity = new TrainerEntity();
     entity.email = dto.email;
-    entity.password = dto.password;
     entity.status = dto.status;
     entity.fullname = dto.fullname;
     entity.address = dto.address;

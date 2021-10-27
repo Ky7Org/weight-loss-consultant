@@ -33,7 +33,6 @@ export class CustomerMapper {
     const entity = new CustomerEntity();
 
     entity.email = dto.email;
-    entity.password = dto.password;
     entity.fullname = dto.fullname;
     entity.address = dto.address;
     entity.phone = dto.phone;
