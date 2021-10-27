@@ -30,6 +30,20 @@ export class CampaignController {
     }
   }
 
+  @Get('/available')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: HttpStatus.OK, description: 'The campaigns has shown below.' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  async getAvaiableCampaigns(@Res() res) {
+    try {
+      const result = await this.campaignService.getAvailableCampaigns();
+      res.status(200).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: HttpStatus.OK, description: 'Campaign details has shown below:' })

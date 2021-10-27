@@ -92,4 +92,11 @@ export class CampaignService {
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[] | null> {
     return await this.repository.find({relations: ["customer"]})
   }
+
+  async getAvailCampaigns() : Promise<CampaignEntity[]> {
+    return this.repository.createQueryBuilder("campaign")
+      .leftJoinAndSelect("campaign.customer", "customer")
+      .where("campaign.status = :status", {status : 1})
+      .getMany();
+  }
 }
