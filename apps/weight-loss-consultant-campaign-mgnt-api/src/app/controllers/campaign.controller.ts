@@ -28,6 +28,12 @@ export class CampaignController {
     return this.campaignService.getCampaignDetailsWithCustomer();
   }
 
+  @MessagePattern({cmd: GET_AVAILABLE_CAMPAIGNS})
+  @UseFilters(new ExceptionFilter())
+  async getAvailCampaigns() {
+    return this.campaignService.getAvailCampaigns();
+  }
+
   @MessagePattern({cmd: FIND_CAMPAIGN_BY_ID})
   @UseFilters(new ExceptionFilter())
   async getByID(@Payload() id: string) {
