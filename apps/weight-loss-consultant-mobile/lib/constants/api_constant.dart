@@ -9,4 +9,5 @@ class ApiConstant{
   static const String deleteCampaignApi = routePath + "/api/v1/campaigns";
   static const String getCampaignApi = routePath + "/api/v1/campaigns";
   static const String updateCampaignApi = routePath + "/api/v1/campaigns";
+  static const String getAllCampaignApi = routePath + "/api/v1/campaigns";
 }

@@ -24,6 +24,7 @@ class CustomerCampaignPage extends StatefulWidget {
 
 class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
   late Future<List<CampaignModel>> listCampaign;
+
   AccountModel user = AccountModel(email: "", fullname: "");
   CustomerService customerService = CustomerService();
 
