@@ -48,7 +48,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        listCampaign = service.getAllPackage(user);
+        listCampaign = service.getTrainerPackage(user);
         setState(() {});
       });
     });
@@ -319,7 +319,12 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
 
         backgroundColor: HexColor("#FF3939"),
         onPressed: (){
-          Navigator.pushNamed(context, RoutePath.createPackagesPage);
+          Navigator.pushNamed(context, RoutePath.createPackagesPage).then((value) {
+            listCampaign = service.getTrainerPackage(user);
+            setState(() {
+
+            });
+          });
         },
         label: const Text("Add new campaign"),
         icon: const Icon(Icons.add),
