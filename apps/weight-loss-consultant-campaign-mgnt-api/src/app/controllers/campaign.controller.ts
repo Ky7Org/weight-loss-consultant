@@ -6,7 +6,7 @@ import {
   CREATE_CAMPAIGN,
   DELETE_CAMPAIGN_BY_ID,
   FIND_ALL_CAMPAIGNS,
-  FIND_CAMPAIGN_BY_ID,
+  FIND_CAMPAIGN_BY_ID, GET_AVAILABLE_CAMPAIGNS,
   UPDATE_CAMPAIGN_BY_ID
 } from '../../../../common/routes/campaigns-management-routes';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';

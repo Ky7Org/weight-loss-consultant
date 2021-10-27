@@ -7,7 +7,7 @@ import {
   DELETE_TRAINER,
   GET_ALL_TRAINERS,
   GET_TRAINER_BY_EMAIL,
-  UPDATE_TRAINER
+  UPDATE_TRAINER, VIEW_DETAIL_SPECIAL_TRAINER
 } from '../../../../common/routes/users-management-service-routes';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
 import { TrainerEntity } from '../entities/trainer.entity';
@@ -44,6 +44,11 @@ export class TrainerService {
 
   async viewDetail(email: string): Promise<TrainerEntity> {
     return this.usersManagementProxy.send<TrainerEntity, string>({ cmd: GET_TRAINER_BY_EMAIL }, email)
+      .toPromise();
+  }
+
+  async viewSpecial(email : string) : Promise<TrainerEntity> {
+    return this.usersManagementProxy.send<TrainerEntity, string>({ cmd: VIEW_DETAIL_SPECIAL_TRAINER }, email)
       .toPromise();
   }
 }

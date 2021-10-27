@@ -16,6 +16,7 @@ export const GET_TRAINER_BY_EMAIL = 'get-trainer-by-email';
 export const CREATE_TRAINER = 'create-trainer';
 export const UPDATE_TRAINER = 'update-trainer';
 export const DELETE_TRAINER = 'delete-trainer';
+export const VIEW_DETAIL_SPECIAL_TRAINER = 'view-detail-special-trainer'
 
 export const SORTING_AND_FILTERING_USERS = 'sorting-and-filtering-users';
 export const SEARCH_USERS = 'search-users';

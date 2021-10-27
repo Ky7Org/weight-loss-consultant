@@ -7,7 +7,7 @@ import {
   DELETE_TRAINER,
   GET_ALL_TRAINERS,
   GET_TRAINER_BY_EMAIL,
-  UPDATE_TRAINER
+  UPDATE_TRAINER, VIEW_DETAIL_SPECIAL_TRAINER
 } from '../../../../common/routes/users-management-service-routes';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
@@ -45,6 +45,12 @@ export class TrainerController {
   @UseFilters(new ExceptionFilter())
   async delete(@Payload() email) {
     return this.trainerService.delete(email);
+  }
+
+  @MessagePattern({ cmd: VIEW_DETAIL_SPECIAL_TRAINER })
+  @UseFilters(new ExceptionFilter())
+  async viewSpecial(@Payload() email): Promise<any> {
+    return this.trainerService.viewOnlyPackagesOfTrainer(email);
   }
 
 }
