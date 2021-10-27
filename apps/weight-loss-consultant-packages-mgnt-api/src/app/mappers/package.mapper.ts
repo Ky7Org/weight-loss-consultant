@@ -20,7 +20,8 @@ export class PackageMapper {
     entity.status = PackageStatus.ACTIVE;
     entity.dietPlan = dto.dietPlan;
     entity.trainer = trainer;
-
+    entity.name = dto.name;
+    entity.spendTimeToTraining = dto.spendTimeToTraining;
     return entity;
   }
 
@@ -37,6 +38,8 @@ export class PackageMapper {
     entity.status = dto.status;
     entity.dietPlan = dto.dietPlan;
     entity.trainer = trainer;
+    entity.name = dto.name;
+    entity.spendTimeToTraining = dto.spendTimeToTraining;
 
     return entity;
   }

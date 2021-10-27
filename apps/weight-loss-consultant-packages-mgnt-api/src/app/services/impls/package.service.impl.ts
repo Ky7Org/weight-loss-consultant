@@ -80,12 +80,17 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
   }
 
   async viewDetail(id): Promise<PackageEntity> {
-    return this.repository.findOne({
-      relations: ["trainer"],
-      where: [{
-        id: `${id}`
-      }],
-    });
+    const result = await this.repository.createQueryBuilder("p")
+      .leftJoinAndSelect("p.trainer", "trainer")
+      .where("p.id = :id", {id : id})
+      .getOne();
+    if (!result) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found package with id: ${id}`
+      } as RpcExceptionModel);
+    }
+    return result;
   }
 
   async getPackageDetailsWithTrainer(): Promise<PackageEntity[] | null> {
