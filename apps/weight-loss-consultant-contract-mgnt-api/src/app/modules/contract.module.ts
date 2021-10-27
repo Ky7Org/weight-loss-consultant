@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {ContractRepository} from "../repositories/health-info.repository";
+import {ContractRepository} from "../repositories/contract.repository";
 import {ContractMapper} from "../mappers/health-info.mapper";
 import {ContractService} from "../services/impls/contract.service";
 import {ClientsModule, Transport} from "@nestjs/microservices";
