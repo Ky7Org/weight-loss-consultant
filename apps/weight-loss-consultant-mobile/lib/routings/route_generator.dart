@@ -138,17 +138,23 @@ class RouteGenerator{
           return const TrainerPackagePage();
         });
       case RoutePath.trainerViewCampaignDetailPage:
-        return MaterialPageRoute(builder: (_){
-          return const TrainerViewCampaignDetailPage();
-        });
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerViewCampaignDetailPage(campaignID: args);
+          });
+        }
+        return _errorRoute();
       case RoutePath.trainerViewListCampaignPage:
         return MaterialPageRoute(builder: (_){
           return const TrainerViewListCampaignPage();
         });
       case RoutePath.trainerViewListPackagePage:
-        return MaterialPageRoute(builder: (_){
-          return const TrainerViewListPackagePage();
-        });
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerViewListPackagePage(campaignId: args,);
+          });
+        }
+        return _errorRoute();
       case RoutePath.customerUpdateCampaignPage:
         if (args is int){
           return MaterialPageRoute(builder: (_){

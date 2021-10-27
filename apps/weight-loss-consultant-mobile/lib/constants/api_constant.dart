@@ -10,4 +10,7 @@ class ApiConstant{
   static const String getCampaignApi = routePath + "/api/v1/campaigns";
   static const String updateCampaignApi = routePath + "/api/v1/campaigns";
   static const String getAllCampaignApi = routePath + "/api/v1/campaigns";
+  static const String getAvailableCampaignApi = routePath + "/api/v1/campaigns/available";
+  static const String getAllPackageApi = routePath + "/api/v1/packages";
+  static const String applyPackageToCampaignApi = routePath + "/api/v1/applies";
 }
