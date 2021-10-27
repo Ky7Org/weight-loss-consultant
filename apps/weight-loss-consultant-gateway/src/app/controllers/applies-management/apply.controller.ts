@@ -116,4 +116,16 @@ export class ApplyController {
       res.status(error.statusCode).send(error);
     }
   }
+
+    @Get('/getAppliedPackages/:campaignId')
+    @UseGuards(JwtAuthGuard)
+    async getPackagesByCampaignID(@Res() res, @Param('campaignId') campaignId: number) {
+      try {
+        const result = await this.appliedService.getAppliedPackagesByCampaignID(campaignId);
+        res.status(HttpStatus.OK).send(result);
+      } catch ({error}) {
+        this.logger.error(error);
+        res.status(error.statusCode).send(error);
+      }
+  }
 }
