@@ -16,17 +16,6 @@ export class UpdateAdminDto {
   email?: string;
 
   @IsString()
-  @MinLength(LIMIT_LENGTH.PASSWORD_MIN_LENGTH, {message: ERR_MSG.PASSWORD_MIN_LENGTH_ERR})
-  @MaxLength(LIMIT_LENGTH.PASSWORD_MAX_LENGTH, {message: ERR_MSG.PASSWORD_MAX_LENGTH_ERR})
-  @ApiProperty({
-    description: 'Pasword of admin',
-    minimum: 1,
-    type: String,
-
-  })
-  password?: string;
-
-  @IsString()
   @MinLength(LIMIT_LENGTH.FULLNAME_MIN_LENGTH, {message: ERR_MSG.FULLNAME_EMPTY_ERR})
   @MaxLength(LIMIT_LENGTH.FULLNAME_MAX_LENGTH, {message: ERR_MSG.FULLNAME_MAX_LENGTH_ERR})
   @ApiProperty({
