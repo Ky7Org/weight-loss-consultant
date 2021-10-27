@@ -84,9 +84,16 @@ export class CampaignService {
   }
 
   async viewDetail(id): Promise<CampaignEntity> {
-    return await this.repository.createQueryBuilder("campaign")
+    const result = await this.repository.createQueryBuilder("campaign")
       .where("campaign.id = :id", {id: id})
       .getOne();
+    if (!result) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found campaign with id: ${id}`
+      } as RpcExceptionModel);
+    }
+    return result
   }
 
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[] | null> {

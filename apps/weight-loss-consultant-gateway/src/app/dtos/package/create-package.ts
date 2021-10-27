@@ -13,4 +13,6 @@ export class CreatePackageDto {
   dietPlan?: string;
   @ApiProperty()
   spendTimeToTraining?: number;
+  @ApiProperty()
+  name?: string;
 }
