@@ -23,7 +23,7 @@ class CustomerCampaignPage extends StatefulWidget {
 }
 
 class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
-  late Future<List<CampaignModel>> listCampaign;
+  Future<List<CampaignModel>>? listCampaign;
 
   AccountModel user = AccountModel(email: "", fullname: "");
   CustomerService customerService = CustomerService();
@@ -56,10 +56,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
   Widget _campaign(int id, String date, String currentWeight, String targetWeight, String description) {
     return GestureDetector(
       onTap: () {
-          Navigator.pushNamed(context, RoutePath.customerUpdateCampaignPage, arguments: id).then((value){
-            listCampaign = customerService.getCustomerCampaign(user.email ?? "");
-            setState(() {});
-          });
+        Navigator.pushNamed(context, RoutePath.customerAppliedPackagePage, arguments: id);
       },
       child: Card(
         elevation: 5,
@@ -90,22 +87,38 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
                         borderRadius:
                         const BorderRadius.all(Radius.circular(5))),
                   ),
-                  IconButton(
-                      onPressed: () async {
-                        bool result = await customerService.deleteCampaign(id, user);
-                        if (result){
-                          CustomToast.makeToast("Delete successfully");
-                        } else {
-                          CustomToast.makeToast("Some thing went wrong! Try again");
-                        }
-                        setState(() {
-                          listCampaign = customerService.getCustomerCampaign(user.email ?? "");
-                        });
-                      },
-                      icon: Icon(
-                        Icons.highlight_remove_outlined,
-                        color: HexColor("#FF3939"),
-                      )
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () async {
+                            Navigator.pushNamed(context, RoutePath.customerUpdateCampaignPage, arguments: id).then((value){
+                              listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+                              setState(() {});
+                            });
+                          },
+                          icon: Icon(
+                            Icons.edit,
+                            color: HexColor("#FF3939"),
+                          )
+                      ),
+                      IconButton(
+                          onPressed: () async {
+                            bool result = await customerService.deleteCampaign(id, user);
+                            if (result){
+                              CustomToast.makeToast("Delete successfully");
+                            } else {
+                              CustomToast.makeToast("Some thing went wrong! Try again");
+                            }
+                            setState(() {
+                              listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+                            });
+                          },
+                          icon: Icon(
+                            Icons.highlight_remove_outlined,
+                            color: HexColor("#FF3939"),
+                          )
+                      ),
+                    ],
                   )
                 ],
               ),
