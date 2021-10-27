@@ -27,7 +27,6 @@
     "lint:campaign-mgnt-api": "nx run weight-loss-consultant-campaign-mgnt-api:lint",
     "lint:contract-mgnt-api": "nx run weight-loss-consultant-contract-mgnt-api:lint",
     "build:ui": "nx run weight-loss-consultant-ui:build",
-    "build:gateway": "nx run weight-loss-consultant-gateway:build",
     "build:gateway": "nx run weight-loss-consultant-applied-mgnt-api:build",
     "build:users-mgnt-api": "nx run weight-loss-consultant-users-mgnt-api:build",
     "build:health-mgnt-api": "nx run weight-loss-consultant-health-mgnt-api:build",

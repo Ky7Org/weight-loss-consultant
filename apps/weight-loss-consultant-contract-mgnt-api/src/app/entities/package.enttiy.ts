@@ -21,6 +21,12 @@ export class PackageEntity extends BaseEntity{
   @Column({type: 'varchar', nullable: false})
   dietPlan: string;
 
+  @Column({type: 'float', nullable: false})
+  spendTimeToTraining: number;
+
+  @Column({type: 'varchar'})
+  trainerEmail: string;
+
   @OneToMany(() => ContractEntity, contract => contract.package)
   contracts : PackageEntity[];
 
