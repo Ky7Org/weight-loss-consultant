@@ -2,15 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
-class ViewDetailCampaignPage extends StatefulWidget {
-  const ViewDetailCampaignPage({Key? key}) : super(key: key);
+class TrainerViewCampaignDetailPage extends StatefulWidget {
+  const TrainerViewCampaignDetailPage({Key? key}) : super(key: key);
 
   @override
-  _ViewDetailCampaignPageState createState() => _ViewDetailCampaignPageState();
+  _TrainerViewCampaignDetailPageState createState() => _TrainerViewCampaignDetailPageState();
 }
 
-class _ViewDetailCampaignPageState extends State<ViewDetailCampaignPage> {
+class _TrainerViewCampaignDetailPageState extends State<TrainerViewCampaignDetailPage> {
   Widget _content(String title, String content) {
     return Column(
       children: [
@@ -62,10 +63,10 @@ class _ViewDetailCampaignPageState extends State<ViewDetailCampaignPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Center(
+            const Center(
               child: CircleAvatar(
                 backgroundImage:
                     AssetImage("assets/fake-image/miku-avatar.png"),
@@ -125,7 +126,9 @@ class _ViewDetailCampaignPageState extends State<ViewDetailCampaignPage> {
               child: FlatButton(
                 height: 64,
                 color: AppColors.PRIMARY_COLOR,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, RoutePath.trainerViewListPackagePage);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [

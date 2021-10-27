@@ -50,7 +50,8 @@
     "coverage:authentication": "nx run weight-loss-consultant-authentication:test --coverage",
     "coverage:packages-mgnt-api": "nx run weight-loss-consultant-packages-mgnt-api:test --coverage",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "tien": "nx run-many --target=serve  --all --parallel --maxParallel=10"
   },
   "private": true,
   "dependencies": {

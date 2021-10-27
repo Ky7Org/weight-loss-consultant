@@ -10,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:uuid/uuid.dart';
-import 'package:weight_loss_consultant_mobile/pages/components/customer_drawer.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 
 class ChatPage extends StatefulWidget {

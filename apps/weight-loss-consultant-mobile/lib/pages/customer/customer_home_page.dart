@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
-import 'package:weight_loss_consultant_mobile/constants/enums.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_sliding_up_panel.dart';
@@ -50,6 +49,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     });
   }
 
+
   int selectedIndex = 0;
   final PanelController _pc = PanelController();
   @override
@@ -62,7 +62,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         controller: _pc,
         panel: CategoryPanel(),
         minHeight: 0,
-        maxHeight: 400,
+        maxHeight: 200,
         body: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: ListView(
