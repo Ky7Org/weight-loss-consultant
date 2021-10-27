@@ -8,7 +8,7 @@ import {
   DELETE_CUSTOMER,
   GET_ALL_CUSTOMER,
   UPDATE_CUSTOMER,
-  VIEW_DETAIL_CUSTOMER
+  VIEW_DETAIL_CUSTOMER, VIEW_DETAIL_SPECIAL
 } from '../../../../common/routes/users-management-service-routes';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
@@ -35,6 +35,12 @@ export class CustomerController {
   @UseFilters(new ExceptionFilter())
   async getByEmail(@Payload() email: string): Promise<CustomerEntity> {
     return this.customerService.viewDetail(email);
+  }
+
+  @MessagePattern({ cmd: VIEW_DETAIL_SPECIAL })
+  @UseFilters(new ExceptionFilter())
+  async getSpecial(@Payload() email: string) : Promise<any>{
+    return this.customerService.viewOnlyCampaignsOfCustomer(email);
   }
 
   @MessagePattern({ cmd: CREATE_CUSTOMER })

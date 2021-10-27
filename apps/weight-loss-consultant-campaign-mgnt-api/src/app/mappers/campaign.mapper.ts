@@ -19,7 +19,9 @@ export class CampaignMapper {
     entity.startDate = dto.startDate;
     entity.endDate = dto.endDate;
     entity.feedback = dto.feedback;
-
+    entity.targetWeight = dto.targetWeight;
+    entity.currentWeight = dto.currentWeight;
+    entity.spendTimeForTraining = dto.spendTimeForTraining
     entity.customer = customer;
 
     return entity;
@@ -37,6 +39,9 @@ export class CampaignMapper {
     entity.endDate = dto.endDate;
     entity.feedback = dto.feedback;
     entity.customer = customer;
+    entity.targetWeight = dto.targetWeight;
+    entity.currentWeight = dto.currentWeight;
+    entity.spendTimeForTraining = dto.spendTimeForTraining
     return entity;
   }
 }

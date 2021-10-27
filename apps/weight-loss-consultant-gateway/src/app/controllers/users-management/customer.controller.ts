@@ -29,7 +29,7 @@ export class CustomerController {
   @Get('/tienAPI/:email')
   async getDetail(@Param('email') email: string, @Res() res) {
     try {
-      const customer = await this.customerService.viewDetail(email);
+      const customer = await this.customerService.viewDetailSpecial(email);
       if (customer === undefined) {
         const error = {
           statusCode : 404,
@@ -44,7 +44,9 @@ export class CustomerController {
     }
   }
 
-  @Get('/v1/customers:email')
+
+
+  @Get('/v1/customers/:email')
   @ApiResponse({status: HttpStatus.OK, description: 'Customer details has shown below:'})
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
   @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Email not found'})
@@ -90,7 +92,8 @@ export class CustomerController {
     }
   }
 
-  @Put('/v1/customers:email')
+
+  @Put('/v1/customers/:email')
   @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: UpdateCustDto
@@ -115,7 +118,8 @@ export class CustomerController {
     }
   }
 
-  @Delete('/v1/customers:email')
+
+  @Delete('/v1/customers/:email')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({status: HttpStatus.OK, description: 'The customer information has been successfully deleted.'})
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})

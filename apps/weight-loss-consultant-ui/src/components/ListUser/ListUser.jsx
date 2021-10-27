@@ -59,7 +59,6 @@ const ListUser = () => {
     setDataFilter({ ...dataFilter, roleFilter: searchRole });
     fetchAPIGetUser(dataFilter);
   }, [searchRole]);
-
   const onNavigation = (id) => {
     history.push(`/admin/user/update/${id}`);
   };
@@ -110,6 +109,7 @@ const ListUser = () => {
     fetchAPIGetUser(dataFilter);
   };
   const handleFillterButton = () => {
+    setDataFilter({ ...dataFilter, page: 1 });
     fetchAPIGetUser(dataFilter);
   };
   const handeOnChangePage = (value) => {
@@ -261,6 +261,7 @@ const ListUser = () => {
                 onNavigation={(id) => onNavigation(id)}
                 isButtonDownDisabled={isButtonDownDisabled}
                 messageError={messageError}
+                currentSearchRole={searchRole}
               />
               <div
                 style={{
