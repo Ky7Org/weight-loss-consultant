@@ -27,8 +27,9 @@ import 'package:weight_loss_consultant_mobile/pages/trainer/create_packages_page
 import 'package:weight_loss_consultant_mobile/pages/trainer/no_packages_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_home_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_package_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_update_package_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_campaign_detail_page.dart';
-import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_list_campaign_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_available_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_list_package_page.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
@@ -148,7 +149,7 @@ class RouteGenerator{
         return _errorRoute();
       case RoutePath.trainerViewListCampaignPage:
         return MaterialPageRoute(builder: (_){
-          return const TrainerViewListCampaignPage();
+          return const TrainerAvailableCampaignPage();
         });
       case RoutePath.trainerViewListPackagePage:
         if (args is int){
@@ -175,6 +176,13 @@ class RouteGenerator{
         if (args is int){
           return MaterialPageRoute(builder: (_){
             return CustomerPackageDetail(packageID: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.trainerUpdatePackagePage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerUpdatePackagePage(packageId: args,);
           });
         }
         return _errorRoute();

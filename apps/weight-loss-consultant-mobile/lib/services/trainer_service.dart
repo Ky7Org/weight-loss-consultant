@@ -178,4 +178,59 @@ class TrainerService{
     return false;
   }
 
+  Future<bool> updatePackage(PackageModel package, AccountModel user) async {
+    Map<String, dynamic> data = {};
+    data["exercisePlan"] = package.exercisePlan;
+    data["schedule"] = package.schedule;
+    data["price"] = package.price;
+    data["status"] = package.status ;
+    data["dietPlan"] = package.dietPlan;
+    data["spendTimeToTraining"] = package.spendTimeToTraining;
+    data["name"] = package.name;
+    data["trainerEmail"] = user.email ?? "";
+    data["id"] = package.id;
+    var url = Uri.parse(ApiConstant.updatePackageApi + "/${package.id}");
+    var response = await http.put(
+      url,
+      body: json.encode(data),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
+
+  Future<PackageModel?> getPackageById(int packageId, AccountModel user) async{
+    var url = Uri.parse(ApiConstant.getPackageDetailApi + "/$packageId");
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      return PackageModel.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<bool> deletePackage(int packageId, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.deletePackageApi + "/$packageId");
+    var response = await http.delete(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
+
 }

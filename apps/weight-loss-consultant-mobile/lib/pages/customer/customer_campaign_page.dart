@@ -22,11 +22,12 @@ class CustomerCampaignPage extends StatefulWidget {
       _CustomerCampaignPageState();
 }
 
-class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
+class _CustomerCampaignPageState extends State<CustomerCampaignPage> with SingleTickerProviderStateMixin {
   Future<List<CampaignModel>>? listCampaign;
-
   AccountModel user = AccountModel(email: "", fullname: "");
   CustomerService customerService = CustomerService();
+
+  late TabController _tabController ;
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -44,6 +45,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
 
   @override
   void initState() {
+    _tabController = TabController(length: 3, vsync: this);
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
@@ -303,30 +305,83 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         margin: const EdgeInsets.only(top: 20),
-        child: SingleChildScrollView(
-          child: FutureBuilder<List<CampaignModel>>(
-            future: listCampaign,
-            builder: (context, snapshot) {
-              if (snapshot.hasData){
-                if (snapshot.requireData.isEmpty){
-                  return _buildEmptyCampaignList();
-                }
-                return Column(
-                  children: [
-                    _title('Your Campaign'),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ..._buildCampaignList(snapshot.requireData),
-                    const SizedBox(
-                      height: 60,
-                    ),
-                  ],
-                );
+        child: FutureBuilder<List<CampaignModel>>(
+          future: listCampaign,
+          builder: (context, snapshot) {
+            if (snapshot.hasData){
+              if (snapshot.requireData.isEmpty){
+                return _buildEmptyCampaignList();
               }
-              return const CircularProgressIndicator();
+              return Column(
+                children: [
+                  Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                        color: const Color(0xFFF0F3F6),
+                        borderRadius: BorderRadius.circular(18),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(0, 3),
+                          )
+                        ]),
+                    child: TabBar(
+                      controller: _tabController,
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: Colors.white,
+                      ),
+                      labelColor: const Color(0xFF0D3F67),
+                      unselectedLabelColor: const Color(0xFFB6C5D1),
+                      tabs: const [
+                        Tab(
+                          child: Text(
+                            'On-going',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            'Active',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            'Closed',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20,),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        ListView(
+                          children: _buildCampaignList(snapshot.requireData),
+                        ),
+                        ListView(
+                          children: _buildCampaignList(snapshot.requireData),
+                        ),
+                        ListView(
+                          children: _buildCampaignList(snapshot.requireData),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
             }
-          ),
+            return const CircularProgressIndicator();
+          }
         ),
       ),
     );

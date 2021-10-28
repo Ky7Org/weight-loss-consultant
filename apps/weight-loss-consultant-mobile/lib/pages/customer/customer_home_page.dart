@@ -24,6 +24,8 @@ class CustomerHomePage extends StatefulWidget {
 class _CustomerHomePageState extends State<CustomerHomePage> {
 
   AccountModel user = AccountModel(email: "", fullname: "");
+  int selectedIndex = 0;
+  final PanelController _pc = PanelController();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -49,9 +51,250 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     });
   }
 
+  Widget _buildUpcomingTraining(){
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+          child: Align(
+              alignment: Alignment.topLeft,
+              child: Text("Upcoming Training",
+                style: TextStyle(
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
+          },
+          child: Card(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            "16:00 Nov 30, 2021",
+                            style: TextStyle(
+                                color: HexColor("#6B48FF"),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w900
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              color: HexColor("#F0F3F6"),
+                              borderRadius: const BorderRadius.all(Radius.circular(5))
+                          ),
+                        ),
+                        Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              "Cardio Training",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.PRIMARY_WORD_COLOR,
+                                  fontSize: 20
+                              ),
+                            )),
+                        Text("Dr. Bang Ngo", style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            color: HexColor("#B6C5D1")
+                        ),)
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    iconSize: 48,
+                    onPressed: (){},
+                    icon: SvgPicture.asset("assets/icon/call-icon.svg"),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
-  int selectedIndex = 0;
-  final PanelController _pc = PanelController();
+  Widget _buildTopCategory(){
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+          child: Align(
+              alignment: Alignment.topLeft,
+              child: Text("Top category",
+                style: TextStyle(
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+          ),
+        ),
+        Wrap(
+          spacing: 10,
+          children: [
+            GestureDetector(
+              onTap: (){
+                Navigator.pushNamed(context, RoutePath.customerTodoPage);
+              },
+              child: SizedBox(
+                height: 118,
+                width: 105,
+                child: Card(
+                  elevation: 15,
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        SvgPicture.asset("assets/panel-image/category/todo-icon.svg"),
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                              child: Text(
+                                "To do",
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.PRIMARY_WORD_COLOR
+                                ),
+                              )
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: (){
+                Navigator.pushNamed(context, RoutePath.myMessagePage);
+              },
+              child: SizedBox(
+                height: 118,
+                width: 105,
+                child: Card(
+                  elevation: 15,
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        SvgPicture.asset("assets/panel-image/category/message-icon.svg"),
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                              child: Text(
+                                "Message",
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.PRIMARY_WORD_COLOR
+                                ),
+                              )
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 118,
+              width: 105,
+              child: Card(
+                elevation: 15,
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      SvgPicture.asset("assets/panel-image/category/campaign-icon.svg"),
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                            child: Text(
+                              "Campaign",
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.PRIMARY_WORD_COLOR
+                              ),
+                            )
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCurrentCampaign(){
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+          child: Align(
+              alignment: Alignment.topLeft,
+              child: Text("Current campaign",
+                style: TextStyle(
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            
+          },
+          child: Card(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Container(
+              child: Text("Your current campaign"),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,202 +313,9 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               const SizedBox(width: double.infinity,),
               SvgPicture.asset("assets/panel-image/customer-home-panel.svg"),
               SvgPicture.asset("assets/fake-image/fake-chart.svg"),
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
-                child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text("Upcoming Training",
-                      style: TextStyle(
-                        color: AppColors.PRIMARY_WORD_COLOR,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                ),
-              ),
-              GestureDetector(
-                onTap: (){
-                  Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
-                },
-                child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                margin: const EdgeInsets.only(bottom: 10),
-                                child: Text(
-                                  "16:00 Nov 30, 2021",
-                                  style: TextStyle(
-                                      color: HexColor("#6B48FF"),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w900
-                                  ),
-                                ),
-                                decoration: BoxDecoration(
-                                    color: HexColor("#F0F3F6"),
-                                    borderRadius: const BorderRadius.all(Radius.circular(5))
-                                ),
-                              ),
-                              Container(
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  child: Text(
-                                    "Cardio Training",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.PRIMARY_WORD_COLOR,
-                                        fontSize: 20
-                                    ),
-                                  )),
-                              Text("Dr. Bang Ngo", style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w800,
-                                  color: HexColor("#B6C5D1")
-                              ),)
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          iconSize: 48,
-                          onPressed: (){},
-                          icon: SvgPicture.asset("assets/icon/call-icon.svg"),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
-                child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text("Top category",
-                      style: TextStyle(
-                        color: AppColors.PRIMARY_WORD_COLOR,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                ),
-              ),
-              Wrap(
-                spacing: 10,
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.pushNamed(context, RoutePath.customerTodoPage);
-                    },
-                    child: SizedBox(
-                      height: 118,
-                      width: 105,
-                      child: Card(
-                        elevation: 15,
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              SvgPicture.asset("assets/panel-image/category/todo-icon.svg"),
-                              Expanded(
-                                flex: 1,
-                                child: Center(
-                                    child: Text(
-                                      "To do",
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.PRIMARY_WORD_COLOR
-                                      ),
-                                    )
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.pushNamed(context, RoutePath.myMessagePage);
-                    },
-                    child: SizedBox(
-                      height: 118,
-                      width: 105,
-                      child: Card(
-                        elevation: 15,
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              SvgPicture.asset("assets/panel-image/category/message-icon.svg"),
-                              Expanded(
-                                flex: 1,
-                                child: Center(
-                                    child: Text(
-                                      "Message",
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.PRIMARY_WORD_COLOR
-                                      ),
-                                    )
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 118,
-                    width: 105,
-                    child: Card(
-                      elevation: 15,
-                      child: Container(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            SvgPicture.asset("assets/panel-image/category/campaign-icon.svg"),
-                            Expanded(
-                              flex: 1,
-                              child: Center(
-                                  child: Text(
-                                    "Campaign",
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.PRIMARY_WORD_COLOR
-                                    ),
-                                  )
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildUpcomingTraining(),
+              _buildTopCategory(),
+              _buildCurrentCampaign(),
               const SizedBox(height: 250,),
             ],
           ),

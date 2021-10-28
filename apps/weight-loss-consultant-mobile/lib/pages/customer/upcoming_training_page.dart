@@ -26,7 +26,7 @@ class _UpcomingTrainingPageState extends State<UpcomingTrainingPage> {
 
   Widget _content(String content, String title){
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -35,7 +35,7 @@ class _UpcomingTrainingPageState extends State<UpcomingTrainingPage> {
               fontWeight: FontWeight.w400,
               fontSize: 13
           ),),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(content, style: TextStyle(
@@ -54,9 +54,9 @@ class _UpcomingTrainingPageState extends State<UpcomingTrainingPage> {
     return Scaffold(
       appBar: GenericAppBar.builder("Upcoming Training"),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(18),
@@ -76,19 +76,19 @@ class _UpcomingTrainingPageState extends State<UpcomingTrainingPage> {
                 children: [
                   Expanded(
                     flex: 2,
-                    child: Container(
+                    child: SizedBox(
                       height: 80,
                       width: 80,
                       child: Image.asset(
                           'assets/fake-image/fake-trainer-avatar.jpg'),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 15,
                   ),
                   Expanded(
                       flex: 8,
-                      child: Container(
+                      child: SizedBox(
                         height: 70,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +96,7 @@ class _UpcomingTrainingPageState extends State<UpcomingTrainingPage> {
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
+                              children: const [
                                 Text(
                                   'Mr.Bang Ngo',
                                   style: TextStyle(

@@ -25,7 +25,7 @@ class TrainerViewListPackagePage extends StatefulWidget {
 
 class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage> {
 
-  Future<List<PackageModel>>? listCampaign;
+  Future<List<PackageModel>>? listPackage;
   AccountModel user = AccountModel(email: "", fullname: "");
   TrainerService service = TrainerService();
 
@@ -48,7 +48,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        listCampaign = service.getTrainerPackage(user);
+        listPackage = service.getTrainerPackage(user);
         setState(() {});
       });
     });
@@ -148,11 +148,9 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
 
 
 
-  Widget _package(
-      int packageId, String exercisePlan, String dietPlan, int dayOfTraining, double fee) {
+  Widget _package(PackageModel model) {
     return GestureDetector(
       onTap: () {
-        _showLoginError(packageId);
       },
       child: Card(
         elevation: 5,
@@ -162,77 +160,167 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         child: Container(
           padding: const EdgeInsets.all(20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Exercise Plan',
-                  style: TextStyle(
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    model.name ?? "",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 19),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                      onPressed: () async {
+                        Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
+                          listPackage = service.getTrainerPackage(user);
+                          setState(() {});
+                        });
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        color: HexColor("#FF3939"),
+                      )
+                  ),
+                  IconButton(
+                      onPressed: () async {
+                        bool result = await service.deletePackage(model.id ?? 0, user);
+                        if (result){
+                          CustomToast.makeToast("Delete successfully");
+                        } else {
+                          CustomToast.makeToast("Some thing went wrong! Try again");
+                        }
+                        setState(() {
+                          listPackage = service.getTrainerPackage(user);
+                        });
+                      },
+                      icon: Icon(
+                        Icons.highlight_remove_outlined,
+                        color: HexColor("#FF3939"),
+                      )
+                  ),
+                ],
+              ),
+              RichText(
+                text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Exercise Plan: ',
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15),
+                      ),
+                      TextSpan(
+                        text: model.exercisePlan ?? "",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15),
+                      )
+
+                    ]
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  exercisePlan,
-                  style: TextStyle(
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
+              const SizedBox(
+                height: 5,
+              ),
+              RichText(
+                text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Diet Plan: ',
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15),
+                      ),
+                      TextSpan(
+                        text: model.dietPlan ?? "",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15),
+                      )
+
+                    ]
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Diet Plan',
-                  style: TextStyle(
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
+              const SizedBox(
+                height: 5,
+              ),
+              RichText(
+                text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Session in weeks: ",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15),
+                      ),
+                      TextSpan(
+                        text: "${model.spendTimeToTraining.toString()} day(s)",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15),
+                      )
+
+                    ]
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  dietPlan,
-                  style: TextStyle(
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
+              const SizedBox(
+                height: 5,
+              ),
+              RichText(
+                text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Session length: ",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15),
+                      ),
+                      TextSpan(
+                        text: "45 minutes",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15),
+                      )
+
+                    ]
                 ),
               ),
               const SizedBox(
                 height: 5,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        fee.toString(),
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 15),
-                      ),
-                      const Icon(
-                        Icons.attach_money,
-                        color: Color(0xFFFF3939),
-                        size: 17,
-                      ),
-                    ],
-                  )
+                  Text(
+                    "Price: ",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15),
+                  ),
+                  Text(
+                    model.price.toString(),
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15),
+                  ),
+                  const Icon(
+                    Icons.attach_money,
+                    color: Color(0xFFFF3939),
+                    size: 17,
+                  ),
                 ],
               )
             ],
@@ -297,13 +385,8 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
   List<Widget> _buildCampaignList(List<PackageModel> data){
     List<Widget> widgets = [];
     for (PackageModel model in data){
-      var widget = _package(
-        model.id ?? 0,
-        model.exercisePlan ?? "",
-        model.dietPlan ?? "",
-        model.spendTimeToTraining ?? 0,
-        model.price ?? 0,
-      );
+      if (model.status != 1) continue;
+      var widget = _package(model);
       widgets.add(widget);
     }
     return widgets;
@@ -320,7 +403,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         backgroundColor: HexColor("#FF3939"),
         onPressed: (){
           Navigator.pushNamed(context, RoutePath.createPackagesPage).then((value) {
-            listCampaign = service.getTrainerPackage(user);
+            listPackage = service.getTrainerPackage(user);
             setState(() {
 
             });
@@ -334,7 +417,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         margin: const EdgeInsets.only(top: 20),
         child: SingleChildScrollView(
           child: FutureBuilder<List<PackageModel>>(
-              future: listCampaign,
+              future: listPackage,
               builder: (context, snapshot) {
                 if (snapshot.hasData){
                   if (snapshot.requireData.isEmpty){
@@ -342,7 +425,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
                   }
                   return Column(
                     children: [
-                      _title('Available Campaign'),
+                      _title('Your active package'),
                       const SizedBox(
                         height: 20,
                       ),
