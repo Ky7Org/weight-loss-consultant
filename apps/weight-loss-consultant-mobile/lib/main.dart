@@ -1,11 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/error_screen_page.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_generator.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  await Firebase.initializeApp();
   runApp(App());
 }
 

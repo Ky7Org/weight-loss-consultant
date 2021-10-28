@@ -53,6 +53,11 @@ dependencies:
   permission_handler: ^8.2.5
   cloud_firestore: ^2.5.4
   fluttertoast: ^8.0.8
+  firebase_storage: ^10.0.6
+  path_provider: ^2.0.5
+  firebase_analytics: ^5.0.6
+
+
 
 dev_dependencies:
   flutter_test:
