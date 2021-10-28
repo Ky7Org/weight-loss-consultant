@@ -17,4 +17,6 @@ class ApiConstant{
   static const String createPackageApi = routePath + "/api/v1/packages";
   static const String getPackageDetailApi = routePath + "/api/v1/packages";
   static const String getAppliedPackageApi = routePath + "/api/v1/applies/getAppliedPackages";
+  static const String updatePackageApi = routePath + "/api/v1/packages";
+  static const String deletePackageApi = routePath + "/api/v1/packages";
 }

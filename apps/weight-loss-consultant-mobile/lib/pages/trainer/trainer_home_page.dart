@@ -61,7 +61,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Row(
             children: [
               Expanded(
@@ -70,8 +70,8 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      margin: EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      margin: const EdgeInsets.only(bottom: 10),
                       child: Text(
                         date,
                         style: TextStyle(
@@ -82,11 +82,11 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                       ),
                       decoration: BoxDecoration(
                           color: HexColor("#F0F3F6"),
-                          borderRadius: BorderRadius.all(Radius.circular(5))
+                          borderRadius: const BorderRadius.all(Radius.circular(5))
                       ),
                     ),
                     Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: Text(
                           nameTraining,
                           style: TextStyle(
@@ -172,7 +172,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
               children: [
                 const SizedBox(width: double.infinity,),
                 Container(
-                  margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                  margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
                       alignment: Alignment.topLeft,
                       child: Text("Upcoming Training",
@@ -188,7 +188,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mr Son"),
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mrs Thy"),
                 Container(
-                  margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                  margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
                       alignment: Alignment.topLeft,
                       child: Text("Top category",
@@ -208,7 +208,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                     _category("Campaign", "campaign-icon.svg"),
                   ],
                 ),
-                SizedBox(height: 250,),
+                const SizedBox(height: 250,),
               ],
             ),
           ),

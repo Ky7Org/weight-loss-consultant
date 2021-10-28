@@ -6,18 +6,21 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
-class CreatePackagesPage extends StatefulWidget {
-  const CreatePackagesPage({Key? key}) : super(key: key);
+class TrainerUpdatePackagePage extends StatefulWidget {
+  int? packageId;
+  TrainerUpdatePackagePage({Key? key, this.packageId}) : super(key: key);
 
   @override
-  _CreatePackagesPageState createState() => _CreatePackagesPageState();
+  _TrainerUpdatePackagePageState createState() => _TrainerUpdatePackagePageState();
 }
 
-class _CreatePackagesPageState extends State<CreatePackagesPage> {
+class _TrainerUpdatePackagePageState extends State<TrainerUpdatePackagePage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _exercisePlan = TextEditingController();
   final TextEditingController _dietPlan = TextEditingController();
@@ -26,7 +29,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
   final TextEditingController _schedule = TextEditingController();
 
   AccountModel user = AccountModel(email: "", fullname: "");
-
+  PackageModel? packageModel;
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -47,7 +50,16 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        setState(() {});
+        TrainerService service = TrainerService();
+        service.getPackageById(widget.packageId ?? 0, user).then((value) {
+          packageModel = value;
+          _exercisePlan.text = packageModel!.exercisePlan ?? "";
+          _dietPlan.text = packageModel!.dietPlan ?? "";
+          _titles.text = packageModel!.name ?? "";
+          _fee.text = packageModel!.price.toString();
+          _schedule.text = packageModel!.schedule ?? "";
+          setState(() {});
+        });
       });
     });
   }
@@ -127,13 +139,13 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
             children: [
               havePrefixIcon ? Padding(
                 padding: const EdgeInsets.only(bottom: 6),
-                child: Icon(
-                  icon,
-                  color: const Color(0xFFFF3939),
-                  size: 20,
-                ),
+                  child: Icon(
+                    icon,
+                    color: const Color(0xFFFF3939),
+                    size: 20,
+                  ),
               )
-                  : const SizedBox(),
+                : const SizedBox(),
               Expanded(
                 child: TextFormField(
                   controller: controller,
@@ -232,7 +244,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Packages"),
+      appBar: GenericAppBar.builder("Update Package"),
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
@@ -241,13 +253,6 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
               const SizedBox(height: 20),
               const Align(
                 alignment: Alignment.topLeft,
-                child: Text(
-                  'Fill the Packages',
-                  style: TextStyle(
-                      color: Color(0xFF0D3F67),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18),
-                ),
               ),
               const SizedBox(height: 10),
               Form(
@@ -261,7 +266,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                         false,
                         Icons.ac_unit,
                         _titles,
-                            (text){
+                        (text){
                           if (text == null || text.isEmpty){
                             return "Title cannot be empty";
                           }
@@ -280,13 +285,13 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                             return "Fee cannot be empty";
                           }
                           try {
-                            double fee = double.parse(text);
-                            if (fee < 0){
-                              return "Fee cannot be negative";
-                            }
-                            if (fee > 1000000){
-                              return "Fee cannot be bigger than 1000000";
-                            }
+                              double fee = double.parse(text);
+                              if (fee < 0){
+                                return "Fee cannot be negative";
+                              }
+                              if (fee > 1000000){
+                                return "Fee cannot be bigger than 1000000";
+                              }
                           } catch (e){
                             return "Fee must be a number";
                           }
@@ -303,33 +308,24 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()){
                           _formKey.currentState?.save();
-                          String exercisePlan = _exercisePlan.text;
-                          String schedule = _schedule.text;
-                          double price = double.parse(_fee.text);
-                          int status = 1;
-                          String dietPlan = _dietPlan.text;
-                          String name = _titles.text;
                           TrainerService trainerService = TrainerService();
-                          bool result = await trainerService.createPackage(
-                            exercisePlan: exercisePlan,
-                            schedule: schedule,
-                            price: price,
-                            status: status,
-                            dietPlan: dietPlan,
-                            spendTimeToTraining: spendTimeToTraining,
-                            name: name,
-                            user: user,
-                          );
+
+                          packageModel!.exercisePlan = _exercisePlan.text;
+                          packageModel!.schedule = _schedule.text;
+                          packageModel!.price = double.parse(_fee.text);
+                          packageModel!.status = 1;
+                          packageModel!.dietPlan = _dietPlan.text;
+                          packageModel!.name = _titles.text;
+                          bool result = await trainerService.updatePackage(packageModel!, user);
                           if (result){
-                            CustomToast.makeToast("Create successfully");
+                            CustomToast.makeToast("Update successfully");
                           } else {
                             CustomToast.makeToast("Some thing went wrong! Try again");
                           }
-
                         }
                       },
                       child: const Text(
-                        'Create Package',
+                        'Update',
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
                       ),
                       shape: RoundedRectangleBorder(

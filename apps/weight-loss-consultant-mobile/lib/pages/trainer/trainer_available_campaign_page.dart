@@ -14,15 +14,15 @@ import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.d
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
-class TrainerViewListCampaignPage extends StatefulWidget {
-  const TrainerViewListCampaignPage({Key? key}) : super(key: key);
+class TrainerAvailableCampaignPage extends StatefulWidget {
+  const TrainerAvailableCampaignPage({Key? key}) : super(key: key);
 
   @override
-  _TrainerViewListCampaignPageState createState() =>
-      _TrainerViewListCampaignPageState();
+  _TrainerAvailableCampaignPageState createState() =>
+      _TrainerAvailableCampaignPageState();
 }
 
-class _TrainerViewListCampaignPageState extends State<TrainerViewListCampaignPage> {
+class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignPage> {
 
 
   Future<List<CustomerCampaignModel>>? listCampaign;
@@ -54,10 +54,11 @@ class _TrainerViewListCampaignPageState extends State<TrainerViewListCampaignPag
     });
   }
 
-  Widget _campaign(int id, String date, String currentWeight, String targetWeight, String customerName) {
+  Widget _campaign(CustomerCampaignModel model) {
+    var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RoutePath.trainerViewCampaignDetailPage, arguments: id);
+        Navigator.pushNamed(context, RoutePath.trainerViewCampaignDetailPage, arguments: model.id);
       },
       child: Card(
         elevation: 5,
@@ -66,96 +67,131 @@ class _TrainerViewListCampaignPageState extends State<TrainerViewListCampaignPag
         ),
         child: Container(
           padding: const EdgeInsets.all(20),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                  flex: 1,
-                  child: Column(
+              Row(
+                children: [
+                  SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Image.asset(
+                        'assets/fake-image/fake-trainer-avatar.jpg'),
+                  ),
+                  const SizedBox(width: 20,),
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 10),
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            date,
-                            style: TextStyle(
-                                color: HexColor("#FF3939"),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w900),
+                      Text(
+                        model.customer!.fullname ?? "",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15
                           ),
-                          decoration: BoxDecoration(
-                              color: HexColor("#F0F3F6"),
-                              borderRadius:
-                              const BorderRadius.all(Radius.circular(5))),
-                        ),
-                        Text(
-                          customerName,
-                          style: TextStyle(
-                              color: AppColors.PRIMARY_WORD_COLOR,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 15),
-                        ),
-                      ],
-                    ),
-                      const SizedBox(
-                        height: 5,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                'Current Weight',
-                                style: TextStyle(
-                                    color: AppColors.PRIMARY_WORD_COLOR,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 13),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                currentWeight,
-                                style: TextStyle(
-                                    color: AppColors.PRIMARY_WORD_COLOR,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 13),
-
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Text(
-                                'Target Weight',
-                                style: TextStyle(
-                                    color: AppColors.PRIMARY_WORD_COLOR,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 13),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                targetWeight,
-                                style: TextStyle(
-                                    color: AppColors.PRIMARY_WORD_COLOR,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 13),
-
-                              ),
-                            ],
-                          )
-                        ],
+                      const SizedBox(height: 10,),
+                      Text(
+                        model.customer!.gender == "1" ? "Male" : "Female",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15
+                        ),
                       ),
-
                     ],
-                  ))
+                  )
+                ],
+              ),
+              const SizedBox(height: 10,),
+              Row(
+                children: [
+                  Text(
+                    'Current Weight',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    "${model.currentWeight.toString()} kg",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10,),
+              Row(
+                children: [
+                  Text(
+                    'Target Weight',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    "${model.targetWeight.toString()} kg",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10,),
+              Row(
+                children: [
+                  Text(
+                    'Start date',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    date,
+                    style: TextStyle(
+                        color: HexColor("#FF3939"),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w900),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10,),
+              Row(
+                children: [
+                  Text(
+                    'End date',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    date,
+                    style: TextStyle(
+                        color: HexColor("#FF3939"),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w900),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -179,14 +215,7 @@ class _TrainerViewListCampaignPageState extends State<TrainerViewListCampaignPag
   List<Widget> _buildCampaignList(List<CustomerCampaignModel> data){
     List<Widget> widgets = [];
     for (CustomerCampaignModel model in data){
-      var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
-      var widget = _campaign(
-        model.id ?? 0,
-        date,
-        model.currentWeight.toString(),
-        model.targetWeight.toString(),
-        model.customer!.fullname ?? "",
-      );
+      var widget = _campaign(model);
       widgets.add(widget);
     }
     return widgets;
