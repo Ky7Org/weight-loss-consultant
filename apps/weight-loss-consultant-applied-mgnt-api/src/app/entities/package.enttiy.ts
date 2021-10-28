@@ -1,5 +1,6 @@
 import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {AppliedEntity} from "./applied.entity";
+import {TrainerEntity} from "./trainer.entity";
 
 @Entity('Package')
 export class PackageEntity extends BaseEntity{
@@ -29,5 +30,8 @@ export class PackageEntity extends BaseEntity{
 
   @OneToMany(() => AppliedEntity, applied => applied.package)
   applies: AppliedEntity[];
+
+  @ManyToOne(() => TrainerEntity, trainer => trainer.packages)
+  trainer : TrainerEntity;
 
 }

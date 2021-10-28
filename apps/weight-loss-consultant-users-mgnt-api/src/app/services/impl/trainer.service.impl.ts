@@ -1,7 +1,7 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
 
 import {BaseService} from '../base.service';
-import {DeleteResult, getManager, UpdateResult} from 'typeorm';
+import {DeleteResult, UpdateResult} from 'typeorm';
 import {TrainerEntity} from '../../entities/trainer.entity';
 import {TrainerRepository} from '../../repositories/trainer.repository';
 import {TrainerMapper} from '../../mappers/trainer.mapper';
@@ -10,6 +10,7 @@ import {UpdateTrainerDto} from '../../dtos/trainer/update-trainer';
 import {EMAIL_EXISTED_ERR} from '../../constants/validation-err-message';
 import {RpcException} from '@nestjs/microservices';
 import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
+import {UpdateTrainerPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
 
 @Injectable()
 export class TrainerService extends BaseService<TrainerEntity, TrainerRepository> {
@@ -47,24 +48,21 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
         message: `Param: ${email} must match with ${entity.email} in request body`
       } as RpcExceptionModel);
     }
-
+    const phoneTrainer = await this.repository.createQueryBuilder("trainer")
+      .where("trainer.phone = :phone", {phone : entity.phone})
+      .getOne();
+    if (phoneTrainer) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `The phone number has been already registered, please choose another one.`
+      } as RpcExceptionModel);
+    }
     const foundTrainer = await this.repository.findOne(entity.email);
     if (foundTrainer === undefined) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
         message: `Not found trainer with email : ${entity.email}`
       } as RpcExceptionModel);
-    }
-    if (foundTrainer.phone !== dto.phone){
-      const phoneTrainer = await this.repository.createQueryBuilder("trainer")
-        .where("trainer.phone = :phone", {phone : dto.phone})
-        .getOne();
-      if (phoneTrainer) {
-        throw new RpcException({
-          statusCode: HttpStatus.CONFLICT,
-          message: `The phone number has been already registered, please choose another one.`
-        } as RpcExceptionModel);
-      }
     }
     return this.repository.update(entity.email, entity);
   }
@@ -94,23 +92,27 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
     return this.repository.findOne(id);
   }
 
-  async viewOnlyPackagesOfTrainer(trainerEmail: string) : Promise<any>  {
-    const entityManager = getManager();
-    const query = entityManager.query(
-      `SELECT \`package\`.\`id\`                     AS \`id\`,
-              \`package\`.\`exercisePlan\`                 AS \`exercisePlan\`,
-              \`package\`.\`schedule\`                     AS \`schedule\`,
-              \`package\`.\`price\`                        AS \`price\`,
-              \`package\`.\`status\`                       AS \`status\`,
-              \`package\`.\`dietPlan\`                     AS \`dietPlan\`,
-              \`package\`.\`trainerEmail\`                 AS \`trainerEmail\`,
-              \`package\`.\`name\`                         AS \`name\`,
-              \`package\`.\`spendTimeToTraining\`          AS \`spendTimeToTraining\`
-       FROM \`Trainer\` \`trainer\`
-              LEFT JOIN \`Package\` \`package\` ON \`package\`.\`trainerEmail\` = \`trainer\`.\`email\`
-       WHERE \`trainer\`.\`email\` = ?
-      `,[trainerEmail]
-    )
-    return query;
+  async updateProfileWithoutPasswordAndStatus(payload : UpdateTrainerPayload) : Promise<UpdateResult> {
+    if (payload.email !== payload.email) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `Param: ${payload.email} must match with request body email : ${payload.email} `
+      } as RpcExceptionModel);
+    }
+    const result = await this.repository.createQueryBuilder("trainer")
+      .update(TrainerEntity)
+      .set({
+        fullname: payload.fullname,
+        address: payload.address,
+        phone: payload.phone,
+        gender: payload.gender,
+        profileImage : payload.profileImage,
+        dob : payload.dob,
+        yearOfExp: payload.yearOfExp,
+        rating: payload.rating,
+      })
+      .where("email = :email", {email : payload.email})
+      .execute();
+    return result;
   }
 }

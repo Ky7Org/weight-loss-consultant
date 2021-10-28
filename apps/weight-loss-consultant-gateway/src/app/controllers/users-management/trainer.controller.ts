@@ -6,6 +6,7 @@ import {Role} from '../../constants/enums';
 import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
 import {CreateTrainerDto} from '../../dtos/trainer/create-trainer';
 import {UpdateTrainerDto} from '../../dtos/trainer/update-trainer';
+import {UpdateTrainerPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
@@ -19,14 +20,14 @@ export class TrainerController {
 
   @Roles(Role.Trainer)
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({status: HttpStatus.OK, description: 'Trainers have shown below:'})
-  @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden: Only available for admin role'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'Trainers have shown below:' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden: Only available for admin role' })
   @Get()
   async index(@Res() res) {
     try {
       const result = await this.trainerService.findAll();
       res.status(HttpStatus.OK).send(result);
-    } catch ({error}) {
+    } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
@@ -35,9 +36,9 @@ export class TrainerController {
   @Roles(Role.Admin, Role.Trainer)
   @UseGuards(JwtAuthGuard)
   @Get(':email')
-  @ApiResponse({status: HttpStatus.OK, description: 'Trainer details has shown below:'})
-  @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Email not found'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'Trainer details has shown below:' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Email not found' })
   @ApiParam({
       name: "email",
       type: String,
@@ -49,7 +50,7 @@ export class TrainerController {
     try {
       const trainer = await this.trainerService.viewDetail(email);
       res.status(HttpStatus.OK).send(trainer);
-    } catch ({error}) {
+    } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
@@ -61,14 +62,14 @@ export class TrainerController {
   @ApiBody({
     type: CreateTrainerDto
   })
-  @ApiResponse({status: HttpStatus.CREATED, description: 'The new trainer has been successfully created.'})
-  @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
-  @ApiResponse({status: HttpStatus.CONFLICT, description: 'Email has already existed.'})
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'The new trainer has been successfully created.' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email has already existed.' })
   async create(@Body() dto: CreateTrainerDto, @Res() res) {
     try {
       const result = await this.trainerService.create(dto);
       res.status(HttpStatus.CREATED).send(result);
-    } catch ({error}) {
+    } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
@@ -80,9 +81,9 @@ export class TrainerController {
   @ApiBody({
     type: UpdateTrainerDto
   })
-  @ApiResponse({status: HttpStatus.OK, description: 'The trainer information has been successfully updated.'})
-  @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Email not found.'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'The trainer information has been successfully updated.' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Email not found.' })
   @ApiParam({
       name: "email",
       type: String,
@@ -94,7 +95,7 @@ export class TrainerController {
     try {
       const result = await this.trainerService.edit(dto, email);
       res.status(HttpStatus.OK).send(result);
-    } catch ({error}) {
+    } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
@@ -103,9 +104,9 @@ export class TrainerController {
   @Roles(Role.Admin, Role.Trainer)
   @UseGuards(JwtAuthGuard)
   @Delete(':email')
-  @ApiResponse({status: HttpStatus.OK, description: 'The trainer information has been successfully deleted.'})
-  @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Email not found.'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'The trainer information has been successfully deleted.' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Email not found.' })
   @ApiParam({
       name: "email",
       type: String,
@@ -117,23 +118,21 @@ export class TrainerController {
     try {
       const result = await this.trainerService.delete(email);
       res.status(HttpStatus.OK).send(result);
-    } catch ({error}) {
+    } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
   }
 
-  @Roles(Role.Admin, Role.Trainer)
+  @Put('/updateWithoutPasswordAndStatus/:email')
   @UseGuards(JwtAuthGuard)
-  @Get('/viewDetailSpecial/:email')
-  async viewSpecial(@Res() res, @Param('email') email) {
+  async updateAdminWithoutPasswordAndStatus(@Param('email') email, @Body() payload: UpdateTrainerPayload, @Res() res) {
     try {
-      const result = await this.trainerService.viewSpecial(email);
+      const result = await this.trainerService.updateWithoutPasswordAndStatus(payload);
       res.status(HttpStatus.OK).send(result);
     } catch ({error}) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
   }
-
 }

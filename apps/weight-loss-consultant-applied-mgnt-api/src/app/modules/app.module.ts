@@ -6,6 +6,7 @@ import {AppliedEntity} from "../entities/applied.entity";
 import {CampaignEntity} from "../entities/campaign.entity";
 import {PackageEntity} from "../entities/package.enttiy";
 import {AppliedModule} from "./applied.module";
+import {TrainerEntity} from "../entities/trainer.entity";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -28,7 +29,8 @@ export class AppModule {
             entities: [
               AppliedEntity,
               CampaignEntity,
-              PackageEntity
+              PackageEntity,
+              TrainerEntity
             ],
           }),
           inject: [ConfigService],

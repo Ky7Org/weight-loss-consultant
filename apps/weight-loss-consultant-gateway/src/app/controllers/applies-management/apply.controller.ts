@@ -1,8 +1,8 @@
-import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
-import { CreateCampaignDto } from '../../dtos/campaign/create-campaign';
-import { UpdateCampaignDto } from '../../dtos/campaign/update-campaign';
+import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
+import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
+import {CreateCampaignDto} from '../../dtos/campaign/create-campaign';
+import {UpdateCampaignDto} from '../../dtos/campaign/update-campaign';
 import {AppliedService} from "../../services/applied.service";
 import {CreateAppliedDto} from "../../dtos/applied/create_applied_dto";
 import {UpdateAppliedDto} from "../../dtos/applied/update_applied_dto";
@@ -121,7 +121,8 @@ export class ApplyController {
     @UseGuards(JwtAuthGuard)
     async getPackagesByCampaignID(@Res() res, @Param('campaignId') campaignId: number) {
       try {
-        const result = await this.appliedService.getAppliedPackagesByCampaignID(campaignId);
+        let result = await this.appliedService.getAppliedPackagesByCampaignID(campaignId);
+        result = result.map(e => e.package)
         res.status(HttpStatus.OK).send(result);
       } catch ({error}) {
         this.logger.error(error);
