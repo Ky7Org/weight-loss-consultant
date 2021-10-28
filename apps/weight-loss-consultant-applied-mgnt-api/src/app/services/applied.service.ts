@@ -1,5 +1,5 @@
 import {HttpStatus, Inject, Injectable} from '@nestjs/common';
-import {DeleteResult, getManager, UpdateResult} from 'typeorm';
+import {DeleteResult, UpdateResult} from 'typeorm';
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {Observable} from "rxjs";
 import {AppliedRepository} from "../repositories/applied.repository";
@@ -120,21 +120,11 @@ export class AppliedService
   }
 
   async getAppliedPackagesByCampaignID(campaignID : number) : Promise<any> {
-    const entityManager = getManager();
-    const query = entityManager.query(
-      `SELECT \`package\`.\`id\`            AS \`id\`,
-              \`package\`.\`exercisePlan\`        AS \`exercisePlan\`,
-              \`package\`.\`schedule\`            AS \`schedule\`,
-              \`package\`.\`price\`               AS \`price\`,
-              \`package\`.\`status\`              AS \`status\`,
-              \`package\`.\`dietPlan\`            AS \`dietPlan\`,
-              \`package\`.\`spendTimeToTraining\` AS \`spendTimeToTraining\`,
-              \`package\`.\`name\`                AS \`name\`
-       FROM \`PackageApplyToCampaign\` \`applied\`
-              LEFT JOIN \`Package\` \`package\` ON \`package\`.\`id\` = \`applied\`.\`packageId\`
-       WHERE applied.campaignID = ?
-      `,[campaignID]
-    )
+    const query = await this.repository.createQueryBuilder("applied")
+      .where("applied.campaignID = :id", {id: campaignID})
+      .leftJoinAndSelect("applied.package", "package")
+      .leftJoinAndSelect("package.trainer", "trainer")
+      .getMany();
     return query;
   }
 }
