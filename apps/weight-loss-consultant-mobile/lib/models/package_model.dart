@@ -15,6 +15,7 @@ class PackageModel{
   String? dietPlan;
   int? spendTimeToTraining;
   TrainerModel? trainer;
+  String? name;
 
   PackageModel();
 
@@ -22,5 +23,9 @@ class PackageModel{
 
   Map<String,dynamic> toJson() => _$PackageModelToJson(this);
 
+  @override
+  String toString() {
+    return 'PackageModel{id: $id, name: $name, exercisePlan: $exercisePlan, schedule: $schedule, price: $price, status: $status, dietPlan: $dietPlan, spendTimeToTraining: $spendTimeToTraining, trainer: ${trainer.toString()}';
+  }
 }
 

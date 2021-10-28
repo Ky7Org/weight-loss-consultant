@@ -13,21 +13,23 @@ import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
-class TrainerViewListPackagePage extends StatefulWidget {
+class CustomerAppliedPackagePage extends StatefulWidget {
   int? campaignId;
-  TrainerViewListPackagePage({Key? key, this.campaignId}) : super(key: key);
+  CustomerAppliedPackagePage({Key? key, this.campaignId}) : super(key: key);
 
   @override
-  _TrainerViewListPackagePageState createState() => _TrainerViewListPackagePageState();
+  _CustomerAppliedPackagePageState createState() => _CustomerAppliedPackagePageState();
 }
 
-class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage> {
+class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage> {
 
   Future<List<PackageModel>>? listCampaign;
   AccountModel user = AccountModel(email: "", fullname: "");
-  TrainerService service = TrainerService();
+  TrainerService trainerService = TrainerService();
+  CustomerService customerService = CustomerService();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,7 +50,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        listCampaign = service.getTrainerPackage(user);
+        listCampaign = trainerService.getAppliedPackage(widget.campaignId ?? 0, user);
         setState(() {});
       });
     });
@@ -68,91 +70,11 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
     );
   }
 
-  void _showLoginError(int packageID) {
-    showDialog(
-        context: context,
-        builder: (ctx) => Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0)),
-            child: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.topCenter,
-              children: [
-                SizedBox(
-                  height: 200,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
-                    child: Column(children: [
-                      const Center(
-                          child: Text(
-                            "Are you sure to apply this package?",
-                            style: TextStyle(
-                              color: Colors.redAccent,
-                            ),
-                          )),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RaisedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            color: Colors.redAccent,
-                            child: const Text(
-                              'Cancel',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          SizedBox(width: 20,),
-                          RaisedButton(
-                            onPressed: () async {
-                              bool result = await service.applyPackageToCampaign(packageID, widget.campaignId as int, user);
-                              if (result){
-                                CustomToast.makeToast("Save successfully");
-                              } else {
-                                CustomToast.makeToast("Some thing went wrong! Try again");
-                              }
-                              Navigator.of(context).pop();
 
-                            },
-                            color: Colors.redAccent,
-                            child: const Text(
-                              'Okay',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                    ]),
-                  ),
-                ),
-                const Positioned(
-                    top: -35,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.redAccent,
-                      radius: 40,
-                      child: Icon(
-                        Icons.warning,
-                        color: Colors.white,
-                        size: 50,
-                      ),
-                    )),
-              ],
-            )));
-  }
-
-
-
-  Widget _package(
-      int packageId, String exercisePlan, String dietPlan, int dayOfTraining, double fee) {
+  Widget _package(PackageModel model) {
     return GestureDetector(
       onTap: () {
-        _showLoginError(packageId);
+        Navigator.pushNamed(context, RoutePath.customerPackageDetailPage, arguments: model.id);
       },
       child: Card(
         elevation: 5,
@@ -178,7 +100,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  exercisePlan,
+                  model.exercisePlan as String,
                   style: TextStyle(
                       color: AppColors.PRIMARY_WORD_COLOR,
                       fontWeight: FontWeight.w400,
@@ -202,7 +124,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  dietPlan,
+                  model.dietPlan as String,
                   style: TextStyle(
                       color: AppColors.PRIMARY_WORD_COLOR,
                       fontWeight: FontWeight.w400,
@@ -220,7 +142,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
                   Row(
                     children: [
                       Text(
-                        fee.toString(),
+                        model.price.toString(),
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontWeight: FontWeight.w900,
@@ -242,7 +164,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
     );
   }
 
-  Widget _buildEmptyCampaignList(){
+  Widget _buildEmptyPackageList(){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -272,7 +194,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         ),
         Center(
           child: Text(
-            "You don't have any campaign.",
+            "You don't have any package applied to this campaign.",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,
@@ -297,13 +219,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
   List<Widget> _buildCampaignList(List<PackageModel> data){
     List<Widget> widgets = [];
     for (PackageModel model in data){
-      var widget = _package(
-        model.id ?? 0,
-        model.exercisePlan ?? "",
-        model.dietPlan ?? "",
-        model.spendTimeToTraining ?? 0,
-        model.price ?? 0,
-      );
+      var widget = _package(model);
       widgets.add(widget);
     }
     return widgets;
@@ -314,21 +230,6 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GenericAppBar.builder("List Packages"),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-
-        backgroundColor: HexColor("#FF3939"),
-        onPressed: (){
-          Navigator.pushNamed(context, RoutePath.createPackagesPage).then((value) {
-            listCampaign = service.getTrainerPackage(user);
-            setState(() {
-
-            });
-          });
-        },
-        label: const Text("Add new campaign"),
-        icon: const Icon(Icons.add),
-      ),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         margin: const EdgeInsets.only(top: 20),
@@ -338,11 +239,11 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
               builder: (context, snapshot) {
                 if (snapshot.hasData){
                   if (snapshot.requireData.isEmpty){
-                    return _buildEmptyCampaignList();
+                    return _buildEmptyPackageList();
                   }
                   return Column(
                     children: [
-                      _title('Available Campaign'),
+                      _title('Applied Package'),
                       const SizedBox(
                         height: 20,
                       ),

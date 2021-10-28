@@ -5,6 +5,7 @@ import 'package:weight_loss_consultant_mobile/constants/api_constant.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 
 
 class CustomerService{
@@ -114,12 +115,24 @@ class CustomerService{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200){
       return true;
     }
     return false;
+  }
+
+  Future<PackageModel?> getPackageById(int packageId, AccountModel user) async{
+    var url = Uri.parse(ApiConstant.getPackageDetailApi + "/$packageId");
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      return PackageModel.fromJson(jsonDecode(response.body));
+    }
   }
 
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_applied_package_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_create_campaign.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_package_detail.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_update_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/edit_profile_page.dart';
@@ -159,6 +161,20 @@ class RouteGenerator{
         if (args is int){
           return MaterialPageRoute(builder: (_){
             return CustomerUpdateCampaignPage(campaignID: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerAppliedPackagePage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerAppliedPackagePage(campaignId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerPackageDetailPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerPackageDetail(packageID: args,);
           });
         }
         return _errorRoute();

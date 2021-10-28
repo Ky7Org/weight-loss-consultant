@@ -23,4 +23,9 @@ class TrainerModel{
   factory TrainerModel.fromJson(Map<String,dynamic> data) => _$TrainerModelFromJson(data);
 
   Map<String,dynamic> toJson() => _$TrainerModelToJson(this);
+
+  @override
+  String toString() {
+    return 'TrainerModel{email: $email, password: $password, fullname: $fullname, address: $address, phone: $phone, gender: $gender, status: $status, profileImage: $profileImage, dob: $dob, yearOfExp: $yearOfExp, rating: $rating}';
+  }
 }
