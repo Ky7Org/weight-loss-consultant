@@ -292,18 +292,26 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
       appBar: GenericAppBar.builder("List Campaigns"),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: HexColor("#FF3939"),
+        backgroundColor: Colors.white,
         onPressed: (){
           Navigator.pushNamed(context, RoutePath.createCampaignPage).then((value){
             listCampaign = customerService.getCustomerCampaign(user.email ?? "");
             setState(() {});
           });
         },
-        label: const Text("Add new campaign"),
-        icon: const Icon(Icons.add),
+        label: Text(
+          "Add new campaign",
+          style: TextStyle(
+            color: HexColor("#FF3939"),
+          ),
+        ),
+        icon: Icon(
+          Icons.add,
+          color: HexColor("#FF3939"),
+        ),
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         margin: const EdgeInsets.only(top: 20),
         child: FutureBuilder<List<CampaignModel>>(
           future: listCampaign,

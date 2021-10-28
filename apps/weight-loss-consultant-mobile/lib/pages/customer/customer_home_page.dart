@@ -3,15 +3,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/customer_sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 
 class CustomerHomePage extends StatefulWidget {
 
@@ -24,6 +28,7 @@ class CustomerHomePage extends StatefulWidget {
 class _CustomerHomePageState extends State<CustomerHomePage> {
 
   AccountModel user = AccountModel(email: "", fullname: "");
+  CampaignModel? ongoingCampaign;
   int selectedIndex = 0;
   final PanelController _pc = PanelController();
 
@@ -46,8 +51,14 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
-      initAccount();
-      setState(() {});
+      initAccount().then((value) {
+        CustomerService customerService = CustomerService();
+        customerService.getCustomerCampaign(user.email ?? "").then((value){
+          ongoingCampaign = value.first;
+          setState(() {});
+        });
+      });
+
     });
   }
 
@@ -262,6 +273,8 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   }
 
   Widget _buildCurrentCampaign(){
+    if (ongoingCampaign == null) return Container();
+    var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(ongoingCampaign!.startDate ?? DateTime.now().millisecond.toString()))).toString();
     return Column(
       children: [
         Container(
@@ -278,8 +291,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
           ),
         ),
         GestureDetector(
-          onTap: (){
-            
+          onTap: () {
           },
           child: Card(
             elevation: 5,
@@ -287,7 +299,107 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               borderRadius: BorderRadius.circular(15.0),
             ),
             child: Container(
-              child: Text("Your current campaign"),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          date,
+                          style: TextStyle(
+                              color: HexColor("#FF3939"),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w900),
+                        ),
+                        decoration: BoxDecoration(
+                            color: HexColor("#F0F3F6"),
+                            borderRadius:
+                            const BorderRadius.all(Radius.circular(5))),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Current Weight',
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 13),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        ongoingCampaign!.currentWeight.toString(),
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13),
+
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Target Weight',
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 13),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        ongoingCampaign!.targetWeight.toString(),
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13),
+
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  RichText(
+                      text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text:"Description: ",
+                              style: TextStyle(
+                                  color: AppColors.PRIMARY_WORD_COLOR,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 13),
+                            ),
+                            TextSpan(
+                              text: ongoingCampaign!.description ?? "",
+                              style: TextStyle(
+                                  color: AppColors.PRIMARY_WORD_COLOR,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13),
+                            )
+                          ]
+                      )
+                  )
+
+                ],
+              ),
             ),
           ),
         ),
@@ -314,7 +426,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               SvgPicture.asset("assets/panel-image/customer-home-panel.svg"),
               SvgPicture.asset("assets/fake-image/fake-chart.svg"),
               _buildUpcomingTraining(),
-              _buildTopCategory(),
+              //_buildTopCategory(),
               _buildCurrentCampaign(),
               const SizedBox(height: 250,),
             ],

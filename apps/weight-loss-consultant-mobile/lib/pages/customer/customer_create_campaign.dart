@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
@@ -69,7 +70,8 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       TextEditingController controller,
       TextInputType type,
       IconData icon,
-      bool haveSuffixIcon) {
+      bool haveSuffixIcon,
+      FormFieldValidator<String> validator) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -121,7 +123,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   }
 
   Widget _multiInput(
-      String label, String hint, TextEditingController controller) {
+      String label, String hint, TextEditingController controller, int maxCharacter) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -134,7 +136,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             controller: controller,
             keyboardType: TextInputType.text,
             style: const TextStyle(fontSize: 15),
-            maxLines: 3,
+            maxLines: 5,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(maxCharacter),
+            ],
             decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 border: InputBorder.none,
@@ -149,11 +154,11 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     color: Color(0xFFB6C5D1),
                     fontWeight: FontWeight.w400)),
           ),
-          const Align(
+          Align(
             alignment: Alignment.bottomRight,
             child: Text(
-              'Max. 150 characters',
-              style: TextStyle(
+              'Max. $maxCharacter characters',
+              style: const TextStyle(
                   color: Color(0xFFB6C5D1),
                   fontWeight: FontWeight.w400,
                   fontSize: 11),
@@ -245,10 +250,58 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   alignment: Alignment.topLeft,
                   child: _title('Fill the Forms'),
                 ),
-                _singleInput("Your target weight", "E.g: 70", _weightTarget, TextInputType.number, Icons.add, false),
-                _singleInput("Your current weight", "E.g: 70", _currentWeight, TextInputType.number, Icons.add, false),
+                _singleInput("Your current weight", "E.g: 70", _currentWeight, TextInputType.number, Icons.add, false, (text){
+                  if (text == null || text.isEmpty){
+                    return "Current weight cannot be empty";
+                  }
+                  try{
+                    int weight = int.parse(text);
+                    if (weight < 0){
+                      return "Current weight cannot be negative";
+                    }
+                    if (weight > 300){
+                      return "Current weight cannot be bigger than 300kg";
+                    }
+                  } catch (e){
+                    return "Current weight must be a number";
+                  }
+                  return null;
+                }),
+                _singleInput("Your target weight", "E.g: 70", _weightTarget, TextInputType.number, Icons.add, false, (text){
+                  int currentWeight = 0;
+                  if (_currentWeight.text.isEmpty){
+                    return null;
+                  }
+                  try{
+                    currentWeight = int.parse(_currentWeight.text);
+                    if (currentWeight < 0 || currentWeight > 300){
+                      return null;
+                    }
+                  } catch (e){
+                    return null;
+                  }
+
+                  if (text == null || text.isEmpty){
+                    return "Target weight cannot be empty";
+                  }
+                  try{
+                    int weight = int.parse(text);
+                    if (weight < 0){
+                      return "Target weight cannot be negative";
+                    }
+                    if (weight > 300){
+                      return "Target weight cannot be bigger than 300kg";
+                    }
+                    if (weight > currentWeight){
+                      return "Target weight cannot be bigger than current weight";
+                    }
+                  } catch (e){
+                    return "Target weight must be a number";
+                  }
+                  return null;
+                }),
                 _dropdown(),
-                _multiInput("Your description", "Your description...", _description),
+                _multiInput("Your description", "Your description...", _description, 1000),
 
                 const SizedBox(
                   height: 30,

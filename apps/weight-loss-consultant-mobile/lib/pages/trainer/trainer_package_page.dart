@@ -330,7 +330,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
 
-        backgroundColor: HexColor("#FF3939"),
+        backgroundColor: Colors.white,
         onPressed: (){
           Navigator.pushNamed(context, RoutePath.createPackagesPage).then((value) {
             listPackage = service.getTrainerPackage(user);
@@ -339,8 +339,16 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
             });
           });
         },
-        label: const Text("Add new package"),
-        icon: const Icon(Icons.add),
+        label: Text(
+          "Add new package",
+          style: TextStyle(
+            color: HexColor("#FF3939")
+          ),
+        ),
+        icon: Icon(
+          Icons.add,
+            color: HexColor("#FF3939"),
+        ),
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),

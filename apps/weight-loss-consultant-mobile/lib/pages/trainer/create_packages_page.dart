@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
@@ -56,7 +57,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
   int spendTimeToTraining = 1;
 
   Widget _multiInput(
-      String label, String hint, TextEditingController controller) {
+      String label, String hint, TextEditingController controller, int maxCharacter) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -69,7 +70,10 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
             controller: controller,
             keyboardType: TextInputType.text,
             style: const TextStyle(fontSize: 15),
-            maxLines: 3,
+            maxLines: 5,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(maxCharacter),
+            ],
             decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 border: InputBorder.none,
@@ -84,11 +88,11 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                     color: Color(0xFFB6C5D1),
                     fontWeight: FontWeight.w400)),
           ),
-          const Align(
+          Align(
             alignment: Alignment.bottomRight,
             child: Text(
-              'Max. 150 characters',
-              style: TextStyle(
+              'Max. $maxCharacter characters',
+              style: const TextStyle(
                   color: Color(0xFFB6C5D1),
                   fontWeight: FontWeight.w400,
                   fontSize: 11),
@@ -100,7 +104,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
   }
 
   Widget _singleInput(String label, String hint, bool haveSuffixIcon,
-      bool havePrefixIcon, IconData icon, TextEditingController controller) {
+      bool havePrefixIcon, IconData icon, TextEditingController controller, FormFieldValidator<String> validator) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -121,27 +125,28 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
           ),
           Row(
             children: [
-              havePrefixIcon
-                  ? Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Icon(
-                        icon,
-                        color: const Color(0xFFFF3939),
-                        size: 20,
-                      ),
-                    )
+              havePrefixIcon ? Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Icon(
+                  icon,
+                  color: const Color(0xFFFF3939),
+                  size: 20,
+                ),
+              )
                   : const SizedBox(),
               Expanded(
                 child: TextFormField(
-                  controller: controller, keyboardType: TextInputType.phone,
+                  controller: controller,
+                  keyboardType: TextInputType.phone,
+                  validator: validator,
                   style: const TextStyle(fontSize: 15),
                   decoration: InputDecoration(
                     suffixIcon: haveSuffixIcon
                         ? Icon(
-                            icon,
-                            color: const Color(0xFF0D3F67),
-                            size: 20,
-                          )
+                      icon,
+                      color: const Color(0xFF0D3F67),
+                      size: 20,
+                    )
                         : const SizedBox(),
                     border: InputBorder.none,
                     hintText: hint,
@@ -250,18 +255,44 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                 child: Column(
                   children: [
                     _singleInput(
-                        "Titles (Max. 30 characters)",
+                        "Title (Max. 30 characters)",
                         "E,g: Tap luyen cung BanhsBao",
                         false,
                         false,
                         Icons.ac_unit,
-                        _titles),
+                        _titles,
+                            (text){
+                          if (text == null || text.isEmpty){
+                            return "Title cannot be empty";
+                          }
+                          if (text.length > 30){
+                            return "Title cannot be bigger than 30 characters";
+                          }
+                          return null;
+                        }
+                    ),
                     _dropdown(),
-                    _multiInput("Exercise Plan", "Do what?", _exercisePlan),
-                    _multiInput("Diet Plan", "Eat what?", _dietPlan),
+                    _multiInput("Exercise Plan", "Do what?", _exercisePlan, 1000),
+                    _multiInput("Diet Plan", "Eat what?", _dietPlan, 1000),
                     _singleInput("Training Fee", "000.00", false, true,
-                        Icons.attach_money, _fee),
-                    _multiInput("Schedule description", "Your description...", _schedule),
+                        Icons.attach_money, _fee, (text){
+                          if (text == null || text.isEmpty){
+                            return "Fee cannot be empty";
+                          }
+                          try {
+                            double fee = double.parse(text);
+                            if (fee < 0){
+                              return "Fee cannot be negative";
+                            }
+                            if (fee > 1000000){
+                              return "Fee cannot be bigger than 1000000";
+                            }
+                          } catch (e){
+                            return "Fee must be a number";
+                          }
+                          return null;
+                        }),
+                    _multiInput("Schedule description", "Your description...", _schedule, 1000),
                     const SizedBox(
                       height: 20,
                     ),
