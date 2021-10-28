@@ -13,6 +13,7 @@ import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class CustomerAppliedPackagePage extends StatefulWidget {
@@ -27,7 +28,8 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
 
   Future<List<PackageModel>>? listCampaign;
   AccountModel user = AccountModel(email: "", fullname: "");
-  TrainerService service = TrainerService();
+  TrainerService trainerService = TrainerService();
+  CustomerService customerService = CustomerService();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,7 +50,7 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        listCampaign = service.getAppliedPackage(widget.campaignId ?? 0, user);
+        listCampaign = trainerService.getAppliedPackage(widget.campaignId ?? 0, user);
         setState(() {});
       });
     });
@@ -162,7 +164,7 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
     );
   }
 
-  Widget _buildEmptyCampaignList(){
+  Widget _buildEmptyPackageList(){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -192,7 +194,7 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
         ),
         Center(
           child: Text(
-            "You don't have any campaign.",
+            "You don't have any package applied to this campaign.",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,
@@ -237,11 +239,11 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
               builder: (context, snapshot) {
                 if (snapshot.hasData){
                   if (snapshot.requireData.isEmpty){
-                    return _buildEmptyCampaignList();
+                    return _buildEmptyPackageList();
                   }
                   return Column(
                     children: [
-                      _title('Available Campaign'),
+                      _title('Applied Package'),
                       const SizedBox(
                         height: 20,
                       ),

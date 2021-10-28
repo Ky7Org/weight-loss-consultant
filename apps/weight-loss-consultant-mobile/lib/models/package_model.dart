@@ -15,6 +15,7 @@ class PackageModel{
   String? dietPlan;
   int? spendTimeToTraining;
   TrainerModel? trainer;
+  String? name;
 
   PackageModel();
 
@@ -24,7 +25,7 @@ class PackageModel{
 
   @override
   String toString() {
-    return 'PackageModel{id: $id, exercisePlan: $exercisePlan, schedule: $schedule, price: $price, status: $status, dietPlan: $dietPlan, spendTimeToTraining: $spendTimeToTraining, trainer: ${trainer.toString()}';
+    return 'PackageModel{id: $id, name: $name, exercisePlan: $exercisePlan, schedule: $schedule, price: $price, status: $status, dietPlan: $dietPlan, spendTimeToTraining: $spendTimeToTraining, trainer: ${trainer.toString()}';
   }
 }
 

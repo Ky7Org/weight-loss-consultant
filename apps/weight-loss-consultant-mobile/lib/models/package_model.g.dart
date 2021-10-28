@@ -16,7 +16,8 @@ PackageModel _$PackageModelFromJson(Map<String, dynamic> json) => PackageModel()
   ..spendTimeToTraining = json['spendTimeToTraining'] as int?
   ..trainer = json['trainer'] == null
       ? null
-      : TrainerModel.fromJson(json['trainer'] as Map<String, dynamic>);
+      : TrainerModel.fromJson(json['trainer'] as Map<String, dynamic>)
+  ..name = json['name'] as String?;
 
 Map<String, dynamic> _$PackageModelToJson(PackageModel instance) =>
     <String, dynamic>{
@@ -28,4 +29,5 @@ Map<String, dynamic> _$PackageModelToJson(PackageModel instance) =>
       'dietPlan': instance.dietPlan,
       'spendTimeToTraining': instance.spendTimeToTraining,
       'trainer': instance.trainer,
+      'name': instance.name,
     };
