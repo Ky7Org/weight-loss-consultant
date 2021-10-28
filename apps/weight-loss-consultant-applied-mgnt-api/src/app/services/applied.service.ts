@@ -1,5 +1,5 @@
 import {HttpStatus, Inject, Injectable} from '@nestjs/common';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import {DeleteResult, getManager, UpdateResult} from 'typeorm';
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {Observable} from "rxjs";
 import {AppliedRepository} from "../repositories/applied.repository";
@@ -111,11 +111,20 @@ export class AppliedService
   }
 
   async viewDetail(id): Promise<AppliedEntity> {
-    const query = this.repository.createQueryBuilder("applied")
+    const query = await this.repository.createQueryBuilder("applied")
       .where("applied.id = :id", {id: id})
       .leftJoinAndSelect("applied.campaign", "campaign")
       .leftJoinAndSelect("applied.package", "package")
       .getOne();
+    return query;
+  }
+
+  async getAppliedPackagesByCampaignID(campaignID : number) : Promise<any> {
+    const query = await this.repository.createQueryBuilder("applied")
+      .where("applied.campaignID = :id", {id: campaignID})
+      .leftJoinAndSelect("applied.package", "package")
+      .leftJoinAndSelect("package.trainer", "trainer")
+      .getMany();
     return query;
   }
 }

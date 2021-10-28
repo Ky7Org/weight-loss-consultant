@@ -6,11 +6,16 @@ import {
   CREATE_TRAINER,
   DELETE_TRAINER,
   GET_ALL_TRAINERS,
-  GET_TRAINER_BY_EMAIL,
-  UPDATE_TRAINER
+  GET_TRAINER_BY_EMAIL, UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS,
+  UPDATE_TRAINER, UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS
 } from '../../../../common/routes/users-management-service-routes';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
+import {
+  UpdateAdminPayload,
+  UpdateTrainerPayload
+} from "../../../../common/dtos/update-without-password-and-status.payload";
+import {UpdateResult} from "typeorm";
 
 @Controller()
 export class TrainerController {
@@ -45,6 +50,12 @@ export class TrainerController {
   @UseFilters(new ExceptionFilter())
   async delete(@Payload() email) {
     return this.trainerService.delete(email);
+  }
+
+  @MessagePattern({ cmd: UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS })
+  @UseFilters(new ExceptionFilter())
+  async updateAdmninWithoutPasswordAndStatus(@Payload() payload: UpdateTrainerPayload): Promise<UpdateResult> {
+    return this.trainerService.updateProfileWithoutPasswordAndStatus(payload);
   }
 
 }

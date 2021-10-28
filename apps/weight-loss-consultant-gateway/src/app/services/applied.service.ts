@@ -8,10 +8,12 @@ import {
   CREATE_APPLY, DELETE_APPLY_BY_ID,
   FIND_ALL_APPLIES,
   FIND_APPLY_BY_ID,
+  GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
   UPDATE_APPLY_BY_ID, UpdateApplyPayloadType
 } from "../../../../common/routes/applies-management-routes";
 import {CreateAppliedDto} from "../dtos/applied/create_applied_dto";
 import {UpdateAppliedDto} from "../dtos/applied/update_applied_dto";
+import {PackageEntity} from "../entities/package.entity";
 
 @Injectable()
 export class AppliedService {
@@ -50,5 +52,12 @@ export class AppliedService {
       .send<DeleteResult, number>
       ({cmd: DELETE_APPLY_BY_ID}, id)
       .toPromise();
+  }
+  async getAppliedPackagesByCampaignID(campaignID: number): Promise<any> {
+    const result =  this.appliedManagementServiceProxy
+      .send<PackageEntity[], number>
+      ({cmd: GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID}, campaignID)
+      .toPromise();
+    return result;
   }
 }

@@ -6,6 +6,11 @@ import { Role } from '../../constants/enums';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateTrainerDto } from '../../dtos/trainer/create-trainer';
 import { UpdateTrainerDto } from '../../dtos/trainer/update-trainer';
+import {UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS} from "../../../../../common/routes/users-management-service-routes";
+import {
+  UpdateAdminPayload,
+  UpdateTrainerPayload
+} from "../../../../../common/dtos/update-without-password-and-status.payload";
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
@@ -118,6 +123,18 @@ export class TrainerController {
       const result = await this.trainerService.delete(email);
       res.status(HttpStatus.OK).send(result);
     } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Put('/updateWithoutPasswordAndStatus/:email')
+  @UseGuards(JwtAuthGuard)
+  async updateAdminWithoutPasswordAndStatus(@Param('email') email, @Body() payload: UpdateTrainerPayload, @Res() res) {
+    try {
+      const result = await this.trainerService.updateWithoutPasswordAndStatus(payload);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }
