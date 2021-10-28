@@ -11,7 +11,6 @@ import {EMAIL_EXISTED_ERR} from '../../constants/validation-err-message';
 import {RpcException} from '@nestjs/microservices';
 import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
 import {UpdateTrainerPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
-import {AdminEntity} from "../../entities/admin.entity";
 
 @Injectable()
 export class TrainerService extends BaseService<TrainerEntity, TrainerRepository> {

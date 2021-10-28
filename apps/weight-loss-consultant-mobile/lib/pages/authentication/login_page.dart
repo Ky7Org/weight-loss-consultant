@@ -25,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    super.initState();
     _passwordVisible = false;
   }
 
@@ -50,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.redAccent,
                         ),
                       )),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       RaisedButton(

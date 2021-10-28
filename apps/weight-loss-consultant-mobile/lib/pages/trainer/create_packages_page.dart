@@ -1,16 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
-class CreatePackages extends StatefulWidget {
-  const CreatePackages({Key? key}) : super(key: key);
+class CreatePackagesPage extends StatefulWidget {
+  const CreatePackagesPage({Key? key}) : super(key: key);
 
   @override
-  _CreatePackagesState createState() => _CreatePackagesState();
+  _CreatePackagesPageState createState() => _CreatePackagesPageState();
 }
 
-class _CreatePackagesState extends State<CreatePackages> {
+class _CreatePackagesPageState extends State<CreatePackagesPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _exercisePlan = TextEditingController();
   final TextEditingController _dietPlan = TextEditingController();
@@ -18,7 +24,36 @@ class _CreatePackagesState extends State<CreatePackages> {
   final TextEditingController _fee = TextEditingController();
   final TextEditingController _schedule = TextEditingController();
 
-  String dropdownValue = '2 days';
+  AccountModel user = AccountModel(email: "", fullname: "");
+
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount().then((value){
+        setState(() {});
+      });
+    });
+  }
+
+
+  String dropdownValue = '1 day';
+  int spendTimeToTraining = 1;
 
   Widget _multiInput(
       String label, String hint, TextEditingController controller) {
@@ -155,9 +190,26 @@ class _CreatePackagesState extends State<CreatePackages> {
             onChanged: (String? newValue) {
               setState(() {
                 dropdownValue = newValue!;
+                switch (newValue){
+                  case '1 day':
+                    spendTimeToTraining = 1;
+                    break;
+                  case '2 days':
+                    spendTimeToTraining = 2;
+                    break;
+                  case "3 days":
+                    spendTimeToTraining = 3;
+                    break;
+                  case "4 days":
+                    spendTimeToTraining = 4;
+                    break;
+                  case "5 days":
+                    spendTimeToTraining = 5;
+                    break;
+                }
               });
             },
-            items: <String>['2 days', '3 days', '4 days', '5 days']
+            items: <String>['1 day','2 days', '3 days', '4 days', '5 days']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -215,23 +267,47 @@ class _CreatePackagesState extends State<CreatePackages> {
                     ),
                     FlatButton(
                       height: 64,
+                      minWidth: MediaQuery.of(context).size.width,
                       color: AppColors.PRIMARY_COLOR,
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          SizedBox(),
-                          Text(
-                            'Create Package',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
-                          ),
-                          Icon(Icons.arrow_forward, color: Colors.white, size: 24,)
-                        ],
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()){
+                          _formKey.currentState?.save();
+                          String exercisePlan = _exercisePlan.text;
+                          String schedule = _schedule.text;
+                          double price = double.parse(_fee.text);
+                          int status = 1;
+                          String dietPlan = _dietPlan.text;
+                          String name = _titles.text;
+                          TrainerService trainerService = TrainerService();
+                          bool result = await trainerService.createPackage(
+                            exercisePlan: exercisePlan,
+                            schedule: schedule,
+                            price: price,
+                            status: status,
+                            dietPlan: dietPlan,
+                            spendTimeToTraining: spendTimeToTraining,
+                            name: name,
+                            user: user,
+                          );
+                          if (result){
+                            CustomToast.makeToast("Create successfully");
+                          } else {
+                            CustomToast.makeToast("Some thing went wrong! Try again");
+                          }
+
+                        }
+                      },
+                      child: const Text(
+                        'Create Package',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
                       ),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18)
                       ),
-                    )
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                   ],
                 ),
               )

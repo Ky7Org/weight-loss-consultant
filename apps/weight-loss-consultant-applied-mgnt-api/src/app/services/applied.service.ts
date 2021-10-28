@@ -1,5 +1,5 @@
 import {HttpStatus, Inject, Injectable} from '@nestjs/common';
-import {DeleteResult, getManager, UpdateResult} from 'typeorm';
+import {DeleteResult, UpdateResult} from 'typeorm';
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {Observable} from "rxjs";
 import {AppliedRepository} from "../repositories/applied.repository";

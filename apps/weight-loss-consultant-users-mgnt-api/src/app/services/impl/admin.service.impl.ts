@@ -50,21 +50,23 @@ export class AdminService {
         message: `Param: ${payload.dto.email} must match with request body email : ${payload.email} `
       } as RpcExceptionModel);
     }
-    const phoneAdmin = await this.repository.createQueryBuilder("a")
-      .where("a.phone = :phone" , {phone: entity.phone})
-      .getOne();
-    if (phoneAdmin) {
-      throw new RpcException({
-        statusCode: HttpStatus.CONFLICT,
-        message: `The phone number has been already registered, please choose another one.`
-      } as RpcExceptionModel);
-    }
     const foundAdmin = await this.repository.findOne(payload.email);
     if (foundAdmin === undefined) {
       throw new RpcException({
         statusCode: HttpStatus.CONFLICT,
         message: `Not found admin with email: ${payload.email}`
       } as RpcExceptionModel);
+    }
+    if (foundAdmin.phone !== payload.dto.phone){
+      const existedPhoneNum = await this.repository.createQueryBuilder("a")
+        .where("a.phone = :phone" , {phone: payload.dto.phone})
+        .getOne();
+      if (existedPhoneNum) {
+        throw new RpcException({
+          statusCode: HttpStatus.CONFLICT,
+          message: `The phone number has been already registered, please choose another one.`
+        } as RpcExceptionModel);
+      }
     }
     return this.repository.update(entity.email, entity);
   }

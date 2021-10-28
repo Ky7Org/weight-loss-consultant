@@ -1,22 +1,64 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
-class TrainerViewListCampaign extends StatefulWidget {
-  const TrainerViewListCampaign({Key? key}) : super(key: key);
+class TrainerViewListCampaignPage extends StatefulWidget {
+  const TrainerViewListCampaignPage({Key? key}) : super(key: key);
 
   @override
-  _TrainerViewListCampaignState createState() =>
-      _TrainerViewListCampaignState();
+  _TrainerViewListCampaignPageState createState() =>
+      _TrainerViewListCampaignPageState();
 }
 
-class _TrainerViewListCampaignState extends State<TrainerViewListCampaign> {
-  Widget _campaign(String date, String currentWeight, String targetWeight, String customerName) {
+class _TrainerViewListCampaignPageState extends State<TrainerViewListCampaignPage> {
+
+
+  Future<List<CustomerCampaignModel>>? listCampaign;
+  AccountModel user = AccountModel(email: "", fullname: "");
+  TrainerService service = TrainerService();
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount().then((value){
+        listCampaign = service.getAvailableCampaign(user);
+        setState(() {});
+      });
+    });
+  }
+
+  Widget _campaign(int id, String date, String currentWeight, String targetWeight, String customerName) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, RoutePath.trainerViewCampaignDetailPage, arguments: id);
+      },
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(
@@ -134,6 +176,74 @@ class _TrainerViewListCampaignState extends State<TrainerViewListCampaign> {
     );
   }
 
+  List<Widget> _buildCampaignList(List<CustomerCampaignModel> data){
+    List<Widget> widgets = [];
+    for (CustomerCampaignModel model in data){
+      var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
+      var widget = _campaign(
+        model.id ?? 0,
+        date,
+        model.currentWeight.toString(),
+        model.targetWeight.toString(),
+        model.customer!.fullname ?? "",
+      );
+      widgets.add(widget);
+    }
+    return widgets;
+  }
+
+  Widget _buildEmptyCampaignList(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(
+          height: 60,
+        ),
+        Center(
+          child:
+          SvgPicture.asset("assets/fake-image/no-package.svg"),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Center(
+          child: Text(
+            'No Campaign',
+            style: TextStyle(
+                color: AppColors.PRIMARY_WORD_COLOR,
+                fontSize: 36,
+                fontWeight: FontWeight.w700
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Center(
+          child: Text(
+            "You don't have any campaign.",
+            style: TextStyle(
+                color: AppColors.PRIMARY_WORD_COLOR,
+                fontSize: 15,
+                fontWeight: FontWeight.w400
+            ),
+          ),
+        ),
+        Center(
+          child: Text(
+            'Create one?',
+            style: TextStyle(
+                color: AppColors.PRIMARY_WORD_COLOR,
+                fontSize: 15,
+                fontWeight: FontWeight.w400
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,16 +252,28 @@ class _TrainerViewListCampaignState extends State<TrainerViewListCampaign> {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         margin: const EdgeInsets.only(top: 20),
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _title('Available Campaign'),
-              const SizedBox(
-                height: 20,
-              ),
-              _campaign('17:00 Nov 30,2021', '62', '52', 'Tran Duy Nghiem'),
-              _campaign('17:00 Nov 30,2021', '92', '82', 'Truong Tran Tien'),
-              _campaign('17:00 Nov 30,2021', '82', '69', 'Ngo Nguyen Bang'),
-            ],
+          child: FutureBuilder<List<CustomerCampaignModel>>(
+            future: listCampaign,
+            builder: (context, snapshot) {
+              if (snapshot.hasData){
+                if (snapshot.requireData.isEmpty){
+                  return _buildEmptyCampaignList();
+                }
+                return Column(
+                  children: [
+                    _title('Available Campaign'),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ..._buildCampaignList(snapshot.requireData),
+                    const SizedBox(
+                      height: 60,
+                    ),
+                  ],
+                );
+              }
+              return const CircularProgressIndicator();
+            }
           ),
         ),
       ),

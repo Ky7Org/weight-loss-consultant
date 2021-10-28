@@ -1,15 +1,16 @@
-import { Inject, Injectable } from '@nestjs/common';
-import {APPLIED_MANAGEMENT_SERVICE_NAME, CONTRACT_MANAGEMENT_SERVICE_NAME} from '../../../../../constant';
-import { ClientProxy } from '@nestjs/microservices';
-import { DeleteResult } from 'typeorm';
-import {ContractEntity} from "../entities/contract.entity";
+import {Inject, Injectable} from '@nestjs/common';
+import {APPLIED_MANAGEMENT_SERVICE_NAME} from '../../../../../constant';
+import {ClientProxy} from '@nestjs/microservices';
+import {DeleteResult} from 'typeorm';
 import {AppliedEntity} from "../entities/applied.entity";
 import {
-  CREATE_APPLY, DELETE_APPLY_BY_ID,
+  CREATE_APPLY,
+  DELETE_APPLY_BY_ID,
   FIND_ALL_APPLIES,
   FIND_APPLY_BY_ID,
   GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
-  UPDATE_APPLY_BY_ID, UpdateApplyPayloadType
+  UPDATE_APPLY_BY_ID,
+  UpdateApplyPayloadType
 } from "../../../../common/routes/applies-management-routes";
 import {CreateAppliedDto} from "../dtos/applied/create_applied_dto";
 import {UpdateAppliedDto} from "../dtos/applied/update_applied_dto";
