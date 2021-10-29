@@ -80,6 +80,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       initAccount();
+
       setState(() {});
     });
   }
