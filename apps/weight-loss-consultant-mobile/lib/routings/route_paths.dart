@@ -30,5 +30,6 @@ class RoutePath{
   static const String customerAppliedPackagePage = "/customerAppliedPackagePage";
   static const String customerPackageDetailPage = "/customerPackageDetailPage";
   static const String trainerUpdatePackagePage = "/trainerUpdatePackagePage";
+  static const String customerOverallReportPage = "/customerOverallReportPage";
 
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_applied_package_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_create_campaign.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_overall_report_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_package_detail.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_update_campaign_page.dart';
@@ -186,6 +187,10 @@ class RouteGenerator{
           });
         }
         return _errorRoute();
+      case RoutePath.customerOverallReportPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerOverallReportPage();
+        });
       default:
         return _errorRoute();
 
