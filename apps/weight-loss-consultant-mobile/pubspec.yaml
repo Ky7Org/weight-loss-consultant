@@ -60,6 +60,7 @@ dependencies:
   syncfusion_flutter_charts: ^19.3.47
   syncfusion_flutter_sliders: ^19.3.47
   syncfusion_flutter_core: ^19.3.47
+  syncfusion_flutter_calendar: ^19.3.47
 
 
 dev_dependencies:

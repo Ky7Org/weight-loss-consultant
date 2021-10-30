@@ -31,5 +31,8 @@ class RoutePath{
   static const String customerPackageDetailPage = "/customerPackageDetailPage";
   static const String trainerUpdatePackagePage = "/trainerUpdatePackagePage";
   static const String customerOverallReportPage = "/customerOverallReportPage";
+  static const String customerOverallReportCalendarViewPage = "/customerOverallReportCalendarViewPage";
+  static const String customerOngoingCampaignPage = "/customerOngoingCampaignPage";
+  static const String customerMakeReportPage = "/customerReportPage";
 
 }
