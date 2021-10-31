@@ -6,6 +6,7 @@ import { Role } from '../../constants/enums';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateTrainerDto } from '../../dtos/trainer/create-trainer';
 import { UpdateTrainerDto } from '../../dtos/trainer/update-trainer';
+import {UpdateTrainerPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
