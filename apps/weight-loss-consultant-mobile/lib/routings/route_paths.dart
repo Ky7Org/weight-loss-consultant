@@ -34,5 +34,8 @@ class RoutePath{
   static const String customerOverallReportCalendarViewPage = "/customerOverallReportCalendarViewPage";
   static const String customerOngoingCampaignPage = "/customerOngoingCampaignPage";
   static const String customerMakeReportPage = "/customerReportPage";
+  static const String trainerFeedbackReportPage = "/trainerFeedbackReportPage";
+  static const String customerReportHistoryPage = "/customerReportHistoryPage";
+  static const String customerReportDetailPage = "/customerReportDetailPage";
 
 }

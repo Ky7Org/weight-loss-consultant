@@ -279,17 +279,18 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
         child: Column(
           children: [
             Form(
-                child: Column(
-              children: [
-                _buildDietCard(),
-                const SizedBox(height: 15,),
-                _buildExerciseCard(),
-                const SizedBox(height: 30,),
-                _buildChangeTodayWeight(),
-                const SizedBox(height: 30,),
-                _buildReportButton(),
-              ],
-            ))
+              child: Column(
+                children: [
+                  _buildDietCard(),
+                  const SizedBox(height: 15,),
+                  _buildExerciseCard(),
+                  const SizedBox(height: 30,),
+                  _buildChangeTodayWeight(),
+                  const SizedBox(height: 30,),
+                  _buildReportButton(),
+                ],
+              )
+            )
           ],
         ),
       ),

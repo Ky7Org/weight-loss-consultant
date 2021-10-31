@@ -7,6 +7,8 @@ import 'package:weight_loss_consultant_mobile/pages/customer/customer_overall_re
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_overall_report_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_package_detail.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_make_report_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_report_detail_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_report_history_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_update_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/edit_profile_page.dart';
@@ -29,6 +31,7 @@ import 'package:weight_loss_consultant_mobile/pages/register/trainer_register_pa
 import 'package:weight_loss_consultant_mobile/pages/register/register_sucessful_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/create_packages_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/no_packages_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_feedback_report_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_home_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_package_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_update_package_page.dart';
@@ -208,6 +211,18 @@ class RouteGenerator{
       case RoutePath.customerMakeReportPage:
         return MaterialPageRoute(builder: (_){
           return const CustomerMakeReportPage();
+        });
+      case RoutePath.trainerFeedbackReportPage:
+        return MaterialPageRoute(builder: (_){
+          return const TrainerFeedbackReportPage();
+        });
+      case RoutePath.customerReportHistoryPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerReportHistoryPage();
+        });
+      case RoutePath.customerReportDetailPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerReportDetailPage();
         });
       default:
         return _errorRoute();
