@@ -37,6 +37,7 @@ static async mapCreateAdminDTOToEntity(dto: CreateAdminDto): Promise<AdminEntity
     entity.status = dto.status;
     entity.profileImage = dto.profileImage;
     entity.dob = dto.dob;
+    entity.deviceID = dto.deviceID;
     return entity;
   }
 }
