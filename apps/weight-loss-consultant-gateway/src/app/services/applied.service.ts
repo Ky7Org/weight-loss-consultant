@@ -4,6 +4,7 @@ import {ClientProxy} from '@nestjs/microservices';
 import {DeleteResult} from 'typeorm';
 import {AppliedEntity} from "../entities/applied.entity";
 import {
+  APPROVED_PACKAGE,
   CREATE_APPLY,
   DELETE_APPLY_BY_ID,
   FIND_ALL_APPLIES,
@@ -15,6 +16,7 @@ import {
 import {CreateAppliedDto} from "../dtos/applied/create_applied_dto";
 import {UpdateAppliedDto} from "../dtos/applied/update_applied_dto";
 import {PackageEntity} from "../entities/package.entity";
+import {ApprovePayload} from "../../../../common/dtos/update-package-dto.payload";
 
 @Injectable()
 export class AppliedService {
@@ -58,6 +60,13 @@ export class AppliedService {
     const result =  this.appliedManagementServiceProxy
       .send<PackageEntity[], number>
       ({cmd: GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID}, campaignID)
+      .toPromise();
+    return result;
+  }
+
+  async approvePackage(payload: ApprovePayload) : Promise<any> {
+    const result = this.appliedManagementServiceProxy
+      .send({cmd: APPROVED_PACKAGE}, payload)
       .toPromise();
     return result;
   }

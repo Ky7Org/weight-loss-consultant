@@ -7,11 +7,13 @@ export class ContractEntity extends BaseEntity{
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ type: 'float'})
-  total: number;
-  @Column({ type: 'float'})
-  dateOfPurchase: number;
-  @Column({ type: 'varchar', length: 1000 })
-  paymentMethod: string;
+  totalPrice: number;
+  @Column({ type: 'bigint'})
+  timeOfExpired: number;
+  @Column({ type: 'bigint'})
+  timeOfCreate: number;
+  @Column({ type: 'int'})
+  status: number;
 
   @ManyToOne(() => CampaignEntity, campaign => campaign.contracts)
   campaign: CampaignEntity;

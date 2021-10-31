@@ -21,6 +21,8 @@ export class CampaignEntity extends BaseEntity{
   currentWeight: number;
   @Column({ type: 'float'})
   spendTimeForTraining: number;
+  @Column({ type: 'float'})
+  createDate: number;
   @OneToMany(() => AppliedEntity, applied => applied.campaign)
   applies: AppliedEntity[];
 

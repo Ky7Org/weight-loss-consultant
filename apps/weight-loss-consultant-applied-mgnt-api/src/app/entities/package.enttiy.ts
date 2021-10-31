@@ -28,6 +28,18 @@ export class PackageEntity extends BaseEntity{
   @Column({type: 'varchar'})
   name: string;
 
+  @Column({type: 'int'})
+  sessionLength: number;
+
+  @Column({type: 'bigint'})
+  createDate: number;
+
+  @Column({type: 'bigint'})
+  startDate: number;
+
+  @Column({type: 'bigint'})
+  endDate: number;
+
   @OneToMany(() => AppliedEntity, applied => applied.package)
   applies: AppliedEntity[];
 
