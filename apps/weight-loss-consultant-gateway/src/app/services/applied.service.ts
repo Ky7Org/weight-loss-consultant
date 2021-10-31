@@ -1,17 +1,22 @@
-import { Inject, Injectable } from '@nestjs/common';
-import {APPLIED_MANAGEMENT_SERVICE_NAME, CONTRACT_MANAGEMENT_SERVICE_NAME} from '../../../../../constant';
-import { ClientProxy } from '@nestjs/microservices';
-import { DeleteResult } from 'typeorm';
-import {ContractEntity} from "../entities/contract.entity";
+import {Inject, Injectable} from '@nestjs/common';
+import {APPLIED_MANAGEMENT_SERVICE_NAME} from '../../../../../constant';
+import {ClientProxy} from '@nestjs/microservices';
+import {DeleteResult} from 'typeorm';
 import {AppliedEntity} from "../entities/applied.entity";
 import {
-  CREATE_APPLY, DELETE_APPLY_BY_ID,
+  APPROVED_PACKAGE,
+  CREATE_APPLY,
+  DELETE_APPLY_BY_ID,
   FIND_ALL_APPLIES,
   FIND_APPLY_BY_ID,
-  UPDATE_APPLY_BY_ID, UpdateApplyPayloadType
+  GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
+  UPDATE_APPLY_BY_ID,
+  UpdateApplyPayloadType
 } from "../../../../common/routes/applies-management-routes";
 import {CreateAppliedDto} from "../dtos/applied/create_applied_dto";
 import {UpdateAppliedDto} from "../dtos/applied/update_applied_dto";
+import {PackageEntity} from "../entities/package.entity";
+import {ApprovePayload} from "../../../../common/dtos/update-package-dto.payload";
 
 @Injectable()
 export class AppliedService {
@@ -50,5 +55,19 @@ export class AppliedService {
       .send<DeleteResult, number>
       ({cmd: DELETE_APPLY_BY_ID}, id)
       .toPromise();
+  }
+  async getAppliedPackagesByCampaignID(campaignID: number): Promise<any> {
+    const result =  this.appliedManagementServiceProxy
+      .send<PackageEntity[], number>
+      ({cmd: GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID}, campaignID)
+      .toPromise();
+    return result;
+  }
+
+  async approvePackage(payload: ApprovePayload) : Promise<any> {
+    const result = this.appliedManagementServiceProxy
+      .send({cmd: APPROVED_PACKAGE}, payload)
+      .toPromise();
+    return result;
   }
 }

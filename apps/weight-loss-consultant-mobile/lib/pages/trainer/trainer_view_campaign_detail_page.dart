@@ -1,16 +1,57 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
-class ViewDetailCampaignPage extends StatefulWidget {
-  const ViewDetailCampaignPage({Key? key}) : super(key: key);
+class TrainerViewCampaignDetailPage extends StatefulWidget {
+  late int campaignID;
+  TrainerViewCampaignDetailPage({Key? key, this.campaignID = 0}) : super(key: key);
 
   @override
-  _ViewDetailCampaignPageState createState() => _ViewDetailCampaignPageState();
+  _TrainerViewCampaignDetailPageState createState() => _TrainerViewCampaignDetailPageState();
 }
 
-class _ViewDetailCampaignPageState extends State<ViewDetailCampaignPage> {
+class _TrainerViewCampaignDetailPageState extends State<TrainerViewCampaignDetailPage> {
+
+  AccountModel user = AccountModel(email: "", fullname: "");
+  CustomerCampaignModel? campaignModel;
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount().then((value){
+        TrainerService service = TrainerService();
+        service.getCampaignById(widget.campaignID, user).then((value) {
+          campaignModel = value;
+          setState(() {});
+        });
+      });
+    });
+  }
+
   Widget _content(String title, String content) {
     return Column(
       children: [
@@ -62,10 +103,10 @@ class _ViewDetailCampaignPageState extends State<ViewDetailCampaignPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Center(
+            const Center(
               child: CircleAvatar(
                 backgroundImage:
                     AssetImage("assets/fake-image/miku-avatar.png"),
@@ -109,11 +150,10 @@ class _ViewDetailCampaignPageState extends State<ViewDetailCampaignPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  _content('Illness', 'Heart attack'),
-                  _content('Your target weight', '72 kg'),
-                  _content('Your current weight', '92 kg'),
-                  _content('Day per week can spend for training', '2 days'),
-                  _content('Description', 'I am very fat'),
+                  _content('Your target weight', '${campaignModel?.targetWeight ?? 0} kg'),
+                  _content('Your current weight', '${campaignModel?.currentWeight ?? 0} kg'),
+                  _content('Day per week can spend for training', '${campaignModel?.spendTimeForTraining ?? 0} day(s)'),
+                  _content('Description', campaignModel?.description ?? ""),
                 ],
               ),
             ),
@@ -125,13 +165,15 @@ class _ViewDetailCampaignPageState extends State<ViewDetailCampaignPage> {
               child: FlatButton(
                 height: 64,
                 color: AppColors.PRIMARY_COLOR,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, RoutePath.trainerViewListPackagePage, arguments: widget.campaignID);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
                     SizedBox(),
                     Text(
-                      'Choose Package',
+                      'Choose package to apply',
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,

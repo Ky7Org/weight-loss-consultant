@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import {ApiProperty} from '@nestjs/swagger';
 
 export class CreatePackageDto {
   @ApiProperty()
@@ -15,4 +15,10 @@ export class CreatePackageDto {
   name?: string;
   @ApiProperty()
   spendTimeToTraining?: number;
+  @ApiProperty()
+  sessionLength?: number;
+  @ApiProperty()
+  startDate?: number;
+  @ApiProperty()
+  endDate?: number;
 }

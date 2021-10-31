@@ -1,22 +1,18 @@
 import {HttpStatus, Inject, Injectable} from '@nestjs/common';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import {DeleteResult, UpdateResult} from 'typeorm';
 import {ContractEntity} from "../../entities/contract.entity";
-import {BaseService} from "../base.service";
-import {ContractRepository} from "../../repositories/health-info.repository";
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {RpcExceptionModel} from "../../../../../common/filters/rpc-exception.model";
 import {ContractMapper} from "../../mappers/health-info.mapper";
 import {CreateContractDto} from "../../dtos/contract/create-health-info.dto";
 import {UpdateContractDto} from "../../dtos/contract/update-health-info.dto";
-import {
-  CAMPAIGN_MANAGEMENT_SERVICE_NAME,
-  PACKAGES_MANAGEMENT_SERVICE_NAME,
-} from "../../../../../../constant";
+import {CAMPAIGN_MANAGEMENT_SERVICE_NAME, PACKAGES_MANAGEMENT_SERVICE_NAME,} from "../../../../../../constant";
 import {CampaignEntity} from "../../entities/campaign.entity";
 import {Observable} from "rxjs";
 import {FIND_CAMPAIGN_BY_ID} from "../../../../../common/routes/campaigns-management-routes";
 import {PackageEntity} from "../../entities/package.enttiy";
 import {FIND_PACKAGE_BY_ID} from "../../../../../common/routes/packages-management-routes";
+import {ContractRepository} from "../../repositories/contract.repository";
 
 @Injectable()
 export class ContractService

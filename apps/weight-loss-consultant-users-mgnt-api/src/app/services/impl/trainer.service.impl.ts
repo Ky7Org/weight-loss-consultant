@@ -90,4 +90,47 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   async findOneTrainer(id): Promise<TrainerEntity> {
     return this.repository.findOne(id);
   }
+  async viewOnlyPackagesOfTrainer(trainerEmail: string) : Promise<any>  {
+    const entityManager = getManager();
+    const query = entityManager.query(
+      `SELECT \`package\`.\`id\`                     AS \`id\`,
+              \`package\`.\`exercisePlan\`                 AS \`exercisePlan\`,
+              \`package\`.\`schedule\`                     AS \`schedule\`,
+              \`package\`.\`price\`                        AS \`price\`,
+              \`package\`.\`status\`                       AS \`status\`,
+              \`package\`.\`dietPlan\`                     AS \`dietPlan\`,
+              \`package\`.\`trainerEmail\`                 AS \`trainerEmail\`,
+              \`package\`.\`name\`                         AS \`name\`,
+              \`package\`.\`spendTimeToTraining\`          AS \`spendTimeToTraining\`
+       FROM \`Trainer\` \`trainer\`
+              LEFT JOIN \`Package\` \`package\` ON \`package\`.\`trainerEmail\` = \`trainer\`.\`email\`
+       WHERE \`trainer\`.\`email\` = ?
+      `,[trainerEmail]
+    )
+    return query;
+  }
+
+  async updateProfileWithoutPasswordAndStatus(payload : UpdateTrainerPayload) : Promise<UpdateResult> {
+    if (payload.email !== payload.email) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `Param: ${payload.email} must match with request body email : ${payload.email} `
+      } as RpcExceptionModel);
+    }
+    const result = await this.repository.createQueryBuilder("trainer")
+      .update(TrainerEntity)
+      .set({
+        fullname: payload.fullname,
+        address: payload.address,
+        phone: payload.phone,
+        gender: payload.gender,
+        profileImage : payload.profileImage,
+        dob : payload.dob,
+        yearOfExp: payload.yearOfExp,
+        rating: payload.rating,
+      })
+      .where("email = :email", {email : payload.email})
+      .execute();
+    return result;
+  }
 }

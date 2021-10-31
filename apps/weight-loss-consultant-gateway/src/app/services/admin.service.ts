@@ -6,13 +6,14 @@ import {
   DELETE_ADMIN,
   GET_ADMIN_BY_EMAIL,
   GET_ALL_ADMINS,
-  UPDATE_ADMIN
+  UPDATE_ADMIN, UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS
 } from '../../../../common/routes/users-management-service-routes';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AdminEntity } from '../entities/admin.entity';
 import { UpdateAdminDto } from '../dtos/admin/update-admin.dto';
 import { CreateAdminDto } from '../dtos/admin/create-admin.dto';
 import {PaginationDto} from "../dtos/pagination/pagination.dto";
+import {UpdateAdminPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
 
 @Injectable()
 export class AdminService {
@@ -43,6 +44,12 @@ export class AdminService {
     const payload = {email, dto};
     return this.usersManagementService.send(pattern, payload)
       // .toPromise<UpdateResult>();
+      .toPromise();
+  }
+
+  async updateWithoutPasswordAndStatus(payload: UpdateAdminPayload) : Promise<UpdateResult> {
+    const pattern = {cmd :  UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS};
+    return this.usersManagementService.send(pattern, payload)
       .toPromise();
   }
 

@@ -122,4 +122,29 @@ export class TrainerController {
       res.status(error.statusCode).send(error);
     }
   }
+
+  @Roles(Role.Admin, Role.Trainer)
+  @UseGuards(JwtAuthGuard)
+  @Get('/viewDetailSpecial/:email')
+  async viewSpecial(@Res() res, @Param('email') email) {
+    try {
+      const result = await this.trainerService.viewSpecial(email);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Put('/updateWithoutPasswordAndStatus/:email')
+  @UseGuards(JwtAuthGuard)
+  async updateAdminWithoutPasswordAndStatus(@Param('email') email, @Body() payload: UpdateTrainerPayload, @Res() res) {
+    try {
+      const result = await this.trainerService.updateWithoutPasswordAndStatus(payload);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
 }

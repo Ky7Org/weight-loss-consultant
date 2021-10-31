@@ -1,11 +1,12 @@
-import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
-import { CreateCampaignDto } from '../../dtos/campaign/create-campaign';
-import { UpdateCampaignDto } from '../../dtos/campaign/update-campaign';
+import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
+import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
+import {CreateCampaignDto} from '../../dtos/campaign/create-campaign';
+import {UpdateCampaignDto} from '../../dtos/campaign/update-campaign';
 import {AppliedService} from "../../services/applied.service";
 import {CreateAppliedDto} from "../../dtos/applied/create_applied_dto";
 import {UpdateAppliedDto} from "../../dtos/applied/update_applied_dto";
+import {ApprovePayload} from "../../../../../common/dtos/update-package-dto.payload";
 
 @ApiTags('Apply')
 @ApiBearerAuth()
@@ -110,6 +111,31 @@ export class ApplyController {
   async delete(@Param('id') id: number, @Res() res) {
     try {
       const result = await this.appliedService.delete(id);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+    @Get('/getAppliedPackages/:campaignId')
+    @UseGuards(JwtAuthGuard)
+    async getPackagesByCampaignID(@Res() res, @Param('campaignId') campaignId: number) {
+      try {
+        let result = await this.appliedService.getAppliedPackagesByCampaignID(campaignId);
+        result = result.map(e => e.package)
+        res.status(HttpStatus.OK).send(result);
+      } catch ({error}) {
+        this.logger.error(error);
+        res.status(error.statusCode).send(error);
+      }
+  }
+
+  @Post('/approved')
+  @UseGuards(JwtAuthGuard)
+  async approvePackage(@Res() res, @Body() payload: ApprovePayload) {
+    try {
+      const result = await this.appliedService.approvePackage(payload);
       res.status(HttpStatus.OK).send(result);
     } catch ({error}) {
       this.logger.error(error);

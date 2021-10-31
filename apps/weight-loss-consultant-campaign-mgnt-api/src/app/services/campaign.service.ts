@@ -3,14 +3,16 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {Observable} from "rxjs";
 import {CustomerEntity} from "../entities/customer.entity";
-import {VIEW_DETAIL_CUSTOMER} from "../../../../common/routes/users-management-service-routes";
-import {RpcExceptionModel} from "../../../../weight-loss-consultant-authentication/src/app/filters/rpc-exception.model";
+import {CUSTOMER_VIEW_DETAIL, VIEW_DETAIL_CUSTOMER} from "../../../../common/routes/users-management-service-routes";
 import {CampaignMapper} from "../mappers/campaign.mapper";
 import {CampaignRepository} from "../repositories/campaign.repository";
 import {CampaignEntity} from "../entities/campaign.entity";
 import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
 import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
 import {USERS_MANAGEMENT_SERVICE_NAME} from "../../../../../constant";
+import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
+import {ResponseUpdateStatus} from "../../../../common/dtos/update-without-password-and-status.payload";
+import {UpdateStatusCampaignPayload} from "../../../../common/dtos/update-campaign-dto.payload";
 
 @Injectable()
 export class CampaignService {
@@ -26,9 +28,9 @@ export class CampaignService {
     return await this.repository.find();
   }
 
-  private validateCustomer (email: string) : Observable<CustomerEntity> {
-    return this.usersManagementServiceProxy.
-    send<CustomerEntity, string>({VIEW_DETAIL_CUSTOMER}, email);
+  private validateCustomer(username: string): Observable<CustomerEntity> {
+    return this.usersManagementServiceProxy
+      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username);
   }
 
   async create(dto: CreateCampaignDto): Promise<CampaignEntity> {
@@ -45,7 +47,6 @@ export class CampaignService {
   }
 
   async edit(dto: UpdateCampaignDto, id: number): Promise<UpdateResult> {
-
     if (id != dto.id) {
       throw new RpcException({
         statusCode: HttpStatus.CONFLICT,
@@ -85,6 +86,7 @@ export class CampaignService {
 
   async viewDetail(id): Promise<CampaignEntity> {
     const result = await this.repository.createQueryBuilder("campaign")
+      .leftJoinAndSelect("campaign.customer", "customer")
       .where("campaign.id = :id", {id: id})
       .getOne();
     if (!result) {
@@ -97,13 +99,31 @@ export class CampaignService {
   }
 
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[] | null> {
-    return await this.repository.find({relations: ["customer"]})
+    return await this.repository.createQueryBuilder("campaign")
+      .leftJoinAndSelect("campaign.customer", "customer")
+      .orderBy("campaign.createDate" , "DESC")
+      .getMany();
   }
 
   async getAvailCampaigns() : Promise<CampaignEntity[]> {
     return this.repository.createQueryBuilder("campaign")
       .leftJoinAndSelect("campaign.customer", "customer")
       .where("campaign.status = :status", {status : 1})
+      .orderBy("campaign.createDate" , "DESC")
       .getMany();
+  }
+
+  async updateStatus(payload: UpdateStatusCampaignPayload) : Promise<boolean>  {
+    const result = this.repository.createQueryBuilder()
+      .update(CampaignEntity)
+      .set({
+        status: payload.status
+      })
+      .where("id = :id", {id: payload.id})
+      .execute();
+    if ((await result).affected === 1) {
+      return true;
+    }
+    return false;
   }
 }

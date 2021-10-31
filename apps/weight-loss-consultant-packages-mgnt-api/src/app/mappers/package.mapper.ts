@@ -4,6 +4,7 @@ import { PackageEntity } from '../entities/package.enttiy';
 import { UpdatePackageDto } from '../dtos/package/update-package';
 import { TrainerEntity } from '../entities/trainer.entity';
 import { PackageStatus } from '../constants/enums';
+import {PACKAGE_STATUS} from "../../../../common/utils";
 
 @Injectable()
 export class PackageMapper {
@@ -14,14 +15,19 @@ export class PackageMapper {
     }
     const entity = new PackageEntity();
 
+    const createDate = new Date().getTime();
     entity.exercisePlan = dto.exercisePlan;
     entity.schedule = dto.schedule;
     entity.price = dto.price;
-    entity.status = PackageStatus.ACTIVE;
+    entity.status = PACKAGE_STATUS.ACTIVE;
     entity.dietPlan = dto.dietPlan;
     entity.trainer = trainer;
     entity.name = dto.name;
     entity.spendTimeToTraining = dto.spendTimeToTraining;
+    entity.sessionLength = dto.sessionLength;
+    entity.createDate=createDate;
+    entity.startDate = dto.startDate;
+    entity.endDate = dto.endDate;
     return entity;
   }
 
@@ -30,6 +36,7 @@ export class PackageMapper {
       return null;
     }
     const entity = new PackageEntity();
+    const createDate = new Date().getTime();
 
     entity.id = dto.id;
     entity.exercisePlan = dto.exercisePlan;
@@ -40,6 +47,9 @@ export class PackageMapper {
     entity.trainer = trainer;
     entity.name = dto.name;
     entity.spendTimeToTraining = dto.spendTimeToTraining;
+    entity.sessionLength = dto.sessionLength;
+    entity.startDate = dto.startDate;
+    entity.endDate = dto.endDate;
 
     return entity;
   }
