@@ -63,6 +63,8 @@ dependencies:
   syncfusion_flutter_calendar: ^19.3.47
   firebase_messaging: ^10.0.9
   flutter_local_notifications: ^9.0.2
+  flutter_datetime_picker: ^1.5.1
+
 
 
 

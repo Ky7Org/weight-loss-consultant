@@ -45,13 +45,17 @@ class CustomerService{
         int currentWeight = 0,
         int spendTimeForTraining = 0,
         String description = "",
+        DateTime? startDate,
+        DateTime? endDate,
         AccountModel? user,
       }) async {
+    startDate = startDate ?? DateTime.now();
+    endDate = endDate ?? DateTime.now();
     Map<String, dynamic> data = {};
     data["customerEmail"] = user!.email ?? "";
     data["description"] = description;
-    data["startDate"] = DateTime.now().millisecondsSinceEpoch.toString();
-    data["endDate"] = "0";
+    data["startDate"] = startDate.millisecondsSinceEpoch.toString();
+    data["endDate"] = endDate.microsecondsSinceEpoch.toString();
     data["feedback"] = "";
     data["targetWeight"] = targetWeight;
     data["currentWeight"] = currentWeight;
