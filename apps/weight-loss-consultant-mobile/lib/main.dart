@@ -37,51 +37,10 @@ class _AppState extends State<App> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   final _navKey = GlobalKey<NavigatorState>();
 
+
   @override
   void initState() {
     super.initState();
-
-    LocalNotificationService.initialize(_navKey);
-
-    ///gives you the message on which user taps
-    ///and it opened the app from terminated state
-    FirebaseMessaging.instance.getInitialMessage().then((message) {
-      if (message != null) {
-        final typeOfMessage = message.data["type"];
-        if (typeOfMessage == 'Apply Package') {
-          final packageID = message.data["packageID"];
-          _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
-              arguments: int.parse(packageID));
-        } else if (typeOfMessage == 'Apply Campaign') {
-          final campaignID = message.data['campaignID'];
-          _navKey.currentState!.pushNamed(
-              RoutePath.trainerViewCampaignDetailPage,
-              arguments: int.parse(campaignID));
-        }
-      }
-    });
-
-    //Foreground message
-    FirebaseMessaging.onMessage.listen((message) {
-      if (message.notification != null) {
-        print(message.notification!.body);
-        print(message.notification!.title);
-      }
-      LocalNotificationService.display(message);
-    });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      final typeOfMessage = message.data["type"];
-      if (typeOfMessage == 'Apply Package') {
-        final packageID = message.data["packageID"];
-        _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
-            arguments: int.parse(packageID));
-      } else if (typeOfMessage == 'Apply Campaign') {
-        final campaignID = message.data['campaignID'];
-        _navKey.currentState!.pushNamed(RoutePath.trainerViewCampaignDetailPage,
-            arguments: int.parse(campaignID));
-      }
-    });
   }
 
   @override
@@ -95,13 +54,17 @@ class _AppState extends State<App> {
         ///gives you the message on which user taps
         ///and it opened the app from terminated state
         FirebaseMessaging.instance.getInitialMessage().then((message) {
+          print("getInitialMessage");
           if (message != null) {
             final typeOfMessage = message.data["type"];
             if (typeOfMessage == 'Apply Package') {
               final packageID = message.data["packageID"];
-              _navKey.currentState!.pushNamed(
-                  RoutePath.customerPackageDetailPage,
-                  arguments: int.parse(packageID));
+              final campaignID = message.data["campaignID"];
+              Map<String, dynamic> mapData = {};
+              mapData["packageID"] = packageID;
+              mapData["campaignID"] = campaignID;
+              _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
+                  arguments: mapData);
             } else if (typeOfMessage == 'Apply Campaign') {
               final campaignID = message.data['campaignID'];
               _navKey.currentState!.pushNamed(
@@ -112,6 +75,7 @@ class _AppState extends State<App> {
         });
         //Foreground message
         FirebaseMessaging.onMessage.listen((message) {
+          print("onMessage");
           if (message.notification != null) {
             print(message.notification!.body);
             print(message.notification!.title);
@@ -121,11 +85,16 @@ class _AppState extends State<App> {
 
         //When the app is in background but opened and user taps on message
         FirebaseMessaging.onMessageOpenedApp.listen((message) {
+          print("onMessageOpenedApp");
           final typeOfMessage = message.data["type"];
           if (typeOfMessage == 'Apply Package') {
             final packageID = message.data["packageID"];
+            final campaignID = message.data["campaignID"];
+            Map<String, dynamic> mapData = {};
+            mapData["packageID"] = packageID;
+            mapData["campaignID"] = campaignID;
             _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
-                arguments: int.parse(packageID));
+                arguments: mapData);
           } else if (typeOfMessage == 'Apply Campaign') {
             final campaignID = message.data['campaignID'];
             _navKey.currentState!.pushNamed(
