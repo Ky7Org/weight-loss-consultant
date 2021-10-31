@@ -1,7 +1,12 @@
 import {Inject, Injectable} from '@nestjs/common';
 import {USERS_MANAGEMENT_SERVICE_NAME} from '../../../../../constant';
 import {ClientProxy} from '@nestjs/microservices';
-import {SEARCH_USERS, UPDATE_PASSWORD, UPDATE_STATUS} from '../../../../common/routes/users-management-service-routes';
+import {
+  SEARCH_USERS,
+  UPDATE_DEVICE_ID,
+  UPDATE_PASSWORD,
+  UPDATE_STATUS
+} from '../../../../common/routes/users-management-service-routes';
 import {SearchPaginationPayloadType} from '../../../../common/dtos/search-pagination-dto.payload';
 import {PaginatedResultDto} from '../dtos/pagination/paginated-result.dto';
 import {PaginationDto} from '../dtos/pagination/pagination.dto';
@@ -10,6 +15,7 @@ import {
   UpdatePasswordPayload,
   UpdateStatusPayload
 } from "../../../../common/dtos/update-without-password-and-status.payload";
+import {UpdateDeviceIDPayload} from "../../../../common/dtos/update-trainer-dto.payload";
 
 @Injectable()
 export class SearchService {
@@ -28,5 +34,10 @@ export class SearchService {
   async updateStatus(payload: UpdateStatusPayload) : Promise<ResponseUpdateStatus>{
     const pattern = {cmd: UPDATE_STATUS};
     return this.usersManagementProxy.send<UpdateStatusPayload>(pattern, payload).toPromise();
+  }
+
+  async updateDeviceID(payload: UpdateDeviceIDPayload) : Promise<boolean> {
+    const pattern = {cmd: UPDATE_DEVICE_ID};
+    return this.usersManagementProxy.send(pattern, payload).toPromise();
   }
 }

@@ -30,3 +30,5 @@ export const TRAINER_VIEW_DETAIL = 'trainer-view-detail';
 
 export const UPDATE_PASSWORD = 'update-password';
 export const UPDATE_STATUS = 'update-status';
+
+export const UPDATE_DEVICE_ID = 'update-device-id';
