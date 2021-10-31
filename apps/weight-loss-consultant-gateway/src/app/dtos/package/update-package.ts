@@ -16,7 +16,13 @@ export class UpdatePackageDto {
   @ApiProperty()
   dietPlan?: string;
   @ApiProperty()
+  name?: string;
+  @ApiProperty()
   spendTimeToTraining?: number;
   @ApiProperty()
-  name?: string;
+  sessionLength?: number;
+  @ApiProperty()
+  startDate: number;
+  @ApiProperty()
+  endDate: number;
 }
