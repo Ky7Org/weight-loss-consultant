@@ -46,3 +46,9 @@ export type UpdateReportMediaPayload = {
   dto: UpdateReportMediaDto,
   id: number
 }
+
+export type UpdateDeviceIDPayload = {
+  email : string,
+  deviceID: string,
+  role: string
+}
