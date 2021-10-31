@@ -9,7 +9,7 @@ import {
   DELETE_ADMIN,
   GET_ADMIN_BY_EMAIL,
   GET_ALL_ADMINS, TRAINER_VIEW_DETAIL,
-  UPDATE_ADMIN
+  UPDATE_ADMIN, UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS
 } from '../../../../common/routes/users-management-service-routes';
 import { AdminEntity } from '../entities/admin.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
@@ -20,6 +20,7 @@ import { TrainerEntity } from '../entities/trainer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import {PaginationDto} from "../dtos/pagination/pagination.dto";
 import {PaginatedResultDto} from "../dtos/pagination/paginated-result.dto";
+import {UpdateAdminPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
 
 export type UpdateAdminType = {
   email: string;
@@ -82,100 +83,10 @@ export class AdminController {
     return this.adminService.delete(email);
   }
 
-  /* //sort by email endpoint
-   @Roles(Role.Admin)
-   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
-   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
-   @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
-   @ApiResponse({status: 200, description: 'The admin list was sorted by email'})
-   @ApiResponse({status: 403, description: 'Forbidden.'})
-   @ApiResponse({status: 412, description: 'Missing some params in URL path.'})
-   @Get('/sort/byEmail')
-   async sortByEmail(
-     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
-     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
-     @Query('order') order?: string
-   ): Promise<Pagination<AdminEntity>> {
-     //set max record of a page is less than 100
-     limit = limit > 100 ? 100 : limit;
-     if (!order) {
-       throw new MissingParamsException();
-     }
-     if (order === 'ASC') {
-       return await this.userService.orderByEmailAscAndPaginate({
-         page,
-         limit,
-       })
-     } else {
-       return await this.userService.orderByEmailDescAndPaginate({
-         page,
-         limit,
-       })
-     }
-   }
-
- //Sort by fullname endpoint
-   @Roles(Role.Admin)
-   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
-   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
-   @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
-   @ApiResponse({status: 200, description: 'The admin list was sorted by fullname'})
-   @ApiResponse({status: 403, description: 'Forbidden.'})
-   @ApiResponse({status: 412, description: 'Missing some params in URL path.'})
-   @Get('/sort/byFullname')
-   async sortByFullname(
-     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
-     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
-     @Query('order') order?: string
-   ): Promise<Pagination<AdminEntity>> {
-     //set max record of a page is less than 100
-     limit = limit > 100 ? 100 : limit;
-     if (!order) {
-       throw new MissingParamsException();
-     }
-     if (order === 'ASC') {
-       return await this.userService.orderByFullNameAscAndPaginate({
-         page,
-         limit,
-       })
-     } else {
-       return await this.userService.orderByFullNameDescAndPaginate({
-         page,
-         limit,
-       })
-     }
-   }
-
-   //sort by DOB endpoint
-   @Roles(Role.Admin)
-   @ApiQuery({name: 'page', type: Number, description: 'The current page index', example: 1})
-   @ApiQuery({name: 'limit', type: Number, description: 'The max record of a page', example: 10})
-   @ApiQuery({name: 'order', type: String, description: 'The order to sort, ASC or DESC', example: 'ASC'})
-   @ApiResponse({status: 200, description: 'The admin list was sorted by DOB'})
-   @ApiResponse({status: 403, description: 'Forbidden.'})
-   @ApiResponse({status: 412, description: 'Missing some params in URL path.'})
-   @Get('/sort/byDOB')
-   async sortByDOB(
-     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
-     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
-     @Query('order') order?: string
-   ): Promise<Pagination<AdminEntity>> {
-     //set max record of a page is less than 100
-     limit = limit > 100 ? 100 : limit;
-     if (!order) {
-       throw new MissingParamsException();
-     }
-     if (order === 'ASC') {
-       return await this.userService.orderByDOBAscAndPaginate({
-         page,
-         limit,
-       })
-     } else {
-       return await this.userService.orderByDOBDescAndPaginate({
-         page,
-         limit,
-       })
-     }
-   }*/
+  @MessagePattern({ cmd: UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS })
+  @UseFilters(new ExceptionFilter())
+  async updateAdmninWithoutPasswordAndStatus(@Payload() payload: UpdateAdminPayload): Promise<UpdateResult> {
+    return this.adminService.updateProfileWithoutPasswordAndStatus(payload);
+  }
 
 }

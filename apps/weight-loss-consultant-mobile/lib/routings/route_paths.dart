@@ -17,5 +17,18 @@ class RoutePath{
   static const String upcomingTrainingPage = "/upcomingTraining";
   static const String videoCallPage = "/videoCall";
   static const String endCallPage = "/endCall";
+  static const String createCampaignPage = "/createCampaign";
+  static const String noPackagePage = "/noPackage";
+  static const String createPackagesPage = "/createPackage";
+  static const String editProfilePage = "/editProfile";
+  static const String customerCampaignPage = "/customerCampaign";
+  static const String trainerPackagePage = "/trainerPackagePage";
+  static const String trainerViewCampaignDetailPage = "/trainerViewCampaignDetailPage";
+  static const String trainerViewListCampaignPage = "/trainerViewListCampaignPage";
+  static const String trainerViewListPackagePage = "/trainerViewListPackagePage";
+  static const String customerUpdateCampaignPage = "/customerUpdateCampaign";
+  static const String customerAppliedPackagePage = "/customerAppliedPackagePage";
+  static const String customerPackageDetailPage = "/customerPackageDetailPage";
+  static const String trainerUpdatePackagePage = "/trainerUpdatePackagePage";
 
 }

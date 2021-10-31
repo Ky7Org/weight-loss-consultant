@@ -1,5 +1,4 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
-import {BaseService} from '../base.service';
 import {DeleteResult, UpdateResult} from 'typeorm';
 import {AdminRepository} from '../../repositories/admin.repository';
 import {AdminEntity} from '../../entities/admin.entity';
@@ -12,6 +11,7 @@ import {UpdateAdminType} from "../../controllers/admin.controller";
 import {SortingAndFilteringService} from "../sorting-filtering.service";
 import {PaginationDto} from "../../dtos/pagination/pagination.dto";
 import {PaginatedResultDto} from "../../dtos/pagination/paginated-result.dto";
+import {UpdateAdminPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
 
 @Injectable()
 export class AdminService {
@@ -50,21 +50,23 @@ export class AdminService {
         message: `Param: ${payload.dto.email} must match with request body email : ${payload.email} `
       } as RpcExceptionModel);
     }
-    const phoneAdmin = await this.repository.createQueryBuilder("a")
-      .where("a.phone = :phone" , {phone: entity.phone})
-      .getOne();
-    if (phoneAdmin) {
-      throw new RpcException({
-        statusCode: HttpStatus.CONFLICT,
-        message: `The phone number has been already registered, please choose another one.`
-      } as RpcExceptionModel);
-    }
     const foundAdmin = await this.repository.findOne(payload.email);
     if (foundAdmin === undefined) {
       throw new RpcException({
         statusCode: HttpStatus.CONFLICT,
         message: `Not found admin with email: ${payload.email}`
       } as RpcExceptionModel);
+    }
+    if (foundAdmin.phone !== payload.dto.phone){
+      const existedPhoneNum = await this.repository.createQueryBuilder("a")
+        .where("a.phone = :phone" , {phone: payload.dto.phone})
+        .getOne();
+      if (existedPhoneNum) {
+        throw new RpcException({
+          statusCode: HttpStatus.CONFLICT,
+          message: `The phone number has been already registered, please choose another one.`
+        } as RpcExceptionModel);
+      }
     }
     return this.repository.update(entity.email, entity);
   }
@@ -85,5 +87,27 @@ export class AdminService {
         message: NOT_FOUND_ERR_MSG + id
       } as RpcExceptionModel);
     });
+  }
+
+  async updateProfileWithoutPasswordAndStatus(payload : UpdateAdminPayload) : Promise<UpdateResult> {
+    if (payload.email !== payload.email) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `Param: ${payload.email} must match with request body email : ${payload.email} `
+      } as RpcExceptionModel);
+    }
+    const result = await this.repository.createQueryBuilder("admin")
+      .update(AdminEntity)
+      .set({
+        fullname: payload.fullname,
+        address: payload.address,
+        phone: payload.phone,
+        gender: payload.gender,
+        profileImage : payload.profileImage,
+        dob : payload.dob
+      })
+      .where("email = :email", {email : payload.email})
+      .execute();
+    return result;
   }
 }
