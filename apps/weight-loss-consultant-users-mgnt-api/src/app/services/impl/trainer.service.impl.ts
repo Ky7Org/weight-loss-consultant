@@ -10,7 +10,6 @@ import {UpdateTrainerDto} from '../../dtos/trainer/update-trainer';
 import {EMAIL_EXISTED_ERR} from '../../constants/validation-err-message';
 import {RpcException} from '@nestjs/microservices';
 import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
-import {UpdateTrainerPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
 
 @Injectable()
 export class TrainerService extends BaseService<TrainerEntity, TrainerRepository> {
@@ -90,6 +89,25 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
 
   async findOneTrainer(id): Promise<TrainerEntity> {
     return this.repository.findOne(id);
+  }
+  async viewOnlyPackagesOfTrainer(trainerEmail: string) : Promise<any>  {
+    const entityManager = getManager();
+    const query = entityManager.query(
+      `SELECT \`package\`.\`id\`                     AS \`id\`,
+              \`package\`.\`exercisePlan\`                 AS \`exercisePlan\`,
+              \`package\`.\`schedule\`                     AS \`schedule\`,
+              \`package\`.\`price\`                        AS \`price\`,
+              \`package\`.\`status\`                       AS \`status\`,
+              \`package\`.\`dietPlan\`                     AS \`dietPlan\`,
+              \`package\`.\`trainerEmail\`                 AS \`trainerEmail\`,
+              \`package\`.\`name\`                         AS \`name\`,
+              \`package\`.\`spendTimeToTraining\`          AS \`spendTimeToTraining\`
+       FROM \`Trainer\` \`trainer\`
+              LEFT JOIN \`Package\` \`package\` ON \`package\`.\`trainerEmail\` = \`trainer\`.\`email\`
+       WHERE \`trainer\`.\`email\` = ?
+      `,[trainerEmail]
+    )
+    return query;
   }
 
   async updateProfileWithoutPasswordAndStatus(payload : UpdateTrainerPayload) : Promise<UpdateResult> {
