@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CampaignEntity } from '../entities/campaign.entity';
-import { CreateCampaignDto } from '../../../../weight-loss-consultant-campaign-mgnt-api/src/app/dtos/campaign/create-campaign';
-import { UpdateCampaignDto } from '../../../../weight-loss-consultant-campaign-mgnt-api/src/app/dtos/campaign/update-campaign';
 import { CustomerEntity } from '../entities/customer.entity';
 import { CampaignStatus } from '../constants/enums';
+import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
+import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
 
 @Injectable()
 export class CampaignMapper {
@@ -13,6 +13,7 @@ export class CampaignMapper {
       return null;
     }
     const entity = new CampaignEntity();
+    const createDate = new Date().getTime();
 
     entity.description = dto.description;
     entity.status = CampaignStatus.ACTIVE;
@@ -21,7 +22,8 @@ export class CampaignMapper {
     entity.feedback = dto.feedback;
     entity.targetWeight = dto.targetWeight;
     entity.currentWeight = dto.currentWeight;
-    entity.spendTimeForTraining = dto.spendTimeForTraining
+    entity.spendTimeForTraining = dto.spendTimeForTraining;
+    entity.createDate = createDate;
     entity.customer = customer;
 
     return entity;
@@ -41,7 +43,7 @@ export class CampaignMapper {
     entity.customer = customer;
     entity.targetWeight = dto.targetWeight;
     entity.currentWeight = dto.currentWeight;
-    entity.spendTimeForTraining = dto.spendTimeForTraining
+    entity.spendTimeForTraining = dto.spendTimeForTraining;
     return entity;
   }
 }

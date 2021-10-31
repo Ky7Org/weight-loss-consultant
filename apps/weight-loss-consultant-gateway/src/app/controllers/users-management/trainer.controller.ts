@@ -1,12 +1,11 @@
-import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
-import {Roles} from '../../decorators/roles.decorator';
-import {TrainerService} from '../../services/trainer.service';
-import {Role} from '../../constants/enums';
-import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
-import {CreateTrainerDto} from '../../dtos/trainer/create-trainer';
-import {UpdateTrainerDto} from '../../dtos/trainer/update-trainer';
-import {UpdateTrainerPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
+import { Roles } from '../../decorators/roles.decorator';
+import { TrainerService } from '../../services/trainer.service';
+import { Role } from '../../constants/enums';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { CreateTrainerDto } from '../../dtos/trainer/create-trainer';
+import { UpdateTrainerDto } from '../../dtos/trainer/update-trainer';
 
 @ApiTags('Trainer')
 @ApiBearerAuth()
@@ -119,6 +118,19 @@ export class TrainerController {
       const result = await this.trainerService.delete(email);
       res.status(HttpStatus.OK).send(result);
     } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Roles(Role.Admin, Role.Trainer)
+  @UseGuards(JwtAuthGuard)
+  @Get('/viewDetailSpecial/:email')
+  async viewSpecial(@Res() res, @Param('email') email) {
+    try {
+      const result = await this.trainerService.viewSpecial(email);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }

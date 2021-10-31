@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {ConflictException, HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {Observable} from "rxjs";
@@ -11,6 +11,8 @@ import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
 import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
 import {USERS_MANAGEMENT_SERVICE_NAME} from "../../../../../constant";
 import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
+import {ResponseUpdateStatus} from "../../../../common/dtos/update-without-password-and-status.payload";
+import {UpdateStatusCampaignPayload} from "../../../../common/dtos/update-campaign-dto.payload";
 
 @Injectable()
 export class CampaignService {
@@ -84,8 +86,8 @@ export class CampaignService {
 
   async viewDetail(id): Promise<CampaignEntity> {
     const result = await this.repository.createQueryBuilder("campaign")
-      .where("campaign.id = :id", {id: id})
       .leftJoinAndSelect("campaign.customer", "customer")
+      .where("campaign.id = :id", {id: id})
       .getOne();
     if (!result) {
       throw new RpcException({
@@ -97,13 +99,31 @@ export class CampaignService {
   }
 
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[] | null> {
-    return await this.repository.find({relations: ["customer"]})
+    return await this.repository.createQueryBuilder("campaign")
+      .leftJoinAndSelect("campaign.customer", "customer")
+      .orderBy("campaign.createDate" , "DESC")
+      .getMany();
   }
 
   async getAvailCampaigns() : Promise<CampaignEntity[]> {
     return this.repository.createQueryBuilder("campaign")
       .leftJoinAndSelect("campaign.customer", "customer")
       .where("campaign.status = :status", {status : 1})
+      .orderBy("campaign.createDate" , "DESC")
       .getMany();
+  }
+
+  async updateStatus(payload: UpdateStatusCampaignPayload) : Promise<boolean>  {
+    const result = this.repository.createQueryBuilder()
+      .update(CampaignEntity)
+      .set({
+        status: payload.status
+      })
+      .where("id = :id", {id: payload.id})
+      .execute();
+    if ((await result).affected === 1) {
+      return true;
+    }
+    return false;
   }
 }

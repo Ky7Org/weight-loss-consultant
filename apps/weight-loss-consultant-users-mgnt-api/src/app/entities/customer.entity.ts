@@ -1,6 +1,5 @@
 import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn} from 'typeorm';
 import { CampaignEntity } from './campaign.entity';
-import {HeathInfoEntity} from "./health-info.entity";
 
 @Entity('Customer')
 export class CustomerEntity extends BaseEntity{
@@ -27,6 +26,4 @@ export class CustomerEntity extends BaseEntity{
   @OneToMany(() => CampaignEntity, campaign => campaign.customer )
   campaigns: CampaignEntity[];
 
-  @OneToMany(() => HeathInfoEntity, heathInfo => heathInfo.customer)
-  healthInfos: HeathInfoEntity[];
 }

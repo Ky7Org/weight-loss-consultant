@@ -61,6 +61,10 @@ dependencies:
   syncfusion_flutter_sliders: ^19.3.47
   syncfusion_flutter_core: ^19.3.47
   syncfusion_flutter_calendar: ^19.3.47
+  firebase_messaging: ^10.0.9
+  flutter_local_notifications: ^9.0.2
+
+
 
 
 dev_dependencies:
