@@ -14,28 +14,26 @@ class LocalNotificationService {
   static void initialize(GlobalKey<NavigatorState> _navKey) {
     LocalNotificationService._navKey = _navKey;
     const InitializationSettings initializationSettings =
-        const InitializationSettings(
+        InitializationSettings(
             android: AndroidInitializationSettings("@mipmap/ic_launcher"));
 
     _notificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String? data) async {
       Map<String, dynamic> myDataFromMessage = jsonDecode(data!);
 
-      if (data != null) {
-        final typeOfMessage = myDataFromMessage['type'];
-        final packageID = myDataFromMessage["packageID"];
-        final campaignID = myDataFromMessage["campaignID"];
-        Map<String, dynamic> mapData = {};
-        mapData["packageID"] = packageID;
-        mapData["campaignID"] = campaignID;
-        if (typeOfMessage == 'Apply Package') {
-          _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
-              arguments: mapData);
-        } else if (typeOfMessage == 'Apply Campaign') {
-          LocalNotificationService._navKey.currentState!.pushNamed(
-              RoutePath.trainerViewCampaignDetailPage,
-              arguments: int.parse(campaignID));
-        }
+      final typeOfMessage = myDataFromMessage['type'];
+      final packageID = myDataFromMessage["packageID"];
+      final campaignID = myDataFromMessage["campaignID"];
+      Map<String, dynamic> mapData = {};
+      mapData["packageID"] = packageID;
+      mapData["campaignID"] = campaignID;
+      if (typeOfMessage == 'Apply Package') {
+        _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
+            arguments: mapData);
+      } else if (typeOfMessage == 'Apply Campaign') {
+        LocalNotificationService._navKey.currentState!.pushNamed(
+            RoutePath.trainerViewCampaignDetailPage,
+            arguments: int.parse(campaignID));
       }
     });
   }
@@ -44,7 +42,7 @@ class LocalNotificationService {
     try {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-      final NotificationDetails notificationDetails = NotificationDetails(
+      const NotificationDetails notificationDetails = NotificationDetails(
           android: AndroidNotificationDetails(
         "default_id",
         "default_id_channel",

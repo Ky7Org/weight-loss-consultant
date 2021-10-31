@@ -8,8 +8,6 @@ import 'package:weight_loss_consultant_mobile/services/local_notification_servic
 
 //Receive message when app is in background solution for on message
 Future<void> backgroundHandler(RemoteMessage message) async {
-  print(message.data.toString());
-  print(message.notification!.title);
 }
 
 void main() async {
@@ -21,7 +19,7 @@ void main() async {
   ]);
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-  runApp(App());
+  runApp(const App());
 }
 
 class App extends StatefulWidget {
@@ -53,8 +51,9 @@ class _AppState extends State<App> {
 
         ///gives you the message on which user taps
         ///and it opened the app from terminated state
+
+
         FirebaseMessaging.instance.getInitialMessage().then((message) {
-          print("getInitialMessage");
           if (message != null) {
             final typeOfMessage = message.data["type"];
             if (typeOfMessage == 'Apply Package') {
@@ -75,17 +74,11 @@ class _AppState extends State<App> {
         });
         //Foreground message
         FirebaseMessaging.onMessage.listen((message) {
-          print("onMessage");
-          if (message.notification != null) {
-            print(message.notification!.body);
-            print(message.notification!.title);
-          }
           LocalNotificationService.display(message);
         });
 
         //When the app is in background but opened and user taps on message
         FirebaseMessaging.onMessageOpenedApp.listen((message) {
-          print("onMessageOpenedApp");
           final typeOfMessage = message.data["type"];
           if (typeOfMessage == 'Apply Package') {
             final packageID = message.data["packageID"];
