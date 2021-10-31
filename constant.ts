@@ -27,3 +27,7 @@ export const CONTRACT_MANAGEMENT_SERVICE_PORT = 5007;
 export const APPLIED_MANAGEMENT_SERVICE_NAME = "applied_management_service";
 export const APPLIED_MANAGEMENT_SERVICE_PORT = 5008;
 
+export const REPORT_MANAGEMENT_SERVICE_NAME = "report_management_service";
+export const REPORT_MANAGEMENT_SERVICE_PORT = 5009;
+
+

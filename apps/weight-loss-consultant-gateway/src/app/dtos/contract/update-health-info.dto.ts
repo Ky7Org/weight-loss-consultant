@@ -43,11 +43,6 @@ export class UpdateContractDto {
   })
   status: number;
 
-  @ApiProperty({
-    description: 'Payment method of contract',
-    type: String,
-  })
-  paymentMethod: string;
 
   @ApiProperty({
     description: 'Campaign ID',

@@ -16,6 +16,7 @@ import {CustomerEntity} from "../entities/customer.entity";
 import * as bcrypt from "bcrypt";
 import {RpcException} from "@nestjs/microservices";
 import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
+import {UpdateDeviceIDPayload} from "../../../../common/dtos/update-trainer-dto.payload";
 
 
 @Injectable()
@@ -415,6 +416,112 @@ export class SearchService {
         default: {
           break;
         }
+      }
+    }
+  }
+
+  private async updateDeviceIDAdmin(payload: UpdateDeviceIDPayload): Promise<boolean> {
+    const admin : AdminEntity = await this.checkEmailAdminExist(payload.email);
+    if (!admin) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found admin with email: ${payload.email}`
+      } as RpcExceptionModel);
+    }
+    const result = this.adminRepository.createQueryBuilder()
+      .update(AdminEntity)
+      .set({
+        deviceID: payload.deviceID
+      })
+      .where("email = :email", {email: payload.email})
+      .execute();
+    if ((await result).affected === 1) {
+      return true;
+    }
+    return false;
+  }
+
+  private async updateDeviceIDTrainer(payload: UpdateDeviceIDPayload): Promise<boolean> {
+    const admin : TrainerEntity = await this.checkEmailTrainerExist(payload.email);
+    if (!admin) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found trainer with email: ${payload.email}`
+      } as RpcExceptionModel);
+    }
+    const result = this.trainerRepository.createQueryBuilder()
+      .update(TrainerEntity)
+      .set({
+        deviceID: payload.deviceID
+      })
+      .where("email = :email", {email: payload.email})
+      .execute();
+    if ((await result).affected === 1) {
+      return true;
+    }
+    return false;
+  }
+
+  private async updateDeviceIDCustomer(payload: UpdateDeviceIDPayload): Promise<boolean> {
+    const admin : CustomerEntity = await this.checkEmailCustomerExist(payload.email);
+    if (!admin) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found customer with email: ${payload.email}`
+      } as RpcExceptionModel);
+    }
+    const result = this.customerRepository.createQueryBuilder()
+      .update(CustomerEntity)
+      .set({
+        deviceID: payload.deviceID
+      })
+      .where("email = :email", {email: payload.email})
+      .execute();
+    if ((await result).affected === 1) {
+      return true;
+    }
+    return false;
+  }
+
+
+  async updateDeviceID(payload: UpdateDeviceIDPayload): Promise<boolean> {
+    const role = payload.role;
+    switch (role) {
+      case Role.Admin : {
+        const result = await this.updateDeviceIDAdmin(payload);
+        if (!result) {
+          throw new RpcException({
+            statusCode: HttpStatus.NOT_FOUND,
+            message: `Update device ID for admin failed`
+          } as RpcExceptionModel);
+        }
+        return result;
+        break;
+      }
+      case Role.Trainer : {
+        const result = await this.updateDeviceIDTrainer(payload);
+        if (!result) {
+          throw new RpcException({
+            statusCode: HttpStatus.NOT_FOUND,
+            message: `Update device ID for trainer failed`
+          } as RpcExceptionModel);
+        }
+        return result;
+        break;
+      }
+      case Role.Customer : {
+        const result = await this.updateDeviceIDCustomer(payload);
+        if (!result) {
+          throw new RpcException({
+            statusCode: HttpStatus.NOT_FOUND,
+            message: `Update device ID for customer failed`
+          } as RpcExceptionModel);
+        }
+        return result;
+        break;
+      }
+      default : {
+        break;
       }
     }
   }

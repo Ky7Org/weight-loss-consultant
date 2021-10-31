@@ -12,6 +12,7 @@ import { TRAINER_VIEW_DETAIL} from '../../../../../common/routes/users-managemen
 import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
 import {Observable} from "rxjs";
 import {PackageRepository} from "../../repositories/package.repository";
+import {UpdateStatusPackagePayload} from "../../../../../common/dtos/update-package-dto.payload";
 
 @Injectable()
 export class PackageService extends BaseService<PackageEntity, PackageRepository> {
@@ -41,6 +42,7 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
       } as RpcExceptionModel);
     }
     const entity: PackageEntity = await PackageMapper.mapCreatePackageDtoToEntity(dto, findTrainer);
+    console.log(entity)
     return this.repository.save(entity);
   }
 
@@ -95,6 +97,23 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
   }
 
   async getPackageDetailsWithTrainer(): Promise<PackageEntity[] | null> {
-    return this.repository.find({relations: ["trainer"]});
+    return this.repository.createQueryBuilder("package")
+      .leftJoinAndSelect("package.trainer", "trainer")
+      .orderBy("package.createDate", "DESC")
+      .getMany();
+  }
+
+  async updateStatus(payload : UpdateStatusPackagePayload) : Promise<boolean>  {
+    const result = this.repository.createQueryBuilder()
+      .update(PackageEntity)
+      .set({
+        status: payload.status
+      })
+      .where("id = :id", {id: payload.id})
+      .execute();
+    if ((await result).affected === 1) {
+      return true;
+    }
+    return false;
   }
 }

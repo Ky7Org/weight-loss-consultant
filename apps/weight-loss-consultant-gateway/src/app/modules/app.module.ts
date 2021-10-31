@@ -12,7 +12,7 @@ import {
   HEALTH_MANAGEMENT_SERVICE_PORT,
   HOST,
   PACKAGES_MANAGEMENT_SERVICE_NAME,
-  PACKAGES_MANAGEMENT_SERVICE_PORT,
+  PACKAGES_MANAGEMENT_SERVICE_PORT, REPORT_MANAGEMENT_SERVICE_NAME, REPORT_MANAGEMENT_SERVICE_PORT,
   SCHEDULING_SERVICE_NAME,
   SCHEDULING_SERVICE_PORT,
   USERS_MANAGEMENT_SERVICE_NAME,
@@ -30,6 +30,7 @@ import { SearchModule } from './search.module';
 import { SortingAndFilteringModule } from './sorting-filtering.module';
 import {ContractModule} from "./contract.module";
 import {AppliedModule} from "./apply.module";
+import {ReportModule} from "./report.module";
 
 
 export class AppModule {
@@ -48,6 +49,7 @@ export class AppModule {
         SortingAndFilteringModule,
         ContractModule,
         AppliedModule,
+        ReportModule,
         ClientsModule.register([
           {
             name: AUTHENTICATION_SERVICE_NAME,
@@ -111,6 +113,14 @@ export class AppModule {
             options: {
               host: HOST,
               port: APPLIED_MANAGEMENT_SERVICE_PORT,
+            }
+          },
+          {
+            name: REPORT_MANAGEMENT_SERVICE_NAME,
+            transport: Transport.TCP,
+            options: {
+              host: HOST,
+              port: REPORT_MANAGEMENT_SERVICE_PORT,
             }
           }
         ]),

@@ -55,6 +55,9 @@
     "weight-loss-consultant-packages-mgnt-api": {
       "tags": []
     },
+    "weight-loss-consultant-report-mgnt-api": {
+      "tags": []
+    },
     "weight-loss-consultant-scheduling-api": {
       "tags": []
     },

@@ -1,7 +1,7 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
 
 import {BaseService} from '../base.service';
-import {DeleteResult, UpdateResult} from 'typeorm';
+import {DeleteResult, getManager, UpdateResult} from 'typeorm';
 import {TrainerEntity} from '../../entities/trainer.entity';
 import {TrainerRepository} from '../../repositories/trainer.repository';
 import {TrainerMapper} from '../../mappers/trainer.mapper';
@@ -90,6 +90,25 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
 
   async findOneTrainer(id): Promise<TrainerEntity> {
     return this.repository.findOne(id);
+  }
+  async viewOnlyPackagesOfTrainer(trainerEmail: string) : Promise<any>  {
+    const entityManager = getManager();
+    const query = entityManager.query(
+      `SELECT \`package\`.\`id\`                     AS \`id\`,
+              \`package\`.\`exercisePlan\`                 AS \`exercisePlan\`,
+              \`package\`.\`schedule\`                     AS \`schedule\`,
+              \`package\`.\`price\`                        AS \`price\`,
+              \`package\`.\`status\`                       AS \`status\`,
+              \`package\`.\`dietPlan\`                     AS \`dietPlan\`,
+              \`package\`.\`trainerEmail\`                 AS \`trainerEmail\`,
+              \`package\`.\`name\`                         AS \`name\`,
+              \`package\`.\`spendTimeToTraining\`          AS \`spendTimeToTraining\`
+       FROM \`Trainer\` \`trainer\`
+              LEFT JOIN \`Package\` \`package\` ON \`package\`.\`trainerEmail\` = \`trainer\`.\`email\`
+       WHERE \`trainer\`.\`email\` = ?
+      `,[trainerEmail]
+    )
+    return query;
   }
 
   async updateProfileWithoutPasswordAndStatus(payload : UpdateTrainerPayload) : Promise<UpdateResult> {

@@ -21,7 +21,6 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
   async findAll(): Promise<CustomerEntity[] | undefined> {
     const query = this.repository.createQueryBuilder("customer")
       .leftJoinAndSelect("customer.campaigns", "campaign")
-      .leftJoinAndSelect("customer.healthInfos", "healthInfo")
       .getMany();
     return query;
   }
@@ -87,12 +86,10 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     const query = this.repository.createQueryBuilder("customer")
       .where("customer.email = :email", {email : id})
       .leftJoinAndSelect("customer.campaigns", "campaign")
-      .leftJoinAndSelect("customer.healthInfos", "healthInfo")
       .getOne();
     const sql = this.repository.createQueryBuilder("customer")
       .where("customer.email = :email", {email : id})
       .leftJoinAndSelect("customer.campaigns", "campaign")
-      .leftJoinAndSelect("customer.healthInfos", "healthInfo")
       .getSql();
     console.log(sql)
     return query;
