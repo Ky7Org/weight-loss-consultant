@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {CampaignEntity} from "./campaign.entity";
 import {PackageEntity} from "./package.entity";
+import {ReportEntity} from "../../../../weight-loss-consultant-report-mgnt-api/src/app/entities/report.entity";
 
 @Entity('Contract')
 export class ContractEntity extends BaseEntity{
@@ -19,5 +20,7 @@ export class ContractEntity extends BaseEntity{
   campaign: CampaignEntity;
   @ManyToOne(() => PackageEntity, p => p.contracts)
   package: PackageEntity;
+  @OneToMany(() => ReportEntity, report => report.contract)
+  reports: ReportEntity[];
 
 }

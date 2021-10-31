@@ -11,12 +11,12 @@ import {
   FIND_REPORT_BY_ID, UPDATE_MEDIA_BY_ID,
   UPDATE_REPORT_BY_ID
 } from "../../../../common/routes/reports-management-routes";
-import {ReportEntity} from "../../../../weight-loss-consultant-report-mgnt-api/src/app/entities/report.entity";
 import {CreateReportDto} from "../dtos/report/create-report.dto";
 import {UpdateReportDto} from "../dtos/report/update-report.dto";
-import {ReportMediaEntity} from "../../../../weight-loss-consultant-report-mgnt-api/src/app/entities/report-media.entity";
 import {CreateReportMediaDto} from "../dtos/report-media/create-report-media.dto";
 import {UpdateReportMediaDto} from "../dtos/report-media/update-report-media.dto";
+import {ReportEntity} from "../entities/report.entity";
+import {ReportMediaEntity} from "../entities/report-media.entity";
 
 @Injectable()
 export class ReportService {
