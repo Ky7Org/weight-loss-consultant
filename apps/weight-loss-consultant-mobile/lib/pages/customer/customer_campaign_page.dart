@@ -205,9 +205,10 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
     );
   }
 
-  List<Widget> _buildCampaignList(List<CampaignModel> data){
+  List<Widget> _buildOnGoingCampaignList(List<CampaignModel> data){
     List<Widget> widgets = [];
     for (CampaignModel model in data){
+      if (model.status != 1) continue;
       var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
       var widget = _campaign(
           model.id ?? 0,
@@ -218,6 +219,43 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
       );
       widgets.add(widget);
     }
+    widgets.add(const SizedBox(height: 70,));
+    return widgets;
+  }
+
+  List<Widget> _buildActiveCampaignList(List<CampaignModel> data){
+    List<Widget> widgets = [];
+    for (CampaignModel model in data){
+      if (model.status != 0) continue;
+      var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
+      var widget = _campaign(
+        model.id ?? 0,
+        date,
+        model.currentWeight.toString(),
+        model.targetWeight.toString(),
+        model.description ?? "",
+      );
+      widgets.add(widget);
+    }
+    widgets.add(const SizedBox(height: 70,));
+    return widgets;
+  }
+
+  List<Widget> _buildClosedCampaignList(List<CampaignModel> data){
+    List<Widget> widgets = [];
+    for (CampaignModel model in data){
+      if (model.status != 2) continue;
+      var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
+      var widget = _campaign(
+        model.id ?? 0,
+        date,
+        model.currentWeight.toString(),
+        model.targetWeight.toString(),
+        model.description ?? "",
+      );
+      widgets.add(widget);
+    }
+    widgets.add(const SizedBox(height: 70,));
     return widgets;
   }
 
@@ -374,13 +412,13 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
                       controller: _tabController,
                       children: [
                         ListView(
-                          children: _buildCampaignList(snapshot.requireData),
+                          children: _buildOnGoingCampaignList(snapshot.requireData),
                         ),
                         ListView(
-                          children: _buildCampaignList(snapshot.requireData),
+                          children: _buildActiveCampaignList(snapshot.requireData),
                         ),
                         ListView(
-                          children: _buildCampaignList(snapshot.requireData),
+                          children: _buildClosedCampaignList(snapshot.requireData),
                         ),
                       ],
                     ),

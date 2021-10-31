@@ -180,9 +180,9 @@ class RouteGenerator{
         }
         return _errorRoute();
       case RoutePath.customerPackageDetailPage:
-        if (args is int){
+        if (args is Map<String, dynamic>){
           return MaterialPageRoute(builder: (_){
-            return CustomerPackageDetail(packageID: args,);
+            return CustomerPackageDetail(data: args,);
           });
         }
         return _errorRoute();

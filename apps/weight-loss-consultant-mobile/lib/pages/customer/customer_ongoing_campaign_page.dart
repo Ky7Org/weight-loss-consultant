@@ -45,7 +45,7 @@ class _CustomerOnGoingCampaignPageState extends State<CustomerOnGoingCampaignPag
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        packageModel = service.getPackageById(widget.packageID as int, user);
+        packageModel = service.getPackageById(24, user);
         setState(() {});
       });
     });

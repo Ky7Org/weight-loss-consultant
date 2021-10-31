@@ -135,5 +135,30 @@ class CustomerService{
     }
   }
 
+  Future<bool> approvePackage(int packageId, int campaignId, AccountModel user) async{
+    var url = Uri.parse(ApiConstant.approvePackageApi);
+    Map<String, dynamic> data = {};
+    data["packageID"] = packageId;
+    data["campaignID"] = campaignId;
+
+    var response = await http.post(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(data),
+    );
+    print(data);
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
+
+
+
 
 }
