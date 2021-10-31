@@ -42,6 +42,7 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
       } as RpcExceptionModel);
     }
     const entity: PackageEntity = await PackageMapper.mapCreatePackageDtoToEntity(dto, findTrainer);
+    console.log(entity)
     return this.repository.save(entity);
   }
 

@@ -208,7 +208,7 @@ export class AppliedService {
     const p = await this.validatePackage(packageID).toPromise();
     const contractPayload = {
       totalPrice: p.price,
-      timeOfExpired: p.endDate,
+      timeOfExpired: p.endDate ?? 0,
       timeOfCreate: new Date().getTime(),
       status: CONTRACT_STATUS.ONGOING,
       campaignID: campaignID,
