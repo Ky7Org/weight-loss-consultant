@@ -630,6 +630,59 @@
         }
       }
     },
+    "weight-loss-consultant-report-mgnt-api": {
+      "root": "apps/weight-loss-consultant-report-mgnt-api",
+      "sourceRoot": "apps/weight-loss-consultant-report-mgnt-api/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/weight-loss-consultant-report-mgnt-api",
+            "main": "apps/weight-loss-consultant-report-mgnt-api/src/main.ts",
+            "tsConfig": "apps/weight-loss-consultant-report-mgnt-api/tsconfig.app.json",
+            "assets": ["apps/weight-loss-consultant-report-mgnt-api/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/weight-loss-consultant-report-mgnt-api/src/environments/environment.ts",
+                  "with": "apps/weight-loss-consultant-report-mgnt-api/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "weight-loss-consultant-report-mgnt-api:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": [
+              "apps/weight-loss-consultant-report-mgnt-api/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/weight-loss-consultant-report-mgnt-api"],
+          "options": {
+            "jestConfig": "apps/weight-loss-consultant-report-mgnt-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "weight-loss-consultant-scheduling-api": {
       "root": "apps/weight-loss-consultant-scheduling-api",
       "sourceRoot": "apps/weight-loss-consultant-scheduling-api/src",

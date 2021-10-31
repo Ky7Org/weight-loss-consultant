@@ -9,13 +9,6 @@ export class CreateContractDto {
   totalPrice: number;
 
   @ApiProperty({
-    description: 'Date of contract purchase',
-    minimum: 1,
-    type: Number,
-  })
-  timeOfApproved: number;
-
-  @ApiProperty({
     description: 'Date of expired purchase',
     minimum: 1,
     type: Number,
@@ -35,12 +28,6 @@ export class CreateContractDto {
     type: Number,
   })
   status: number;
-
-  @ApiProperty({
-    description: 'Payment method of contract',
-    type: String,
-  })
-  paymentMethod: string;
 
   @ApiProperty({
     description: 'Campaign ID',

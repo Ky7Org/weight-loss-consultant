@@ -12,3 +12,8 @@ export type UpdateCampaignPayloadType = {
   dto: UpdateCampaignDto;
   id: number;
 }
+
+export type UpdateStatusCampaignPayload = {
+  id: number;
+  status: number;
+}

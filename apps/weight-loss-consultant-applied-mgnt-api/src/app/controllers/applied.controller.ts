@@ -4,13 +4,15 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import {AppliedService} from "../services/applied.service";
 import {
+  APPROVED_PACKAGE,
   CREATE_APPLY,
   DELETE_APPLY_BY_ID,
   FIND_ALL_APPLIES,
-  FIND_APPLY_BY_ID,
+  FIND_APPLY_BY_ID, GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
   UPDATE_APPLY_BY_ID, UpdateApplyPayloadType
 } from "../../../../common/routes/applies-management-routes";
 import {CreateAppliedDto} from "../dtos/applied/create_applied_dto";
+import {ApprovePayload} from "../../../../common/dtos/update-package-dto.payload";
 
 
 
@@ -50,5 +52,17 @@ export class AppliedController {
   @UseFilters(new ExceptionFilter())
   async delete(@Payload() id: number) {
     return this.appliedService.del(id);
+  }
+
+  @MessagePattern({cmd: GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID})
+  @UseFilters(new ExceptionFilter())
+  async getPackages(@Payload() id: number) {
+    return this.appliedService.getAppliedPackagesByCampaignID(id);
+  }
+
+  @MessagePattern({cmd: APPROVED_PACKAGE})
+  @UseFilters(new ExceptionFilter())
+  async approvePackage(@Payload() payload: ApprovePayload) {
+    return this.appliedService.approvePackageByCustomer(payload);
   }
 }
