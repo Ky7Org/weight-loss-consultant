@@ -290,7 +290,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       minTime: DateTime.now(),
                       onConfirm: (date) {
                         startDate = DateTime(date.year, date.month, date.day);
-                        _startDateController.text = DateFormat('yyyy-MM-dd').format(date);
+                        _startDateController.text = DateFormat.yMMMd().format(date);
                       },
                       currentTime: DateTime.now());
                 },
@@ -353,7 +353,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                       minTime: startDate.add(const Duration(days: 1)),
                       onConfirm: (date) {
                         endDate = DateTime(date.year, date.month, date.day);
-                        _endDateController.text = DateFormat('yyyy-MM-dd').format(date);
+                        _endDateController.text = DateFormat.yMMMd().format(date);
                       },
                       currentTime: DateTime.now());
                 },
