@@ -7,7 +7,9 @@ import {
   DELETE_TRAINER,
   GET_ALL_TRAINERS,
   GET_TRAINER_BY_EMAIL,
-  UPDATE_TRAINER, VIEW_DETAIL_SPECIAL_TRAINER
+  UPDATE_TRAINER,
+  VIEW_DETAIL_SPECIAL_TRAINER,
+  UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS
 } from '../../../../common/routes/users-management-service-routes';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
@@ -47,10 +49,15 @@ export class TrainerController {
     return this.trainerService.delete(email);
   }
 
+  @MessagePattern({ cmd: UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS })
+  @UseFilters(new ExceptionFilter())
+  async updateAdmninWithoutPasswordAndStatus(@Payload() payload: UpdateTrainerPayload): Promise<UpdateResult> {
+    return this.trainerService.updateProfileWithoutPasswordAndStatus(payload);
+  }
+
   @MessagePattern({ cmd: VIEW_DETAIL_SPECIAL_TRAINER })
   @UseFilters(new ExceptionFilter())
   async viewSpecial(@Payload() email): Promise<any> {
     return this.trainerService.viewOnlyPackagesOfTrainer(email);
   }
-
 }

@@ -1,7 +1,7 @@
 import {HttpStatus, Injectable} from '@nestjs/common';
 
 import {BaseService} from '../base.service';
-import {DeleteResult, getManager, UpdateResult} from 'typeorm';
+import {DeleteResult, UpdateResult} from 'typeorm';
 import {TrainerEntity} from '../../entities/trainer.entity';
 import {TrainerRepository} from '../../repositories/trainer.repository';
 import {TrainerMapper} from '../../mappers/trainer.mapper';
@@ -90,7 +90,6 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   async findOneTrainer(id): Promise<TrainerEntity> {
     return this.repository.findOne(id);
   }
-
   async viewOnlyPackagesOfTrainer(trainerEmail: string) : Promise<any>  {
     const entityManager = getManager();
     const query = entityManager.query(
@@ -109,5 +108,29 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
       `,[trainerEmail]
     )
     return query;
+  }
+
+  async updateProfileWithoutPasswordAndStatus(payload : UpdateTrainerPayload) : Promise<UpdateResult> {
+    if (payload.email !== payload.email) {
+      throw new RpcException({
+        statusCode: HttpStatus.CONFLICT,
+        message: `Param: ${payload.email} must match with request body email : ${payload.email} `
+      } as RpcExceptionModel);
+    }
+    const result = await this.repository.createQueryBuilder("trainer")
+      .update(TrainerEntity)
+      .set({
+        fullname: payload.fullname,
+        address: payload.address,
+        phone: payload.phone,
+        gender: payload.gender,
+        profileImage : payload.profileImage,
+        dob : payload.dob,
+        yearOfExp: payload.yearOfExp,
+        rating: payload.rating,
+      })
+      .where("email = :email", {email : payload.email})
+      .execute();
+    return result;
   }
 }

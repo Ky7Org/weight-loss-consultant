@@ -61,7 +61,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Row(
             children: [
               Expanded(
@@ -70,8 +70,8 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      margin: EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      margin: const EdgeInsets.only(bottom: 10),
                       child: Text(
                         date,
                         style: TextStyle(
@@ -82,11 +82,11 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                       ),
                       decoration: BoxDecoration(
                           color: HexColor("#F0F3F6"),
-                          borderRadius: BorderRadius.all(Radius.circular(5))
+                          borderRadius: const BorderRadius.all(Radius.circular(5))
                       ),
                     ),
                     Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: Text(
                           nameTraining,
                           style: TextStyle(
@@ -128,7 +128,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
         child: Card(
           elevation: 15,
           child: Container(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: Column(
               children: [
                 SvgPicture.asset("assets/panel-image/category/$icon"),
@@ -165,14 +165,14 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
           controller: _pc,
           panel:  TrainerCategoryPanel(),
           minHeight: 0,
-          maxHeight: 400,
+          maxHeight: 200,
           body: Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             child: ListView(
               children: [
                 const SizedBox(width: double.infinity,),
                 Container(
-                  margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                  margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
                       alignment: Alignment.topLeft,
                       child: Text("Upcoming Training",
@@ -188,7 +188,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mr Son"),
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mrs Thy"),
                 Container(
-                  margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                  margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
                       alignment: Alignment.topLeft,
                       child: Text("Top category",
@@ -203,12 +203,12 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 Wrap(
                   spacing: 10,
                   children: [
-                    _category("Training\nScedule", "training-schedule.svg"),
+                    _category("Training\nSchedule", "training-schedule.svg"),
                     _category("Message", "message-icon.svg"),
                     _category("Campaign", "campaign-icon.svg"),
                   ],
                 ),
-                SizedBox(height: 250,),
+                const SizedBox(height: 250,),
               ],
             ),
           ),

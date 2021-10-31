@@ -7,7 +7,6 @@ class CategoryPanel extends StatelessWidget {
   CategoryPanel({
     Key? key
   }) : super(key: key);
-
   final List<Map> categories = [
     {
       "text": "Todo",
@@ -22,8 +21,9 @@ class CategoryPanel extends StatelessWidget {
     {
       "text": "Campaign",
       "imageName": "campaign-icon.svg",
+      "route": RoutePath.customerCampaignPage,
     },
-    {
+    /*{
       "text": "Package",
       "imageName": "package-icon.svg",
     },
@@ -42,12 +42,12 @@ class CategoryPanel extends StatelessWidget {
     {
       "text": "Payment",
       "imageName": "payment-icon.svg",
-    },
-    {
+    },*/
+    /*{
       "text": "Profile",
       "imageName": "profile-icon.svg",
       "route": RoutePath.customerDetailPage,
-    },
+    },*/
   ];
 
   @override

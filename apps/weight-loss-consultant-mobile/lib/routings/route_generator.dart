@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_applied_package_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_create_campaign.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_package_detail.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_update_campaign_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/edit_profile_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/upcoming_training_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/others/chat_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
@@ -21,6 +26,11 @@ import 'package:weight_loss_consultant_mobile/pages/register/register_sucessful_
 import 'package:weight_loss_consultant_mobile/pages/trainer/create_packages_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/no_packages_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_home_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_package_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_update_package_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_campaign_detail_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_available_campaign_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_list_package_page.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 
@@ -30,7 +40,7 @@ class RouteGenerator{
     switch (settings.name){
       case RoutePath.initialPage:
         return MaterialPageRoute(builder: (_){
-          return const CreatePackages();
+          return const InitialPage();
         });
       case RoutePath.getStartedPage:
         return MaterialPageRoute(builder: (_){
@@ -106,6 +116,76 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (_){
           return const EndingCallPage();
         });
+      case RoutePath.createCampaignPage:
+        return MaterialPageRoute(builder: (_){
+          return const CreateCampaignPage();
+        });
+      case RoutePath.noPackagePage:
+        return MaterialPageRoute(builder: (_){
+          return const NoPackagesPage();
+        });
+      case RoutePath.createPackagesPage:
+        return MaterialPageRoute(builder: (_){
+          return const CreatePackagesPage();
+        });
+      case RoutePath.editProfilePage:
+        return MaterialPageRoute(builder: (_){
+          return const EditProfilePage();
+        });
+      case RoutePath.customerCampaignPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerCampaignPage();
+        });
+      case RoutePath.trainerPackagePage:
+        return MaterialPageRoute(builder: (_){
+          return const TrainerPackagePage();
+        });
+      case RoutePath.trainerViewCampaignDetailPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerViewCampaignDetailPage(campaignID: args);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.trainerViewListCampaignPage:
+        return MaterialPageRoute(builder: (_){
+          return const TrainerAvailableCampaignPage();
+        });
+      case RoutePath.trainerViewListPackagePage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerViewListPackagePage(campaignId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerUpdateCampaignPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerUpdateCampaignPage(campaignID: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerAppliedPackagePage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerAppliedPackagePage(campaignId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerPackageDetailPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerPackageDetail(packageID: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.trainerUpdatePackagePage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerUpdatePackagePage(packageId: args,);
+          });
+        }
+        return _errorRoute();
       default:
         return _errorRoute();
 

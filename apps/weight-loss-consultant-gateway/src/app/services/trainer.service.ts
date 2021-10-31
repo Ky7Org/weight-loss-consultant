@@ -8,11 +8,13 @@ import {
   GET_ALL_TRAINERS,
   GET_TRAINER_BY_EMAIL,
   UPDATE_TRAINER, VIEW_DETAIL_SPECIAL_TRAINER
+  ,UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS
 } from '../../../../common/routes/users-management-service-routes';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
 import { TrainerEntity } from '../entities/trainer.entity';
 import { UpdateTrainerDto } from '../dtos/trainer/update-trainer';
 import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
+import {UpdateTrainerPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
 
 @Injectable()
 export class TrainerService {
@@ -49,6 +51,12 @@ export class TrainerService {
 
   async viewSpecial(email : string) : Promise<TrainerEntity> {
     return this.usersManagementProxy.send<TrainerEntity, string>({ cmd: VIEW_DETAIL_SPECIAL_TRAINER }, email)
+      .toPromise();
+  }
+
+  async updateWithoutPasswordAndStatus(payload: UpdateTrainerPayload) : Promise<UpdateResult> {
+    const pattern = {cmd :  UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS};
+    return this.usersManagementProxy.send(pattern, payload)
       .toPromise();
   }
 }

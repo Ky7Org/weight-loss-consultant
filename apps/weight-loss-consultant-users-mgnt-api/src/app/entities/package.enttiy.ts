@@ -21,6 +21,15 @@ export class PackageEntity extends BaseEntity{
   @Column({type: 'varchar', nullable: false})
   dietPlan: string;
 
+  @Column({type: 'float', nullable: false})
+  spendTimeToTraining: number;
+
+  @Column({type: 'varchar'})
+  name: string;
+
+  @Column({type: 'int'})
+  sessionLength: number;
+
   @ManyToOne(() => TrainerEntity, trainer => trainer.packages)
   trainer : TrainerEntity;
 

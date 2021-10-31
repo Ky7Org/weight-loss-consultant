@@ -51,6 +51,16 @@ dependencies:
   http: ^0.13.4
   agora_rtc_engine: ^4.0.7
   permission_handler: ^8.2.5
+  cloud_firestore: ^2.5.4
+  fluttertoast: ^8.0.8
+  firebase_storage: ^10.0.6
+  path_provider: ^2.0.5
+  firebase_analytics: ^5.0.6
+  firebase_messaging: ^10.0.9
+  flutter_local_notifications: ^9.0.2
+
+
+
 
 dev_dependencies:
   flutter_test:

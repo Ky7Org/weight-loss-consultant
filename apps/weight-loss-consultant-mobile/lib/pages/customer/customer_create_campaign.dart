@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 
 class CreateCampaignPage extends StatefulWidget {
   const CreateCampaignPage({Key? key}) : super(key: key);
@@ -12,14 +19,42 @@ class CreateCampaignPage extends StatefulWidget {
 }
 
 class _CreateCampaignPageState extends State<CreateCampaignPage> {
+
+  AccountModel user = AccountModel(email: "", fullname: "");
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _weightTarget = TextEditingController();
-  final TextEditingController _medicalHistory = TextEditingController();
   final TextEditingController _description = TextEditingController();
   final TextEditingController _currentWeight = TextEditingController();
   final TextEditingController _habit = TextEditingController();
 
-  String dropdownValue = '2 days';
+  String dropdownValue = '1 day';
+  int spendTimeForTraining = 1;
+
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount().then((value){
+        setState(() {});
+      });
+    });
+  }
 
   Widget _title(String title) {
     return Text(title,
@@ -35,7 +70,8 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
       TextEditingController controller,
       TextInputType type,
       IconData icon,
-      bool haveSuffixIcon) {
+      bool haveSuffixIcon,
+      FormFieldValidator<String> validator) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -87,7 +123,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
   }
 
   Widget _multiInput(
-      String label, String hint, TextEditingController controller) {
+      String label, String hint, TextEditingController controller, int maxCharacter) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -100,7 +136,10 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             controller: controller,
             keyboardType: TextInputType.text,
             style: const TextStyle(fontSize: 15),
-            maxLines: 3,
+            maxLines: 5,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(maxCharacter),
+            ],
             decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 border: InputBorder.none,
@@ -115,11 +154,11 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                     color: Color(0xFFB6C5D1),
                     fontWeight: FontWeight.w400)),
           ),
-          const Align(
+          Align(
             alignment: Alignment.bottomRight,
             child: Text(
-              'Max. 150 characters',
-              style: TextStyle(
+              'Max. $maxCharacter characters',
+              style: const TextStyle(
                   color: Color(0xFFB6C5D1),
                   fontWeight: FontWeight.w400,
                   fontSize: 11),
@@ -158,11 +197,28 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
             style: const TextStyle(color: Color(0xFF0D3F67), fontWeight: FontWeight.w400, fontSize: 15),
             underline: const SizedBox(),
             onChanged: (String? newValue) {
+              switch (newValue){
+                case "1 day":
+                  spendTimeForTraining = 1;
+                  break;
+                case "2 days":
+                  spendTimeForTraining = 2;
+                  break;
+                case "3 days":
+                  spendTimeForTraining = 3;
+                  break;
+                case "4 days":
+                  spendTimeForTraining = 4;
+                  break;
+                case "5 days":
+                  spendTimeForTraining = 5;
+                  break;
+              }
               setState(() {
                 dropdownValue = newValue!;
               });
             },
-            items: <String>['2 days', '3 days', '4 days', '5 days']
+            items: <String>["1 day", '2 days', '3 days', '4 days', '5 days']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -194,12 +250,58 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                   alignment: Alignment.topLeft,
                   child: _title('Fill the Forms'),
                 ),
-                _singleInput("Your medical history", "E,g: I'm addicted to cigarettes ", _medicalHistory, TextInputType.text, Icons.add, false),
-                _singleInput("Your target weight", "E,g: My head feel dizzy", _weightTarget, TextInputType.text, Icons.add, false),
-                _singleInput("Your current weight", "70 kilograms", _currentWeight, TextInputType.text, Icons.add, false),
+                _singleInput("Your current weight", "E.g: 70", _currentWeight, TextInputType.number, Icons.add, false, (text){
+                  if (text == null || text.isEmpty){
+                    return "Current weight cannot be empty";
+                  }
+                  try{
+                    int weight = int.parse(text);
+                    if (weight < 0){
+                      return "Current weight cannot be negative";
+                    }
+                    if (weight > 300){
+                      return "Current weight cannot be bigger than 300kg";
+                    }
+                  } catch (e){
+                    return "Current weight must be a number";
+                  }
+                  return null;
+                }),
+                _singleInput("Your target weight", "E.g: 70", _weightTarget, TextInputType.number, Icons.add, false, (text){
+                  int currentWeight = 0;
+                  if (_currentWeight.text.isEmpty){
+                    return null;
+                  }
+                  try{
+                    currentWeight = int.parse(_currentWeight.text);
+                    if (currentWeight < 0 || currentWeight > 300){
+                      return null;
+                    }
+                  } catch (e){
+                    return null;
+                  }
+
+                  if (text == null || text.isEmpty){
+                    return "Target weight cannot be empty";
+                  }
+                  try{
+                    int weight = int.parse(text);
+                    if (weight < 0){
+                      return "Target weight cannot be negative";
+                    }
+                    if (weight > 300){
+                      return "Target weight cannot be bigger than 300kg";
+                    }
+                    if (weight > currentWeight){
+                      return "Target weight cannot be bigger than current weight";
+                    }
+                  } catch (e){
+                    return "Target weight must be a number";
+                  }
+                  return null;
+                }),
                 _dropdown(),
-                _multiInput("Your habits", "When i woke up i feel like...", _habit),
-                _multiInput("Your description", "Your description...", _description),
+                _multiInput("Your description", "Your description...", _description, 1000),
 
                 const SizedBox(
                   height: 30,
@@ -207,17 +309,30 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                 FlatButton(
                   height: 64,
                   color: AppColors.PRIMARY_COLOR,
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      SizedBox(),
-                      Text(
-                        'Choose Method',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
-                      ),
-                      Icon(Icons.arrow_forward, color: Colors.white, size: 24,)
-                    ],
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()){
+                      _formKey.currentState?.save();
+                      int targetWeight = int.parse(_weightTarget.text);
+                      int currentWeight = int.parse(_currentWeight.text);
+                      CustomerService service = CustomerService();
+                      bool result = await service.createCampaign(
+                          targetWeight: targetWeight,
+                          currentWeight: currentWeight,
+                          description: _description.text,
+                          spendTimeForTraining: spendTimeForTraining,
+                          user: user
+                      );
+                      if (result){
+                        CustomToast.makeToast("Create successfully");
+                      } else {
+                        CustomToast.makeToast("Some thing went wrong! Try again");
+                      }
+                    }
+                  },
+                  minWidth: 300,
+                  child: const Text(
+                    'Create campaign',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
                   ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18)

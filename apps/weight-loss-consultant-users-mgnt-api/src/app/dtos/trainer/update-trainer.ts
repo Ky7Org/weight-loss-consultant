@@ -14,14 +14,6 @@ export class UpdateTrainerDto {
   })
   email: string;
 
-  @IsString()
-  @MinLength(LIMIT_LENGTH.PASSWORD_MIN_LENGTH, {message: ERR_MSG.PASSWORD_MIN_LENGTH_ERR})
-  @ApiProperty({
-    description: 'Pasword of trainer',
-    minimum: 1,
-    type: String,
-  })
-  password: string;
 
   @IsString()
   @MinLength(LIMIT_LENGTH.FULLNAME_MIN_LENGTH, {message: ERR_MSG.FULLNAME_EMPTY_ERR})
