@@ -1,8 +1,6 @@
-import {BadRequestException, HttpStatus, Inject, Injectable, Logger} from '@nestjs/common';
+import {HttpStatus, Injectable, Logger, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AccountService } from './account.service';
-import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
+import {Client, ClientKafka, RpcException} from '@nestjs/microservices';
 import { AdminEntity } from '../entities/admin.entity';
 import { CustomerEntity } from '../entities/customer.entity';
 import { TrainerEntity } from '../entities/trainer.entity';
@@ -11,13 +9,10 @@ import { catchError, defaultIfEmpty, map } from 'rxjs/operators';
 import { RpcExceptionModel } from '../filters/rpc-exception.model';
 import { LoginRequest } from '../models/login.req';
 import { Role } from '../constants/enums';
-import {
-  ADMIN_VIEW_DETAIL,
-  CUSTOMER_VIEW_DETAIL,
-  TRAINER_VIEW_DETAIL
-} from '../../../../common/routes/users-management-service-routes';
 import { FirebaseAuthService } from './firebase-auth.service';
 import * as bcrypt from 'bcrypt';
+import {KAFKA_USERS_MANAGEMENT_SERVICE} from "../../../../common/kafka-utils";
+import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from "../../../../common/kafka-utils";
 
 export interface UserIdentity {
   email: string;
@@ -27,30 +22,47 @@ export interface UserIdentity {
 }
 
 @Injectable()
-export class AuthenticationService {
+export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
 
   private readonly logger = new Logger(AuthenticationService.name);
 
-  constructor(private readonly accountService: AccountService,
-              @Inject(USERS_MANAGEMENT_SERVICE_NAME)
-              private readonly usersManagementServiceProxy: ClientProxy,
-              private readonly jwtService: JwtService,
+  @Client(KAFKA_USERS_MANAGEMENT_SERVICE)
+  private readonly client: ClientKafka;
+
+  constructor(private readonly jwtService: JwtService,
               private readonly firebaseAuthService: FirebaseAuthService) {
   }
 
+  async onModuleInit() {
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN.admins)) {
+      this.client.subscribeToResponseOf(value);
+    }
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN.trainers)) {
+      this.client.subscribeToResponseOf(value);
+    }
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN.customers)) {
+      this.client.subscribeToResponseOf(value);
+    }
+    await this.client.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.client.close();
+  }
+
   private validateAdmin(username: string): Observable<AdminEntity> {
-    return this.usersManagementServiceProxy
-      .send<AdminEntity, string>({ cmd: ADMIN_VIEW_DETAIL }, username);
+    return this.client
+      .send<AdminEntity, string>(MESSAGE_PATTERN.admins.getByEmail, username);
   }
 
   private validateCustomer(username: string): Observable<CustomerEntity> {
-    return this.usersManagementServiceProxy
-      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username);
+    return this.client
+      .send<CustomerEntity, string>(MESSAGE_PATTERN.customers.getByEmail, username);
   }
 
   private validateTrainer(username: string): Observable<TrainerEntity> {
-    return this.usersManagementServiceProxy
-      .send<TrainerEntity, string>({ cmd: TRAINER_VIEW_DETAIL }, username);
+    return this.client
+      .send<TrainerEntity, string>(MESSAGE_PATTERN.trainers.getByEmail, username);
   }
 
   private async validateAccountWithoutPassword(username: string) {

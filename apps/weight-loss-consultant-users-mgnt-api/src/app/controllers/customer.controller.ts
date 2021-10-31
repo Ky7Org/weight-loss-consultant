@@ -7,6 +7,7 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN} from "../../../../common/kafka-utils";
+import {IKafkaMessage} from "../../../../common/kafka-message.model";
 
 export type UpdateCustomerPayload = {
   email: string;
@@ -27,32 +28,32 @@ export class CustomerController {
 
   @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.getByEmail)
   @UseFilters(new ExceptionFilter())
-  getByEmail(@Payload() email: string): Promise<CustomerEntity> {
-    return this.customerService.viewDetail(email);
+  getByEmail(@Payload() email: IKafkaMessage<string>): Promise<CustomerEntity> {
+    return this.customerService.viewDetail(email.value);
   }
 
   @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.getSpecial)
   @UseFilters(new ExceptionFilter())
-  getSpecial(@Payload() email: string) {
-    return this.customerService.viewOnlyCampaignsOfCustomer(email);
+  getSpecial(@Payload() email: IKafkaMessage<string>) {
+    return this.customerService.viewOnlyCampaignsOfCustomer(email.value);
   }
 
   @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.create)
   @UseFilters(new ExceptionFilter())
-  create(@Payload() dto: CreateCustDto): Promise<CustomerEntity> {
-    return this.customerService.create(dto);
+  create(@Payload() dto: IKafkaMessage<CreateCustDto>): Promise<CustomerEntity> {
+    return this.customerService.create(dto.value);
   }
 
   @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.update)
   @UseFilters(new ExceptionFilter())
-  update(@Payload() payload: UpdateCustomerPayload): Promise<UpdateResult> {
-    return this.customerService.edit(payload);
+  update(@Payload() payload: IKafkaMessage<UpdateCustomerPayload>): Promise<UpdateResult> {
+    return this.customerService.edit(payload.value);
   }
 
   @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.customers.delete)
   @UseFilters(new ExceptionFilter())
-  delete(@Payload() email): Promise<DeleteResult> {
-    return this.customerService.delete(email);
+  delete(@Payload() email: IKafkaMessage<string>): Promise<DeleteResult> {
+    return this.customerService.delete(email.value);
   }
 
 }

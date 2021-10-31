@@ -6,7 +6,6 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import {AuthenticationService} from '../services/authentication.service';
-import {CustomerService} from '../services/customer.service';
 import {MailService} from '../services/mail.service';
 import {ResetPasswordRequestModel} from '../models/reset-password-request-model';
 import {generateOtp} from '../utils/otp-generator';
@@ -15,9 +14,7 @@ import {ResetPasswordTokenEntity} from '../entities/reset-password-token.entity'
 import {v4 as uuidv4} from 'uuid';
 import {ResetPasswordConfirmRequestModel} from '../models/reset-password-confirm-request-model';
 import {AccountDTO} from '../dtos/acount.dto';
-import {AccountService} from '../services/account.service';
 import {RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status} from '../../constant';
-import {TrainerService} from '../services/trainer.service';
 import {MessagePattern, Payload, RpcException} from '@nestjs/microservices';
 import {ExceptionFilter} from '../filters/rpc-exception.filter';
 import {LoginRequest} from '../models/login.req';
@@ -30,23 +27,20 @@ import {KAFKA_AUTHENTICATION_MESSAGE_PATTERN} from "../../../../common/kafka-uti
 @UseInterceptors(ClassSerializerInterceptor)
 export class AppController {
 
-  constructor(private customerService: CustomerService,
-              private trainerService: TrainerService,
-              private readonly authenticationService: AuthenticationService,
+  constructor(private readonly authenticationService: AuthenticationService,
               private readonly mailService: MailService,
-              private readonly resetPasswordTokenService: ResetPasswordTokenService,
-              private readonly accountService: AccountService) {
+              private readonly resetPasswordTokenService: ResetPasswordTokenService,) {
   }
 
   @MessagePattern(KAFKA_AUTHENTICATION_MESSAGE_PATTERN.login)
   @UseFilters(new ExceptionFilter())
-  async login(@Payload() message: IKafkaMessage<LoginRequest>): Promise<LoginResponse> {
+  login(@Payload() message: IKafkaMessage<LoginRequest>): Promise<LoginResponse> {
     return this.authenticationService.login(message.value);
   }
 
   @MessagePattern(KAFKA_AUTHENTICATION_MESSAGE_PATTERN.loginWithFirebase)
   @UseFilters(new ExceptionFilter())
-  async loginWithFirebase(@Payload() firebaseUserToken: IKafkaMessage<string>) {
+  loginWithFirebase(@Payload() firebaseUserToken: IKafkaMessage<string>) {
     return this.authenticationService.loginWithFirebase(firebaseUserToken.value);
   }
 
@@ -94,14 +88,15 @@ export class AppController {
           message: 'OTP is expired'
         } as RpcExceptionModel);
       }
-      const account: AccountDTO = await this.accountService.findAccountByEmail(email);
+     // const account: AccountDTO = await this.accountService.findAccountByEmail(email);
+      const account = {} as AccountDTO;
       if (account.status !== Status.ACTIVE) {
         throw new RpcException({
           statusCode: HttpStatus.BAD_REQUEST,
           message: 'This account is inactivated'
         } as RpcExceptionModel);
       }
-      await this.accountService.updatePassword(account, newPassword);
+     // await this.accountService.updatePassword(account, newPassword);
       await this.resetPasswordTokenService.update(tokenDTO.id, {isInvalidated: true})
     } catch (e) {
       throw new RpcException({

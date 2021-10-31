@@ -50,9 +50,19 @@ export const KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN = {
     update: 'users.customers.update',
     delete: 'users.customers.delete',
   },
-  getAllAdmins: 'users.get-all-admins',
-  getByEmail: 'users.get-by-email',
-  update: 'users.update',
-  delete: 'users.delete',
-  create: 'users.create',
+  admins: {
+    getAllAdmins: 'users.admins.get-all-admins',
+    getByEmail: 'users.admins.get-by-email',
+    update: 'users.admins.update',
+    delete: 'users.admins.delete',
+    create: 'users.admins.create',
+  },
+  trainers: {
+    getAllTrainers: 'users.trainers.getAll',
+    getByEmail: 'users.trainers.getByEmail',
+    create: 'users.trainers.create',
+    update: 'users.trainers.update',
+    delete: 'users.trainers.delete',
+    getSpecial: 'users.trainers.getSpecial',
+  }
 };

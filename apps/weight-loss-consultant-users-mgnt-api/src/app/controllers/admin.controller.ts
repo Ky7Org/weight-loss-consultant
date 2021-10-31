@@ -9,6 +9,7 @@ import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter
 import {PaginationDto} from "../dtos/pagination/pagination.dto";
 import {PaginatedResultDto} from "../dtos/pagination/paginated-result.dto";
 import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN} from "../../../../common/kafka-utils";
+import {IKafkaMessage} from "../../../../common/kafka-message.model";
 
 export type UpdateAdminType = {
   email: string;
@@ -21,33 +22,33 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {
   }
 
-  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.getAllAdmins)
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.admins.getAllAdmins)
   @UseFilters(new ExceptionFilter())
-  async index(@Payload() payload: PaginationDto): Promise<PaginatedResultDto> {
-    return this.adminService.findAll(payload);
+  async index(@Payload() payload: IKafkaMessage<PaginationDto>): Promise<PaginatedResultDto> {
+    return this.adminService.findAll(payload.value);
   }
 
-  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.getByEmail)
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.admins.getByEmail)
   @UseFilters(new ExceptionFilter())
-  async getByEmail(@Payload() email: string): Promise<AdminEntity> {
-    return this.adminService.viewDetail(email);
+  async getByEmail(@Payload() email: IKafkaMessage<string>): Promise<AdminEntity> {
+    return this.adminService.viewDetail(email.value);
   }
 
-  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.create)
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.admins.create)
   @UseFilters(new ExceptionFilter())
-  async create(@Payload() dto: CreateAdminDto): Promise<AdminEntity> {
-    return this.adminService.create(dto);
+  async create(@Payload() dto: IKafkaMessage<CreateAdminDto>): Promise<AdminEntity> {
+    return this.adminService.create(dto.value);
   }
 
-  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.update)
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.admins.update)
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() payload: UpdateAdminType): Promise<UpdateResult> {
-    return this.adminService.edit(payload);
+  async update(@Payload() payload: IKafkaMessage<UpdateAdminType>): Promise<UpdateResult> {
+    return this.adminService.edit(payload.value);
   }
 
-  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.delete)
+  @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.admins.delete)
   @UseFilters(new ExceptionFilter())
-  async delete(@Payload() email): Promise<DeleteResult> {
-    return this.adminService.delete(email);
+  async delete(@Payload() email: IKafkaMessage<string>): Promise<DeleteResult> {
+    return this.adminService.delete(email.value);
   }
 }

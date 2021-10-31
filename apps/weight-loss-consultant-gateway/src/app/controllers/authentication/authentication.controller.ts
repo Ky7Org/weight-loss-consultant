@@ -34,9 +34,9 @@ export class AuthenticationController {
     try {
       const result = await this.authenticationService.login(dto);
       res.status(HttpStatus.OK).send(result);
-    } catch ({ error }) {
-      this.logger.error(error);
-      res.status(error.statusCode).send(error);
+    } catch (error) {
+      this.logger.error(error.error);
+      res.status(error.error.statusCode).send(error.error);
     }
   }
 

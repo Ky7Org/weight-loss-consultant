@@ -28,11 +28,12 @@ import {CustomerModule} from './customer.module';
 import {AuthenticationModule} from './auth.module';
 import * as Joi from 'joi';
 import {ENV_FILE_PATH} from '../constant';
-import {SearchModule} from './search.module';
-import {SortingAndFilteringModule} from './sorting-filtering.module';
 import {ContractModule} from "./contract.module";
 import {AppliedModule} from "./apply.module";
-import {KAFKA_AUTHENTICATION_SERVICE, KAFKA_USERS_MANAGEMENT_SERVICE} from "../../../../common/kafka-utils";
+import {
+  KAFKA_AUTHENTICATION_SERVICE,
+  KAFKA_USERS_MANAGEMENT_SERVICE,
+} from "../../../../common/kafka-utils";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -46,8 +47,6 @@ export class AppModule {
         CustomerModule,
         AuthenticationModule,
         HealthCheckModule,
-        SearchModule,
-        SortingAndFilteringModule,
         ContractModule,
         AppliedModule,
         ClientsModule.register([

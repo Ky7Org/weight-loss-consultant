@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { AdminService } from '../../services/admin.service';
+import { AdminService } from '../../services/users-management/admin.service';
 import { Response } from 'express';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';

@@ -20,12 +20,12 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
     await this.client.connect();
   }
 
-
   async onModuleDestroy() {
     await this.client.close();
   }
 
   login(dto: LoginRequest): Promise<LoginResponseModel> {
+    console.log(dto);
       return lastValueFrom(this.client.send(KAFKA_AUTHENTICATION_MESSAGE_PATTERN.login, dto));
   }
 

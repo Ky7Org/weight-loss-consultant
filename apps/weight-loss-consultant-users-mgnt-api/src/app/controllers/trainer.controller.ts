@@ -2,55 +2,49 @@ import { Controller, UseFilters } from '@nestjs/common';
 import { TrainerService } from '../services/impl/trainer.service.impl';
 import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import {
-  CREATE_TRAINER,
-  DELETE_TRAINER,
-  GET_ALL_TRAINERS,
-  GET_TRAINER_BY_EMAIL,
-  UPDATE_TRAINER, VIEW_DETAIL_SPECIAL_TRAINER
-} from '../../../../common/routes/users-management-service-routes';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
+import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from '../../../../common/kafka-utils'
+import {IKafkaMessage} from "../../../../common/kafka-message.model";
 
 @Controller()
 export class TrainerController {
   constructor(private readonly trainerService: TrainerService) {
   }
 
-  @MessagePattern({cmd: GET_ALL_TRAINERS})
+  @MessagePattern(MESSAGE_PATTERN.trainers.getAllTrainers)
   @UseFilters(new ExceptionFilter())
-  async index() {
+  index() {
     return this.trainerService.findAll();
   }
 
-  @MessagePattern({cmd: GET_TRAINER_BY_EMAIL})
+  @MessagePattern(MESSAGE_PATTERN.trainers.getByEmail)
   @UseFilters(new ExceptionFilter())
-  async getByEmail(@Payload() email: string) {
-    return this.trainerService.viewDetail(email);
+  getByEmail(@Payload() email: IKafkaMessage<string>) {
+    return this.trainerService.viewDetail(email.value);
   }
 
-  @MessagePattern({cmd: CREATE_TRAINER})
+  @MessagePattern(MESSAGE_PATTERN.trainers.create)
   @UseFilters(new ExceptionFilter())
-  async create(@Payload() dto: CreateTrainerDto) {
-    return this.trainerService.create(dto);
+  create(@Payload() dto: IKafkaMessage<CreateTrainerDto>) {
+    return this.trainerService.create(dto.value);
   }
 
-  @MessagePattern({cmd: UPDATE_TRAINER})
+  @MessagePattern(MESSAGE_PATTERN.trainers.update)
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() payload: UpdateTrainerPayloadType) {
-    return this.trainerService.edit(payload.dto, payload.email);
+  update(@Payload() payload: IKafkaMessage<UpdateTrainerPayloadType>) {
+    return this.trainerService.edit(payload.value.dto, payload.value.email);
   }
 
-  @MessagePattern({cmd: DELETE_TRAINER})
+  @MessagePattern(MESSAGE_PATTERN.trainers.delete)
   @UseFilters(new ExceptionFilter())
-  async delete(@Payload() email) {
-    return this.trainerService.delete(email);
+  delete(@Payload() email: IKafkaMessage<string>) {
+    return this.trainerService.delete(email.value);
   }
 
-  @MessagePattern({ cmd: VIEW_DETAIL_SPECIAL_TRAINER })
+  @MessagePattern(MESSAGE_PATTERN.trainers.getSpecial)
   @UseFilters(new ExceptionFilter())
-  async viewSpecial(@Payload() email): Promise<any> {
-    return this.trainerService.viewOnlyPackagesOfTrainer(email);
+  viewSpecial(@Payload() email: IKafkaMessage<string>) {
+    return this.trainerService.viewOnlyPackagesOfTrainer(email.value);
   }
-
 }
