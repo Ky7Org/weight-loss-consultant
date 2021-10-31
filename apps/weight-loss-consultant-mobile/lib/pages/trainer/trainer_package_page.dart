@@ -45,7 +45,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
 
   @override
   void initState() {
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
@@ -292,7 +292,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
   List<Widget> _buildActiveCampaignList(List<PackageModel> data){
     List<Widget> widgets = [];
     for (PackageModel model in data){
-      if (model.status != 1) continue;
+      if (model.status != 0) continue;
       var widget = _package(model);
       widgets.add(widget);
     }
@@ -303,7 +303,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
   List<Widget> _buildAppliedCampaignList(List<PackageModel> data){
     List<Widget> widgets = [];
     for (PackageModel model in data){
-      if (model.status != 2) continue;
+      if (model.status != 1) continue;
       var widget = _package(model);
       widgets.add(widget);
     }
@@ -312,6 +312,17 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
   }
 
   List<Widget> _buildApproveCampaignList(List<PackageModel> data){
+    List<Widget> widgets = [];
+    for (PackageModel model in data){
+      if (model.status != 2) continue;
+      var widget = _package(model);
+      widgets.add(widget);
+    }
+    widgets.add(const SizedBox(height: 60,));
+    return widgets;
+  }
+
+  List<Widget> _buildDeclineCampaignList(List<PackageModel> data){
     List<Widget> widgets = [];
     for (PackageModel model in data){
       if (model.status != 3) continue;
@@ -388,21 +399,28 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                             child: Text(
                               'Active',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w700),
+                                  fontSize: 15, fontWeight: FontWeight.w700),
                             ),
                           ),
                           Tab(
                             child: Text(
                               'Applied',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w700),
+                                  fontSize: 15, fontWeight: FontWeight.w700),
                             ),
                           ),
                           Tab(
                             child: Text(
                               'Approve',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w700),
+                                  fontSize: 15, fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              'Decline',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w700),
                             ),
                           ),
                         ],
@@ -421,6 +439,9 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                           ),
                           ListView(
                             children: _buildApproveCampaignList(snapshot.requireData),
+                          ),
+                          ListView(
+                            children: _buildDeclineCampaignList(snapshot.requireData),
                           ),
                         ],
                       ),

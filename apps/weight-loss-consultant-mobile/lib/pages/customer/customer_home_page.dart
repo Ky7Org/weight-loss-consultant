@@ -54,7 +54,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
       initAccount().then((value) {
         CustomerService customerService = CustomerService();
         customerService.getCustomerCampaign(user.email ?? "").then((value){
-          ongoingCampaign = value.first;
+          ongoingCampaign = value.firstWhere((element) => element.status == 1);
           setState(() {});
         });
       });
@@ -292,6 +292,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         ),
         GestureDetector(
           onTap: () {
+            Navigator.pushNamed(context, RoutePath.customerOngoingCampaignPage, arguments: ongoingCampaign!.id);
           },
           child: Card(
             elevation: 5,

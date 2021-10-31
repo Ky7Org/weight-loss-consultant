@@ -74,7 +74,10 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
   Widget _package(PackageModel model) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RoutePath.customerPackageDetailPage, arguments: model.id);
+        Navigator.pushNamed(context, RoutePath.customerPackageDetailPage, arguments: {
+          "packageID" : model.id,
+          "campaignID": widget.campaignId,
+        });
       },
       child: Card(
         elevation: 5,

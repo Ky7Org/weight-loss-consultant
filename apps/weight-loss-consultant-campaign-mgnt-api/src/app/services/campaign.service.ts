@@ -43,6 +43,7 @@ export class CampaignService {
       } as RpcExceptionModel);
     }
     const entity: CampaignEntity = await CampaignMapper.mapCreateCampaignDtoToEntity(dto, findCust);
+    entity.status = 0;
     return await this.repository.save(entity);
   }
 
@@ -108,7 +109,7 @@ export class CampaignService {
   async getAvailCampaigns() : Promise<CampaignEntity[]> {
     return this.repository.createQueryBuilder("campaign")
       .leftJoinAndSelect("campaign.customer", "customer")
-      .where("campaign.status = :status", {status : 1})
+      .where("campaign.status = :status", {status : 0})
       .orderBy("campaign.createDate" , "DESC")
       .getMany();
   }

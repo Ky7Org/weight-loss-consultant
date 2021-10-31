@@ -13,6 +13,8 @@ import {
 } from '../../../../common/routes/users-management-service-routes';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
+import {UpdateTrainerPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
+import {UpdateResult} from "typeorm";
 
 @Controller()
 export class TrainerController {
