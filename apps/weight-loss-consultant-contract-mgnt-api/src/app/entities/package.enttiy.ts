@@ -27,6 +27,18 @@ export class PackageEntity extends BaseEntity{
   @Column({type: 'varchar'})
   trainerEmail: string;
 
+  @Column({type: 'int'})
+  sessionLength: number;
+
+  @Column({type: 'bigint'})
+  createDate: number;
+
+  @Column({type: 'bigint'})
+  startDate: number;
+
+  @Column({type: 'bigint'})
+  endDate: number;
+
   @OneToMany(() => ContractEntity, contract => contract.package)
   contracts : PackageEntity[];
 

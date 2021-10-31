@@ -18,5 +18,11 @@ export class UpdatePackageDto {
   @ApiProperty()
   name?: string;
   @ApiProperty()
-  spendTimeToTraining: number;
+  spendTimeToTraining?: number;
+  @ApiProperty()
+  sessionLength?: number;
+  @ApiProperty()
+  startDate: number;
+  @ApiProperty()
+  endDate: number;
 }

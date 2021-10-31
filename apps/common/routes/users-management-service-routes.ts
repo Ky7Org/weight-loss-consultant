@@ -18,6 +18,7 @@ export const GET_TRAINER_BY_EMAIL = 'get-trainer-by-email';
 export const CREATE_TRAINER = 'create-trainer';
 export const UPDATE_TRAINER = 'update-trainer';
 export const DELETE_TRAINER = 'delete-trainer';
+export const VIEW_DETAIL_SPECIAL_TRAINER = 'view-detail-special-trainer'
 export const UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS = 'update-trainer-without-password-and-status'
 
 export const SORTING_AND_FILTERING_USERS = 'sorting-and-filtering-users';

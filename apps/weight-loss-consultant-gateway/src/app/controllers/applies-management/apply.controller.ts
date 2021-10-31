@@ -6,6 +6,7 @@ import {UpdateCampaignDto} from '../../dtos/campaign/update-campaign';
 import {AppliedService} from "../../services/applied.service";
 import {CreateAppliedDto} from "../../dtos/applied/create_applied_dto";
 import {UpdateAppliedDto} from "../../dtos/applied/update_applied_dto";
+import {ApprovePayload} from "../../../../../common/dtos/update-package-dto.payload";
 
 @ApiTags('Apply')
 @ApiBearerAuth()
@@ -128,5 +129,17 @@ export class ApplyController {
         this.logger.error(error);
         res.status(error.statusCode).send(error);
       }
+  }
+
+  @Post('/approved')
+  @UseGuards(JwtAuthGuard)
+  async approvePackage(@Res() res, @Body() payload: ApprovePayload) {
+    try {
+      const result = await this.appliedService.approvePackage(payload);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
   }
 }

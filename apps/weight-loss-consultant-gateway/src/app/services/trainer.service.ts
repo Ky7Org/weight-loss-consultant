@@ -1,19 +1,19 @@
-import {Inject, Injectable} from '@nestjs/common';
-import {USERS_MANAGEMENT_SERVICE_NAME} from '../../../../../constant';
-import {ClientProxy} from '@nestjs/microservices';
-import {DeleteResult, UpdateResult} from 'typeorm';
+import { Inject, Injectable } from '@nestjs/common';
+import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
+import { ClientProxy } from '@nestjs/microservices';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import {
   CREATE_TRAINER,
   DELETE_TRAINER,
   GET_ALL_TRAINERS,
   GET_TRAINER_BY_EMAIL,
-  UPDATE_TRAINER,
-  UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS
+  UPDATE_TRAINER, VIEW_DETAIL_SPECIAL_TRAINER
+  ,UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS
 } from '../../../../common/routes/users-management-service-routes';
-import {UpdateTrainerPayloadType} from '../../../../common/dtos/update-trainer-dto.payload';
-import {TrainerEntity} from '../entities/trainer.entity';
-import {UpdateTrainerDto} from '../dtos/trainer/update-trainer';
-import {CreateTrainerDto} from '../dtos/trainer/create-trainer';
+import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
+import { TrainerEntity } from '../entities/trainer.entity';
+import { UpdateTrainerDto } from '../dtos/trainer/update-trainer';
+import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
 import {UpdateTrainerPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
 
 @Injectable()
@@ -46,6 +46,11 @@ export class TrainerService {
 
   async viewDetail(email: string): Promise<TrainerEntity> {
     return this.usersManagementProxy.send<TrainerEntity, string>({ cmd: GET_TRAINER_BY_EMAIL }, email)
+      .toPromise();
+  }
+
+  async viewSpecial(email : string) : Promise<TrainerEntity> {
+    return this.usersManagementProxy.send<TrainerEntity, string>({ cmd: VIEW_DETAIL_SPECIAL_TRAINER }, email)
       .toPromise();
   }
 
