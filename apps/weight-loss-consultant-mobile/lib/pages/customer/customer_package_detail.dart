@@ -8,14 +8,15 @@ import 'package:weight_loss_consultant_mobile/constants/enums.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 import 'package:weight_loss_consultant_mobile/models/trainer_model.dart';
 
 
 class CustomerPackageDetail extends StatefulWidget {
-  int? packageID;
-  CustomerPackageDetail({Key? key, this.packageID}) : super(key: key);
+  Map<String, dynamic>? data;
+  CustomerPackageDetail({Key? key, this.data}) : super(key: key);
 
   @override
   _CustomerPackageDetailState createState() => _CustomerPackageDetailState();
@@ -26,6 +27,9 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
 
   AccountModel user = AccountModel(email: "", fullname: "");
   CustomerService service = CustomerService();
+  int? campaignID;
+  int? packageID;
+
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -46,7 +50,9 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        packageModel = service.getPackageById(widget.packageID as int, user);
+        packageID = widget.data!["packageID"];
+        campaignID = widget.data!["campaignID"];
+        packageModel = service.getPackageById(packageID as int, user);
         setState(() {});
       });
     });
@@ -328,8 +334,14 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: HexColor("#FF3939"),
-        onPressed: (){
-
+        onPressed: () async {
+          CustomerService customerService = CustomerService();
+          bool result = await customerService.approvePackage(packageID as int, campaignID as int, user);
+          if (result){
+            CustomToast.makeToast("Approve successfully");
+          } else {
+            CustomToast.makeToast("Some thing went wrong! Try again");
+          }
         },
         label: const Text("Approve this campaign"),
         icon: const Icon(Icons.add),
