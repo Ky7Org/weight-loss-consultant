@@ -20,16 +20,18 @@ class LocalNotificationService {
     _notificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String? data) async {
       Map<String, dynamic> myDataFromMessage = jsonDecode(data!);
-      print(myDataFromMessage['type']);
+
       if (data != null) {
         final typeOfMessage = myDataFromMessage['type'];
+        final packageID = myDataFromMessage["packageID"];
+        final campaignID = myDataFromMessage["campaignID"];
+        Map<String, dynamic> mapData = {};
+        mapData["packageID"] = packageID;
+        mapData["campaignID"] = campaignID;
         if (typeOfMessage == 'Apply Package') {
-          final packageID = myDataFromMessage['packageID'];
-          LocalNotificationService._navKey.currentState!.pushNamed(
-              RoutePath.customerPackageDetailPage,
-              arguments: int.parse(packageID));
+          _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
+              arguments: mapData);
         } else if (typeOfMessage == 'Apply Campaign') {
-          final campaignID = myDataFromMessage['campaignID'];
           LocalNotificationService._navKey.currentState!.pushNamed(
               RoutePath.trainerViewCampaignDetailPage,
               arguments: int.parse(campaignID));
