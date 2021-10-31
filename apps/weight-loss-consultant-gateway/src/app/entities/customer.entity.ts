@@ -23,6 +23,8 @@ export class CustomerEntity extends BaseEntity{
   profileImage: string;
   @Column({type: 'bigint'})
   dob: number;
+  @Column({type: 'varchar'})
+  deviceID: string;
 
   @OneToMany(() => CampaignEntity, campaign => campaign.customer )
   campaigns: CampaignEntity[];

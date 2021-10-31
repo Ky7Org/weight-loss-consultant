@@ -39,6 +39,9 @@ export class TrainerEntity extends BaseEntity {
   @Column({type: 'float'})
   rating: number;
 
+  @Column({type: 'varchar'})
+  deviceID: string;
+
   @OneToMany(() => PackageEntity, packaged => packaged.trainer)
   packages: PackageEntity[];
 
