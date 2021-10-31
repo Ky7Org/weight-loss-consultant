@@ -110,6 +110,8 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
                           SizedBox(width: 20,),
                           RaisedButton(
                             onPressed: () async {
+                              print(packageID);
+                              print(widget.campaignId );
                               bool result = await service.applyPackageToCampaign(packageID, widget.campaignId as int, user);
                               if (result){
                                 CustomToast.makeToast("Save successfully");
@@ -151,6 +153,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
   Widget _package(PackageModel model) {
     return GestureDetector(
       onTap: () {
+        _showLoginError(model.id as int);
       },
       child: Card(
         elevation: 5,
@@ -385,7 +388,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
   List<Widget> _buildCampaignList(List<PackageModel> data){
     List<Widget> widgets = [];
     for (PackageModel model in data){
-      if (model.status != 1) continue;
+      if (model.status != 0) continue;
       var widget = _package(model);
       widgets.add(widget);
     }
