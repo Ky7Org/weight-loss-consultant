@@ -6,6 +6,7 @@ import Signin from '../pages/auth/Signin/Signin';
 import ErrorPage from '../pages/ErrorPages/ErrorPages';
 import ListUser from '../components/ListUser/ListUser';
 import Profile from '../pages/Profile/Profile';
+import Contract from '../pages/ContractPage/Contract';
 export default function AppRouter() {
   return (
     <Switch>
@@ -16,6 +17,7 @@ export default function AppRouter() {
       <PrivateRoute path="/user/customer" component={ListUser} exact={true} />
       <PrivateRoute path="/user/trainer" component={ListUser} exact={true} />
       <PrivateRoute path="/user/admin" component={ListUser} exact={true} />
+      <PrivateRoute path="/user/contract" component={Contract} exact={true} />
       <Route exact path="/page-not-found">
         <ErrorPage code={404} />
       </Route>

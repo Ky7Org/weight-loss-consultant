@@ -24,3 +24,11 @@ const toSelection = (data) => {
 
   return { value: data?.id, label: data?.name };
 };
+export const transDateFormat = (data) => {
+  var cdate = new Date(data);
+  var month = cdate.getUTCMonth() + 1;
+  var day = cdate.getUTCDate();
+  var year = cdate.getUTCFullYear();
+  var result = day + '/' + month + '/' + year;
+  return result;
+};
