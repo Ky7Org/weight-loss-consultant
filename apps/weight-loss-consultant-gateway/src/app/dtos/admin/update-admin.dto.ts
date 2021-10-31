@@ -70,4 +70,6 @@ export class UpdateAdminDto {
     type: Number,
   })
   dob?: number;
+
+  deviceID?: string;
 }

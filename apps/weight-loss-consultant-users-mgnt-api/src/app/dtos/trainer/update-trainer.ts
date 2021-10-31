@@ -98,4 +98,6 @@ export class UpdateTrainerDto {
   })
   @IsNumber()
   rating: number;
+
+  deviceID?: string;
 }
