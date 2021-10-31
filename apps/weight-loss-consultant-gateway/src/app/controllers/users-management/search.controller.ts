@@ -7,6 +7,7 @@ import {
   UpdatePasswordPayload,
   UpdateStatusPayload
 } from "../../../../../common/dtos/update-without-password-and-status.payload";
+import {UpdateDeviceIDPayload} from "../../../../../common/dtos/update-trainer-dto.payload";
 
 @ApiTags('Sorting and Filtering')
 @ApiBearerAuth()
@@ -72,6 +73,26 @@ export class SearchController {
         const error = {
           statusCode: HttpStatus.BAD_REQUEST,
           message: 'Update status failed'
+        }
+        res.status(error.statusCode).send(error);
+      }
+      res.status(HttpStatus.OK).send(result);
+
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/v1/updateDeviceID')
+  async updateDeviceID(@Res() res, @Body() payload: UpdateDeviceIDPayload) {
+    try {
+      const result = await this.service.updateDeviceID(payload);
+      if (!result) {
+        const error = {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'Update device ID failed'
         }
         res.status(error.statusCode).send(error);
       }
