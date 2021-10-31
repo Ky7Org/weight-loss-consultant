@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_applied_package_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_create_campaign.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_ongoing_campaign_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_overall_report_calendar_view_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_overall_report_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_package_detail.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_make_report_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_report_detail_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_report_history_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_update_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/edit_profile_page.dart';
@@ -25,6 +31,7 @@ import 'package:weight_loss_consultant_mobile/pages/register/trainer_register_pa
 import 'package:weight_loss_consultant_mobile/pages/register/register_sucessful_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/create_packages_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/no_packages_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_feedback_report_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_home_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_package_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_update_package_page.dart';
@@ -173,9 +180,9 @@ class RouteGenerator{
         }
         return _errorRoute();
       case RoutePath.customerPackageDetailPage:
-        if (args is int){
+        if (args is Map<String, dynamic>){
           return MaterialPageRoute(builder: (_){
-            return CustomerPackageDetail(packageID: args,);
+            return CustomerPackageDetail(data: args,);
           });
         }
         return _errorRoute();
@@ -186,6 +193,37 @@ class RouteGenerator{
           });
         }
         return _errorRoute();
+      case RoutePath.customerOverallReportPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerOverallReportPage();
+        });
+      case RoutePath.customerOverallReportCalendarViewPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerOverallReportCalendarViewPage();
+        });
+      case RoutePath.customerOngoingCampaignPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerOnGoingCampaignPage(packageID: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerMakeReportPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerMakeReportPage();
+        });
+      case RoutePath.trainerFeedbackReportPage:
+        return MaterialPageRoute(builder: (_){
+          return const TrainerFeedbackReportPage();
+        });
+      case RoutePath.customerReportHistoryPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerReportHistoryPage();
+        });
+      case RoutePath.customerReportDetailPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerReportDetailPage();
+        });
       default:
         return _errorRoute();
 
