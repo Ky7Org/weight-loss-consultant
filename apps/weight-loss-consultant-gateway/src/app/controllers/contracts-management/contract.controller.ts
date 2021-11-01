@@ -4,6 +4,7 @@ import {ApiBody, ApiParam, ApiResponse} from "@nestjs/swagger";
 import {ContractService} from "../../services/contract.service";
 import {CreateContractDto} from "../../dtos/contract/create-health-info.dto";
 import {UpdateContractDto} from "../../dtos/contract/update-health-info.dto";
+import {GetContractByPackageIDOrCampaignIDPayload} from "../../../../../common/dtos/update-trainer-dto.payload";
 
 
 @Controller(`/v1/contracts`)
@@ -120,4 +121,17 @@ export class ContractController {
       res.status(error.statusCode).send(error);
     }
   }
+
+  @Get('/getContract/byPackageOrCampaignId')
+  @UseGuards(JwtAuthGuard)
+  async getContractByPackageIdOrCampaignId(@Body() payload: GetContractByPackageIDOrCampaignIDPayload, @Res() res) {
+    try {
+      const result = await this.contractService.getContractByPackageIdOrCampaignId(payload);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
 }

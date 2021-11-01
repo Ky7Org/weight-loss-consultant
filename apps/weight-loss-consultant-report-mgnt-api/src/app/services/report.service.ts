@@ -16,6 +16,8 @@ import {CONTRACT_MANAGEMENT_SERVICE_NAME} from "../../../../../constant";
 import {FIND_CONTRACT_BY_ID} from "../../../../common/routes/contract-management-service-routes";
 import {ReportMapper} from "../mappers/report/report.mapper";
 import {ReportMediaMapper} from "../mappers/report-media/report-media.mapper";
+import {TrainerApproveReportPayload} from "../../../../common/dtos/update-trainer-dto.payload";
+import {TRAINER_APPROVAL} from "../../../../common/utils";
 
 @Injectable()
 export class ReportService {
@@ -123,4 +125,45 @@ export class ReportService {
     return result;
   }
 
+  async findReportByContractId(contractID: number) : Promise<ReportEntity[]> {
+    const result = await this.reportRepository.createQueryBuilder("report")
+      .where("report.contractID = :contractID", {contractID : contractID})
+      .getMany();
+    return result;
+  }
+
+  //GET
+  async customerCreateReport(payload: CreateReportDto) : Promise<ReportEntity> {
+    const contractID = payload.contractID;
+    const contract = await this.validateContract(contractID);
+    if (contract === undefined) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found contract with id: ${contractID}`
+      } as RpcExceptionModel);
+    }
+    const entity = await ReportMapper.mapCreateReportDtoToEntity(payload, contract);
+    return this.reportRepository.save(entity);
+  }
+
+  //PUT
+  async trainerApproveReport(payload: TrainerApproveReportPayload) : Promise<UpdateResult> {
+    // const trainerEmail = payload.trainerEmail ?? "";
+    const trainerFeedback : string = payload.trainerFeedback ?? "";
+    const trainerApproval : number = payload.trainerApproval ?? TRAINER_APPROVAL.APPROVED;
+    const reportId : number = payload.reportID;
+
+    const viewReport = await this.viewReportDetail(reportId);
+
+
+    const result = await this.reportRepository.createQueryBuilder("report")
+      .update(ReportEntity)
+      .set({
+          trainerFeedback : trainerFeedback,
+          trainerApproval: trainerApproval
+      })
+      .where("id = :id", {id : viewReport.id})
+      .execute();
+    return result;
+  }
 }
