@@ -5,7 +5,9 @@ import 'package:weight_loss_consultant_mobile/constants/api_constant.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/contract_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
+import 'package:weight_loss_consultant_mobile/models/report_model.dart';
 
 
 class CustomerService{
@@ -45,13 +47,17 @@ class CustomerService{
         int currentWeight = 0,
         int spendTimeForTraining = 0,
         String description = "",
+        DateTime? startDate,
+        DateTime? endDate,
         AccountModel? user,
       }) async {
+    startDate = startDate ?? DateTime.now();
+    endDate = endDate ?? DateTime.now();
     Map<String, dynamic> data = {};
     data["customerEmail"] = user!.email ?? "";
     data["description"] = description;
-    data["startDate"] = DateTime.now().millisecondsSinceEpoch.toString();
-    data["endDate"] = "0";
+    data["startDate"] = startDate.millisecondsSinceEpoch.toString();
+    data["endDate"] = endDate.microsecondsSinceEpoch.toString();
     data["feedback"] = "";
     data["targetWeight"] = targetWeight;
     data["currentWeight"] = currentWeight;
@@ -149,14 +155,97 @@ class CustomerService{
       },
       body: json.encode(data),
     );
-    print(data);
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200){
       return true;
     }
     return false;
   }
+
+  Future<ContractModel> getContractByCampaignId(int campaignID, AccountModel user) async{
+    var url = Uri.parse(ApiConstant.getContractByPackageIDorCampaignIDApi);
+    List<ContractModel> models = [];
+    var response = await http.post(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "campaignID": campaignID,
+      }),
+    );
+
+    if (response.statusCode == 200){
+      Iterable list = json.decode(response.body);
+      for (var item in list){
+        ContractModel model = ContractModel.fromJson(item);
+        models.add(model);
+      }
+    }
+    return models[0];
+  }
+
+  Future<ContractModel> getContractByPackageId(int campaignID, AccountModel user) async{
+    var url = Uri.parse(ApiConstant.getContractByPackageIDorCampaignIDApi);
+    List<ContractModel> models = [];
+    var response = await http.post(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "packageID": campaignID,
+      }),
+    );
+
+    if (response.statusCode == 200){
+      Iterable list = json.decode(response.body);
+      for (var item in list){
+        ContractModel model = ContractModel.fromJson(item);
+        models.add(model);
+      }
+    }
+    return models[0];
+  }
+
+  Future<ReportModel?> customerCreateReport
+      (String contractID, String exerciseDescription, String dietDescription, int weight, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.customerCreateProjectApi);
+    var response = await http.post(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode({
+        "contractID": contractID,
+        "exerciseDescription": exerciseDescription,
+        "dietDescription": dietDescription,
+        "weight": weight
+      }),
+    );
+    if (response.statusCode == 201){
+      return ReportModel.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<void> createMediaReport(int reportID, String url, int type, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.customerCreateProjectApi);
+    var response = await http.post(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode({
+        "reportID": reportID,
+        "url": url,
+        "type": type
+      }),
+    );
+  }
+
 
 
 

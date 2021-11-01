@@ -6,15 +6,18 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/models/trainer_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class CustomerOnGoingCampaignPage extends StatefulWidget {
-  int? packageID;
-  CustomerOnGoingCampaignPage({Key? key,  this.packageID}) : super(key: key);
+  int? campaignId;
+  CustomerOnGoingCampaignPage({Key? key,  this.campaignId}) : super(key: key);
 
   @override
   _CustomerOnGoingCampaignPageState createState() => _CustomerOnGoingCampaignPageState();
@@ -22,9 +25,11 @@ class CustomerOnGoingCampaignPage extends StatefulWidget {
 
 class _CustomerOnGoingCampaignPageState extends State<CustomerOnGoingCampaignPage> {
   Future<PackageModel?>? packageModel;
+  CustomerCampaignModel? campaignModel;
 
   AccountModel user = AccountModel(email: "", fullname: "");
   CustomerService service = CustomerService();
+  TrainerService trainerService = TrainerService();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,8 +50,12 @@ class _CustomerOnGoingCampaignPageState extends State<CustomerOnGoingCampaignPag
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        packageModel = service.getPackageById(24, user);
-        setState(() {});
+        //packageModel = service.getPackageById(widget.packageID as int, user);
+        packageModel = service.getPackageById(37, user);
+        trainerService.getCampaignById(widget.campaignId as int, user).then((value){
+          campaignModel = value;
+          setState(() {});
+        });
       });
     });
   }
@@ -175,13 +184,13 @@ class _CustomerOnGoingCampaignPageState extends State<CustomerOnGoingCampaignPag
     );
   }
 
-  Widget _buildReportButton(){
+  Widget _buildReportButton(PackageModel packageModel){
     return SizedBox(
       width: 100,
       height: 100,
       child: GestureDetector(
         onTap: (){
-          Navigator.pushNamed(context, RoutePath.customerMakeReportPage);
+          Navigator.pushNamed(context, RoutePath.customerMakeReportPage, arguments: packageModel.id);
         },
         child: Card(
           elevation: 10,
@@ -244,10 +253,10 @@ class _CustomerOnGoingCampaignPageState extends State<CustomerOnGoingCampaignPag
   }
 
 
-  Widget _buildButtonGroup(){
+  Widget _buildButtonGroup(PackageModel packageModel){
     return Wrap(
       children: [
-        _buildReportButton(),
+        _buildReportButton(packageModel),
         _buildHistoryButton(),
 
       ],
@@ -273,7 +282,7 @@ class _CustomerOnGoingCampaignPageState extends State<CustomerOnGoingCampaignPag
                     children: [
                       _buildTrainerContainer(snapshot.requireData!.trainer as TrainerModel),
                       _buildPackageContainer(snapshot.requireData as PackageModel),
-                      _buildButtonGroup(),
+                      _buildButtonGroup(snapshot.requireData as PackageModel),
                       const SizedBox(height: 60,),
                     ],
                   );

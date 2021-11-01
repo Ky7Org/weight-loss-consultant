@@ -204,14 +204,17 @@ class RouteGenerator{
       case RoutePath.customerOngoingCampaignPage:
         if (args is int){
           return MaterialPageRoute(builder: (_){
-            return CustomerOnGoingCampaignPage(packageID: args,);
+            return CustomerOnGoingCampaignPage(campaignId: args,);
           });
         }
         return _errorRoute();
       case RoutePath.customerMakeReportPage:
-        return MaterialPageRoute(builder: (_){
-          return const CustomerMakeReportPage();
-        });
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerMakeReportPage(packageId: args,);
+          });
+        }
+        return _errorRoute();
       case RoutePath.trainerFeedbackReportPage:
         return MaterialPageRoute(builder: (_){
           return const TrainerFeedbackReportPage();

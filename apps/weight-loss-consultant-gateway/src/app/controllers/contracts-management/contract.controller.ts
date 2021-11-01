@@ -122,7 +122,7 @@ export class ContractController {
     }
   }
 
-  @Get('/v1/contracts/getContract/byPackageOrCampaignId')
+  @Post('/v1/contracts/getContract/byPackageOrCampaignId')
   @UseGuards(JwtAuthGuard)
   async getContractByPackageIdOrCampaignId(@Body() payload: GetContractByPackageIDOrCampaignIDPayload, @Res() res) {
     try {

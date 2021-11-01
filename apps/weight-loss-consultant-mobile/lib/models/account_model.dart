@@ -17,6 +17,7 @@ class AccountModel{
   late String? dob;
   late String? accessToken;
   late String? password;
+  late String? deviceID;
 
 
   AccountModel({this.email = "", this.fullname = ""});
