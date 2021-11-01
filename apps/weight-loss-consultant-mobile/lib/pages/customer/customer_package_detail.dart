@@ -51,8 +51,8 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        packageID = int.parse(widget.data!["packageID"]);
-        campaignID = int.parse(widget.data!["campaignID"]);
+        packageID = widget.data!["packageID"];
+        campaignID = widget.data!["campaignID"];
         packageModel = service.getPackageById(packageID as int, user);
         setState(() {});
       });

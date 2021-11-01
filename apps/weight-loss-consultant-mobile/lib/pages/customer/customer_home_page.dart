@@ -294,6 +294,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         ),
         GestureDetector(
           onTap: () {
+            print(ongoingCampaign);
             Navigator.pushNamed(context, RoutePath.customerOngoingCampaignPage, arguments: ongoingCampaign!.id);
           },
           child: Card(

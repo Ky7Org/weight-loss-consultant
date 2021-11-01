@@ -34,6 +34,7 @@ export class ReportService {
 
   async findReports(): Promise<ReportEntity[]> {
     return await this.reportRepository.createQueryBuilder("report")
+      .leftJoinAndSelect("report.contract", "Contract")
       .getMany();
   }
 

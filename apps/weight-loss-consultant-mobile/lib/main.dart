@@ -60,8 +60,8 @@ class _AppState extends State<App> {
               final packageID = message.data["packageID"];
               final campaignID = message.data["campaignID"];
               Map<String, dynamic> mapData = {};
-              mapData["packageID"] = packageID;
-              mapData["campaignID"] = campaignID;
+              mapData["packageID"] = int.parse(packageID);
+              mapData["campaignID"] = int.parse(campaignID);
               _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
                   arguments: mapData);
             } else if (typeOfMessage == 'Apply Campaign') {

@@ -22,4 +22,6 @@ class ApiConstant{
   static const String approvePackageApi = routePath + "/api/v1/applies/approved";
   static const String firebaseMessagingApi = "https://fcm.googleapis.com/fcm/send";
   static const String updateDeviceIDApi = routePath + "/api/v1/updateDeviceID";
+  static const String getContractByPackageIDorCampaignIDApi = routePath + "/api/v1/contracts/getContract/byPackageOrCampaignId";
+  static const String customerCreateProjectApi = routePath + "/api/v1/reports";
 }

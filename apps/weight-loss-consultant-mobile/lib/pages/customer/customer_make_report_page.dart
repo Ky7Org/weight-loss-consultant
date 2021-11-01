@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 
@@ -5,16 +6,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
+import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/contract_model.dart';
+import 'package:weight_loss_consultant_mobile/models/report_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 
 class CustomerMakeReportPage extends StatefulWidget {
-  const CustomerMakeReportPage({Key? key}) : super(key: key);
+  int? packageId;
+  CustomerMakeReportPage({Key? key, this.packageId}) : super(key: key);
 
   @override
   _CustomerMakeReportPageState createState() => _CustomerMakeReportPageState();
@@ -23,12 +31,37 @@ class CustomerMakeReportPage extends StatefulWidget {
 class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
   final TextEditingController _todayDiet = TextEditingController();
   final TextEditingController _todayExercise = TextEditingController();
-  File? _imageFile0;
-  File? _imageFile1;
   List<File> exerciseImages = [];
   List<File> dietImages = [];
   final picker = ImagePicker();
-  double userWeight = 30;
+  int userWeight = 30;
+
+  AccountModel user = AccountModel(email: "", fullname: "");
+
+  Future<void> initAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJSON = prefs.getString('ACCOUNT');
+    if (userJSON is String){
+      Map<String, dynamic> userMap = jsonDecode(userJSON);
+      user = AccountModel.fromJson(userMap);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_){
+      initAccount().then((value){
+        setState(() {});
+      });
+    });
+  }
+
+  Future<void> saveAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
+  }
+
 
 
   Future pickImage(List<File> imageList) async {
@@ -37,12 +70,12 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
   }
 
 
-  Future uploadFile() async {
-    String imageName = basename(_imageFile0!.path);
+  Future<String?> uploadFile(File image) async {
+    String imageName = basename(image.path);
     try {
       await firebase_storage.FirebaseStorage.instance
           .ref('uploads/$imageName')
-          .putFile(_imageFile0!);
+          .putFile(image);
       return await firebase_storage.FirebaseStorage.instance
           .ref('uploads/$imageName')
           .getDownloadURL();
@@ -240,9 +273,9 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
               showLabels: true,
               enableTooltip: true,
               value: userWeight,
-              onChanged: (dynamic newValue){
+              onChanged: (newValue){
                 setState(() {
-                  userWeight = newValue;
+                  userWeight = (newValue as double).toInt();
                 });
               },
             ),
@@ -256,7 +289,31 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
     return FlatButton(
       height: 64,
       color: AppColors.PRIMARY_COLOR,
-      onPressed: () async {},
+      onPressed: () async {
+        CustomerService customerService = CustomerService();
+        ContractModel contract = await customerService.getContractByPackageId(widget.packageId as int, user);
+        ReportModel? report = await customerService.customerCreateReport(
+          contract.id.toString(), _todayExercise.text, _todayDiet.text, userWeight, user
+        );
+        if (report == null){
+          CustomToast.makeToast("Some thing went wrong! Try again");
+          return;
+        }
+        for (File exerciseImage in exerciseImages){
+          String? url = await uploadFile(exerciseImage);
+          customerService.createMediaReport(
+            report.id as int, url as String, 0, user
+          );
+        }
+        for (File exerciseImage in dietImages){
+          String? url = await uploadFile(exerciseImage);
+          customerService.createMediaReport(
+              report.id as int, url as String, 1, user
+          );
+        }
+        CustomToast.makeToast("Update successfully");
+
+      },
       minWidth: double.infinity,
       child: const Text(
         'Save Repost',

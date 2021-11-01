@@ -25,8 +25,8 @@ class LocalNotificationService {
       final packageID = myDataFromMessage["packageID"];
       final campaignID = myDataFromMessage["campaignID"];
       Map<String, dynamic> mapData = {};
-      mapData["packageID"] = packageID;
-      mapData["campaignID"] = campaignID;
+      mapData["packageID"] = int.parse(packageID);
+      mapData["campaignID"] = int.parse(campaignID);
       if (typeOfMessage == 'Apply Package') {
         _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
             arguments: mapData);
