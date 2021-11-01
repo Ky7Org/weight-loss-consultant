@@ -1,0 +1,15 @@
+create table ExerciseDetail
+(
+    id          int                        not null
+        primary key,
+    name        varchar(100) charset utf8  not null,
+    taskID      int                        not null,
+    description varchar(1000) charset utf8 null,
+    note        varchar(1000) charset utf8 null,
+    constraint ExerciseDetail_ibfk_1
+        foreign key (taskID) references Task (id)
+);
+
+create index taskID
+    on ExerciseDetail (taskID);
+

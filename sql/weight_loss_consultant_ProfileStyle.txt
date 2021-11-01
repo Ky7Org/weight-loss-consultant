@@ -1,0 +1,24 @@
+create table ProfileStyle
+(
+    id           int auto_increment
+        primary key,
+    trainerEmail varchar(320) not null,
+    styleID      int          not null,
+    constraint ProfileStyle_TrainerStyle_id_fk
+        foreign key (styleID) references TrainerStyle (id),
+    constraint ProfileStyle_ibfk_1
+        foreign key (trainerEmail) references Trainer (email)
+);
+
+create index profileEmail
+    on ProfileStyle (trainerEmail);
+
+create index styleID
+    on ProfileStyle (styleID);
+
+INSERT INTO weight_loss_consultant.ProfileStyle (id, trainerEmail, styleID) VALUES (1, 'sontrainer@gmail.com', 1);
+INSERT INTO weight_loss_consultant.ProfileStyle (id, trainerEmail, styleID) VALUES (2, 'tientrainer@gmail.com', 2);
+INSERT INTO weight_loss_consultant.ProfileStyle (id, trainerEmail, styleID) VALUES (3, 'nghiemtrainer@gmail.com', 2);
+INSERT INTO weight_loss_consultant.ProfileStyle (id, trainerEmail, styleID) VALUES (4, 'bangtrainer@gmail.com', 3);
+INSERT INTO weight_loss_consultant.ProfileStyle (id, trainerEmail, styleID) VALUES (5, 'baotrainer@gmail.com', 3);
+INSERT INTO weight_loss_consultant.ProfileStyle (id, trainerEmail, styleID) VALUES (6, 'sontrainer@gmail.com', 2);

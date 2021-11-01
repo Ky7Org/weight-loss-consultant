@@ -1,0 +1,16 @@
+create table Task
+(
+    id          int           not null
+        primary key,
+    contractID  int           not null,
+    date        bigint        not null,
+    weightAfter float         not null,
+    heightAfter float         not null,
+    comment     varchar(1000) null,
+    constraint Task_Contract_id_fk
+        foreign key (contractID) references Contract (id)
+);
+
+create index packageID
+    on Task (contractID);
+

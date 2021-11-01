@@ -1,0 +1,11 @@
+create table TrainerStyle
+(
+    id          int auto_increment
+        primary key,
+    name        varchar(200) charset utf8  not null,
+    description varchar(1000) charset utf8 null
+);
+
+INSERT INTO weight_loss_consultant.TrainerStyle (id, name, description) VALUES (1, 'Aerobic exercise', 'Exercise is key to good health');
+INSERT INTO weight_loss_consultant.TrainerStyle (id, name, description) VALUES (2, 'Workout', 'Workout is the best way to loss weight');
+INSERT INTO weight_loss_consultant.TrainerStyle (id, name, description) VALUES (3, 'Front squat', 'Front squat is also one of the ways to loss weight');
