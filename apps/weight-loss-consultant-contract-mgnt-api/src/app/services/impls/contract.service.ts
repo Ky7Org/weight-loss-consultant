@@ -9,11 +9,14 @@ import {UpdateContractDto} from "../../dtos/contract/update-health-info.dto";
 import {CAMPAIGN_MANAGEMENT_SERVICE_NAME, PACKAGES_MANAGEMENT_SERVICE_NAME,} from "../../../../../../constant";
 import {CampaignEntity} from "../../entities/campaign.entity";
 import {Observable} from "rxjs";
-import {FIND_CAMPAIGN_BY_ID} from "../../../../../common/routes/campaigns-management-routes";
+import {FIND_CAMPAIGN_BY_ID, UPDATE_STATUS_CAMPAIGN} from "../../../../../common/routes/campaigns-management-routes";
 import {PackageEntity} from "../../entities/package.enttiy";
-import {FIND_PACKAGE_BY_ID} from "../../../../../common/routes/packages-management-routes";
+import {FIND_PACKAGE_BY_ID, UPDATE_STATUS_PACKAGE} from "../../../../../common/routes/packages-management-routes";
 import {ContractRepository} from "../../repositories/contract.repository";
 import {GetContractByPackageIDOrCampaignIDPayload} from "../../../../../common/dtos/update-trainer-dto.payload";
+import {CAMPAIGN_STATUS, CONTRACT_STATUS, PACKAGE_STATUS} from "../../../../../common/utils";
+import {UpdateStatusCampaignPayload} from "../../../../../common/dtos/update-campaign-dto.payload";
+import {UpdateStatusPackagePayload} from "../../../../../common/dtos/update-package-dto.payload";
 
 @Injectable()
 export class ContractService
@@ -44,9 +47,26 @@ export class ContractService
       .send<PackageEntity, number>({cmd: FIND_PACKAGE_BY_ID}, id);
   }
 
+  private updateCampaignStatus(payload: UpdateStatusCampaignPayload): Observable<boolean> {
+    return this.campaignServiceManagementProxy
+      .send({cmd: UPDATE_STATUS_CAMPAIGN}, payload);
+  }
+
+  private updatePackageStatus(payload: UpdateStatusPackagePayload): Observable<boolean> {
+    return this.packageServiceManagementProxy
+      .send({cmd: UPDATE_STATUS_PACKAGE}, payload);
+  }
+
   async create(dto: CreateContractDto): Promise<ContractEntity | null> {
     const campaignID = dto.campaignID;
     const packageID = dto.packageID;
+    const existed = await this.checkExistedCampaignOrPackage(packageID, campaignID);
+    if (existed) {
+      throw new RpcException({
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: `Package or campaign is already existed in another contract.`
+      } as RpcExceptionModel);
+    }
     const findCampaign = await this.validateCampaign(campaignID).toPromise();
     if (!findCampaign) {
       throw new RpcException({
@@ -117,6 +137,15 @@ export class ContractService
     return query;
   }
 
+  async viewDetailWithCampaignAndPackage(id : number) : Promise<ContractEntity> {
+    const query = this.repository.createQueryBuilder("contract")
+      .leftJoinAndSelect("contract.campaign", "campaign")
+      .leftJoinAndSelect("contract.package", "package")
+      .where("contract.id = :id", {id: id})
+      .getOne();
+    return query;
+  }
+
   async getContractByPackageIdOrCampaignId(payload: GetContractByPackageIDOrCampaignIDPayload) : Promise<any> {
     const packageID = payload.packageID ?? "";
     const campaignID = payload.campaignID ?? "";
@@ -125,6 +154,63 @@ export class ContractService
       .orWhere("contract.campaignID = :campaignID", {campaignID : campaignID})
       .getMany();
     return result;
+  }
+
+  //false is not exist, true is exist
+  private async checkExistedCampaignOrPackage(packageId : number, campaignId: number) : Promise<boolean> {
+    const result = await this.repository.createQueryBuilder("contract")
+      //Nếu contract đó đã expired thì package đó vẫn có thể tạo contract với campaign khác
+      .where("(contract.campaignID = :campaignID OR contract.packageID = :packageID) AND contract.status = :status" ,
+        {campaignID: campaignId, packageID : packageId, status: CONTRACT_STATUS.ONGOING})
+      .getOne();
+    return result ? true : false;
+  }
+
+   async expireContract(contractId: number) : Promise<boolean> {
+    //find contract
+    const exist = await this.viewDetailWithCampaignAndPackage(contractId);
+    if (!exist) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found contract with id: ${contractId}`
+      } as RpcExceptionModel);
+    }
+    //update campaign status => CLOSED
+     const campaignPayload = {
+        id: exist.campaign.id,
+        status: CAMPAIGN_STATUS.CLOSED
+     } as UpdateStatusCampaignPayload
+    const updateCampaignStatusResult = await this.updateCampaignStatus(campaignPayload).toPromise();
+    if (!updateCampaignStatusResult) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Update campaign status failed`
+      } as RpcExceptionModel);
+    }
+     //update package status => APPROVED
+     const packagePayload = {
+       id: exist.package.id,
+       status: PACKAGE_STATUS.APPROVED
+     } as UpdateStatusPackagePayload
+     const updatePackageStatusResult = await this.updatePackageStatus(packagePayload).toPromise();
+     if (!updatePackageStatusResult) {
+       throw new RpcException({
+         statusCode: HttpStatus.NOT_FOUND,
+         message: `Update package status failed`
+       } as RpcExceptionModel);
+     }
+    //update contract status => EXPIRED
+    const result = await this.repository.createQueryBuilder("contract")
+      .update(ContractEntity)
+      .set({
+        status: CONTRACT_STATUS.EXPIRED
+      })
+      .where("id = :id", {id: contractId})
+      .execute();
+    if ((await result.affected) === 1 && updateCampaignStatusResult && updatePackageStatusResult){
+      return true;
+    }
+    return false;
   }
 
 }
