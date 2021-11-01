@@ -12,11 +12,10 @@ export class ReportMapper {
       return null;
     }
     const entity = new ReportEntity();
-    entity.date = dto.date;
     entity.exerciseDescription = dto.exerciseDescription;
     entity.dietDescription = dto.dietDescription;
-    entity.trainerFeedback = dto.trainerFeedback;
-    entity.trainerApproval = dto.trainerApproval;
+    entity.trainerFeedback = undefined;
+    entity.trainerApproval = undefined;
     entity.weight = dto.weight;
     entity.createDate = new Date().getTime();
     entity.contract = contract;
@@ -29,7 +28,6 @@ export class ReportMapper {
     }
     const entity = new ReportEntity();
 
-    entity.date = dto.date;
     entity.exerciseDescription = dto.exerciseDescription;
     entity.dietDescription = dto.dietDescription;
     entity.trainerFeedback = dto.trainerFeedback;

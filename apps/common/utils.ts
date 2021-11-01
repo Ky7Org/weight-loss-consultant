@@ -19,3 +19,8 @@ export enum CONTRACT_STATUS {
   ONGOING = 0,
   EXPIRED = 1
 }
+
+export enum TRAINER_APPROVAL {
+  APPROVED = 1,
+  DECLINED = 2,
+}
