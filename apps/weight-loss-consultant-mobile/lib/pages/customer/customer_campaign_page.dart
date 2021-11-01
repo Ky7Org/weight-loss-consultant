@@ -426,7 +426,9 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
                 ],
               );
             }
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator()
+            );
           }
         ),
       ),

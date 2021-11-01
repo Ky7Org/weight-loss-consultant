@@ -449,7 +449,9 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                   ],
                 );
               }
-              return const CircularProgressIndicator();
+              return const Center(
+                child: CircularProgressIndicator()
+              );
             }
         ),
       ),

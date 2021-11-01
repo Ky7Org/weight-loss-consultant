@@ -439,7 +439,10 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
+
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
           ),
         ),

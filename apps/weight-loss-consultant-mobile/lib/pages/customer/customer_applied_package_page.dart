@@ -184,7 +184,7 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
         ),
         Center(
           child: Text(
-            'No Campaign',
+            'No Package',
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 36,
@@ -197,7 +197,7 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
         ),
         Center(
           child: Text(
-            "You don't have any package applied to this campaign.",
+            "You don't have any package\n applied to this campaign.",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,
@@ -205,6 +205,7 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
             ),
           ),
         ),
+        SizedBox(height: 5),
         Center(
           child: Text(
             'Create one?',
@@ -257,7 +258,9 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator()
+                );
               }
           ),
         ),

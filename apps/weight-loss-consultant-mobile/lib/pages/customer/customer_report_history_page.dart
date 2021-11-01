@@ -179,7 +179,9 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
           ),
         ),

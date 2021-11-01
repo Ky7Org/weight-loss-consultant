@@ -209,7 +209,9 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator()
+                );
               }
           ),
         ),
