@@ -30,6 +30,7 @@ class AuthenticationService {
 
 
       await updateDeviceID(accountModel, deviceId!);
+      print(accountModel);
       return accountModel;
     }
   }
@@ -47,7 +48,6 @@ class AuthenticationService {
           'role': accountModel.role
         }
     );
-    print(response.statusCode);
   }
 
   Future<AccountModel?> signInWithGoogle() async {

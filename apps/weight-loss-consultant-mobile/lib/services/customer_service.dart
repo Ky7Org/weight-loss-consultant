@@ -153,9 +153,6 @@ class CustomerService{
       },
       body: json.encode(data),
     );
-    print(data);
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200){
       return true;
     }

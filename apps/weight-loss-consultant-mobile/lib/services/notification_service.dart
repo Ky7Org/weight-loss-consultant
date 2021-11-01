@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -13,7 +14,7 @@ class NotificationService{
           HttpHeaders.authorizationHeader: 'key=AAAA3JynyF8:APA91bGoTp1Dp9BLffDIP7aLOFEumWqtb5tDHXnStPlS5H6ELu67IuEW1vC-L44IKFXDZspMuRCfUmFs5v1jrV4C9O4pXWQ5-SWXBoeQUZQK2p_jL0xXqrLSNr5RlooOurPg_2wXNxLQ',
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: {
+        body: jsonEncode({
           "to": toToken,
           "notification": {
             "body": "A campaign has a new applied package",
@@ -21,11 +22,34 @@ class NotificationService{
           },
           "direct_boot_ok": true,
           "data": {
-            "type": "Apply Campaign",
+            "type": "Apply Package",
             "campaignID": campaignID.toString(),
             "packageID": packageID.toString(),
           },
+        }),
+    );
+  }
+
+  Future<void> approvePackage(String toToken, String userEmail, int campaignID) async {
+    var url = Uri.parse(ApiConstant.firebaseMessagingApi);
+    var response = await http.post(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'key=AAAA3JynyF8:APA91bGoTp1Dp9BLffDIP7aLOFEumWqtb5tDHXnStPlS5H6ELu67IuEW1vC-L44IKFXDZspMuRCfUmFs5v1jrV4C9O4pXWQ5-SWXBoeQUZQK2p_jL0xXqrLSNr5RlooOurPg_2wXNxLQ',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "to": toToken,
+        "notification": {
+          "body": "Your campaign has been approved",
+          "title": "Campaign approved",
         },
+        "direct_boot_ok": true,
+        "data": {
+          "type": "Apply Campaign",
+          "campaignID": campaignID.toString(),
+        },
+      }),
     );
   }
 

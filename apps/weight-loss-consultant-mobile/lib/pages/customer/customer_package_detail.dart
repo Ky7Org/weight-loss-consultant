@@ -10,6 +10,7 @@ import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 import 'package:weight_loss_consultant_mobile/models/trainer_model.dart';
 
@@ -50,8 +51,8 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        packageID = widget.data!["packageID"];
-        campaignID = widget.data!["campaignID"];
+        packageID = int.parse(widget.data!["packageID"]);
+        campaignID = int.parse(widget.data!["campaignID"]);
         packageModel = service.getPackageById(packageID as int, user);
         setState(() {});
       });
@@ -336,8 +337,18 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
         backgroundColor: HexColor("#FF3939"),
         onPressed: () async {
           CustomerService customerService = CustomerService();
+          TrainerService trainerService = TrainerService();
+          NotificationService notificationService = NotificationService();
+
+          PackageModel? packageModel = await trainerService.getPackageById(packageID as int, user);
+          if (packageModel == null){
+            CustomToast.makeToast("Some thing went wrong! Try again");
+            return;
+          }
           bool result = await customerService.approvePackage(packageID as int, campaignID as int, user);
           if (result){
+            notificationService.approvePackage(packageModel.trainer!.deviceID as String
+                , packageModel.trainer!.email as String, campaignID as int);
             CustomToast.makeToast("Approve successfully");
           } else {
             CustomToast.makeToast("Some thing went wrong! Try again");
