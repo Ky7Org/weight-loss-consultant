@@ -6,10 +6,11 @@ import {ContractEntity} from "../entities/contract.entity";
 import {
   CREATE_CONTRACT, DELETE_CONTRACT_BY_ID,
   FIND_ALL_CONTRACT,
-  FIND_CONTRACT_BY_ID, UPDATE_CONTRACT_BY_ID, UpdateContractPayloadType
+  FIND_CONTRACT_BY_ID, GET_CONTRACT_BY_CAMPAIGN_ID_OR_PACKAGE_ID, UPDATE_CONTRACT_BY_ID, UpdateContractPayloadType
 } from "../../../../common/routes/contract-management-service-routes";
 import {CreateContractDto} from "../dtos/contract/create-health-info.dto";
 import {UpdateContractDto} from "../dtos/contract/update-health-info.dto";
+import {GetContractByPackageIDOrCampaignIDPayload} from "../../../../common/dtos/update-trainer-dto.payload";
 
 @Injectable()
 export class ContractService {
@@ -47,6 +48,13 @@ export class ContractService {
     return this.contractManagementServiceProxy
       .send<DeleteResult, number>
       ({cmd: DELETE_CONTRACT_BY_ID}, id)
+      .toPromise();
+  }
+
+  async getContractByPackageIdOrCampaignId(payload: GetContractByPackageIDOrCampaignIDPayload) : Promise<ContractEntity>{
+    return this.contractManagementServiceProxy
+      .send
+      ({cmd: GET_CONTRACT_BY_CAMPAIGN_ID_OR_PACKAGE_ID}, payload)
       .toPromise();
   }
 }

@@ -8,6 +8,7 @@ import {CreateReportDto} from "../../dtos/report/create-report.dto";
 import {UpdateReportDto} from "../../dtos/report/update-report.dto";
 import {CreateReportMediaDto} from "../../dtos/report-media/create-report-media.dto";
 import {UpdateReportMediaDto} from "../../dtos/report-media/update-report-media.dto";
+import {TrainerApproveReportPayload} from "../../../../../common/dtos/update-trainer-dto.payload";
 
 @ApiTags('Report')
 @ApiBearerAuth()
@@ -19,7 +20,7 @@ export class ReportController {
   constructor(private readonly service: ReportService) {
   }
 
-  @Roles(Role.Trainer)
+  // @Roles(Role.Trainer)
   @UseGuards(JwtAuthGuard)
   @Get('/v1/reports')
   async index(@Res() res) {
@@ -32,7 +33,7 @@ export class ReportController {
     }
   }
 
-  @Roles(Role.Trainer)
+  // @Roles(Role.Trainer)
   @UseGuards(JwtAuthGuard)
   @Get('/v1/medias')
   async indexMedia(@Res() res) {
@@ -45,7 +46,7 @@ export class ReportController {
     }
   }
 
-  @Roles(Role.Admin, Role.Trainer)
+  // @Roles(Role.Admin, Role.Trainer)
   @UseGuards(JwtAuthGuard)
   @Get('/v1/reports/:id')
   async getByEmail(@Param('id') id: number, @Res() res): Promise<void> {
@@ -58,7 +59,7 @@ export class ReportController {
     }
   }
 
-  @Roles(Role.Admin, Role.Trainer)
+  // @Roles(Role.Admin, Role.Trainer)
   @UseGuards(JwtAuthGuard)
   @Get('/v1/medias/:id')
   async getByEmailMedia(@Param('id') id: number, @Res() res): Promise<void> {
@@ -71,7 +72,7 @@ export class ReportController {
     }
   }
 
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard)
   @Post('/v1/reports')
   async create(@Body() dto: CreateReportDto, @Res() res) {
@@ -84,7 +85,7 @@ export class ReportController {
     }
   }
 
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard)
   @Post('/v1/medias')
   async createMedia(@Body() dto: CreateReportMediaDto, @Res() res) {
@@ -97,7 +98,20 @@ export class ReportController {
     }
   }
 
-  @Roles(Role.Admin, Role.Trainer)
+  // @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard)
+  @Put('/v1/reports/trainerApproval')
+  async trainerApproval(@Body() payload: TrainerApproveReportPayload, @Res() res) {
+    try {
+      const result = await this.service.trainerApproveReport(payload);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  // @Roles(Role.Admin, Role.Trainer)
   @UseGuards(JwtAuthGuard)
   @Put('/v1/reports/:id')
   async update(@Param('id') id : number, @Body() dto: UpdateReportDto, @Res() res) {
@@ -110,7 +124,7 @@ export class ReportController {
     }
   }
 
-  @Roles(Role.Admin, Role.Trainer)
+  // @Roles(Role.Admin, Role.Trainer)
   @UseGuards(JwtAuthGuard)
   @Put('/v1/medias/:id')
   async updateMedia(@Param('id') id : number, @Body() dto: UpdateReportMediaDto, @Res() res) {
@@ -123,7 +137,7 @@ export class ReportController {
     }
   }
 
-  @Roles(Role.Admin, Role.Trainer)
+  // @Roles(Role.Admin, Role.Trainer)
   @UseGuards(JwtAuthGuard)
   @Delete('/v1/reports/:id')
   async delete(@Param('id') id : number, @Res() res) {
@@ -136,7 +150,7 @@ export class ReportController {
     }
   }
 
-  @Roles(Role.Admin, Role.Trainer)
+  // @Roles(Role.Admin, Role.Trainer)
   @UseGuards(JwtAuthGuard)
   @Delete('/v1/medias/:id')
   async deleteMedia(@Param('id') id : number, @Res() res) {
@@ -149,4 +163,16 @@ export class ReportController {
     }
   }
 
+  // @Roles(Role.Admin, Role.Trainer)
+  @UseGuards(JwtAuthGuard)
+  @Get('/v1/reports/findReportByContractID/:id')
+  async findReportByContractID(@Param('id') id : number, @Res() res) {
+    try {
+      const result = await this.service.findReportByContractID(id);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
 }

@@ -9,13 +9,17 @@ import {
   DELETE_REPORT_BY_ID,
   FIND_ALL_MEDIAS,
   FIND_ALL_REPORTS,
-  FIND_MEDIA_BY_ID,
-  FIND_REPORT_BY_ID,
+  FIND_MEDIA_BY_ID, FIND_REPORT_BY_CONTRACT_ID,
+  FIND_REPORT_BY_ID, TRAINER_APPROVE_REPORT,
   UPDATE_MEDIA_BY_ID,
   UPDATE_REPORT_BY_ID
 } from "../../../../common/routes/reports-management-routes";
 import {CreateReportDto} from "../dtos/report/create-report.dto";
-import {UpdateReportMediaPayload, UpdateReportPayload} from "../../../../common/dtos/update-trainer-dto.payload";
+import {
+  TrainerApproveReportPayload,
+  UpdateReportMediaPayload,
+  UpdateReportPayload
+} from "../../../../common/dtos/update-trainer-dto.payload";
 import {CreateReportMediaDto} from "../dtos/report-media/create-report-media.dto";
 
 
@@ -53,7 +57,7 @@ export class ReportController {
   @MessagePattern({ cmd: CREATE_REPORT })
   @UseFilters(new ExceptionFilter())
   async create(@Payload() dto: CreateReportDto) {
-    return this.service.createReport(dto);
+    return this.service.customerCreateReport(dto);
   }
 
   @MessagePattern({ cmd: CREATE_MEDIA })
@@ -86,4 +90,15 @@ export class ReportController {
     return this.service.deleteReportMedia(id);
   }
 
+  @MessagePattern({ cmd: FIND_REPORT_BY_CONTRACT_ID })
+  @UseFilters(new ExceptionFilter())
+  async findReportByContractID(@Payload() id: number) {
+    return this.service.findReportByContractId(id);
+  }
+
+  @MessagePattern({ cmd: TRAINER_APPROVE_REPORT })
+  @UseFilters(new ExceptionFilter())
+  async approveReport(@Payload() payload: TrainerApproveReportPayload) {
+    return this.service.trainerApproveReport(payload);
+  }
 }

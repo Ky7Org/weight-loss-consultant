@@ -13,6 +13,7 @@ import {FIND_CAMPAIGN_BY_ID} from "../../../../../common/routes/campaigns-manage
 import {PackageEntity} from "../../entities/package.enttiy";
 import {FIND_PACKAGE_BY_ID} from "../../../../../common/routes/packages-management-routes";
 import {ContractRepository} from "../../repositories/contract.repository";
+import {GetContractByPackageIDOrCampaignIDPayload} from "../../../../../common/dtos/update-trainer-dto.payload";
 
 @Injectable()
 export class ContractService
@@ -115,4 +116,15 @@ export class ContractService
       .getOne();
     return query;
   }
+
+  async getContractByPackageIdOrCampaignId(payload: GetContractByPackageIDOrCampaignIDPayload) : Promise<any> {
+    const packageID = payload.packageID ?? "";
+    const campaignID = payload.campaignID ?? "";
+    const result = this.repository.createQueryBuilder("contract")
+      .where("contract.packageID = :packageID", {packageID : packageID})
+      .orWhere("contract.campaignID = :campaignID", {campaignID : campaignID})
+      .getMany();
+    return result;
+  }
+
 }
