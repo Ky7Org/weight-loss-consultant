@@ -18,7 +18,8 @@ AccountModel _$AccountModelFromJson(Map<String, dynamic> json) => AccountModel(
       ..profileImage = json['profileImage'] as String?
       ..dob = json['dob'] as String?
       ..accessToken = json['accessToken'] as String?
-      ..password = json['password'] as String?;
+      ..password = json['password'] as String?
+      ..deviceID = json['deviceID'] as String?;
 
 Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
     <String, dynamic>{
@@ -33,4 +34,5 @@ Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
       'dob': instance.dob,
       'accessToken': instance.accessToken,
       'password': instance.password,
+      'deviceID': instance.deviceID,
     };

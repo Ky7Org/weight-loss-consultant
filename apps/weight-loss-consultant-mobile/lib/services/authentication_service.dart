@@ -22,10 +22,32 @@ class AuthenticationService {
       AccountModel accountModel = AccountModel.fromJson(jsonDecode(response.body));
       accountModel.password = password;
 
+      String? deviceId = await FirebaseMessaging.instance.getToken();
+      accountModel.deviceID = deviceId;
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("ACCOUNT", jsonEncode(accountModel.toJson()));
+
+
+      await updateDeviceID(accountModel, deviceId!);
       return accountModel;
     }
+  }
+
+  Future<void> updateDeviceID(AccountModel accountModel, String token) async {
+    var url = Uri.parse(ApiConstant.updateDeviceIDApi);
+    var response = await http.put(
+        url,
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer ${accountModel.accessToken}',
+        },
+        body: {
+          'email': accountModel.email,
+          'deviceID': token,
+          'role': accountModel.role
+        }
+    );
+    print(response.statusCode);
   }
 
   Future<AccountModel?> signInWithGoogle() async {
