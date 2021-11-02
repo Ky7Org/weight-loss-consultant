@@ -283,7 +283,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
           margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
           child: Align(
               alignment: Alignment.topLeft,
-              child: Text("Current campaign",
+              child: Text("Campaign In Progress",
                 style: TextStyle(
                   color: AppColors.PRIMARY_WORD_COLOR,
                   fontSize: 18,

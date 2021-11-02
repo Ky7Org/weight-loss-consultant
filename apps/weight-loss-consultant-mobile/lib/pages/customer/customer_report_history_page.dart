@@ -64,7 +64,24 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
         Navigator.pushNamed(context, RoutePath.customerReportDetailPage, arguments: data.id);
       },
       child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 10),
         child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +188,7 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Package detail"),
+      appBar: GenericAppBar.builder("Report History"),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         margin: const EdgeInsets.only(top: 20),

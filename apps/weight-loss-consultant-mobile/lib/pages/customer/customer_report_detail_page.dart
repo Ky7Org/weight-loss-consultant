@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
@@ -60,8 +61,8 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
         title,
         style: const TextStyle(
             color: Color(0xFF0D3F67),
-            fontWeight: FontWeight.w700,
-            fontSize: 18),
+            fontWeight: FontWeight.w900,
+            fontSize: 15),
       ),
     );
   }
@@ -80,7 +81,9 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
       } catch (e){
         image = Image.asset("assets/fake-image/miku-avatar.png");
       }
-      listWidget.add(image);
+      if(file.contains('http://')){
+        listWidget.add(image);
+      }
     }
 
     return Row(
@@ -97,6 +100,22 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
       ),
       child: Container(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -107,7 +126,8 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
             Text(
                 data.dietDescription ?? "",
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
                   color: AppColors.PRIMARY_WORD_COLOR,
                 )
             ),
@@ -127,6 +147,22 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
       ),
       child: Container(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -137,7 +173,8 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
             Text(
                 data.exerciseDescription ?? "",
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
                   color: AppColors.PRIMARY_WORD_COLOR,
                 )
             ),
@@ -161,20 +198,43 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
         borderRadius: BorderRadius.circular(20.0),
       ),
       child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _title('Trainer Feedback'),
-            const SizedBox(height: 10,),
+            Text(
+              "Trainer Feedback",
+              style: TextStyle(
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900
+              ),
+            ),
+            const SizedBox(height: 20,),
             Row(
               children: [
                 Text(
                   "Trainer approval",
                   style: TextStyle(
                     color: AppColors.PRIMARY_WORD_COLOR,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900
                   ),
                 ),
                 const SizedBox(width: 10,),
@@ -198,7 +258,7 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
             Text(
                 data.trainerFeedback ?? "Trainer has not yet feedback this report",
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 15,
                   color: AppColors.PRIMARY_WORD_COLOR,
                 )
             ),
@@ -211,8 +271,9 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      appBar: GenericAppBar.builder("Package detail"),
+      appBar: GenericAppBar.builder("Report detail"),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         margin: const EdgeInsets.only(top: 20),
@@ -221,6 +282,7 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
               future: report,
               builder: (context, snapshot) {
                 if (snapshot.hasData){
+                  var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(snapshot.requireData!.createDate ?? "")));
                   TrainerService service = TrainerService();
                   ReportModel report = snapshot.requireData as ReportModel;
                   service.getExerciseReportMediaModelByReportId(report.id as int, user).then((value){
@@ -234,12 +296,27 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
                   });
                   return Column(
                     children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                            'Create date:  $date',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15,
+                                color: AppColors.PRIMARY_WORD_COLOR
+                            )
+                        ),
+                      ),
+                      const SizedBox(
+                          height: 20
+                      ),
                       _buildTrainerFeedbackCard(snapshot.requireData as ReportModel),
                       const SizedBox(height: 15,),
                       _buildDietCard(snapshot.requireData as ReportModel),
                       const SizedBox(height: 15,),
                       _buildExerciseCard(snapshot.requireData as ReportModel),
-                      const SizedBox(height: 30,),
+
+
                     ],
                   );
                 }
