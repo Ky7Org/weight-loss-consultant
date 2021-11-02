@@ -10,15 +10,15 @@ import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.d
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 
-class CustomerReportHistoryPage extends StatefulWidget {
+class TrainerReportHistoryPage extends StatefulWidget {
   int? packageId;
-  CustomerReportHistoryPage({Key? key, this.packageId}) : super(key: key);
+  TrainerReportHistoryPage({Key? key, this.packageId}) : super(key: key);
 
   @override
-  _CustomerReportHistoryPageState createState() => _CustomerReportHistoryPageState();
+  _TrainerReportHistoryPageState createState() => _TrainerReportHistoryPageState();
 }
 
-class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
+class _TrainerReportHistoryPageState extends State<TrainerReportHistoryPage> {
   AccountModel user = AccountModel(email: "", fullname: "");
   Future<List<ReportModel>?>? listReport;
 
@@ -61,7 +61,7 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
 
     return GestureDetector(
       onTap: (){
-        Navigator.pushNamed(context, RoutePath.customerReportDetailPage, arguments: data.id);
+        Navigator.pushNamed(context, RoutePath.trainerReportDetailPage, arguments: data.id);
       },
       child: Card(
         child: Container(
@@ -74,30 +74,30 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
                   Text(
                     DateFormat.yMMMd().format(DateTime.now()),
                     style: TextStyle(
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
                     ),
                   ),
                   const Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 7),
-                    decoration: BoxDecoration(
-                      color: status == "Approve" ? Colors.green : Colors.red,
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    ),
-                    child: Text(
-                      status,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 7),
+                      decoration: BoxDecoration(
+                        color: status == "Approve" ? Colors.green : Colors.red,
+                        borderRadius: const BorderRadius.all(Radius.circular(20)),
                       ),
-                    )
+                      child: Text(
+                        status,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      )
                   ),
                 ],
               ),
               const SizedBox(height: 10,),
               Text(
-                "Your diet",
+                "Customer diet",
                 style: TextStyle(
                     color: AppColors.PRIMARY_WORD_COLOR,
                     fontSize: 17,
@@ -105,17 +105,17 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
                 ),
               ),
               Text(
-                data.dietDescription ?? "",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                style: TextStyle(
+                  data.dietDescription ?? "",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: TextStyle(
                     color: AppColors.PRIMARY_WORD_COLOR,
                     fontSize: 17,
-                )
+                  )
               ),
               const SizedBox(height: 10,),
               Text(
-                "Your exercise",
+                "Customer exercise",
                 style: TextStyle(
                     color: AppColors.PRIMARY_WORD_COLOR,
                     fontSize: 17,
@@ -123,17 +123,17 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
                 ),
               ),
               Text(
-                data.exerciseDescription ?? "",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                style: TextStyle(
-                  color: AppColors.PRIMARY_WORD_COLOR,
-                  fontSize: 17,
-                )
+                  data.exerciseDescription ?? "",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: AppColors.PRIMARY_WORD_COLOR,
+                    fontSize: 17,
+                  )
               ),
               const SizedBox(height: 10,),
               Text(
-                "Trainer feedback",
+                "Your feedback",
                 style: TextStyle(
                     color: AppColors.PRIMARY_WORD_COLOR,
                     fontSize: 17,
@@ -141,13 +141,13 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
                 ),
               ),
               Text(
-                data.trainerFeedback ?? "Trainer has not yet feedback this report",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                style: TextStyle(
-                  color: AppColors.PRIMARY_WORD_COLOR,
-                  fontSize: 17,
-                )
+                  data.trainerFeedback ?? "Trainer has not yet feedback this report",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: AppColors.PRIMARY_WORD_COLOR,
+                    fontSize: 17,
+                  )
               ),
             ],
           ),

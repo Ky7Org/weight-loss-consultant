@@ -28,4 +28,5 @@ class ApiConstant{
   static const String customerCreateMediaReportApi = routePath + "/api/v1/medias";
   static const String getAllMediaReportApi = routePath + "/api/v1/medias";
   static const String trainerFeedbackApi = routePath + "/api/v1/reports/trainerApproval";
+  static const String getReportById = routePath + "/api/v1/reports";
 }

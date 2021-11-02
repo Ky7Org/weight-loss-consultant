@@ -310,13 +310,13 @@ class _CustomerOnGoingCampaignPageState extends State<CustomerOnGoingCampaignPag
     );
   }
 
-  Widget _buildHistoryButton(){
+  Widget _buildHistoryButton(PackageModel model){
     return SizedBox(
       width: 100,
       height: 100,
       child: GestureDetector(
         onTap: (){
-          Navigator.pushNamed(context, RoutePath.customerReportHistoryPage);
+          Navigator.pushNamed(context, RoutePath.customerReportHistoryPage, arguments: model.id);
         },
         child: Card(
           elevation: 10,
@@ -349,13 +349,13 @@ class _CustomerOnGoingCampaignPageState extends State<CustomerOnGoingCampaignPag
     return Wrap(
       children: [
         _buildReportButton(packageModel),
-        _buildHistoryButton(),
+        _buildHistoryButton(packageModel),
 
       ],
     );
   }
 
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

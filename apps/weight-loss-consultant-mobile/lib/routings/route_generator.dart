@@ -35,6 +35,8 @@ import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_feedback_rep
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_home_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_on_going_package_detail_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_package_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_report_detail_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_report_history_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_update_package_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_campaign_detail_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_available_campaign_page.dart';
@@ -224,17 +226,37 @@ class RouteGenerator{
         }
         return _errorRoute();
       case RoutePath.customerReportHistoryPage:
-        return MaterialPageRoute(builder: (_){
-          return const CustomerReportHistoryPage();
-        });
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerReportHistoryPage(packageId: args,);
+          });
+        }
+        return _errorRoute();
       case RoutePath.customerReportDetailPage:
-        return MaterialPageRoute(builder: (_){
-          return const CustomerReportDetailPage();
-        });
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerReportDetailPage(reportId: args,);
+          });
+        }
+        return _errorRoute();
       case RoutePath.trainerOnGoingPackageDetailPage:
         if (args is int){
           return MaterialPageRoute(builder: (_){
             return TrainerOnGoingPackageDetailPage(packageId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.trainerReportHistoryPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerReportHistoryPage(packageId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.trainerReportDetailPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerReportDetailPage(reportId: args,);
           });
         }
         return _errorRoute();

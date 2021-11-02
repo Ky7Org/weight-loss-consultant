@@ -30,7 +30,6 @@ class AuthenticationService {
 
 
       await updateDeviceID(accountModel, deviceId!);
-      print(accountModel);
       return accountModel;
     }
   }

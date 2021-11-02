@@ -279,13 +279,13 @@ class _TrainerOnGoingPackageDetailPageState extends State<TrainerOnGoingPackageD
     );
   }
 
-  Widget _buildHistoryButton(){
+  Widget _buildHistoryButton(PackageModel packageModel){
     return SizedBox(
       width: 100,
       height: 100,
       child: GestureDetector(
         onTap: (){
-          Navigator.pushNamed(context, RoutePath.customerReportHistoryPage);
+          Navigator.pushNamed(context, RoutePath.trainerReportHistoryPage, arguments: packageModel.id as int);
         },
         child: Card(
           elevation: 10,
@@ -318,7 +318,7 @@ class _TrainerOnGoingPackageDetailPageState extends State<TrainerOnGoingPackageD
     return Wrap(
       children: [
         _buildReportButton(packageModel),
-        _buildHistoryButton(),
+        _buildHistoryButton(packageModel),
 
       ],
     );

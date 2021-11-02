@@ -23,8 +23,8 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
   Future<ReportModel?>? reportModel;
 
   AccountModel user = AccountModel(email: "", fullname: "");
-  List<String> dietImages = ["assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png"];
-  List<String> exerciseImages = ["assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png"];
+  List<String> dietImages = [];
+  List<String> exerciseImages = [];
   final TextEditingController _feedback = TextEditingController();
   int trainerApproval = 0;
 
