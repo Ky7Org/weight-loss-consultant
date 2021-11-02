@@ -254,7 +254,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
         ),
         Center(
           child: Text(
-            'No Campaign',
+            'No Package',
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 36,
@@ -267,17 +267,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
         ),
         Center(
           child: Text(
-            "You don't have any campaign.",
-            style: TextStyle(
-                color: AppColors.PRIMARY_WORD_COLOR,
-                fontSize: 15,
-                fontWeight: FontWeight.w400
-            ),
-          ),
-        ),
-        Center(
-          child: Text(
-            'Create one?',
+            "You don't have any Package.",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,
