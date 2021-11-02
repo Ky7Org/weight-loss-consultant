@@ -57,7 +57,9 @@ export class ReportController {
   @MessagePattern({ cmd: CREATE_REPORT })
   @UseFilters(new ExceptionFilter())
   async create(@Payload() dto: CreateReportDto) {
-    return this.service.customerCreateReport(dto);
+    const reportEntity = await this.service.customerCreateReport(dto);
+    reportEntity.createDate = `${reportEntity.createDate}`
+    return reportEntity;
   }
 
   @MessagePattern({ cmd: CREATE_MEDIA })

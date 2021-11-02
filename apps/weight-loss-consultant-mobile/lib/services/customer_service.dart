@@ -185,7 +185,7 @@ class CustomerService{
     return models[0];
   }
 
-  Future<ContractModel> getContractByPackageId(int campaignID, AccountModel user) async{
+  Future<ContractModel?> getContractByPackageId(int packageID, AccountModel user) async{
     var url = Uri.parse(ApiConstant.getContractByPackageIDorCampaignIDApi);
     List<ContractModel> models = [];
     var response = await http.post(
@@ -195,7 +195,7 @@ class CustomerService{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        "packageID": campaignID,
+        "packageID": packageID,
       }),
     );
 
@@ -230,8 +230,8 @@ class CustomerService{
     }
   }
 
-  Future<void> createMediaReport(int reportID, String url, int type, AccountModel user) async {
-    var url = Uri.parse(ApiConstant.customerCreateProjectApi);
+  Future<void> createMediaReport(int reportID, String imageUrl, int type, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.customerCreateMediaReportApi);
     var response = await http.post(
       url,
       headers: {
@@ -240,7 +240,7 @@ class CustomerService{
       },
       body: json.encode({
         "reportID": reportID,
-        "url": url,
+        "url": imageUrl,
         "type": type
       }),
     );

@@ -4,15 +4,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
+import 'package:weight_loss_consultant_mobile/main.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/trainer_sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
+import 'package:collection/collection.dart';
+
 
 class TrainerHomePage extends StatefulWidget {
   const TrainerHomePage({Key? key}) : super(key: key);
@@ -24,6 +30,7 @@ class TrainerHomePage extends StatefulWidget {
 class _TrainerHomePageState extends State<TrainerHomePage> {
   int selectedIndex = 0;
   final PanelController _pc = PanelController();
+  PackageModel? onGoingPackage;
 
   AccountModel user = AccountModel(email: "", fullname: "");
 
@@ -45,8 +52,13 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
-      initAccount();
-      setState(() {});
+      initAccount().then((value){
+        TrainerService trainerService = TrainerService();
+        trainerService.getTrainerPackage(user).then((value) {
+          onGoingPackage = value.firstWhereOrNull((element) => element.status == 2);
+          setState(() {});
+        });
+      });
     });
   }
 
@@ -156,6 +168,161 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     );
   }
 
+  Widget _buildCurrentCampaign(){
+    if (onGoingPackage == null) return Container();
+    return  GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, RoutePath.trainerOnGoingPackageDetailPage, arguments: onGoingPackage!.id as int);
+      },
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    onGoingPackage!.name ?? "",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 19),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5,),
+              RichText(
+                text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Exercise Plan: ',
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15),
+                      ),
+                      TextSpan(
+                        text: onGoingPackage!.exercisePlan ?? "",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15),
+                      )
+
+                    ]
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              RichText(
+                text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Diet Plan: ',
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15),
+                      ),
+                      TextSpan(
+                        text: onGoingPackage!.dietPlan ?? "",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15),
+                      )
+
+                    ]
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              RichText(
+                text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Session in weeks: ",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15),
+                      ),
+                      TextSpan(
+                        text: "${onGoingPackage!.spendTimeToTraining.toString()} day(s)",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15),
+                      )
+
+                    ]
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              RichText(
+                text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Session length: ",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15),
+                      ),
+                      TextSpan(
+                        text: "45 minutes",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15),
+                      )
+
+                    ]
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Price: ",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15),
+                  ),
+                  Text(
+                    onGoingPackage!.price.toString(),
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15),
+                  ),
+                  const Icon(
+                    Icons.attach_money,
+                    color: Color(0xFFFF3939),
+                    size: 17,
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,7 +354,8 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mr Duy Nghiem"),
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mr Son"),
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mrs Thy"),
-                Container(
+                _buildCurrentCampaign(),
+                /*Container(
                   margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
                       alignment: Alignment.topLeft,
@@ -207,7 +375,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                     _category("Message", "message-icon.svg"),
                     _category("Campaign", "campaign-icon.svg"),
                   ],
-                ),
+                ),*/
                 const SizedBox(height: 250,),
               ],
             ),

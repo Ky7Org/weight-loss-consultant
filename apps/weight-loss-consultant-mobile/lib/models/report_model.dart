@@ -11,7 +11,7 @@ class ReportModel{
   String? trainerFeedback;
   int? trainerApproval;
   int? weight;
-  int? createDate;
+  String? createDate;
   ContractModel? contract;
 
   ReportModel();

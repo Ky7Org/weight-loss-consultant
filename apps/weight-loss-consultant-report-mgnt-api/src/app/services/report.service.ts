@@ -40,6 +40,7 @@ export class ReportService {
 
   async findReportMedias() : Promise<ReportMediaEntity[]> {
     return await this.reportMediaRepository.createQueryBuilder("media")
+      .leftJoinAndSelect("media.report", "report")
       .getMany();
   }
 
@@ -134,7 +135,7 @@ export class ReportService {
   }
 
   //GET
-  async customerCreateReport(payload: CreateReportDto) : Promise<ReportEntity> {
+  async customerCreateReport(payload: CreateReportDto) : Promise<any> {
     const contractID = payload.contractID;
     const contract = await this.validateContract(contractID);
     if (contract === undefined) {
