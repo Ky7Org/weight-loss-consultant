@@ -64,3 +64,8 @@ export type TrainerApproveReportPayload = {
   trainerFeedback: string,
   trainerApproval: number
 }
+
+export type CampaignAndPackageIdPayload = {
+  campaignID: number,
+  packageID: number
+}
