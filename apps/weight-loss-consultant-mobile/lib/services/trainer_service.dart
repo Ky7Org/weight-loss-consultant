@@ -152,6 +152,8 @@ class TrainerService{
     String dietPlan = "",
     int spendTimeToTraining = 0,
     String name = "",
+    int endDate = 0,
+    int startDate = 0,
     AccountModel? user,
   }) async {
     Map<String, dynamic> data = {};
@@ -163,6 +165,8 @@ class TrainerService{
     data["spendTimeToTraining"] = spendTimeToTraining;
     data["name"] = name;
     data["trainerEmail"] = user!.email ?? "";
+    data["endDate"] = endDate;
+    data["startDate"] = startDate;
     var url = Uri.parse(ApiConstant.createPackageApi);
     var response = await http.post(
       url,

@@ -1,9 +1,9 @@
-import {ConflictException, HttpStatus, Inject, Injectable, NotFoundException} from '@nestjs/common';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import {HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {DeleteResult, UpdateResult} from 'typeorm';
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {Observable} from "rxjs";
 import {CustomerEntity} from "../entities/customer.entity";
-import {CUSTOMER_VIEW_DETAIL, VIEW_DETAIL_CUSTOMER} from "../../../../common/routes/users-management-service-routes";
+import {CUSTOMER_VIEW_DETAIL} from "../../../../common/routes/users-management-service-routes";
 import {CampaignMapper} from "../mappers/campaign.mapper";
 import {CampaignRepository} from "../repositories/campaign.repository";
 import {CampaignEntity} from "../entities/campaign.entity";
@@ -11,7 +11,6 @@ import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
 import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
 import {USERS_MANAGEMENT_SERVICE_NAME} from "../../../../../constant";
 import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
-import {ResponseUpdateStatus} from "../../../../common/dtos/update-without-password-and-status.payload";
 import {UpdateStatusCampaignPayload} from "../../../../common/dtos/update-campaign-dto.payload";
 
 @Injectable()
@@ -90,12 +89,6 @@ export class CampaignService {
       .leftJoinAndSelect("campaign.customer", "customer")
       .where("campaign.id = :id", {id: id})
       .getOne();
-    if (!result) {
-      throw new RpcException({
-        statusCode: HttpStatus.NOT_FOUND,
-        message: `Not found campaign with id: ${id}`
-      } as RpcExceptionModel);
-    }
     return result
   }
 
@@ -115,6 +108,13 @@ export class CampaignService {
   }
 
   async updateStatus(payload: UpdateStatusCampaignPayload) : Promise<boolean>  {
+    const exist : CampaignEntity = await this.viewDetail(payload.id);
+    if (!exist){
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found campaign with id: ${payload.id}`
+      } as RpcExceptionModel);
+    }
     const result = this.repository.createQueryBuilder()
       .update(CampaignEntity)
       .set({

@@ -15,6 +15,7 @@ class CampaignAccountModel{
   late int? status;
   late String? profileImage;
   late String? dob;
+  late String? deviceID;
 
 
   CampaignAccountModel(this.email, this.password, this.fullname, this.address,
