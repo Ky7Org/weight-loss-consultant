@@ -301,7 +301,9 @@ class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignP
                   ],
                 );
               }
-              return const CircularProgressIndicator();
+              return const Center(
+                child: CircularProgressIndicator()
+              );
             }
           ),
         ),
