@@ -35,7 +35,7 @@ class _CustomerOnGoingCampaignPageState
   CustomerCampaignModel? campaignModel;
 
   AccountModel user = AccountModel(email: "", fullname: "");
-  CustomerService service = CustomerService();
+  CustomerService customerService = CustomerService();
   TrainerService trainerService = TrainerService();
 
   final PanelController _pc = PanelController();
@@ -68,12 +68,13 @@ class _CustomerOnGoingCampaignPageState
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       initAccount().then((value) {
         //packageModel = service.getPackageById(widget.packageID as int, user);
-        packageModel = service.getPackageById(37, user);
-        trainerService
-            .getCampaignById(widget.campaignId as int, user)
-            .then((value) {
-          campaignModel = value;
-          setState(() {});
+
+        customerService.getPackageIdByCampaignIdWithSameContract(widget.campaignId as int, user).then((value){
+          packageModel = customerService.getPackageById(value as int, user);
+          trainerService.getCampaignById(widget.campaignId as int, user).then((value){
+            campaignModel = value;
+            setState(() {});
+          });
         });
       });
     });

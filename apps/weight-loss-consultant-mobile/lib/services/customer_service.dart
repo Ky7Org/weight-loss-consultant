@@ -285,6 +285,40 @@ class CustomerService{
     }
   }
 
+  Future<int?> getPackageIdByCampaignIdWithSameContract(int campaignId, AccountModel user) async{
+    var url = Uri.parse(ApiConstant.getAnotherId);
+    var response = await http.post(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode({
+        "campaignID": campaignId,
+      }),
+    );
+    if (response.statusCode == 200){
+      return jsonDecode(response.body)["packageID"];
+    }
+  }
+
+
+  Future<int?> getCampaignIdByPackageIdWithSameContract(int packageId, AccountModel user) async{
+    var url = Uri.parse(ApiConstant.getAnotherId);
+    var response = await http.post(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode({
+        "packageID": packageId,
+      }),
+    );
+    if (response.statusCode == 200){
+      return jsonDecode(response.body)["campaignID"];
+    }
+  }
 
 
 
