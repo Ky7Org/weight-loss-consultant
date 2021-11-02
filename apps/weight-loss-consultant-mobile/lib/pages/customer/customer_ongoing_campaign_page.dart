@@ -28,7 +28,7 @@ class _CustomerOnGoingCampaignPageState extends State<CustomerOnGoingCampaignPag
   CustomerCampaignModel? campaignModel;
 
   AccountModel user = AccountModel(email: "", fullname: "");
-  CustomerService service = CustomerService();
+  CustomerService customerService = CustomerService();
   TrainerService trainerService = TrainerService();
 
   Future<void> initAccount() async {
@@ -51,10 +51,12 @@ class _CustomerOnGoingCampaignPageState extends State<CustomerOnGoingCampaignPag
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
         //packageModel = service.getPackageById(widget.packageID as int, user);
-        packageModel = service.getPackageById(37, user);
-        trainerService.getCampaignById(widget.campaignId as int, user).then((value){
-          campaignModel = value;
-          setState(() {});
+        customerService.getPackageIdByCampaignIdWithSameContract(widget.campaignId as int, user).then((value){
+          packageModel = customerService.getPackageById(value as int, user);
+          trainerService.getCampaignById(widget.campaignId as int, user).then((value){
+            campaignModel = value;
+            setState(() {});
+          });
         });
       });
     });

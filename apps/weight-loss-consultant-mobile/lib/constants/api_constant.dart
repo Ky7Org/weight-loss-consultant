@@ -1,5 +1,5 @@
 class ApiConstant{
-  static const String routePath = "http://10.0.2.2:5000";
+  static const String routePath = "http://34.134.0.168";
   static const String loginApi = routePath + "/api/v1/auth/login";
   static const String loginWithFirebaseApi = routePath + "/api/v1/auth/login/firebase";
   static const String updateTrainerApi = routePath + "/api/v1/trainers";
@@ -29,4 +29,5 @@ class ApiConstant{
   static const String getAllMediaReportApi = routePath + "/api/v1/medias";
   static const String trainerFeedbackApi = routePath + "/api/v1/reports/trainerApproval";
   static const String getReportById = routePath + "/api/v1/reports";
+  static const String getAnotherId = routePath + "/api/v1/contracts/getAnother";
 }

@@ -27,7 +27,7 @@ class _TrainerOnGoingPackageDetailPageState extends State<TrainerOnGoingPackageD
   CustomerCampaignModel? campaignModel;
 
   AccountModel user = AccountModel(email: "", fullname: "");
-  CustomerService service = CustomerService();
+  CustomerService customerService = CustomerService();
   TrainerService trainerService = TrainerService();
 
   Future<void> initAccount() async {
@@ -50,11 +50,12 @@ class _TrainerOnGoingPackageDetailPageState extends State<TrainerOnGoingPackageD
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
         //packageModel = service.getPackageById(widget.packageID as int, user);
-        packageModel = service.getPackageById(widget.packageId as int, user);
-
-        trainerService.getCampaignById(35, user).then((value){
-          campaignModel = value;
-          setState(() {});
+        packageModel = customerService.getPackageById(widget.packageId as int, user);
+        customerService.getCampaignIdByPackageIdWithSameContract(widget.packageId as int, user).then((value){
+          trainerService.getCampaignById(value as int, user).then((value){
+            campaignModel = value;
+            setState(() {});
+          });
         });
       });
     });
