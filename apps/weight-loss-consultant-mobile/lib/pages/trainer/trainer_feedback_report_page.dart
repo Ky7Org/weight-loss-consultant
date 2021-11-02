@@ -5,20 +5,29 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/report_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class TrainerFeedbackReportPage extends StatefulWidget {
-  const TrainerFeedbackReportPage({Key? key}) : super(key: key);
+  int? packageId;
+  TrainerFeedbackReportPage({Key? key, this.packageId}) : super(key: key);
 
   @override
   _TrainerFeedbackReportPageState createState() => _TrainerFeedbackReportPageState();
 }
 
 class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
+
+  Future<ReportModel?>? reportModel;
+
   AccountModel user = AccountModel(email: "", fullname: "");
-  List<String> dietImages = ["assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png"];
-  List<String> exerciseImages = ["assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png"];
+  List<String> dietImages = [];
+  List<String> exerciseImages = [];
   final TextEditingController _feedback = TextEditingController();
+  int trainerApproval = 0;
+
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -40,7 +49,9 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value) {
-          setState(() {});
+        TrainerService service = TrainerService();
+        reportModel = service.getTodayReport(widget.packageId! as int, user);
+        setState(() {});
         });
     });
   }
@@ -106,7 +117,17 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
   Widget _buildImages(List<String> images){
     List<Widget> listWidget = [];
     for (String file in images){
-      Widget image = Image.asset(file);
+      Widget image;
+      try{
+         image = Image.network(
+             file,
+           height: 100,
+           width: 100,
+         )
+         ;
+      } catch (e){
+        image = Image.asset("assets/fake-image/miku-avatar.png");
+      }
       listWidget.add(image);
     }
 
@@ -117,7 +138,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
     );
   }
 
-  Widget _buildDietCard(){
+  Widget _buildDietCard(ReportModel reportModel){
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
@@ -125,17 +146,18 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
       child: Container(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildImages(dietImages),
             const SizedBox(height: 20,),
             _title('Customer Diet'),
             const SizedBox(height: 10,),
             Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+              reportModel.dietDescription as String,
               style: TextStyle(
                 fontSize: 17,
                 color: AppColors.PRIMARY_WORD_COLOR,
-              )
+              ),
             ),
             //_pickUpImageCard(),
             /*_multiInput(
@@ -146,7 +168,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
     );
   }
 
-  Widget _buildExerciseCard(){
+  Widget _buildExerciseCard(ReportModel reportModel){
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
@@ -154,13 +176,14 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
       child: Container(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildImages(exerciseImages),
             const SizedBox(height: 20,),
             _title('Customer Exercise'),
             const SizedBox(height: 10,),
             Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                reportModel.exerciseDescription as String,
                 style: TextStyle(
                   fontSize: 17,
                   color: AppColors.PRIMARY_WORD_COLOR,
@@ -200,7 +223,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
           labelColor: const Color(0xFF0D3F67),
           unselectedLabelColor: const Color(0xFFB6C5D1),
           onTap: (index){
-
+            trainerApproval = index;
           },
           tabs: const [
             Tab(
@@ -224,11 +247,21 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
     );
   }
 
-  Widget _buildFeedbackButton(){
+  Widget _buildFeedbackButton(ReportModel report){
     return FlatButton(
       height: 64,
       color: AppColors.PRIMARY_COLOR,
-      onPressed: () async {},
+      onPressed: () async {
+        int reportId = report.id as int;
+        String trainerFeedback = _feedback.text;
+        TrainerService service = TrainerService();
+        bool result = await service.sendFeedBack(reportId, trainerFeedback, trainerApproval, user);
+        if (result){
+          CustomToast.makeToast("Feedback successfully");
+        } else {
+          CustomToast.makeToast("Some thing went wrong! Try again");
+        }
+      },
       minWidth: double.infinity,
       child: const Text(
         'Send feedback',
@@ -248,22 +281,43 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
       appBar: GenericAppBar.builder('Daily Report'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          children: [
-            Column(
-              children: [
-                _buildDietCard(),
-                const SizedBox(height: 15,),
-                _buildExerciseCard(),
-                const SizedBox(height: 30,),
-                _multiInput("Your feedback", "Noice", _feedback),
-                _buildStatusSlider(),
-                const SizedBox(height: 30,),
-                _buildFeedbackButton(),
-              ],
-            )
-          ],
-        ),
+        child: FutureBuilder<ReportModel?>(
+          future: reportModel,
+          builder: (context, snapshot){
+            if (snapshot.hasData){
+              TrainerService service = TrainerService();
+              ReportModel report = snapshot.requireData as ReportModel;
+              service.getExerciseReportMediaModelByReportId(report.id as int, user).then((value){
+                exerciseImages = value.map((e) => e.url ?? "").toList();
+                service.getDietReportMediaModelByReportId(report.id as int, user).then((value) {
+                  dietImages = value.map((e) => e.url ?? "").toList();
+                  setState(() {
+
+                  });
+                });
+              });
+              return Column(
+                children: [
+                  Column(
+                    children: [
+                      _buildDietCard(snapshot.requireData as ReportModel),
+                      const SizedBox(height: 15,),
+                      _buildExerciseCard(snapshot.requireData as ReportModel),
+                      const SizedBox(height: 30,),
+                      _multiInput("Your feedback", "Noice", _feedback),
+                      _buildStatusSlider(),
+                      const SizedBox(height: 30,),
+                      _buildFeedbackButton(report),
+                    ],
+                  )
+                ],
+              );
+            }
+            return const Text("There are no report yet");
+          }
+        )
+
+
       ),
     );
   }

@@ -16,6 +16,8 @@ import 'package:weight_loss_consultant_mobile/pages/components/customer_sliding_
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:collection/collection.dart';
+
 
 class CustomerHomePage extends StatefulWidget {
 
@@ -54,7 +56,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
       initAccount().then((value) {
         CustomerService customerService = CustomerService();
         customerService.getCustomerCampaign(user.email ?? "").then((value){
-          ongoingCampaign = value.firstWhere((element) => element.status == 1);
+          ongoingCampaign = value.firstWhereOrNull((element) => element.status == 1);
           setState(() {});
         });
       });
@@ -292,6 +294,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         ),
         GestureDetector(
           onTap: () {
+            print(ongoingCampaign);
             Navigator.pushNamed(context, RoutePath.customerOngoingCampaignPage, arguments: ongoingCampaign!.id);
           },
           child: Card(

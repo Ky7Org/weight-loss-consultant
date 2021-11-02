@@ -17,7 +17,8 @@ TrainerModel _$TrainerModelFromJson(Map<String, dynamic> json) => TrainerModel()
   ..profileImage = json['profileImage'] as String?
   ..dob = json['dob'] as String?
   ..yearOfExp = (json['yearOfExp'] as num?)?.toDouble()
-  ..rating = (json['rating'] as num?)?.toDouble();
+  ..rating = (json['rating'] as num?)?.toDouble()
+  ..deviceID = json['deviceID'] as String?;
 
 Map<String, dynamic> _$TrainerModelToJson(TrainerModel instance) =>
     <String, dynamic>{
@@ -32,4 +33,5 @@ Map<String, dynamic> _$TrainerModelToJson(TrainerModel instance) =>
       'dob': instance.dob,
       'yearOfExp': instance.yearOfExp,
       'rating': instance.rating,
+      'deviceID': instance.deviceID,
     };

@@ -18,7 +18,7 @@ CampaignAccountModel _$CampaignAccountModelFromJson(
       json['status'] as int?,
       json['profileImage'] as String?,
       json['dob'] as String?,
-    );
+    )..deviceID = json['deviceID'] as String?;
 
 Map<String, dynamic> _$CampaignAccountModelToJson(
         CampaignAccountModel instance) =>
@@ -32,4 +32,5 @@ Map<String, dynamic> _$CampaignAccountModelToJson(
       'status': instance.status,
       'profileImage': instance.profileImage,
       'dob': instance.dob,
+      'deviceID': instance.deviceID,
     };

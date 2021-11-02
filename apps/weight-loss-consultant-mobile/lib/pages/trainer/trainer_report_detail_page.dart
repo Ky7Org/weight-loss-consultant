@@ -9,15 +9,15 @@ import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.d
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
-class CustomerReportDetailPage extends StatefulWidget {
+class TrainerReportDetailPage extends StatefulWidget {
   int? reportId;
-  CustomerReportDetailPage({Key? key, this.reportId}) : super(key: key);
+  TrainerReportDetailPage({Key? key, this.reportId}) : super(key: key);
 
   @override
-  _CustomerReportDetailPageState createState() => _CustomerReportDetailPageState();
+  _TrainerReportDetailPageState createState() => _TrainerReportDetailPageState();
 }
 
-class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
+class _TrainerReportDetailPageState extends State<TrainerReportDetailPage> {
   AccountModel user = AccountModel(email: "", fullname: "");
   Future<ReportModel?>? report;
   List<String> dietImages = [];
@@ -165,16 +165,16 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _title('Trainer Feedback'),
+            _title('Your Feedback'),
             const SizedBox(height: 10,),
             Row(
               children: [
                 Text(
-                  "Trainer approval",
+                  "Your approval",
                   style: TextStyle(
-                    color: AppColors.PRIMARY_WORD_COLOR,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold
+                      color: AppColors.PRIMARY_WORD_COLOR,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold
                   ),
                 ),
                 const SizedBox(width: 10,),
@@ -196,7 +196,7 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
             ),
             const SizedBox(height: 10,),
             Text(
-                data.trainerFeedback ?? "Trainer has not yet feedback this report",
+                data.trainerFeedback ?? "You have not yet feedback this report",
                 style: TextStyle(
                   fontSize: 17,
                   color: AppColors.PRIMARY_WORD_COLOR,
@@ -243,9 +243,7 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
                     ],
                   );
                 }
-                return const Center(
-                  child: CircularProgressIndicator()
-                );
+                return const CircularProgressIndicator();
               }
           ),
         ),

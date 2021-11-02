@@ -6,8 +6,12 @@ import 'package:weight_loss_consultant_mobile/constants/enums.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/contract_model.dart';
 import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
+import 'package:weight_loss_consultant_mobile/models/report_media_model.dart';
+import 'package:weight_loss_consultant_mobile/models/report_model.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 
 
 class TrainerService{
@@ -152,6 +156,8 @@ class TrainerService{
     String dietPlan = "",
     int spendTimeToTraining = 0,
     String name = "",
+    int endDate = 0,
+    int startDate = 0,
     AccountModel? user,
   }) async {
     Map<String, dynamic> data = {};
@@ -163,6 +169,8 @@ class TrainerService{
     data["spendTimeToTraining"] = spendTimeToTraining;
     data["name"] = name;
     data["trainerEmail"] = user!.email ?? "";
+    data["endDate"] = endDate;
+    data["startDate"] = startDate;
     var url = Uri.parse(ApiConstant.createPackageApi);
     var response = await http.post(
       url,
@@ -233,4 +241,93 @@ class TrainerService{
     return false;
   }
 
+  Future<ReportModel?> getTodayReport(int packageId, AccountModel user) async {
+    CustomerService customerService = CustomerService();
+    ContractModel? contractModel = await customerService.getContractByPackageId(packageId, user);
+    if (contractModel == null) return null;
+
+    var url = Uri.parse(ApiConstant.getReportsByContractIDApi + "/${contractModel.id}");
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      Iterable list = json.decode(response.body);
+      for (var item in list){
+        ReportModel model = ReportModel.fromJson(item);
+        if (model.createDate == null) continue;
+        DateTime createDate = DateTime.fromMillisecondsSinceEpoch(int.parse(model.createDate as String));
+        if (createDate.day == DateTime.now().day
+            && createDate.month == DateTime.now().month
+            && createDate.year == DateTime.now().year){
+          return model;
+        }
+      }
+    }
+  }
+
+  Future<List<ReportMediaModel>> getAllMediaReport(AccountModel user) async {
+    var url = Uri.parse(ApiConstant.getAllMediaReportApi);
+    List<ReportMediaModel> models = [];
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      Iterable list = json.decode(response.body);
+      for (var item in list){
+        ReportMediaModel model = ReportMediaModel.fromJson(item);
+        models.add(model);
+      }
+    }
+    return models;
+  }
+
+  Future<List<ReportMediaModel>> getExerciseReportMediaModelByReportId(int reportID, AccountModel user) async{
+    List<ReportMediaModel> models = [];
+    List<ReportMediaModel> allModels = await getAllMediaReport(user);
+    for (ReportMediaModel model in allModels){
+      if (model.report!.id == reportID && model.type == 0){
+        models.add(model);
+      }
+    }
+    return models;
+  }
+
+  Future<List<ReportMediaModel>> getDietReportMediaModelByReportId(int reportID, AccountModel user) async{
+    List<ReportMediaModel> models = [];
+    List<ReportMediaModel> allModels = await getAllMediaReport(user);
+    for (ReportMediaModel model in allModels){
+      if (model.report!.id == reportID && model.type == 1){
+        models.add(model);
+      }
+    }
+    return models;
+  }
+
+  Future<bool> sendFeedBack(int reportID, String trainerFeedback, int trainerApproval, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.trainerFeedbackApi);
+    var response = await http.put(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode({
+        "reportID" : reportID,
+        "trainerFeedback" : trainerFeedback,
+        "trainerApproval" : trainerApproval
+      })
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
 }

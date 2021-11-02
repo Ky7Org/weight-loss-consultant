@@ -8,11 +8,14 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class TrainerViewListPackagePage extends StatefulWidget {
@@ -28,6 +31,8 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
   Future<List<PackageModel>>? listPackage;
   AccountModel user = AccountModel(email: "", fullname: "");
   TrainerService service = TrainerService();
+  CustomerService customerService = CustomerService();
+  NotificationService notificationService = NotificationService();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -110,11 +115,19 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
                           SizedBox(width: 20,),
                           RaisedButton(
                             onPressed: () async {
-                              print(packageID);
-                              print(widget.campaignId );
+                              CustomerCampaignModel? campaignModel = await service.getCampaignById(widget.campaignId as int, user);
+                              if (campaignModel == null) {
+                                CustomToast.makeToast("Some thing went wrong! Try again");
+                                return;
+                              }
+
+                              notificationService.applyPackage(campaignModel.customer!.deviceID as String
+                                  , user.email as String, packageID, widget.campaignId as int);
+
                               bool result = await service.applyPackageToCampaign(packageID, widget.campaignId as int, user);
                               if (result){
                                 CustomToast.makeToast("Save successfully");
+
                               } else {
                                 CustomToast.makeToast("Some thing went wrong! Try again");
                               }
