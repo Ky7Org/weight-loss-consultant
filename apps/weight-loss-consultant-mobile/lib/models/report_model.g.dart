@@ -13,7 +13,7 @@ ReportModel _$ReportModelFromJson(Map<String, dynamic> json) => ReportModel()
   ..trainerFeedback = json['trainerFeedback'] as String?
   ..trainerApproval = json['trainerApproval'] as int?
   ..weight = json['weight'] as int?
-  ..createDate = json['createDate'] as int?
+  ..createDate = json['createDate'] as String?
   ..contract = json['contract'] == null
       ? null
       : ContractModel.fromJson(json['contract'] as Map<String, dynamic>);

@@ -16,6 +16,9 @@ class PackageModel{
   int? spendTimeToTraining;
   TrainerModel? trainer;
   String? name;
+  int? createDate;
+  String? startDate;
+  String? endDate;
 
   PackageModel();
 

@@ -24,4 +24,9 @@ class ApiConstant{
   static const String updateDeviceIDApi = routePath + "/api/v1/updateDeviceID";
   static const String getContractByPackageIDorCampaignIDApi = routePath + "/api/v1/contracts/getContract/byPackageOrCampaignId";
   static const String customerCreateProjectApi = routePath + "/api/v1/reports";
+  static const String getReportsByContractIDApi = routePath + "/api/v1/reports/findReportByContractID";
+  static const String customerCreateMediaReportApi = routePath + "/api/v1/medias";
+  static const String getAllMediaReportApi = routePath + "/api/v1/medias";
+  static const String trainerFeedbackApi = routePath + "/api/v1/reports/trainerApproval";
+  static const String getReportById = routePath + "/api/v1/reports";
 }

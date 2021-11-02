@@ -162,6 +162,7 @@ class CustomerService{
   }
 
   Future<ContractModel> getContractByCampaignId(int campaignID, AccountModel user) async{
+    print(campaignID);
     var url = Uri.parse(ApiConstant.getContractByPackageIDorCampaignIDApi);
     List<ContractModel> models = [];
     var response = await http.post(
@@ -185,7 +186,7 @@ class CustomerService{
     return models[0];
   }
 
-  Future<ContractModel> getContractByPackageId(int campaignID, AccountModel user) async{
+  Future<ContractModel?> getContractByPackageId(int packageID, AccountModel user) async{
     var url = Uri.parse(ApiConstant.getContractByPackageIDorCampaignIDApi);
     List<ContractModel> models = [];
     var response = await http.post(
@@ -195,7 +196,7 @@ class CustomerService{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        "packageID": campaignID,
+        "packageID": packageID,
       }),
     );
 
@@ -230,8 +231,8 @@ class CustomerService{
     }
   }
 
-  Future<void> createMediaReport(int reportID, String url, int type, AccountModel user) async {
-    var url = Uri.parse(ApiConstant.customerCreateProjectApi);
+  Future<void> createMediaReport(int reportID, String imageUrl, int type, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.customerCreateMediaReportApi);
     var response = await http.post(
       url,
       headers: {
@@ -240,11 +241,51 @@ class CustomerService{
       },
       body: json.encode({
         "reportID": reportID,
-        "url": url,
+        "url": imageUrl,
         "type": type
       }),
     );
   }
+
+  Future<List<ReportModel>> getReportsByPackageId(int packageId, AccountModel user) async{
+    List<ReportModel> models = [];
+    ContractModel? contractModel = await getContractByPackageId(packageId, user);
+    if (contractModel == null) return models;
+
+    var url = Uri.parse(ApiConstant.getReportsByContractIDApi + "/${contractModel.id}");
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200){
+      Iterable list = json.decode(response.body);
+      for (var item in list){
+        ReportModel model = ReportModel.fromJson(item);
+        models.add(model);
+      }
+    }
+    return models;
+  }
+
+  Future<ReportModel?> getReportModelById(int reportId, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.getReportById + "/$reportId");
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      return ReportModel.fromJson(jsonDecode(response.body));
+    }
+  }
+
+
 
 
 
