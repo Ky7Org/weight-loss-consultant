@@ -9,16 +9,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
+import 'package:weight_loss_consultant_mobile/constants/trainer_bottom_navigator_index.dart';
 import 'package:weight_loss_consultant_mobile/main.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/trainer_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/trainer_sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 import 'package:collection/collection.dart';
-
 
 class TrainerHomePage extends StatefulWidget {
   const TrainerHomePage({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userJSON = prefs.getString('ACCOUNT');
-    if (userJSON is String){
+    if (userJSON is String) {
       Map<String, dynamic> userMap = jsonDecode(userJSON);
       user = AccountModel.fromJson(userMap);
     }
@@ -51,20 +52,21 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_){
-      initAccount().then((value){
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      initAccount().then((value) {
         TrainerService trainerService = TrainerService();
         trainerService.getTrainerPackage(user).then((value) {
-          onGoingPackage = value.firstWhereOrNull((element) => element.status == 2);
+          onGoingPackage =
+              value.firstWhereOrNull((element) => element.status == 2);
           setState(() {});
         });
       });
     });
   }
 
-  Widget _phoneCard(String date, String nameTraining, String nameCustomer){
+  Widget _phoneCard(String date, String nameTraining, String nameCustomer) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
       },
       child: Card(
@@ -82,20 +84,20 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
                       margin: const EdgeInsets.only(bottom: 10),
                       child: Text(
                         date,
                         style: TextStyle(
                             color: HexColor("#FF3939"),
                             fontSize: 13,
-                            fontWeight: FontWeight.w900
-                        ),
+                            fontWeight: FontWeight.w900),
                       ),
                       decoration: BoxDecoration(
                           color: HexColor("#F0F3F6"),
-                          borderRadius: const BorderRadius.all(Radius.circular(5))
-                      ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5))),
                     ),
                     Container(
                         margin: const EdgeInsets.only(bottom: 10),
@@ -104,20 +106,21 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: AppColors.PRIMARY_WORD_COLOR,
-                              fontSize: 20
-                          ),
+                              fontSize: 20),
                         )),
-                    Text(nameCustomer, style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w800,
-                        color: HexColor("#B6C5D1")
-                    ),)
+                    Text(
+                      nameCustomer,
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w800,
+                          color: HexColor("#B6C5D1")),
+                    )
                   ],
                 ),
               ),
               IconButton(
                 iconSize: 48,
-                onPressed: (){},
+                onPressed: () {},
                 icon: SvgPicture.asset("assets/icon/call-icon.svg"),
               )
             ],
@@ -127,10 +130,10 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     );
   }
 
-  Widget _category(String title, String icon){
+  Widget _category(String title, String icon) {
     return GestureDetector(
-      onTap: (){
-        if (title == "Message"){
+      onTap: () {
+        if (title == "Message") {
           Navigator.pushNamed(context, RoutePath.myMessagePage);
         }
       },
@@ -148,14 +151,12 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                   flex: 1,
                   child: Center(
                       child: Text(
-                        title,
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.PRIMARY_WORD_COLOR
-                        ),
-                      )
-                  ),
+                    title,
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.PRIMARY_WORD_COLOR),
+                  )),
                 ),
               ],
             ),
@@ -168,11 +169,12 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     );
   }
 
-  Widget _buildCurrentCampaign(){
+  Widget _buildCurrentCampaign() {
     if (onGoingPackage == null) return Container();
-    return  GestureDetector(
+    return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RoutePath.trainerOnGoingPackageDetailPage, arguments: onGoingPackage!.id as int);
+        Navigator.pushNamed(context, RoutePath.trainerOnGoingPackageDetailPage,
+            arguments: onGoingPackage!.id as int);
       },
       child: Card(
         elevation: 5,
@@ -196,99 +198,90 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 5,),
+              const SizedBox(
+                height: 5,
+              ),
               RichText(
-                text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Exercise Plan: ',
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 15),
-                      ),
-                      TextSpan(
-                        text: onGoingPackage!.exercisePlan ?? "",
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15),
-                      )
-
-                    ]
-                ),
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: 'Exercise Plan: ',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15),
+                  ),
+                  TextSpan(
+                    text: onGoingPackage!.exercisePlan ?? "",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15),
+                  )
+                ]),
               ),
               const SizedBox(
                 height: 5,
               ),
               RichText(
-                text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Diet Plan: ',
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 15),
-                      ),
-                      TextSpan(
-                        text: onGoingPackage!.dietPlan ?? "",
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15),
-                      )
-
-                    ]
-                ),
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: 'Diet Plan: ',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15),
+                  ),
+                  TextSpan(
+                    text: onGoingPackage!.dietPlan ?? "",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15),
+                  )
+                ]),
               ),
               const SizedBox(
                 height: 5,
               ),
               RichText(
-                text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Session in weeks: ",
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 15),
-                      ),
-                      TextSpan(
-                        text: "${onGoingPackage!.spendTimeToTraining.toString()} day(s)",
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15),
-                      )
-
-                    ]
-                ),
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: "Session in weeks: ",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15),
+                  ),
+                  TextSpan(
+                    text:
+                        "${onGoingPackage!.spendTimeToTraining.toString()} day(s)",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15),
+                  )
+                ]),
               ),
               const SizedBox(
                 height: 5,
               ),
               RichText(
-                text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Session length: ",
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 15),
-                      ),
-                      TextSpan(
-                        text: "45 minutes",
-                        style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15),
-                      )
-
-                    ]
-                ),
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: "Session length: ",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15),
+                  ),
+                  TextSpan(
+                    text: "45 minutes",
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15),
+                  )
+                ]),
               ),
               const SizedBox(
                 height: 5,
@@ -330,58 +323,57 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
         appBar: MainAppBar.builder(user.fullname ?? "", context),
         body: SlidingUpPanel(
           controller: _pc,
-          panel:  TrainerCategoryPanel(),
+          panel: TrainerCategoryPanel(),
           minHeight: 0,
           maxHeight: 200,
           body: Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             child: ListView(
               children: [
-                const SizedBox(width: double.infinity,),
+                const SizedBox(
+                  width: double.infinity,
+                ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text("Upcoming Training",
+                      child: Text(
+                        "Upcoming Training",
                         style: TextStyle(
                           color: AppColors.PRIMARY_WORD_COLOR,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                      )
-                  ),
+                      )),
                 ),
-                _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mr Duy Nghiem"),
+                _phoneCard(
+                    "17:00 Nov 30,2021", "Cardio Training", "Mr Duy Nghiem"),
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mr Son"),
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mrs Thy"),
-                _buildCurrentCampaign(),
-                /*Container(
+                Container(
                   margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text("Top category",
+                      child: Text(
+                        "In Progress Campaign",
                         style: TextStyle(
                           color: AppColors.PRIMARY_WORD_COLOR,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                      )
-                  ),
+                      )),
                 ),
-                Wrap(
-                  spacing: 10,
-                  children: [
-                    _category("Training\nSchedule", "training-schedule.svg"),
-                    _category("Message", "message-icon.svg"),
-                    _category("Campaign", "campaign-icon.svg"),
-                  ],
-                ),*/
-                const SizedBox(height: 250,),
+                _buildCurrentCampaign(),
+                const SizedBox(
+                  height: 250,
+                ),
               ],
             ),
           ),
         ),
-        bottomNavigationBar: CustomerBottomNavigator(pc: _pc, selectedIndex: CustomerBottomNavigatorIndex.HOME,)
-    );
+        bottomNavigationBar: TrainerBottomNavigator(
+          pc: _pc,
+          selectedIndex: TrainerBottomNavigatorIndex.HOME,
+        ));
   }
 }

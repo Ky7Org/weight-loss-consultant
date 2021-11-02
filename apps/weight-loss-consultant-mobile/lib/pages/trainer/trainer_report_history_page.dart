@@ -64,8 +64,20 @@ class _TrainerReportHistoryPageState extends State<TrainerReportHistoryPage> {
         Navigator.pushNamed(context, RoutePath.trainerReportDetailPage, arguments: data.id);
       },
       child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 10),
         child: Container(
           padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3),
+                )
+              ]),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -171,7 +183,7 @@ class _TrainerReportHistoryPageState extends State<TrainerReportHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Package detail"),
+      appBar: GenericAppBar.builder("Report History"),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         margin: const EdgeInsets.only(top: 20),
@@ -187,7 +199,7 @@ class _TrainerReportHistoryPageState extends State<TrainerReportHistoryPage> {
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
+                return const Center(child: CircularProgressIndicator());
               }
           ),
         ),

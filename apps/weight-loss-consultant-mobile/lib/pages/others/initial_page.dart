@@ -18,7 +18,7 @@ class InitialPage extends StatelessWidget {
             Container(
               margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
               child: Text(
-                "Weight Loss Consultan",
+                "Weight Loss Consultant",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 36,
