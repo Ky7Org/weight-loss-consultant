@@ -376,7 +376,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         ),
         Center(
           child: Text(
-            "You don't have any campaign.",
+            "You don't have any active campaign.",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,
@@ -436,7 +436,8 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
               future: listPackage,
               builder: (context, snapshot) {
                 if (snapshot.hasData){
-                  if (snapshot.requireData.isEmpty){
+                  List<PackageModel> activePackage = snapshot.requireData.where((element) => element.status == 0).toList();
+                  if (activePackage.isEmpty){
                     return _buildEmptyCampaignList();
                   }
                   return Column(

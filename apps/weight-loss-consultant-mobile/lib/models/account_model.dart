@@ -6,18 +6,18 @@ part "account_model.g.dart";
 
 @JsonSerializable()
 class AccountModel{
-  late String? email;
-  late String? fullname;
-  late String? role;
-  late String? address;
-  late String? phone;
-  late String? gender;
-  late int? status;
-  late String? profileImage;
-  late String? dob;
-  late String? accessToken;
-  late String? password;
-  late String? deviceID;
+  String? email;
+  String? fullname;
+  String? role;
+  String? address;
+  String? phone;
+  String? gender;
+  int? status;
+  String? profileImage;
+  String? dob;
+  String? accessToken;
+  String? password;
+  String? deviceID;
 
 
   AccountModel({this.email = "", this.fullname = ""});

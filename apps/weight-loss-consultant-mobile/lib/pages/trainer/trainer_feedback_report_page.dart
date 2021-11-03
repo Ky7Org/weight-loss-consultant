@@ -68,7 +68,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
   }
 
   Widget _multiInput(String label, String hint,
-      TextEditingController controller) {
+      TextEditingController controller, ReportModel report) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -78,6 +78,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
       child: Column(
         children: [
           TextFormField(
+            enabled: report.trainerFeedback!.isEmpty,
             controller: controller,
             keyboardType: TextInputType.text,
             style: const TextStyle(fontSize: 15),
@@ -125,7 +126,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
       } catch (e) {
         image = Image.asset("assets/fake-image/miku-avatar.png");
       }
-      if(file.contains('http://')){
+      if(file.contains('https://')){
         listWidget.add(image);
       }
     }
@@ -222,6 +223,9 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
   }
 
   Widget _buildApprovedAndDenyButton(ReportModel report) {
+    if (report.trainerFeedback!.isNotEmpty){
+      return Container();
+    }
     return Row(
       children: [
         Expanded(
@@ -295,6 +299,25 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
     );
   }
 
+  Widget _buildHasReportContainer(ReportModel model){
+    if (model.trainerFeedback!.isNotEmpty){
+      return Column(
+        children: [
+          Text(
+              "You have feedback this report. In this we do not allow edit report",
+            style: TextStyle(
+                color: AppColors.PRIMARY_WORD_COLOR,
+                fontWeight: FontWeight.w700,
+                fontSize: 20
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 10,),
+        ],
+      );
+    }
+    return Container();
+  }
 
 
   @override
@@ -322,10 +345,14 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
                       setState(() {});
                     });
                   });
+                  if (report.trainerFeedback!.isNotEmpty){
+                    _feedback.text = report.trainerFeedback ?? "";
+                  }
                   return Column(
                     children: [
                       Column(
                         children: [
+                          _buildHasReportContainer(report),
                           _buildDietCard(snapshot.requireData as ReportModel),
                           const SizedBox(
                             height: 15,
@@ -335,7 +362,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
                           const SizedBox(
                             height: 30,
                           ),
-                          _multiInput("Your feedback", "Noice", _feedback),
+                          _multiInput("Your feedback", "Noice", _feedback, report),
                           const SizedBox(
                             height: 30,
                           ),

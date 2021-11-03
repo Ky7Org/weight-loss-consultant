@@ -98,6 +98,16 @@ class _TrainerViewCampaignDetailPageState extends State<TrainerViewCampaignDetai
 
   @override
   Widget build(BuildContext context) {
+    Image avatar;
+    if (campaignModel == null){
+      avatar = Image.asset("assets/fake-image/miku-avatar.png");
+    } else if (campaignModel!.customer == null){
+      avatar = Image.asset("assets/fake-image/miku-avatar.png");
+    } else if (campaignModel!.customer!.profileImage == null){
+      avatar = Image.asset("assets/fake-image/miku-avatar.png");
+    } else {
+      avatar = Image.network(campaignModel!.customer!.profileImage as String);
+    }
     return Scaffold(
       appBar: GenericAppBar.builder("Detail Campaign"),
       body: SingleChildScrollView(
@@ -106,16 +116,16 @@ class _TrainerViewCampaignDetailPageState extends State<TrainerViewCampaignDetai
             const SizedBox(
               height: 20,
             ),
-            const Center(
+            Center(
               child: CircleAvatar(
                 backgroundImage:
-                    AssetImage("assets/fake-image/miku-avatar.png"),
+                    avatar.image,
                 radius: 50,
               ),
             ),
             Center(
               child: Text(
-                'BanhsBao',
+                campaignModel!.customer!.fullname ?? "",
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,

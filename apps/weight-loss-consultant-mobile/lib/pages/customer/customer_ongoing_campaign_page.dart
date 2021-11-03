@@ -418,7 +418,11 @@ class _CustomerOnGoingCampaignPageState
       child: GestureDetector(
         onTap: () {
           Navigator.pushNamed(context, RoutePath.customerMakeReportPage,
-              arguments: packageModel.id);
+              arguments: packageModel.id).then((value){
+                if (value != null){
+                  Navigator.pushNamed(context, RoutePath.customerReportDetailPage, arguments: value);
+                }
+          });
         },
         child: Card(
           elevation: 10,

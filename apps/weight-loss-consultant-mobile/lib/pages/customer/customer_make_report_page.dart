@@ -18,7 +18,9 @@ import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
+import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class CustomerMakeReportPage extends StatefulWidget {
   int? packageId;
@@ -35,6 +37,7 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
   List<File> dietImages = [];
   final picker = ImagePicker();
   int userWeight = 30;
+  Future<ReportModel?>? reportModel;
 
   AccountModel user = AccountModel(email: "", fullname: "");
 
@@ -52,6 +55,8 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
+        TrainerService service = TrainerService();
+        reportModel = service.getTodayReport(widget.packageId! as int, user);
         setState(() {});
       });
     });
@@ -337,22 +342,38 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
       appBar: GenericAppBar.builder('Daily Report'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        child: Column(
-          children: [
-            Form(
-              child: Column(
+        child: FutureBuilder<ReportModel?>(
+          future: reportModel,
+          builder: (context, snapshot) {
+            if (snapshot.hasData){
+              ReportModel report = snapshot.requireData as ReportModel;
+              if (report.trainerFeedback!.isNotEmpty){
+                Navigator.pop(context, report.id);
+                return Container();
+              }
+
+              return Column(
                 children: [
-                  _buildDietCard(),
-                  const SizedBox(height: 15,),
-                  _buildExerciseCard(),
-                  const SizedBox(height: 30,),
-                  _buildChangeTodayWeight(),
-                  const SizedBox(height: 30,),
-                  _buildReportButton(),
+                  Form(
+                      child: Column(
+                        children: [
+                          _buildDietCard(),
+                          const SizedBox(height: 15,),
+                          _buildExerciseCard(),
+                          const SizedBox(height: 30,),
+                          _buildChangeTodayWeight(),
+                          const SizedBox(height: 30,),
+                          _buildReportButton(),
+                        ],
+                      )
+                  )
                 ],
-              )
-            )
-          ],
+              );
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         ),
       ),
     );

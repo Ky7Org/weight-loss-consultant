@@ -197,17 +197,7 @@ class _CustomerAppliedPackagePageState
         ),
         Center(
           child: Text(
-            "You don't have any package\n applied to this campaignsss.",
-            style: TextStyle(
-                color: AppColors.PRIMARY_WORD_COLOR,
-                fontSize: 15,
-                fontWeight: FontWeight.w400),
-          ),
-        ),
-        SizedBox(height: 5),
-        Center(
-          child: Text(
-            'Create one?',
+            "You don't have any package\n applied to this campaign.",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,

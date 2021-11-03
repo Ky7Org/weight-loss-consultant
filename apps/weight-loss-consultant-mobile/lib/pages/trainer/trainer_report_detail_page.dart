@@ -39,9 +39,7 @@ class _TrainerReportDetailPageState extends State<TrainerReportDetailPage> {
     prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
   }
 
-  Future<String> _generateFakeReport() async {
-    return "Hey";
-  }
+
 
   @override
   void initState() {
@@ -81,7 +79,7 @@ class _TrainerReportDetailPageState extends State<TrainerReportDetailPage> {
       } catch (e) {
         image = Image.asset("assets/fake-image/miku-avatar.png");
       }
-      if (file.contains("http://")) {
+      if (file.contains("https://")) {
         listWidget.add(image);
       }
     }
@@ -268,17 +266,13 @@ class _TrainerReportDetailPageState extends State<TrainerReportDetailPage> {
                 if (snapshot.hasData) {
                   TrainerService service = TrainerService();
                   ReportModel report = snapshot.requireData as ReportModel;
-                  service
-                      .getExerciseReportMediaModelByReportId(
-                          report.id as int, user)
-                      .then((value) {
+                  service.getExerciseReportMediaModelByReportId(report.id as int, user).then((value) {
                     exerciseImages = value.map((e) => e.url ?? "").toList();
-                    service
-                        .getDietReportMediaModelByReportId(
-                            report.id as int, user)
-                        .then((value) {
+                    service.getDietReportMediaModelByReportId(report.id as int, user).then((value) {
                       dietImages = value.map((e) => e.url ?? "").toList();
-                      setState(() {});
+                      setState(() {
+
+                      });
                     });
                   });
                   return Column(
