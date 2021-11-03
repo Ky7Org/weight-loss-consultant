@@ -8,6 +8,8 @@ import 'package:weight_loss_consultant_mobile/services/local_notification_servic
 
 //Receive message when app is in background solution for on message
 Future<void> backgroundHandler(RemoteMessage message) async {
+  print(message.notification!.title);
+  print(message.notification!.body);
 }
 
 void main() async {

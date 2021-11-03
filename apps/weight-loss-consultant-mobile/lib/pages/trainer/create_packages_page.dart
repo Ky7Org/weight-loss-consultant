@@ -110,7 +110,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
   }
 
   Widget _singleInput(String label, String hint, bool haveSuffixIcon,
-      bool havePrefixIcon, IconData icon, TextEditingController controller, FormFieldValidator<String> validator) {
+      bool havePrefixIcon, IconData icon, TextEditingController controller, FormFieldValidator<String> validator, TextInputType type) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -143,7 +143,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
               Expanded(
                 child: TextFormField(
                   controller: controller,
-                  keyboardType: TextInputType.phone,
+                  keyboardType: type,
                   validator: validator,
                   style: const TextStyle(fontSize: 15),
                   decoration: InputDecoration(
@@ -401,7 +401,8 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                             return "Title cannot be bigger than 30 characters";
                           }
                           return null;
-                        }
+                        },
+                      TextInputType.text
                     ),
                     _dropdown(),
                     _multiInput("Exercise Plan", "Do what?", _exercisePlan, 1000),
@@ -423,7 +424,10 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                             return "Fee must be a number";
                           }
                           return null;
-                        }),
+                        },
+                        TextInputType.number
+
+                    ),
                     _multiInput("Schedule description", "Your description...", _schedule, 1000),
                     _buildStartDateTF(),
                     const SizedBox(height: 20,),
@@ -457,6 +461,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                             endDate: endDate.microsecondsSinceEpoch,
                             startDate: startDate.microsecondsSinceEpoch,
                           );
+                          Navigator.pop(context);
                           if (result){
                             CustomToast.makeToast("Create successfully");
                           } else {

@@ -22,15 +22,17 @@ class LocalNotificationService {
       Map<String, dynamic> myDataFromMessage = jsonDecode(data!);
 
       final typeOfMessage = myDataFromMessage['type'];
-      final packageID = myDataFromMessage["packageID"];
-      final campaignID = myDataFromMessage["campaignID"];
-      Map<String, dynamic> mapData = {};
-      mapData["packageID"] = int.parse(packageID);
-      mapData["campaignID"] = int.parse(campaignID);
+
       if (typeOfMessage == 'Apply Package') {
+        final packageID = myDataFromMessage["packageID"];
+        final campaignID = myDataFromMessage["campaignID"];
+        Map<String, dynamic> mapData = {};
+        mapData["packageID"] = int.parse(packageID);
+        mapData["campaignID"] = int.parse(campaignID);
         _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
             arguments: mapData);
       } else if (typeOfMessage == 'Apply Campaign') {
+        final campaignID = myDataFromMessage['campaignID'];
         LocalNotificationService._navKey.currentState!.pushNamed(
             RoutePath.trainerViewCampaignDetailPage,
             arguments: int.parse(campaignID));

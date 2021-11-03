@@ -9,13 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
-import 'package:weight_loss_consultant_mobile/constants/trainer_bottom_navigator_index.dart';
 import 'package:weight_loss_consultant_mobile/main.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
-import 'package:weight_loss_consultant_mobile/pages/components/trainer_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/trainer_sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
@@ -67,7 +65,14 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
   Widget _phoneCard(String date, String nameTraining, String nameCustomer) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
+        Navigator.pushNamed(context, RoutePath.upcomingTrainingPage).then((value){
+          TrainerService trainerService = TrainerService();
+          trainerService.getTrainerPackage(user).then((value) {
+            onGoingPackage =
+                value.firstWhereOrNull((element) => element.status == 2);
+            setState(() {});
+          });
+        });
       },
       child: Card(
         elevation: 5,
@@ -134,7 +139,14 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     return GestureDetector(
       onTap: () {
         if (title == "Message") {
-          Navigator.pushNamed(context, RoutePath.myMessagePage);
+          Navigator.pushNamed(context, RoutePath.myMessagePage).then((value){
+            TrainerService trainerService = TrainerService();
+            trainerService.getTrainerPackage(user).then((value) {
+              onGoingPackage =
+                  value.firstWhereOrNull((element) => element.status == 2);
+              setState(() {});
+            });
+          });
         }
       },
       child: SizedBox(
@@ -174,7 +186,14 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, RoutePath.trainerOnGoingPackageDetailPage,
-            arguments: onGoingPackage!.id as int);
+            arguments: onGoingPackage!.id as int).then((value){
+          TrainerService trainerService = TrainerService();
+          trainerService.getTrainerPackage(user).then((value) {
+            onGoingPackage =
+                value.firstWhereOrNull((element) => element.status == 2);
+            setState(() {});
+          });
+        });
       },
       child: Card(
         elevation: 5,
@@ -318,9 +337,19 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Image image;
+    if (user.profileImage == null){
+      image = Image.asset("assets/fake-image/miku-avatar.png", width: 50, height: 50,);
+    } else {
+      image = Image.network(
+        user.profileImage as String,
+        height: 50,
+        width: 50,
+      );
+    }
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: MainAppBar.builder(user.fullname ?? "", context),
+        appBar: MainAppBar.builder(user.fullname ?? "", context, image),
         body: SlidingUpPanel(
           controller: _pc,
           panel: TrainerCategoryPanel(),
@@ -371,9 +400,9 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
             ),
           ),
         ),
-        bottomNavigationBar: TrainerBottomNavigator(
+        bottomNavigationBar: CustomerBottomNavigator(
           pc: _pc,
-          selectedIndex: TrainerBottomNavigatorIndex.HOME,
+          selectedIndex: CustomerBottomNavigatorIndex.HOME,
         ));
   }
 }

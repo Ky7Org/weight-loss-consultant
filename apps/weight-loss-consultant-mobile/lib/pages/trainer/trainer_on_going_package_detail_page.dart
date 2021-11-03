@@ -126,7 +126,7 @@ class _TrainerOnGoingPackageDetailPageState
             _content("Email", campaignModel!.customer!.email ?? ""),
             _content("Gender", "${campaignModel!.customer!.gender == "1" ? "Male" : "Female"} "),
             _content("Phone number", campaignModel!.customer!.phone ?? ""),
-            _content("Date of birth", date ?? ""),
+            _content("Date of birth", date),
           ],
         ),
       ),

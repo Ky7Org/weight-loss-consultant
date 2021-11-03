@@ -58,7 +58,10 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
   Widget _campaign(int id, String date, String currentWeight, String targetWeight, String description) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RoutePath.customerAppliedPackagePage, arguments: id);
+        Navigator.pushNamed(context, RoutePath.customerAppliedPackagePage, arguments: id).then((value){
+          listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+          setState(() {});
+        });
       },
       child: Card(
         elevation: 5,

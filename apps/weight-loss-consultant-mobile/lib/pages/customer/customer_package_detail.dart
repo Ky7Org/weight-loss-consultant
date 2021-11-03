@@ -446,6 +446,7 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
           } else {
             CustomToast.makeToast("Some thing went wrong! Try again");
           }
+          Navigator.pop(context);
         },
         label: const Text("Approve this package"),
         icon: const Icon(Icons.add),
