@@ -4,9 +4,13 @@ import {ApiBody, ApiParam, ApiResponse} from "@nestjs/swagger";
 import {ContractService} from "../../services/contract.service";
 import {CreateContractDto} from "../../dtos/contract/create-health-info.dto";
 import {UpdateContractDto} from "../../dtos/contract/update-health-info.dto";
+import {
+  CampaignAndPackageIdPayload,
+  GetContractByPackageIDOrCampaignIDPayload
+} from "../../../../../common/dtos/update-trainer-dto.payload";
 
 
-@Controller(`/v1/contracts`)
+@Controller()
 export class ContractController {
 
   private readonly logger = new Logger(ContractController.name);
@@ -14,7 +18,7 @@ export class ContractController {
   constructor(private readonly contractService: ContractService) {
   }
 
-  @Get()
+  @Get('/v1/contracts/')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({status: HttpStatus.OK, description: 'The contracts has shown below.'})
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
@@ -28,7 +32,7 @@ export class ContractController {
     }
   }
 
-  @Get(':id')
+  @Get('/v1/contracts/:id')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({status: HttpStatus.OK, description: 'Contract details has shown below:'})
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
@@ -57,7 +61,7 @@ export class ContractController {
     }
   }
 
-  @Post()
+  @Post('/v1/contracts')
   @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: CreateContractDto
@@ -74,7 +78,7 @@ export class ContractController {
     }
   }
 
-  @Put(':id')
+  @Put('/v1/contracts/:id')
   @UseGuards(JwtAuthGuard)
   @ApiBody({
     type: UpdateContractDto
@@ -99,7 +103,7 @@ export class ContractController {
     }
   }
 
-  @Delete(':id')
+  @Delete('/v1/contracts/:id')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({status: HttpStatus.OK, description: 'The contract has been successfully deleted.'})
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden.'})
@@ -120,4 +124,41 @@ export class ContractController {
       res.status(error.statusCode).send(error);
     }
   }
+
+  @Post('/v1/contracts/getContract/byPackageOrCampaignId')
+  @UseGuards(JwtAuthGuard)
+  async getContractByPackageIdOrCampaignId(@Body() payload: GetContractByPackageIDOrCampaignIDPayload, @Res() res) {
+    try {
+      const result = await this.contractService.getContractByPackageIdOrCampaignId(payload);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Put('/v1/contracts/expireContract/:id')
+  @UseGuards(JwtAuthGuard)
+  async expireContract(@Param('id') id: number, @Res() res) {
+    try {
+      const result = await this.contractService.expireContract(id);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Post('/v1/contracts/getAnother')
+  @UseGuards(JwtAuthGuard)
+  async getAnother(@Body() payload: CampaignAndPackageIdPayload, @Res() res) {
+    try {
+      const result = await this.contractService.getAnother(payload);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
 }

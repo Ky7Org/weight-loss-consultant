@@ -22,11 +22,12 @@ class CustomerCampaignPage extends StatefulWidget {
       _CustomerCampaignPageState();
 }
 
-class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
-  late Future<List<CampaignModel>> listCampaign;
-
+class _CustomerCampaignPageState extends State<CustomerCampaignPage> with SingleTickerProviderStateMixin {
+  Future<List<CampaignModel>>? listCampaign;
   AccountModel user = AccountModel(email: "", fullname: "");
   CustomerService customerService = CustomerService();
+
+  late TabController _tabController ;
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -44,6 +45,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
 
   @override
   void initState() {
+    _tabController = TabController(length: 3, vsync: this);
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
@@ -56,10 +58,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
   Widget _campaign(int id, String date, String currentWeight, String targetWeight, String description) {
     return GestureDetector(
       onTap: () {
-          Navigator.pushNamed(context, RoutePath.customerUpdateCampaignPage, arguments: id).then((value){
-            listCampaign = customerService.getCustomerCampaign(user.email ?? "");
-            setState(() {});
-          });
+        Navigator.pushNamed(context, RoutePath.customerAppliedPackagePage, arguments: id);
       },
       child: Card(
         elevation: 5,
@@ -90,22 +89,38 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
                         borderRadius:
                         const BorderRadius.all(Radius.circular(5))),
                   ),
-                  IconButton(
-                      onPressed: () async {
-                        bool result = await customerService.deleteCampaign(id, user);
-                        if (result){
-                          CustomToast.makeToast("Delete successfully");
-                        } else {
-                          CustomToast.makeToast("Some thing went wrong! Try again");
-                        }
-                        setState(() {
-                          listCampaign = customerService.getCustomerCampaign(user.email ?? "");
-                        });
-                      },
-                      icon: Icon(
-                        Icons.highlight_remove_outlined,
-                        color: HexColor("#FF3939"),
-                      )
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () async {
+                            Navigator.pushNamed(context, RoutePath.customerUpdateCampaignPage, arguments: id).then((value){
+                              listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+                              setState(() {});
+                            });
+                          },
+                          icon: Icon(
+                            Icons.edit,
+                            color: HexColor("#FF3939"),
+                          )
+                      ),
+                      IconButton(
+                          onPressed: () async {
+                            bool result = await customerService.deleteCampaign(id, user);
+                            if (result){
+                              CustomToast.makeToast("Delete successfully");
+                            } else {
+                              CustomToast.makeToast("Some thing went wrong! Try again");
+                            }
+                            setState(() {
+                              listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+                            });
+                          },
+                          icon: Icon(
+                            Icons.highlight_remove_outlined,
+                            color: HexColor("#FF3939"),
+                          )
+                      ),
+                    ],
                   )
                 ],
               ),
@@ -190,9 +205,10 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
     );
   }
 
-  List<Widget> _buildCampaignList(List<CampaignModel> data){
+  List<Widget> _buildOnGoingCampaignList(List<CampaignModel> data){
     List<Widget> widgets = [];
     for (CampaignModel model in data){
+      if (model.status != 1) continue;
       var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
       var widget = _campaign(
           model.id ?? 0,
@@ -203,6 +219,43 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
       );
       widgets.add(widget);
     }
+    widgets.add(const SizedBox(height: 70,));
+    return widgets;
+  }
+
+  List<Widget> _buildActiveCampaignList(List<CampaignModel> data){
+    List<Widget> widgets = [];
+    for (CampaignModel model in data){
+      if (model.status != 0) continue;
+      var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
+      var widget = _campaign(
+        model.id ?? 0,
+        date,
+        model.currentWeight.toString(),
+        model.targetWeight.toString(),
+        model.description ?? "",
+      );
+      widgets.add(widget);
+    }
+    widgets.add(const SizedBox(height: 70,));
+    return widgets;
+  }
+
+  List<Widget> _buildClosedCampaignList(List<CampaignModel> data){
+    List<Widget> widgets = [];
+    for (CampaignModel model in data){
+      if (model.status != 2) continue;
+      var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
+      var widget = _campaign(
+        model.id ?? 0,
+        date,
+        model.currentWeight.toString(),
+        model.targetWeight.toString(),
+        model.description ?? "",
+      );
+      widgets.add(widget);
+    }
+    widgets.add(const SizedBox(height: 70,));
     return widgets;
   }
 
@@ -277,43 +330,106 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> {
       appBar: GenericAppBar.builder("List Campaigns"),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: HexColor("#FF3939"),
+        backgroundColor: Colors.white,
         onPressed: (){
           Navigator.pushNamed(context, RoutePath.createCampaignPage).then((value){
             listCampaign = customerService.getCustomerCampaign(user.email ?? "");
             setState(() {});
           });
         },
-        label: const Text("Add new campaign"),
-        icon: const Icon(Icons.add),
+        label: Text(
+          "Add new campaign",
+          style: TextStyle(
+            color: HexColor("#FF3939"),
+          ),
+        ),
+        icon: Icon(
+          Icons.add,
+          color: HexColor("#FF3939"),
+        ),
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         margin: const EdgeInsets.only(top: 20),
-        child: SingleChildScrollView(
-          child: FutureBuilder<List<CampaignModel>>(
-            future: listCampaign,
-            builder: (context, snapshot) {
-              if (snapshot.hasData){
-                if (snapshot.requireData.isEmpty){
-                  return _buildEmptyCampaignList();
-                }
-                return Column(
-                  children: [
-                    _title('Your Campaign'),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ..._buildCampaignList(snapshot.requireData),
-                    const SizedBox(
-                      height: 60,
-                    ),
-                  ],
-                );
+        child: FutureBuilder<List<CampaignModel>>(
+          future: listCampaign,
+          builder: (context, snapshot) {
+            if (snapshot.hasData){
+              if (snapshot.requireData.isEmpty){
+                return _buildEmptyCampaignList();
               }
-              return const CircularProgressIndicator();
+              return Column(
+                children: [
+                  Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                        color: const Color(0xFFF0F3F6),
+                        borderRadius: BorderRadius.circular(18),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(0, 3),
+                          )
+                        ]),
+                    child: TabBar(
+                      controller: _tabController,
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: Colors.white,
+                      ),
+                      labelColor: const Color(0xFF0D3F67),
+                      unselectedLabelColor: const Color(0xFFB6C5D1),
+                      tabs: const [
+                        Tab(
+                          child: Text(
+                            'On-going',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            'Active',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            'Closed',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20,),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        ListView(
+                          children: _buildOnGoingCampaignList(snapshot.requireData),
+                        ),
+                        ListView(
+                          children: _buildActiveCampaignList(snapshot.requireData),
+                        ),
+                        ListView(
+                          children: _buildClosedCampaignList(snapshot.requireData),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
             }
-          ),
+            return const Center(
+              child: CircularProgressIndicator()
+            );
+          }
         ),
       ),
     );

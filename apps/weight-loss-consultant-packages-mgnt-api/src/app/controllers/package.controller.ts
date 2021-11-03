@@ -8,9 +8,10 @@ import {
   DELETE_PACKAGE_BY_ID,
   FIND_ALL_PACKAGES,
   FIND_PACKAGE_BY_ID,
-  UPDATE_PACKAGE_BY_ID,
+  UPDATE_PACKAGE_BY_ID, UPDATE_STATUS_PACKAGE,
   UpdatePackagePayloadType
 } from '../../../../common/routes/packages-management-routes';
+import {UpdateStatusPackagePayload} from "../../../../common/dtos/update-package-dto.payload";
 
 
 @Controller()
@@ -47,5 +48,11 @@ export class PackageController {
   @UseFilters(new ExceptionFilter())
   async delete(@Payload() id: number) {
     return this.packageService.delete(id);
+  }
+
+  @MessagePattern({ cmd: UPDATE_STATUS_PACKAGE })
+  @UseFilters(new ExceptionFilter())
+  async updateStatus(@Payload() payload: UpdateStatusPackagePayload) {
+    return this.packageService.updateStatus(payload);
   }
 }

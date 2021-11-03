@@ -1,9 +1,9 @@
-import { HttpStatus, Inject, Injectable} from '@nestjs/common';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import {HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {DeleteResult, UpdateResult} from 'typeorm';
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {Observable} from "rxjs";
 import {CustomerEntity} from "../entities/customer.entity";
-import {CUSTOMER_VIEW_DETAIL, VIEW_DETAIL_CUSTOMER} from "../../../../common/routes/users-management-service-routes";
+import {CUSTOMER_VIEW_DETAIL} from "../../../../common/routes/users-management-service-routes";
 import {CampaignMapper} from "../mappers/campaign.mapper";
 import {CampaignRepository} from "../repositories/campaign.repository";
 import {CampaignEntity} from "../entities/campaign.entity";
@@ -11,6 +11,7 @@ import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
 import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
 import {USERS_MANAGEMENT_SERVICE_NAME} from "../../../../../constant";
 import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
+import {UpdateStatusCampaignPayload} from "../../../../common/dtos/update-campaign-dto.payload";
 
 @Injectable()
 export class CampaignService {
@@ -41,6 +42,7 @@ export class CampaignService {
       } as RpcExceptionModel);
     }
     const entity: CampaignEntity = await CampaignMapper.mapCreateCampaignDtoToEntity(dto, findCust);
+    entity.status = 0;
     return await this.repository.save(entity);
   }
 
@@ -84,26 +86,45 @@ export class CampaignService {
 
   async viewDetail(id): Promise<CampaignEntity> {
     const result = await this.repository.createQueryBuilder("campaign")
-      .where("campaign.id = :id", {id: id})
       .leftJoinAndSelect("campaign.customer", "customer")
+      .where("campaign.id = :id", {id: id})
       .getOne();
-    if (!result) {
-      throw new RpcException({
-        statusCode: HttpStatus.NOT_FOUND,
-        message: `Not found campaign with id: ${id}`
-      } as RpcExceptionModel);
-    }
     return result
   }
 
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[] | null> {
-    return await this.repository.find({relations: ["customer"]})
+    return await this.repository.createQueryBuilder("campaign")
+      .leftJoinAndSelect("campaign.customer", "customer")
+      .orderBy("campaign.createDate" , "DESC")
+      .getMany();
   }
 
   async getAvailCampaigns() : Promise<CampaignEntity[]> {
     return this.repository.createQueryBuilder("campaign")
       .leftJoinAndSelect("campaign.customer", "customer")
-      .where("campaign.status = :status", {status : 1})
+      .where("campaign.status = :status", {status : 0})
+      .orderBy("campaign.createDate" , "DESC")
       .getMany();
+  }
+
+  async updateStatus(payload: UpdateStatusCampaignPayload) : Promise<boolean>  {
+    const exist : CampaignEntity = await this.viewDetail(payload.id);
+    if (!exist){
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found campaign with id: ${payload.id}`
+      } as RpcExceptionModel);
+    }
+    const result = this.repository.createQueryBuilder()
+      .update(CampaignEntity)
+      .set({
+        status: payload.status
+      })
+      .where("id = :id", {id: payload.id})
+      .execute();
+    if ((await result).affected === 1) {
+      return true;
+    }
+    return false;
   }
 }

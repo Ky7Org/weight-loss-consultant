@@ -9,10 +9,11 @@ import { CustomerModule } from './customer.module';
 import { CustomerEntity } from '../entities/customer.entity';
 import { ENV_FILE_PATH } from '../constants/env-file-path';
 import {CampaignEntity} from "../entities/campaign.entity";
+import {PackageEntity} from "../entities/package.enttiy";
+import {SortingAndFilteringModule} from "./sorting-filtering.module";
+import {SearchModule} from "./search.module";
 import {ProfileStyleEntity} from "../entities/profile-trainer.entity";
 import {TrainerStyleEntity} from "../entities/trainer-style.entity";
-import {PackageEntity} from "../entities/package.entity";
-import {HeathInfoEntity} from "../entities/health-info.entity";
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -40,7 +41,6 @@ export class AppModule {
               PackageEntity,
               TrainerStyleEntity,
               ProfileStyleEntity,
-              HeathInfoEntity
             ],
           }),
           inject: [ConfigService],
@@ -48,6 +48,8 @@ export class AppModule {
         AdminModule,
         TrainerModule,
         CustomerModule,
+        SortingAndFilteringModule,
+        SearchModule,
       ],
     };
   }

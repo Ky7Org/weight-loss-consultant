@@ -1,20 +1,19 @@
-import {DynamicModule} from '@nestjs/common';
-import {ClientProviderOptions, ClientsModule, Transport} from '@nestjs/microservices';
-import {ConfigModule} from '@nestjs/config';
-import {HealthCheckModule} from './health-check.module';
+import { DynamicModule } from '@nestjs/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule } from '@nestjs/config';
+import { HealthCheckModule } from './health-check.module';
 import {
-  APPLIED_MANAGEMENT_SERVICE_NAME,
-  APPLIED_MANAGEMENT_SERVICE_PORT,
+  APPLIED_MANAGEMENT_SERVICE_NAME, APPLIED_MANAGEMENT_SERVICE_PORT,
   AUTHENTICATION_SERVICE_NAME,
-  CAMPAIGN_MANAGEMENT_SERVICE_NAME,
-  CAMPAIGN_MANAGEMENT_SERVICE_PORT,
-  CONTRACT_MANAGEMENT_SERVICE_NAME,
-  CONTRACT_MANAGEMENT_SERVICE_PORT,
+  AUTHENTICATION_SERVICE_PORT,
+  CAMPAIGN_MANAGEMENT_SERVICE_NAME, CAMPAIGN_MANAGEMENT_SERVICE_PORT,
+  CONTRACT_MANAGEMENT_SERVICE_NAME, CONTRACT_MANAGEMENT_SERVICE_PORT,
   HEALTH_MANAGEMENT_SERVICE_NAME,
   HEALTH_MANAGEMENT_SERVICE_PORT,
   HOST,
   PACKAGES_MANAGEMENT_SERVICE_NAME,
   PACKAGES_MANAGEMENT_SERVICE_PORT,
+  REPORT_MANAGEMENT_SERVICE_NAME, REPORT_MANAGEMENT_SERVICE_PORT,
   SCHEDULING_SERVICE_NAME,
   SCHEDULING_SERVICE_PORT,
   USERS_MANAGEMENT_SERVICE_NAME,
@@ -30,6 +29,8 @@ import * as Joi from 'joi';
 import {ENV_FILE_PATH} from '../constant';
 import {ContractModule} from "./contract.module";
 import {AppliedModule} from "./apply.module";
+import {ReportModule} from "./report.module";
+
 import {
   KAFKA_AUTHENTICATION_SERVICE,
   KAFKA_USERS_MANAGEMENT_SERVICE,
@@ -49,7 +50,24 @@ export class AppModule {
         HealthCheckModule,
         ContractModule,
         AppliedModule,
+        ReportModule,
         ClientsModule.register([
+          {
+            name: AUTHENTICATION_SERVICE_NAME,
+            transport: Transport.TCP,
+            options: {
+              host: HOST,
+              port: AUTHENTICATION_SERVICE_PORT,
+            }
+          },
+          {
+            name: USERS_MANAGEMENT_SERVICE_NAME,
+            transport: Transport.TCP,
+            options: {
+              host: HOST,
+              port: USERS_MANAGEMENT_SERVICE_PORT
+            }
+          },
           {
             name: PACKAGES_MANAGEMENT_SERVICE_NAME,
             transport: Transport.TCP,
@@ -96,6 +114,14 @@ export class AppModule {
             options: {
               host: HOST,
               port: APPLIED_MANAGEMENT_SERVICE_PORT,
+            }
+          },
+          {
+            name: REPORT_MANAGEMENT_SERVICE_NAME,
+            transport: Transport.TCP,
+            options: {
+              host: HOST,
+              port: REPORT_MANAGEMENT_SERVICE_PORT,
             }
           }
         ]),

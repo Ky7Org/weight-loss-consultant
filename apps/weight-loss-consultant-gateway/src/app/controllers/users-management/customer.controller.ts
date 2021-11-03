@@ -4,6 +4,10 @@ import { CustomerService } from '../../services/users-management/customer.servic
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateCustDto } from '../../dtos/customer/create-customer.dto';
 import { UpdateCustDto } from '../../dtos/customer/update-customer-dto';
+import {
+  UpdateAdminPayload,
+  UpdateCustomerPayloadd
+} from "../../../../../common/dtos/update-without-password-and-status.payload";
 
 @ApiTags('Customer')
 @ApiBearerAuth()
@@ -136,6 +140,18 @@ export class CustomerController {
       const result = await this.customerService.delete(email);
       res.status(HttpStatus.OK).send(result);
     } catch ({ error }) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Put('/v1/customers/updateWithoutPasswordAndStatus/:email')
+  @UseGuards(JwtAuthGuard)
+  async updateAdminWithoutPasswordAndStatus(@Param('email') email, @Body() payload: UpdateCustomerPayloadd, @Res() res) {
+    try {
+      const result = await this.customerService.updateWithoutPasswordAndStatus(payload);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
     }

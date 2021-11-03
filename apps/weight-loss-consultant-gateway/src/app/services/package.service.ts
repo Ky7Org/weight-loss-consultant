@@ -12,8 +12,8 @@ import {
   UpdatePackagePayloadType
 } from '../../../../common/routes/packages-management-routes';
 import { CreatePackageDto } from '../dtos/package/create-package';
-import { UpdatePackageDto } from '../dtos/package/update-package';
 import { PackageEntity } from '../entities/package.entity';
+import {UpdatePackageDto} from "../dtos/package/update-package";
 
 @Injectable()
 export class PackageService {

@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_applied_package_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_create_campaign.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_ongoing_campaign_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_overall_report_calendar_view_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_overall_report_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_package_detail.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_make_report_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_report_detail_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/customer/customer_report_history_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_todo_screen.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/customer_update_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/customer/edit_profile_page.dart';
@@ -23,10 +31,15 @@ import 'package:weight_loss_consultant_mobile/pages/register/trainer_register_pa
 import 'package:weight_loss_consultant_mobile/pages/register/register_sucessful_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/create_packages_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/no_packages_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_feedback_report_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_home_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_on_going_package_detail_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_package_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_report_detail_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_report_history_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_update_package_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_campaign_detail_page.dart';
-import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_list_campaign_page.dart';
+import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_available_campaign_page.dart';
 import 'package:weight_loss_consultant_mobile/pages/trainer/trainer_view_list_package_page.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
@@ -138,21 +151,112 @@ class RouteGenerator{
           return const TrainerPackagePage();
         });
       case RoutePath.trainerViewCampaignDetailPage:
-        return MaterialPageRoute(builder: (_){
-          return const TrainerViewCampaignDetailPage();
-        });
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerViewCampaignDetailPage(campaignID: args);
+          });
+        }
+        return _errorRoute();
       case RoutePath.trainerViewListCampaignPage:
         return MaterialPageRoute(builder: (_){
-          return const TrainerViewListCampaignPage();
+          return const TrainerAvailableCampaignPage();
         });
       case RoutePath.trainerViewListPackagePage:
-        return MaterialPageRoute(builder: (_){
-          return const TrainerViewListPackagePage();
-        });
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerViewListPackagePage(campaignId: args,);
+          });
+        }
+        return _errorRoute();
       case RoutePath.customerUpdateCampaignPage:
         if (args is int){
           return MaterialPageRoute(builder: (_){
             return CustomerUpdateCampaignPage(campaignID: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerAppliedPackagePage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerAppliedPackagePage(campaignId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerPackageDetailPage:
+        if (args is Map<String, dynamic>){
+          return MaterialPageRoute(builder: (_){
+            return CustomerPackageDetail(data: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.trainerUpdatePackagePage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerUpdatePackagePage(packageId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerOverallReportPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerOverallReportPage();
+        });
+      case RoutePath.customerOverallReportCalendarViewPage:
+        return MaterialPageRoute(builder: (_){
+          return const CustomerOverallReportCalendarViewPage();
+        });
+      case RoutePath.customerOngoingCampaignPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerOnGoingCampaignPage(campaignId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerMakeReportPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerMakeReportPage(packageId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.trainerFeedbackReportPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerFeedbackReportPage(packageId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerReportHistoryPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerReportHistoryPage(packageId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.customerReportDetailPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerReportDetailPage(reportId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.trainerOnGoingPackageDetailPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerOnGoingPackageDetailPage(packageId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.trainerReportHistoryPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerReportHistoryPage(packageId: args,);
+          });
+        }
+        return _errorRoute();
+      case RoutePath.trainerReportDetailPage:
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerReportDetailPage(reportId: args,);
           });
         }
         return _errorRoute();

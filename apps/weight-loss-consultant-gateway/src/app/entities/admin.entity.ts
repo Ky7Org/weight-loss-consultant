@@ -21,5 +21,7 @@ export class AdminEntity extends BaseEntity {
   profileImage: string;
   @Column({type: 'bigint'})
   dob: number;
+  @Column({type: 'varchar'})
+  deviceID: string;
 
 }

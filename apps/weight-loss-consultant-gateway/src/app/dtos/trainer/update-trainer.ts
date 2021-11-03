@@ -79,4 +79,5 @@ export class UpdateTrainerDto {
     type: Number,
   })
   rating: number;
+  deviceID?: string;
 }

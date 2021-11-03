@@ -1,7 +1,7 @@
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
 import {Roles} from '../../decorators/roles.decorator';
-import {TrainerService} from '../../services/users-management/trainer.service';
+import {TrainerService} from '../../services/trainer.service';
 import {Role} from '../../constants/enums';
 import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
 import {CreateTrainerDto} from '../../dtos/trainer/create-trainer';
@@ -136,4 +136,15 @@ export class TrainerController {
     }
   }
 
+  @Put('/updateWithoutPasswordAndStatus/:email')
+  @UseGuards(JwtAuthGuard)
+  async updateAdminWithoutPasswordAndStatus(@Param('email') email, @Body() payload: UpdateTrainerPayload, @Res() res) {
+    try {
+      const result = await this.trainerService.updateWithoutPasswordAndStatus(payload);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/api_constant.dart';
 import 'dart:convert';
@@ -13,16 +14,39 @@ class AuthenticationService {
   AuthenticationService();
 
   Future<AccountModel?> login(String email, String password) async {
+
+
     var url = Uri.parse(ApiConstant.loginApi);
     var response = await http.post(url, body: {'email': email, 'password': password});
     if (response.statusCode == 200){
       AccountModel accountModel = AccountModel.fromJson(jsonDecode(response.body));
       accountModel.password = password;
 
+      String? deviceId = await FirebaseMessaging.instance.getToken();
+      accountModel.deviceID = deviceId;
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("ACCOUNT", jsonEncode(accountModel.toJson()));
+
+
+      await updateDeviceID(accountModel, deviceId!);
       return accountModel;
     }
+  }
+
+  Future<void> updateDeviceID(AccountModel accountModel, String token) async {
+    var url = Uri.parse(ApiConstant.updateDeviceIDApi);
+    var response = await http.put(
+        url,
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer ${accountModel.accessToken}',
+        },
+        body: {
+          'email': accountModel.email,
+          'deviceID': token,
+          'role': accountModel.role
+        }
+    );
   }
 
   Future<AccountModel?> signInWithGoogle() async {

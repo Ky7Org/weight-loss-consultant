@@ -69,4 +69,6 @@ export class UpdateCustDto {
     type: Number,
   })
   dob?: number;
+
+  deviceID?: string;
 }

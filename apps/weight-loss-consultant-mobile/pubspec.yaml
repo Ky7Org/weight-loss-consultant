@@ -53,6 +53,21 @@ dependencies:
   permission_handler: ^8.2.5
   cloud_firestore: ^2.5.4
   fluttertoast: ^8.0.8
+  firebase_storage: ^10.0.6
+  path_provider: ^2.0.5
+  firebase_analytics: ^5.0.6
+  calendar_timeline: 1.0.3-null-safety.0
+  syncfusion_flutter_charts: ^19.3.47
+  syncfusion_flutter_sliders: ^19.3.47
+  syncfusion_flutter_core: ^19.3.47
+  syncfusion_flutter_calendar: ^19.3.47
+  firebase_messaging: ^10.0.9
+  flutter_local_notifications: ^9.0.2
+  flutter_datetime_picker: ^1.5.1
+
+
+
+
 
 dev_dependencies:
   flutter_test:

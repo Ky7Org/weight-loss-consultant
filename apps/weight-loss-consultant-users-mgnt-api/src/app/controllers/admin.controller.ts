@@ -1,15 +1,26 @@
-import {ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors} from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { AdminService } from '../services/impl/admin.service.impl';
 import { CreateAdminDto } from '../dtos/admin/create-admin.dto';
 import { UpdateAdminDto } from '../dtos/admin/update-admin.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import {
+  ADMIN_VIEW_DETAIL,
+  CREATE_ADMIN, CUSTOMER_VIEW_DETAIL,
+  DELETE_ADMIN,
+  GET_ADMIN_BY_EMAIL,
+  GET_ALL_ADMINS, TRAINER_VIEW_DETAIL,
+  UPDATE_ADMIN, UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS
+} from '../../../../common/routes/users-management-service-routes';
 import { AdminEntity } from '../entities/admin.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { CustomerEntity } from '../entities/customer.entity';
+import { CustomerService } from '../services/impl/customer.service.impl';
+import { TrainerService } from '../services/impl/trainer.service.impl';
+import { TrainerEntity } from '../entities/trainer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import {PaginationDto} from "../dtos/pagination/pagination.dto";
 import {PaginatedResultDto} from "../dtos/pagination/paginated-result.dto";
-import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN} from "../../../../common/kafka-utils";
-import {IKafkaMessage} from "../../../../common/kafka-message.model";
+import {UpdateAdminPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
 
 export type UpdateAdminType = {
   email: string;
@@ -53,4 +64,10 @@ export class AdminController {
   async delete(@Payload() email: IKafkaMessage<string>): Promise<DeleteResult> {
     return this.adminService.delete(email.value);
   }
+  @MessagePattern({ cmd: UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS })
+  @UseFilters(new ExceptionFilter())
+  async updateAdmninWithoutPasswordAndStatus(@Payload() payload: UpdateAdminPayload): Promise<UpdateResult> {
+    return this.adminService.updateProfileWithoutPasswordAndStatus(payload);
+  }
+
 }

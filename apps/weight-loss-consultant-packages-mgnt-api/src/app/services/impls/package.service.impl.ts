@@ -1,17 +1,18 @@
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { DeleteResult, UpdateResult } from 'typeorm';
-import { PackageEntity } from '../../entities/package.enttiy';
-import { PackageMapper } from '../../mappers/package.mapper';
-import { CreatePackageDto } from '../../dtos/package/create-package';
-import { UpdatePackageDto } from '../../dtos/package/update-package';
-import { BaseService } from '../base.service';
-import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../../constant';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { TrainerEntity } from '../../entities/trainer.entity';
-import { TRAINER_VIEW_DETAIL} from '../../../../../common/routes/users-management-service-routes';
-import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
+import {HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {DeleteResult, UpdateResult} from 'typeorm';
+import {PackageEntity} from '../../entities/package.enttiy';
+import {PackageMapper} from '../../mappers/package.mapper';
+import {CreatePackageDto} from '../../dtos/package/create-package';
+import {UpdatePackageDto} from '../../dtos/package/update-package';
+import {BaseService} from '../base.service';
+import {USERS_MANAGEMENT_SERVICE_NAME} from '../../../../../../constant';
+import {ClientProxy, RpcException} from '@nestjs/microservices';
+import {TrainerEntity} from '../../entities/trainer.entity';
+import {TRAINER_VIEW_DETAIL} from '../../../../../common/routes/users-management-service-routes';
+import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
 import {Observable} from "rxjs";
 import {PackageRepository} from "../../repositories/package.repository";
+import {UpdateStatusPackagePayload} from "../../../../../common/dtos/update-package-dto.payload";
 
 @Injectable()
 export class PackageService extends BaseService<PackageEntity, PackageRepository> {
@@ -85,16 +86,34 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
       .leftJoinAndSelect("p.trainer", "trainer")
       .where("p.id = :id", {id : id})
       .getOne();
-    if (!result) {
-      throw new RpcException({
-        statusCode: HttpStatus.NOT_FOUND,
-        message: `Not found package with id: ${id}`
-      } as RpcExceptionModel);
-    }
     return result;
   }
 
   async getPackageDetailsWithTrainer(): Promise<PackageEntity[] | null> {
-    return this.repository.find({relations: ["trainer"]});
+    return this.repository.createQueryBuilder("package")
+      .leftJoinAndSelect("package.trainer", "trainer")
+      .orderBy("package.createDate", "DESC")
+      .getMany();
+  }
+
+  async updateStatus(payload : UpdateStatusPackagePayload) : Promise<boolean>  {
+    const exist = await this.viewDetail(payload.id);
+    if (!exist) {
+        throw new RpcException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: `Not found package with id: ${payload.id}`
+        } as RpcExceptionModel);
+    }
+    const result = this.repository.createQueryBuilder()
+      .update(PackageEntity)
+      .set({
+        status: payload.status
+      })
+      .where("id = :id", {id: payload.id})
+      .execute();
+    if ((await result).affected === 1) {
+      return true;
+    }
+    return false;
   }
 }

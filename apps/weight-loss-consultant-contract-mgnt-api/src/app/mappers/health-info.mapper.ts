@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {CreateContractDto} from "../dtos/contract/create-health-info.dto";
 import {CampaignEntity} from "../entities/campaign.entity";
 import {PackageEntity} from "../entities/package.enttiy";
 import {ContractEntity} from "../entities/contract.entity";
 import {UpdateContractDto} from "../dtos/contract/update-health-info.dto";
-import {ContractStatus} from "../constants/enums";
+import {CONTRACT_STATUS} from "../../../../common/utils";
 
 @Injectable()
 export class ContractMapper {
@@ -16,11 +16,9 @@ export class ContractMapper {
     const entity = new ContractEntity();
 
     entity.totalPrice = dto.totalPrice;
-    entity.timeOfApproved = dto.timeOfApproved;
     entity.timeOfExpired = dto.timeOfExpired;
-    entity.timeOfCreate = dto.timeOfCreate;
-    entity.paymentMethod = dto.paymentMethod;
-    entity.status = ContractStatus.PENDING_FOR_PAYMENT
+    entity.timeOfCreate = new Date().getTime();
+    entity.status = CONTRACT_STATUS.ONGOING;
     entity.campaign = campaign;
     entity.package = p;
 
@@ -34,10 +32,7 @@ export class ContractMapper {
     const entity = new ContractEntity();
 
     entity.totalPrice = dto.totalPrice;
-    entity.timeOfApproved = dto.timeOfApproved;
     entity.timeOfExpired = dto.timeOfExpired;
-    entity.timeOfCreate = dto.timeOfCreate;
-    entity.paymentMethod = dto.paymentMethod;
     entity.status = dto.status;
     entity.campaign = campaign;
     entity.package = p;
