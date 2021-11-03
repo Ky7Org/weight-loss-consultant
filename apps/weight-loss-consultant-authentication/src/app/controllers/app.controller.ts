@@ -35,6 +35,7 @@ export class AppController {
   @MessagePattern(KAFKA_AUTHENTICATION_MESSAGE_PATTERN.login)
   @UseFilters(new ExceptionFilter())
   login(@Payload() message: IKafkaMessage<LoginRequest>): Promise<LoginResponse> {
+    console.log('receive');
     return this.authenticationService.login(message.value);
   }
 

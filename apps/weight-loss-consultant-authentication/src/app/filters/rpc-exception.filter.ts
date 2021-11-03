@@ -6,7 +6,8 @@ import {Observable, throwError} from 'rxjs';
 export class ExceptionFilter extends BaseRpcExceptionFilter {
   catch(e: RpcException, host: ArgumentsHost): Observable<any> {
     const ctx = host.switchToRpc().getContext<KafkaContext>();
-    console.log(ctx.getTopic())
+    console.log("asssss");
+   console.log(ctx.getTopic())
     console.log(JSON.stringify(e.getError()));
     return throwError(() => Buffer.from(JSON.stringify({
         error: {

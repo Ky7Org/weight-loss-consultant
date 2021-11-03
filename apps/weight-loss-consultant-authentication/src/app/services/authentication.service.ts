@@ -1,4 +1,4 @@
-import {HttpStatus, Injectable, Logger, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
+import {HttpStatus, Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {Client, ClientKafka, RpcException} from '@nestjs/microservices';
 import { AdminEntity } from '../entities/admin.entity';
@@ -26,7 +26,7 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
 
   private readonly logger = new Logger(AuthenticationService.name);
 
-  @Client(KAFKA_USERS_MANAGEMENT_SERVICE)
+  @Inject('SERVER')
   private readonly client: ClientKafka;
 
   constructor(private readonly jwtService: JwtService,
@@ -51,6 +51,8 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
   }
 
   private validateAdmin(username: string): Observable<AdminEntity> {
+    this.client
+      .send<AdminEntity, string>(MESSAGE_PATTERN.admins.getByEmail, username).toPromise().then((t) => console.log(JSON.stringify(t)));
     return this.client
       .send<AdminEntity, string>(MESSAGE_PATTERN.admins.getByEmail, username);
   }
@@ -114,6 +116,7 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
     let customer : CustomerEntity;
     try {
       admin  = await this.validateAdmin(username).toPromise();
+      console.log("admin tt" + JSON.stringify(admin, null, 2));
       if (admin && await bcrypt.compare(password, admin.password)) {
         console.log("admin")
         return {
@@ -166,6 +169,12 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
     }
 
     user = await this.validateAccount(user.email, user.password);
+    if (user === undefined) {
+      throw new RpcException({
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid username or password.'
+      } as RpcExceptionModel);
+    }
     return {
       accessToken: this.jwtService.sign(user),
       ...user,

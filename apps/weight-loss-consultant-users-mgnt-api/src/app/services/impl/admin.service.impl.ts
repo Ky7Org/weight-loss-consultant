@@ -81,7 +81,9 @@ export class AdminService {
   }
 
   async viewDetail(id): Promise<AdminEntity> {
+    console.log("assss" + id);
     return this.repository.findOneOrFail(id).catch((err) => {
+      console.log("is error");
       throw new RpcException({
         statusCode: HttpStatus.BAD_REQUEST,
         message: NOT_FOUND_ERR_MSG + id

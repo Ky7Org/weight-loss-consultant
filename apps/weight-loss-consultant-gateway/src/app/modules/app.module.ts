@@ -50,8 +50,6 @@ export class AppModule {
         ContractModule,
         AppliedModule,
         ClientsModule.register([
-          KAFKA_AUTHENTICATION_SERVICE,
-          KAFKA_USERS_MANAGEMENT_SERVICE,
           {
             name: PACKAGES_MANAGEMENT_SERVICE_NAME,
             transport: Transport.TCP,

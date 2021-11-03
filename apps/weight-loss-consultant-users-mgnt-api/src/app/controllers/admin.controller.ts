@@ -1,4 +1,4 @@
-import { Controller, UseFilters } from '@nestjs/common';
+import {ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors} from '@nestjs/common';
 import { AdminService } from '../services/impl/admin.service.impl';
 import { CreateAdminDto } from '../dtos/admin/create-admin.dto';
 import { UpdateAdminDto } from '../dtos/admin/update-admin.dto';
@@ -17,6 +17,7 @@ export type UpdateAdminType = {
 };
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class AdminController {
 
   constructor(private readonly adminService: AdminService) {
@@ -31,7 +32,8 @@ export class AdminController {
   @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.admins.getByEmail)
   @UseFilters(new ExceptionFilter())
   async getByEmail(@Payload() email: IKafkaMessage<string>): Promise<AdminEntity> {
-    return this.adminService.viewDetail(email.value);
+    const payload =  this.adminService.viewDetail(email.value);
+    return payload;
   }
 
   @MessagePattern(KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN.admins.create)

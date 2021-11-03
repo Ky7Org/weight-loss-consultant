@@ -39,7 +39,7 @@ export class PackageController {
 
   @MessagePattern({ cmd: UPDATE_PACKAGE_BY_ID })
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() payload: UpdatePackagePayloadType) {
+  async update(@Payload() payload) {
     return this.packageService.edit(payload.dto, payload.id);
   }
 

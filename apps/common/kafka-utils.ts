@@ -1,5 +1,6 @@
 import {AUTHENTICATION_SERVICE_NAME, USERS_MANAGEMENT_SERVICE_NAME} from "../../constant";
 import {ClientProviderOptions, Transport} from "@nestjs/microservices";
+import {v4 as uuid} from 'uuid';
 
 export const KAFKA_BROKER_ENDPOINT_1 = 'bangmaple.tech:9092';
 export const KAFKA_CONSUMER_GROUP_ID = "test-consumer-group";
@@ -10,11 +11,10 @@ export const KAFKA_AUTHENTICATION_SERVICE = {
   transport: Transport.KAFKA,
   options: {
     client: {
-      clientId: KAFKA_CLIENT_ID,
       brokers: [KAFKA_BROKER_ENDPOINT_1],
     },
     consumer: {
-      groupId: KAFKA_CONSUMER_GROUP_ID,
+      groupId: `authentication.${uuid()}`,
     }
   }
 } as ClientProviderOptions;
@@ -24,11 +24,10 @@ export const KAFKA_USERS_MANAGEMENT_SERVICE = {
   transport: Transport.KAFKA,
   options: {
     client: {
-      clientId: KAFKA_CLIENT_ID,
       brokers: [KAFKA_BROKER_ENDPOINT_1],
     },
     consumer: {
-      groupId: KAFKA_CONSUMER_GROUP_ID,
+      groupId: `user.${uuid()}`,
     }
   }
 } as ClientProviderOptions;

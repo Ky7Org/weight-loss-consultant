@@ -17,7 +17,7 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
     for (const [key, value] of Object.entries(KAFKA_AUTHENTICATION_MESSAGE_PATTERN)) {
       this.client.subscribeToResponseOf(value);
     }
-    await this.client.connect();
+    this.client.connect();
   }
 
   async onModuleDestroy() {

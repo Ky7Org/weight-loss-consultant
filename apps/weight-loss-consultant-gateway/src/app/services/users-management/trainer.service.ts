@@ -18,7 +18,6 @@ export class TrainerService implements OnModuleInit, OnModuleDestroy {
     for (const [key, value] of Object.entries(MESSAGE_PATTERN.trainers)) {
       this.client.subscribeToResponseOf(value);
     }
-    await this.client.connect();
   }
 
   async onModuleDestroy() {
