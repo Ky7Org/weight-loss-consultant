@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
-import {ClientsModule, Transport} from "@nestjs/microservices";
-import {
-  CONTRACT_MANAGEMENT_SERVICE_NAME,
-  CONTRACT_MANAGEMENT_SERVICE_PORT,
-  HOST,
-} from "../../../../../constant";
 import {ContractService} from "../services/contract.service";
 import {ContractController} from "../controllers/contracts-management/contract.controller";
+import { ClientsModule } from '@nestjs/microservices';
+import { KAFKA_SERVICE } from '../../../../common/kafka-utils';
 
 @Module({
-  imports: [],
+  imports: [ClientsModule.register([
+    {
+      ...KAFKA_SERVICE,
+      name: 'SERVER',
+    }
+  ]),],
   providers: [ContractService],
   exports: [ContractService],
   controllers: [ContractController]

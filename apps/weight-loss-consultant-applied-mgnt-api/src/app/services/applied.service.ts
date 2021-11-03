@@ -1,14 +1,17 @@
-import {HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  HttpStatus,
+  Inject,
+  Injectable,
+  OnModuleDestroy,
+  OnModuleInit,
+  UseInterceptors
+} from '@nestjs/common';
 import {DeleteResult, UpdateResult} from 'typeorm';
-import {ClientProxy, RpcException} from "@nestjs/microservices";
-import {Observable} from "rxjs";
+import { ClientKafka, ClientProxy, RpcException } from '@nestjs/microservices';
+import { lastValueFrom, Observable } from 'rxjs';
 import {AppliedRepository} from "../repositories/applied.repository";
 import {AppliedMapper} from "../mappers/applied.mapper";
-import {
-  CAMPAIGN_MANAGEMENT_SERVICE_NAME,
-  CONTRACT_MANAGEMENT_SERVICE_NAME,
-  PACKAGES_MANAGEMENT_SERVICE_NAME
-} from "../../../../../constant";
 import {AppliedEntity} from "../entities/applied.entity";
 import {CampaignEntity} from "../entities/campaign.entity";
 import {FIND_CAMPAIGN_BY_ID, UPDATE_STATUS_CAMPAIGN} from "../../../../common/routes/campaigns-management-routes";
@@ -20,69 +23,97 @@ import {UpdateAppliedDto} from "../dtos/applied/update_applied_dto";
 import {UpdateStatusCampaignPayload} from "../../../../common/dtos/update-campaign-dto.payload";
 import {
   ApprovePayload,
-  ApproveResponse, CreateContractDto,
+  ApproveResponse,
   UpdateStatusPackagePayload
 } from "../../../../common/dtos/update-package-dto.payload";
 import {CAMPAIGN_STATUS, CONTRACT_STATUS, PACKAGE_STATUS} from "../../../../common/utils";
 import {CREATE_CONTRACT} from "../../../../common/routes/contract-management-service-routes";
+import { KAFKA_PACKAGES_MANAGEMENT_MESSAGE_PATTERN as PACKAGE_MANAGEMENT_MESSAGE_PATTERN,
+  KAFKA_CONTRACTS_MANAGEMENT_MESSAGE_PATTERN as CONTRACTS_MANAGEMENT_MESSAGE_PATTERN,
+  KAFKA_CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN as CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN,
+} from '../../../../common/kafka-utils';
 
 @Injectable()
-export class AppliedService {
-  constructor(private readonly repository: AppliedRepository,
-              private readonly mapper: AppliedMapper,
-              @Inject(CAMPAIGN_MANAGEMENT_SERVICE_NAME)
-              private readonly campaignServiceManagementProxy: ClientProxy,
-              @Inject(PACKAGES_MANAGEMENT_SERVICE_NAME)
-              private readonly packageServiceManagementProxy: ClientProxy,
-              @Inject(CONTRACT_MANAGEMENT_SERVICE_NAME)
-              private readonly contractServiceManagementProxy: ClientProxy) {
+export class AppliedService implements OnModuleInit, OnModuleDestroy {
+
+  @Inject('SERVER')
+  private readonly campaignsManagementClient: ClientKafka;
+
+  @Inject('SERVER')
+  private readonly packagesManagementClient: ClientKafka;
+
+  @Inject('SERVER')
+  private readonly contractsManagementClient: ClientKafka;
+
+  constructor(private readonly repository: AppliedRepository) {}
+
+  async onModuleInit() {
+    for (const [key, value] of Object.entries(PACKAGE_MANAGEMENT_MESSAGE_PATTERN)) {
+      this.packagesManagementClient.subscribeToResponseOf(value);
+    }
+    for (const [key, value] of Object.entries(CONTRACTS_MANAGEMENT_MESSAGE_PATTERN)) {
+      this.contractsManagementClient.subscribeToResponseOf(value);
+    }
+    for (const [key, value] of Object.entries(CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN)) {
+      this.campaignsManagementClient.subscribeToResponseOf(value);
+    }
+    await this.packagesManagementClient.connect();
+    await this.contractsManagementClient.connect();
+    await this.campaignsManagementClient.connect();
   }
 
-  async findAll(): Promise<AppliedEntity[] | null> {
-    return await this.repository.createQueryBuilder("apply")
+  async onModuleDestroy() {
+    await this.campaignsManagementClient.close();
+    await this.packagesManagementClient.close();
+    await this.contractsManagementClient.close();
+  }
+
+  async findAll(): Promise<AppliedEntity[]> {
+    return this.repository.createQueryBuilder("apply")
       .leftJoinAndSelect("apply.campaign", "campaign")
       .leftJoinAndSelect("apply.package", "package")
       .getMany();
-
   }
 
   private validateCampaign(id: number): Observable<CampaignEntity> {
-    return this.campaignServiceManagementProxy
-      .send<CampaignEntity, number>({cmd: FIND_CAMPAIGN_BY_ID}, id);
+    return this.campaignsManagementClient
+      .send<CampaignEntity, number>(CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN.getByID, id);
   }
 
   private validatePackage(id: number): Observable<PackageEntity> {
-    return this.packageServiceManagementProxy
-      .send<PackageEntity, number>({cmd: FIND_PACKAGE_BY_ID}, id);
+    return this.packagesManagementClient
+      .send<PackageEntity, number>(PACKAGE_MANAGEMENT_MESSAGE_PATTERN.getByID, id);
   }
 
   private updateCampaignStatus(payload: UpdateStatusCampaignPayload): Observable<boolean> {
-    return this.campaignServiceManagementProxy
-      .send({cmd: UPDATE_STATUS_CAMPAIGN}, payload);
+    return this.campaignsManagementClient
+      .send(CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN.updateStatus, payload);
   }
 
-  private createContract(payload: { timeOfCreate: number; totalPrice: number; campaignID: number; packageID: number; timeOfExpired: number; status: CONTRACT_STATUS }): Observable<any> {
-    return this.contractServiceManagementProxy
-      .send({cmd: CREATE_CONTRACT}, payload);
+  private createContract(payload: { timeOfCreate: number; totalPrice: number;
+    campaignID: number; packageID: number; timeOfExpired: number;
+    status: CONTRACT_STATUS }): Observable<any> {
+    return this.contractsManagementClient
+      .send(CONTRACTS_MANAGEMENT_MESSAGE_PATTERN.create, payload);
   }
 
   private updatePackageStatus(payload: UpdateStatusPackagePayload): Observable<boolean> {
-    return this.packageServiceManagementProxy
-      .send({cmd: UPDATE_STATUS_PACKAGE}, payload);
+    return this.packagesManagementClient
+      .send(PACKAGE_MANAGEMENT_MESSAGE_PATTERN.updateStatus, payload);
   }
 
   async create(dto: CreateAppliedDto): Promise<AppliedEntity | null> {
     //1: create new apply
     const campaignID = dto.campaignID;
     const packageID = dto.packageID;
-    const findCampaign = await this.validateCampaign(campaignID).toPromise();
+    const findCampaign = await lastValueFrom(this.validateCampaign(campaignID));
     if (!findCampaign) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
         message: `Not campaign with id : ${campaignID}`
       } as RpcExceptionModel);
     }
-    const findPackage = await this.validatePackage(packageID).toPromise();
+    const findPackage = await lastValueFrom(this.validatePackage(packageID));
     if (!findPackage) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -95,17 +126,20 @@ export class AppliedService {
       id: campaignID,
       status: CAMPAIGN_STATUS.ACTIVE
     } as UpdateStatusCampaignPayload;
-    const updateCampaignResult = await this.updateCampaignStatus(campaignPayload).toPromise();
+    const updateCampaignResult = await lastValueFrom(this.updateCampaignStatus(campaignPayload));
     //3: update package status = APPLIED
     const packagePayload = {
       id: packageID,
       status: PACKAGE_STATUS.APPLIED
     } as UpdateStatusPackagePayload;
-    const updatePackageResult = await this.updatePackageStatus(packagePayload).toPromise();
+    const updatePackageResult = await lastValueFrom(this.updatePackageStatus(packagePayload));
     if (updateCampaignResult && updatePackageResult) {
-      return await this.repository.save(entity);
+      return this.repository.save(entity);
     }
-    return null;
+    throw new RpcException({
+      statusCode: HttpStatus.NOT_FOUND,
+      message: `Not package or campaign with id : ${packageID}`
+    } as RpcExceptionModel);
   }
 
   async edit(dto: UpdateAppliedDto, id: number): Promise<UpdateResult> {
@@ -116,7 +150,7 @@ export class AppliedService {
       } as RpcExceptionModel);
     }
     const campaignID = dto.campaignID;
-    const findCampaign = await this.validateCampaign(campaignID).toPromise();
+    const findCampaign = await lastValueFrom(this.validateCampaign(campaignID));
     if (!findCampaign) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -124,7 +158,7 @@ export class AppliedService {
       } as RpcExceptionModel);
     }
     const packageID = dto.packageID;
-    const findPackage = await this.validatePackage(packageID).toPromise();
+    const findPackage = await lastValueFrom(this.validatePackage(packageID));
     if (!findPackage) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -138,7 +172,8 @@ export class AppliedService {
         message: `Not found applied with id: ${id}`
       } as RpcExceptionModel);
     }
-    const entity: AppliedEntity = await AppliedMapper.mapUpdateContractDtoToEntity(dto, findCampaign, findPackage);
+    const entity: AppliedEntity = await AppliedMapper
+      .mapUpdateContractDtoToEntity(dto, findCampaign, findPackage);
     return await this.repository.update(id, entity);
   }
 
@@ -150,25 +185,28 @@ export class AppliedService {
         message: `Not found applied with id: ${id}`
       } as RpcExceptionModel);
     }
-    return await this.repository.delete(id);
+    return this.repository.delete(id);
   }
 
-  async viewDetail(id): Promise<AppliedEntity> {
-    const query = await this.repository.createQueryBuilder("applied")
+  async viewDetail(id: number): Promise<AppliedEntity> {
+    return this.repository.createQueryBuilder("applied")
       .where("applied.id = :id", {id: id})
       .leftJoinAndSelect("applied.campaign", "campaign")
       .leftJoinAndSelect("applied.package", "package")
-      .getOne();
-    return query;
+      .getOneOrFail().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: `Not found applied with id: ${id}`
+        } as RpcExceptionModel);
+      });
   }
 
   async getAppliedPackagesByCampaignID(campaignID: number): Promise<any> {
-    const query = await this.repository.createQueryBuilder("applied")
+    return this.repository.createQueryBuilder("applied")
       .where("applied.campaignID = :id", {id: campaignID})
       .leftJoinAndSelect("applied.package", "package")
       .leftJoinAndSelect("package.trainer", "trainer")
       .getMany();
-    return query;
   }
 
   async approvePackageByCustomer(payload: ApprovePayload): Promise<any> {
@@ -185,7 +223,8 @@ export class AppliedService {
       id: packageID,
       status: PACKAGE_STATUS.APPROVED
     } as UpdateStatusPackagePayload;
-    const updateStatusPackageResult: boolean = await this.updatePackageStatus(updateApprovePackagePayload).toPromise();
+    const updateStatusPackageResult: boolean = await lastValueFrom(this.
+    updatePackageStatus(updateApprovePackagePayload));
     //4: update status packages (=> DECLINED) for those got decline in package list
     const declinePackages = packages.filter(p => p.package.id !== packageID);
     const updateDeclineResult = declinePackages.forEach(async (p) => {
@@ -200,10 +239,10 @@ export class AppliedService {
       id: campaignID,
       status: CAMPAIGN_STATUS.ON_GOING
     } as UpdateStatusCampaignPayload
-    const updateCampaignStatus: boolean = await this.updateCampaignStatus(updateCampaignPayload).toPromise();
+    const updateCampaignStatus: boolean = await lastValueFrom(this.updateCampaignStatus(updateCampaignPayload));
     //7: create contract
-    const campaign = await this.validateCampaign(campaignID).toPromise();
-    const p = await this.validatePackage(packageID).toPromise();
+    const campaign = await lastValueFrom(this.validateCampaign(campaignID));
+    const p = await lastValueFrom(this.validatePackage(packageID));
     const contractPayload = {
       totalPrice: p.price,
       timeOfExpired: p.endDate??0,
@@ -212,14 +251,11 @@ export class AppliedService {
       campaignID: campaignID,
       packageID: packageID
     }
-    const createContractResult = await this.createContract(contractPayload).toPromise();
+    const createContractResult = await lastValueFrom(this.createContract(contractPayload));
     if (createContractResult) {
       return {
         message: "Approve successfully"
       } as ApproveResponse
     }
   }
-
-
-
 }

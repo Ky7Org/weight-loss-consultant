@@ -26,6 +26,15 @@ export const KAFKA_AUTHENTICATION_MESSAGE_PATTERN = {
   validateAccount: 'authentication.validate-account',
   loginWithFirebase: 'authentication.firebase.login',
 }
+export const KAFKA_CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN = {
+  getAll: 'campaigns.get-all',
+  getAvailableCampaigns: 'campaigns.get-available-campaigns',
+  getByID: 'campaigns.get-by-id',
+  create: 'campaigns.create',
+  update: 'campaigns.update',
+  delete: 'campaigns.delete',
+  updateStatus: 'campaigns.update-status',
+};
 
 export const KAFKA_CONTRACTS_MANAGEMENT_MESSAGE_PATTERN = {
   getAll: 'contracts.get-all',
@@ -52,6 +61,33 @@ export const KAFKA_REPORTS_MANAGEMENT_MESSAGE_PATTERN = {
   getByContractID: 'reports.get-by-contract-id',
   approveReport: 'reports.approve-report',
 }
+
+export const KAFKA_PACKAGES_MANAGEMENT_MESSAGE_PATTERN = {
+  getAll: 'packages.get-all',
+  getByID: 'packages.get-by-id',
+  create: 'packages.create',
+  delete: 'packages.delete',
+  update: 'packages.update',
+  updateStatus: 'packages.update-status',
+}
+
+export const KAFKA_HEALTH_MANAGEMENT_MESSAGE_PATTERN = {
+  getAll: 'health.get-all',
+  getByID: 'health.get-by-id',
+  create: 'health.create',
+  update: 'health.update',
+  delete: 'health.delete',
+}
+
+export const KAFKA_APPLIED_MANAGEMENT_MESSAGE_PATTERN = {
+  getAll: 'applied.get-all',
+  getByID: 'applied.get-by-id',
+  create: 'applied.create',
+  update: 'applied.update',
+  delete: 'applied.delete',
+  getByCampaignID: 'applied.get-by-campaign-id',
+  approvePackage: 'applied.approve-package',
+};
 
 export const KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN = {
   customers: {

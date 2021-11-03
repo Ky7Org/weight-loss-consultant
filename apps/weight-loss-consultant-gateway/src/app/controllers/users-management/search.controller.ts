@@ -1,6 +1,6 @@
 import {Body, Controller, HttpStatus, Logger, Post, Put, Query, Res, UseGuards} from '@nestjs/common';
 import {ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {SearchService} from '../../services/search.service';
+import {SearchService} from '../../services/users-management/search.service';
 import {PaginationDto} from '../../dtos/pagination/pagination.dto';
 import {JwtAuthGuard} from "../../guards/jwt-auth.guard";
 import {

@@ -1,4 +1,4 @@
-import { Controller, UseFilters } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
 import { PackageService } from '../services/impls/package.service.impl';
 import { CreatePackageDto } from '../dtos/package/create-package';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
@@ -12,47 +12,49 @@ import {
   UpdatePackagePayloadType
 } from '../../../../common/routes/packages-management-routes';
 import {UpdateStatusPackagePayload} from "../../../../common/dtos/update-package-dto.payload";
-
+import { KAFKA_PACKAGES_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from '../../../../common/kafka-utils';
+import { IKafkaMessage } from '../../../../common/kafka-message.model';
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class PackageController {
 
   constructor(private readonly packageService: PackageService) {
   }
 
-  @MessagePattern({ cmd: FIND_ALL_PACKAGES })
+  @MessagePattern(MESSAGE_PATTERN.getAll)
   @UseFilters(new ExceptionFilter())
   async index() {
     return this.packageService.getPackageDetailsWithTrainer();
   }
 
-  @MessagePattern({ cmd: FIND_PACKAGE_BY_ID })
+  @MessagePattern(MESSAGE_PATTERN.getByID)
   @UseFilters(new ExceptionFilter())
-  async getByID(@Payload() id: string) {
-    return this.packageService.viewDetail(id);
+  async getByID(@Payload() payload: IKafkaMessage<string>) {
+    return this.packageService.viewDetail(payload.value);
   }
 
-  @MessagePattern({ cmd: CREATE_PACKAGE })
+  @MessagePattern(MESSAGE_PATTERN.create)
   @UseFilters(new ExceptionFilter())
-  async create(@Payload() dto: CreatePackageDto) {
-    return this.packageService.create(dto);
+  async create(@Payload() payload: IKafkaMessage<CreatePackageDto>) {
+    return this.packageService.create(payload.value);
   }
 
-  @MessagePattern({ cmd: UPDATE_PACKAGE_BY_ID })
+  @MessagePattern(MESSAGE_PATTERN.update)
   @UseFilters(new ExceptionFilter())
   async update(@Payload() payload) {
-    return this.packageService.edit(payload.dto, payload.id);
+    return this.packageService.edit(payload.value.dto, payload.value.id);
   }
 
-  @MessagePattern({ cmd: DELETE_PACKAGE_BY_ID })
+  @MessagePattern(MESSAGE_PATTERN.delete)
   @UseFilters(new ExceptionFilter())
-  async delete(@Payload() id: number) {
-    return this.packageService.delete(id);
+  async delete(@Payload() payload: IKafkaMessage<number>) {
+    return this.packageService.delete(payload.value);
   }
 
-  @MessagePattern({ cmd: UPDATE_STATUS_PACKAGE })
+  @MessagePattern(MESSAGE_PATTERN.updateStatus)
   @UseFilters(new ExceptionFilter())
-  async updateStatus(@Payload() payload: UpdateStatusPackagePayload) {
-    return this.packageService.updateStatus(payload);
+  async updateStatus(@Payload() payload: IKafkaMessage<UpdateStatusPackagePayload>) {
+    return this.packageService.updateStatus(payload.value);
   }
 }

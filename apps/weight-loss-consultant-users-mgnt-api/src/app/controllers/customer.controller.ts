@@ -60,8 +60,8 @@ export class CustomerController {
 
   @MessagePattern(MESSAGE_PATTERN.customers.updateProfileWithoutPasswordAndStatus)
   @UseFilters(new ExceptionFilter())
-  async updateAdminWithoutPasswordAndStatus(@Payload() payload: UpdateAdminPayload): Promise<UpdateResult> {
-    return this.customerService.updateProfileWithoutPasswordAndStatus(payload);
+  async updateAdminWithoutPasswordAndStatus(@Payload() payload: IKafkaMessage<UpdateAdminPayload>): Promise<UpdateResult> {
+    return this.customerService.updateProfileWithoutPasswordAndStatus(payload.value);
   }
 
 }

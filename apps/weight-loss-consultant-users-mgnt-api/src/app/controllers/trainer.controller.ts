@@ -48,8 +48,8 @@ export class TrainerController {
 
   @MessagePattern(MESSAGE_PATTERN.trainers.updateProfileWithoutPasswordAndStatus)
   @UseFilters(new ExceptionFilter())
-  async updateAdminWithoutPasswordAndStatus(@Payload() payload: UpdateTrainerPayload): Promise<UpdateResult> {
-    return this.trainerService.updateProfileWithoutPasswordAndStatus(payload);
+  async updateAdminWithoutPasswordAndStatus(@Payload() payload: IKafkaMessage<UpdateTrainerPayload>): Promise<UpdateResult> {
+    return this.trainerService.updateProfileWithoutPasswordAndStatus(payload.value);
   }
 
   @MessagePattern(MESSAGE_PATTERN.trainers.getSpecial)

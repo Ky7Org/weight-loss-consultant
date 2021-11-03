@@ -1,7 +1,7 @@
-import {HttpStatus, Inject, Injectable} from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import {DeleteResult, UpdateResult} from 'typeorm';
-import {ClientProxy, RpcException} from "@nestjs/microservices";
-import {Observable} from "rxjs";
+import {ClientKafka, RpcException} from "@nestjs/microservices";
+import { lastValueFrom, Observable } from 'rxjs';
 import {CustomerEntity} from "../entities/customer.entity";
 import {CUSTOMER_VIEW_DETAIL} from "../../../../common/routes/users-management-service-routes";
 import {CampaignMapper} from "../mappers/campaign.mapper";
@@ -9,32 +9,42 @@ import {CampaignRepository} from "../repositories/campaign.repository";
 import {CampaignEntity} from "../entities/campaign.entity";
 import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
 import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
-import {USERS_MANAGEMENT_SERVICE_NAME} from "../../../../../constant";
 import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
 import {UpdateStatusCampaignPayload} from "../../../../common/dtos/update-campaign-dto.payload";
+import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 
 @Injectable()
-export class CampaignService {
-  constructor(
-    private readonly repository: CampaignRepository,
-    private readonly campaignMapper: CampaignMapper,
-    @Inject(USERS_MANAGEMENT_SERVICE_NAME)
-    private readonly usersManagementServiceProxy : ClientProxy,
-  ) {
+export class CampaignService implements OnModuleInit, OnModuleDestroy {
+
+  @Inject('SERVER')
+  private readonly usersManagementClient : ClientKafka;
+
+  constructor(private readonly repository: CampaignRepository) {}
+
+  async onModuleInit() {
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN)) {
+      for (const [key2, value2] of Object.entries(value)) {
+        this.usersManagementClient.subscribeToResponseOf(value2);
+      }    }
+    this.usersManagementClient.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.usersManagementClient.close();
   }
 
   async findAll(): Promise<CampaignEntity[] | null> {
-    return await this.repository.find();
+    return this.repository.find();
   }
 
   private validateCustomer(username: string): Observable<CustomerEntity> {
-    return this.usersManagementServiceProxy
+    return this.usersManagementClient
       .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username);
   }
 
   async create(dto: CreateCampaignDto): Promise<CampaignEntity> {
     const custEmail = dto.customerEmail;
-    const findCust = await this.validateCustomer(custEmail).toPromise();
+    const findCust = await lastValueFrom(this.validateCustomer(custEmail));
     if (findCust === undefined) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -43,7 +53,7 @@ export class CampaignService {
     }
     const entity: CampaignEntity = await CampaignMapper.mapCreateCampaignDtoToEntity(dto, findCust);
     entity.status = 0;
-    return await this.repository.save(entity);
+    return this.repository.save(entity);
   }
 
   async edit(dto: UpdateCampaignDto, id: number): Promise<UpdateResult> {
@@ -54,46 +64,50 @@ export class CampaignService {
       } as RpcExceptionModel);
     }
     const customerEmail = dto.customerEmail;
-    const cust = await this.validateCustomer(customerEmail).toPromise();
+    const cust = await lastValueFrom(this.validateCustomer(customerEmail));
     if (cust === undefined) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
         message: `Not found customer with email: ${customerEmail}`
       } as RpcExceptionModel);
     }
-    const existeCampaign = await this.viewDetail(dto.id);
-    if (!existeCampaign) {
+    const existedCampaign = await this.viewDetail(dto.id);
+    if (!existedCampaign) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
         message: `Not found campaign with id: ${id}`
       } as RpcExceptionModel);
     }
     const entity: CampaignEntity = await CampaignMapper.mapUpdateCampaignDtoToEntity(dto, cust);
-    return await this.repository.update(id, entity);
+    return this.repository.update(id, entity);
 
   }
 
   async delete(id): Promise<DeleteResult> {
-    const existeCampaign = await this.viewDetail(id);
-    if (!existeCampaign) {
+    const existedCampaign = await this.viewDetail(id);
+    if (!existedCampaign) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
         message: `Not found campaign with id: ${id}`
       } as RpcExceptionModel);
     }
-    return await this.repository.delete(id);
+    return this.repository.delete(id);
   }
 
   async viewDetail(id): Promise<CampaignEntity> {
-    const result = await this.repository.createQueryBuilder("campaign")
+    return this.repository.createQueryBuilder("campaign")
       .leftJoinAndSelect("campaign.customer", "customer")
       .where("campaign.id = :id", {id: id})
-      .getOne();
-    return result
+      .getOneOrFail().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: `Not found campaign with id: ${id}`
+        } as RpcExceptionModel);
+      });
   }
 
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[] | null> {
-    return await this.repository.createQueryBuilder("campaign")
+    return this.repository.createQueryBuilder("campaign")
       .leftJoinAndSelect("campaign.customer", "customer")
       .orderBy("campaign.createDate" , "DESC")
       .getMany();
@@ -122,9 +136,6 @@ export class CampaignService {
       })
       .where("id = :id", {id: payload.id})
       .execute();
-    if ((await result).affected === 1) {
-      return true;
-    }
-    return false;
+    return (await result).affected === 1;
   }
 }

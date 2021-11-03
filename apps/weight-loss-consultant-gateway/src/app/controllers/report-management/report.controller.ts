@@ -3,7 +3,7 @@ import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res
 import {Roles} from '../../decorators/roles.decorator';
 import {Role} from '../../constants/enums';
 import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
-import {ReportService} from "../../services/report.service";
+import {ReportService} from "../../services/reports-management/report.service";
 import {CreateReportDto} from "../../dtos/report/create-report.dto";
 import {UpdateReportDto} from "../../dtos/report/update-report.dto";
 import {CreateReportMediaDto} from "../../dtos/report-media/create-report-media.dto";

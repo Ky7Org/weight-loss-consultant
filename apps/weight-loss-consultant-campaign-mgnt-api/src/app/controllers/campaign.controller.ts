@@ -1,69 +1,61 @@
-import {Body, Controller, UseFilters} from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {CreateCampaignDto} from '../dtos/campaign/create-campaign';
 import {MessagePattern, Payload} from '@nestjs/microservices';
-import {
-  CREATE_CAMPAIGN,
-  DELETE_CAMPAIGN_BY_ID,
-  FIND_ALL_CAMPAIGNS,
-  FIND_CAMPAIGN_BY_ID,
-  GET_AVAILABLE_CAMPAIGNS,
-  UPDATE_CAMPAIGN_BY_ID, UPDATE_STATUS_CAMPAIGN
-} from '../../../../common/routes/campaigns-management-routes';
 import {ExceptionFilter} from '../../../../common/filters/rpc-exception.filter';
 import {
   UpdateCampaignPayloadType,
   UpdateStatusCampaignPayload
 } from '../../../../common/dtos/update-campaign-dto.payload';
 import {CampaignService} from "../services/campaign.service";
+import { KAFKA_CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
+import { IKafkaMessage } from '../../../../common/kafka-message.model';
 
-@ApiTags('Campaign')
-@ApiBearerAuth()
-@Controller('/v1/campaigns')
+@UseInterceptors(ClassSerializerInterceptor)
 export class CampaignController {
 
   constructor(private readonly campaignService: CampaignService) {
   }
 
-  @MessagePattern({cmd: FIND_ALL_CAMPAIGNS})
+  @MessagePattern(MESSAGE_PATTERN.getAll)
   @UseFilters(new ExceptionFilter())
   async index() {
     return this.campaignService.getCampaignDetailsWithCustomer();
   }
 
-  @MessagePattern({cmd: GET_AVAILABLE_CAMPAIGNS})
+  @MessagePattern(MESSAGE_PATTERN.getAvailableCampaigns)
   @UseFilters(new ExceptionFilter())
   async getAvailCampaigns() {
     return this.campaignService.getAvailCampaigns();
   }
 
-  @MessagePattern({cmd: FIND_CAMPAIGN_BY_ID})
+  @MessagePattern(MESSAGE_PATTERN.getAvailableCampaigns)
   @UseFilters(new ExceptionFilter())
-  async getByID(@Payload() id: string) {
-    return this.campaignService.viewDetail(id);
+  async getByID(@Payload() payload: IKafkaMessage<string>) {
+    return this.campaignService.viewDetail(payload.value);
   }
 
-  @MessagePattern({cmd: CREATE_CAMPAIGN})
+  @MessagePattern(MESSAGE_PATTERN.create)
   @UseFilters(new ExceptionFilter())
-  async create(@Body() dto: CreateCampaignDto) {
-    return this.campaignService.create(dto);
+  async create(@Payload() payload: IKafkaMessage<CreateCampaignDto>) {
+    return this.campaignService.create(payload.value);
   }
 
-  @MessagePattern({cmd: UPDATE_CAMPAIGN_BY_ID})
+  @MessagePattern(MESSAGE_PATTERN.update)
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() updatePayload: UpdateCampaignPayloadType) {
-    return this.campaignService.edit(updatePayload.dto, updatePayload.id);
+  async update(@Payload() payload: IKafkaMessage<UpdateCampaignPayloadType>) {
+    return this.campaignService.edit(payload.value.dto, payload.value.id);
   }
 
-  @MessagePattern({cmd: DELETE_CAMPAIGN_BY_ID})
+  @MessagePattern(MESSAGE_PATTERN.delete)
   @UseFilters(new ExceptionFilter())
-  async delete(@Payload() id: number) {
-    return this.campaignService.delete(id);
+  async delete(@Payload() payload: IKafkaMessage<number>) {
+    return this.campaignService.delete(payload.value);
   }
 
-  @MessagePattern({cmd: UPDATE_STATUS_CAMPAIGN})
+  @MessagePattern(MESSAGE_PATTERN.updateStatus)
   @UseFilters(new ExceptionFilter())
-  async updateStatus(@Payload() payload: UpdateStatusCampaignPayload) {
-    return this.campaignService.updateStatus(payload);
+  async updateStatus(@Payload() payload: IKafkaMessage<UpdateStatusCampaignPayload>) {
+    return this.campaignService.updateStatus(payload.value);
   }
 }

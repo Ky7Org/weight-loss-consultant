@@ -11,6 +11,7 @@ import {
   GetContractByPackageIDOrCampaignIDPayload
 } from "../../../../common/dtos/update-trainer-dto.payload";
 import { KAFKA_CONTRACTS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
+import { IKafkaMessage } from '../../../../common/kafka-message.model';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -27,43 +28,43 @@ export class ContractController {
 
   @MessagePattern(MESSAGE_PATTERN.getByID)
   @UseFilters(new ExceptionFilter())
-  async getByID(@Payload() id: string) {
-    return this.contractService.viewDetail(id);
+  async getByID(@Payload() payload: IKafkaMessage<string>) {
+    return this.contractService.viewDetail(payload.value);
   }
 
   @MessagePattern(MESSAGE_PATTERN.create)
   @UseFilters(new ExceptionFilter())
-  async create(@Payload() dto: CreateContractDto) {
-    return this.contractService.create(dto);
+  async create(@Payload() payload: IKafkaMessage<CreateContractDto>) {
+    return this.contractService.create(payload.value);
   }
 
   @MessagePattern(MESSAGE_PATTERN.update)
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() payload: UpdateContractPayloadType) {
-    return this.contractService.edit(payload.dto, payload.id);
+  async update(@Payload() payload: IKafkaMessage<UpdateContractPayloadType>) {
+    return this.contractService.edit(payload.value.dto, payload.value.id);
   }
 
   @MessagePattern(MESSAGE_PATTERN.delete)
   @UseFilters(new ExceptionFilter())
-  async delete(@Payload() id: number) {
-    return this.contractService.del(id);
+  async delete(@Payload() payload: IKafkaMessage<number>) {
+    return this.contractService.del(payload.value);
   }
 
   @MessagePattern(MESSAGE_PATTERN.getByCampaignIDOrPackageID)
   @UseFilters(new ExceptionFilter())
-  async getContractByPackageIdOrCampaignId(@Payload() payload: GetContractByPackageIDOrCampaignIDPayload) {
-    return this.contractService.getContractByPackageIdOrCampaignId(payload);
+  async getContractByPackageIdOrCampaignId(@Payload() payload: IKafkaMessage<GetContractByPackageIDOrCampaignIDPayload>) {
+    return this.contractService.getContractByPackageIdOrCampaignId(payload.value);
   }
 
   @MessagePattern(MESSAGE_PATTERN.expireContract)
   @UseFilters(new ExceptionFilter())
-  async expireContract(@Payload() id: number) {
-    return this.contractService.expireContract(id);
+  async expireContract(@Payload() payload: IKafkaMessage<number>) {
+    return this.contractService.expireContract(payload.value);
   }
 
   @MessagePattern(MESSAGE_PATTERN.getAnotherInTheSameContract)
   @UseFilters(new ExceptionFilter())
-  async getAnother(@Payload() payload: CampaignAndPackageIdPayload) {
-    return this.contractService.getAnotherInTheSameContract(payload);
+  async getAnother(@Payload() payload: IKafkaMessage<CampaignAndPackageIdPayload>) {
+    return this.contractService.getAnotherInTheSameContract(payload.value);
   }
 }

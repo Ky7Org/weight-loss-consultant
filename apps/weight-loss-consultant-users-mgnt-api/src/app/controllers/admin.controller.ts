@@ -55,8 +55,8 @@ export class AdminController {
   }
   @MessagePattern(MESSAGE_PATTERN.admins.updateProfileWithoutPasswordAndStatus)
   @UseFilters(new ExceptionFilter())
-  async updateAdminWithoutPasswordAndStatus(@Payload() payload: UpdateAdminPayload): Promise<UpdateResult> {
-    return this.adminService.updateProfileWithoutPasswordAndStatus(payload);
+  async updateAdminWithoutPasswordAndStatus(@Payload() payload: IKafkaMessage<UpdateAdminPayload>): Promise<UpdateResult> {
+    return this.adminService.updateProfileWithoutPasswordAndStatus(payload.value);
   }
 
 }

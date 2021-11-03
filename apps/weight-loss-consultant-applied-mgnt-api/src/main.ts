@@ -16,15 +16,21 @@ import {
 } from '../../../constant';
 import {ENV_FILE_PATH} from "./app/constants/env-file-path";
 import {AppModule} from "./app/modules/app.module";
+import { KAFKA_BROKER_ENDPOINT_1 } from '../../common/kafka-utils';
+import {v4 as uuid} from 'uuid';
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule.forRoot(settings), {
-    transport: Transport.TCP,
+    transport: Transport.KAFKA,
     options: {
-      host: HOST,
-      port: APPLIED_MANAGEMENT_SERVICE_PORT
-    }
+      client: {
+        brokers: [KAFKA_BROKER_ENDPOINT_1],
+      },
+      consumer: {
+        groupId: `user.${uuid()}`,
+      },
+    },
   });
   await app.listen();
   Logger.log(`Microservice ${APPLIED_MANAGEMENT_SERVICE_NAME} is listening on http://${HOST}:${APPLIED_MANAGEMENT_SERVICE_PORT}`);

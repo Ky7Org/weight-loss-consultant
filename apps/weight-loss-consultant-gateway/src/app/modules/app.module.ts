@@ -45,60 +45,8 @@ export class AppModule {
         ReportModule,
         ClientsModule.register([
           {
-            name: PACKAGES_MANAGEMENT_SERVICE_NAME,
-            transport: Transport.TCP,
-            options: {
-              host: HOST,
-              port: PACKAGES_MANAGEMENT_SERVICE_PORT,
-            }
-          },
-          {
-            name: HEALTH_MANAGEMENT_SERVICE_NAME,
-            transport: Transport.TCP,
-            options: {
-              host: HOST,
-              port: HEALTH_MANAGEMENT_SERVICE_PORT,
-            }
-          },
-          {
-            name: SCHEDULING_SERVICE_NAME,
-            transport: Transport.TCP,
-            options: {
-              host: HOST,
-              port: SCHEDULING_SERVICE_PORT,
-            }
-          },
-          {
-            name: CONTRACT_MANAGEMENT_SERVICE_NAME,
-            transport: Transport.TCP,
-            options: {
-              host: HOST,
-              port: CONTRACT_MANAGEMENT_SERVICE_PORT,
-            }
-          },
-          {
-            name: CAMPAIGN_MANAGEMENT_SERVICE_NAME,
-            transport: Transport.TCP,
-            options: {
-              host: HOST,
-              port: CAMPAIGN_MANAGEMENT_SERVICE_PORT,
-            }
-          },
-          {
-            name: APPLIED_MANAGEMENT_SERVICE_NAME,
-            transport: Transport.TCP,
-            options: {
-              host: HOST,
-              port: APPLIED_MANAGEMENT_SERVICE_PORT,
-            }
-          },
-          {
-            name: REPORT_MANAGEMENT_SERVICE_NAME,
-            transport: Transport.TCP,
-            options: {
-              host: HOST,
-              port: REPORT_MANAGEMENT_SERVICE_PORT,
-            }
+            ...KAFKA_SERVICE,
+            name: 'SERVER',
           }
         ]),
         ConfigModule.forRoot({

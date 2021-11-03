@@ -1,7 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { DeleteResult } from 'typeorm';
 import { PACKAGES_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientKafka, ClientProxy } from '@nestjs/microservices';
 
 import {
   CREATE_PACKAGE,
@@ -13,39 +13,43 @@ import {
 import { CreatePackageDto } from '../dtos/package/create-package';
 import { PackageEntity } from '../entities/package.entity';
 import {UpdatePackageDto} from "../dtos/package/update-package";
+import { KAFKA_PACKAGES_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
-export class PackageService {
-  private readonly packagesManagementProxy;
+export class PackageService implements OnModuleInit, OnModuleDestroy {
+
+  @Inject('SERVER')
+  private client: ClientKafka;
+
+  async onModuleInit() {
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN)) {
+      this.client.subscribeToResponseOf(value);
+    }
+    this.client.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.client.close();
+  }
 
   async delete(id: number): Promise<DeleteResult> {
-      return this.packagesManagementProxy
-        .send({cmd: DELETE_PACKAGE_BY_ID}, id)
-        .toPromise();
+      return lastValueFrom(this.client.send(MESSAGE_PATTERN.delete, id));
   }
 
   async getPackageDetailsWithTrainer(): Promise<PackageEntity[]> {
-    return this.packagesManagementProxy
-      .send({cmd: FIND_ALL_PACKAGES}, {})
-      .toPromise();
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.getAll, ''));
   }
 
   async viewDetail(id: number): Promise<PackageEntity> {
-    return this.packagesManagementProxy
-      .send({cmd: FIND_PACKAGE_BY_ID}, id)
-      .toPromise();
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.getByID, id));
   }
 
   async create(dto: CreatePackageDto): Promise<PackageEntity> {
-    return this.packagesManagementProxy
-      .send({cmd: CREATE_PACKAGE}, dto)
-      .toPromise();
+    return lastValueFrom(this.client.send({cmd: CREATE_PACKAGE}, dto));
   }
 
   async edit(dto: UpdatePackageDto, id: number): Promise<void> {
-    return this.packagesManagementProxy
-      .send
-      ({cmd: UPDATE_PACKAGE_BY_ID}, {dto: dto, id: id})
-      .toPromise();
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.update, {dto: dto, id: id}));
   }
 }

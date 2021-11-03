@@ -1,7 +1,7 @@
-import {HttpStatus, Inject, Injectable} from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import {DeleteResult, UpdateResult} from 'typeorm';
 import {ContractEntity} from "../../entities/contract.entity";
-import {ClientProxy, RpcException} from "@nestjs/microservices";
+import { ClientKafka, ClientProxy, RpcException } from '@nestjs/microservices';
 import {RpcExceptionModel} from "../../../../../common/filters/rpc-exception.model";
 import {ContractMapper} from "../../mappers/health-info.mapper";
 import {CreateContractDto} from "../../dtos/contract/create-health-info.dto";
@@ -20,19 +20,38 @@ import {
 import {CAMPAIGN_STATUS, CONTRACT_STATUS, PACKAGE_STATUS} from "../../../../../common/utils";
 import {UpdateStatusCampaignPayload} from "../../../../../common/dtos/update-campaign-dto.payload";
 import {UpdateStatusPackagePayload} from "../../../../../common/dtos/update-package-dto.payload";
+import { KAFKA_CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN as CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN,
+  KAFKA_PACKAGES_MANAGEMENT_MESSAGE_PATTERN as PACKAGES_MANAGEMENT_MESSAGE_PATTERN,
+} from '../../../../../common/kafka-utils';
 
 @Injectable()
-export class ContractService {
-  constructor(private readonly repository: ContractRepository,
-              private readonly mapper: ContractMapper,
-              @Inject(CAMPAIGN_MANAGEMENT_SERVICE_NAME)
-              private readonly campaignServiceManagementProxy: ClientProxy,
-              @Inject(PACKAGES_MANAGEMENT_SERVICE_NAME)
-              private readonly packageServiceManagementProxy: ClientProxy
-  ) {
+export class ContractService implements OnModuleInit, OnModuleDestroy {
+
+  @Inject('SERVER')
+  private readonly campaignsManagementClient: ClientKafka;
+
+  @Inject('SERVER')
+  private readonly packagesManagementClient: ClientKafka;
+
+  constructor(private readonly repository: ContractRepository) {}
+
+  async onModuleInit() {
+    for (const [key, value] of Object.entries(CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN)) {
+        this.campaignsManagementClient.subscribeToResponseOf(value);
+    }
+    for (const [key, value] of Object.entries(PACKAGES_MANAGEMENT_MESSAGE_PATTERN)) {
+      this.packagesManagementClient.subscribeToResponseOf(value);
+    }
+    this.campaignsManagementClient.connect();
+    this.packagesManagementClient.connect();
   }
 
-  async findAll(): Promise<ContractEntity[] | null> {
+  async onModuleDestroy() {
+    await this.campaignsManagementClient.close();
+    await this.packagesManagementClient.close();
+  }
+
+  async findAll(): Promise<ContractEntity[]> {
     return this.repository.createQueryBuilder("contract")
       .leftJoinAndSelect("contract.campaign", "campaign")
       .leftJoinAndSelect("contract.package", "package")
@@ -40,23 +59,23 @@ export class ContractService {
   }
 
   private validateCampaign(id: number): Observable<CampaignEntity> {
-    return this.campaignServiceManagementProxy
-      .send<CampaignEntity, number>({cmd: FIND_CAMPAIGN_BY_ID}, id);
+    return this.campaignsManagementClient
+      .send<CampaignEntity, number>(CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN.getByID, id);
   }
 
   private validatePackage(id: number): Observable<PackageEntity> {
-    return this.packageServiceManagementProxy
-      .send<PackageEntity, number>({cmd: FIND_PACKAGE_BY_ID}, id);
+    return this.packagesManagementClient
+      .send<PackageEntity, number>(PACKAGES_MANAGEMENT_MESSAGE_PATTERN.getByID, id);
   }
 
   private updateCampaignStatus(payload: UpdateStatusCampaignPayload): Observable<boolean> {
-    return this.campaignServiceManagementProxy
-      .send({cmd: UPDATE_STATUS_CAMPAIGN}, payload);
+    return this.campaignsManagementClient
+      .send(CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN.updateStatus, payload);
   }
 
   private updatePackageStatus(payload: UpdateStatusPackagePayload): Observable<boolean> {
-    return this.packageServiceManagementProxy
-      .send({cmd: UPDATE_STATUS_PACKAGE}, payload);
+    return this.packagesManagementClient
+      .send(PACKAGES_MANAGEMENT_MESSAGE_PATTERN.updateStatus, payload);
   }
 
   async create(dto: CreateContractDto): Promise<ContractEntity | null> {
@@ -69,7 +88,7 @@ export class ContractService {
         message: `Package or campaign is already existed in another contract.`
       } as RpcExceptionModel);
     }
-    const findCampaign = await this.validateCampaign(campaignID).toPromise();
+    const findCampaign = await lastValueFrom(this.validateCampaign(campaignID));
     if (!findCampaign) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -88,14 +107,14 @@ export class ContractService {
   }
 
   async edit(dto: UpdateContractDto, id: number): Promise<UpdateResult> {
-    if (id != dto.id) {
+    if (id !== dto.id) {
       throw new RpcException({
         statusCode: HttpStatus.CONFLICT,
         message: `Param id: ${id} must match with id in request body: ${dto.id}`
       } as RpcExceptionModel);
     }
     const campaignID = dto.campaignID;
-    const findCampaign = await this.validateCampaign(campaignID).toPromise();
+    const findCampaign = await lastValueFrom(this.validateCampaign(campaignID));
     if (!findCampaign) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -103,7 +122,7 @@ export class ContractService {
       } as RpcExceptionModel);
     }
     const packageID = dto.packageID;
-    const findPackage = await this.validatePackage(packageID).toPromise();
+    const findPackage = await lastValueFrom(this.validatePackage(packageID));
     if (!findPackage) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -171,7 +190,7 @@ export class ContractService {
       .where("(contract.campaignID = :campaignID OR contract.packageID = :packageID) AND contract.status = :status",
         {campaignID: campaignId, packageID: packageId, status: CONTRACT_STATUS.ONGOING})
       .getOne();
-    return result ? true : false;
+    return !!result;
   }
 
   async expireContract(contractId: number): Promise<boolean> {
@@ -188,7 +207,7 @@ export class ContractService {
       id: exist.campaign.id,
       status: CAMPAIGN_STATUS.CLOSED
     } as UpdateStatusCampaignPayload
-    const updateCampaignStatusResult = await this.updateCampaignStatus(campaignPayload).toPromise();
+    const updateCampaignStatusResult = await lastValueFrom(this.updateCampaignStatus(campaignPayload));
     if (!updateCampaignStatusResult) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -200,7 +219,7 @@ export class ContractService {
       id: exist.package.id,
       status: PACKAGE_STATUS.APPROVED
     } as UpdateStatusPackagePayload
-    const updatePackageStatusResult = await this.updatePackageStatus(packagePayload).toPromise();
+    const updatePackageStatusResult = await lastValueFrom(this.updatePackageStatus(packagePayload));
     if (!updatePackageStatusResult) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -267,7 +286,7 @@ export class ContractService {
       return packageIdReturn;
     }
     if (packageId) {
-      const validatePackage = await this.validatePackage(packageId).toPromise();
+      const validatePackage = await lastValueFrom(this.validatePackage(packageId));
       if (!validatePackage) {
         throw new RpcException({
           statusCode: HttpStatus.NOT_FOUND,
