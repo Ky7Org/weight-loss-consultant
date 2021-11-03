@@ -10,16 +10,7 @@ import { CampaignService } from '../services/campaign.service';
 
 
 @Module({
-  imports: [ClientsModule.register([
-    {
-      name: CAMPAIGN_MANAGEMENT_SERVICE_NAME,
-      transport: Transport.TCP,
-      options: {
-        host: HOST,
-        port: CAMPAIGN_MANAGEMENT_SERVICE_PORT
-      }
-    }])
-  ],
+  imports: [],
   controllers: [CampaignController],
   providers: [CampaignService],
   exports: [CampaignService]

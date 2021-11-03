@@ -16,47 +16,43 @@ import { UpdateCampaignPayloadType } from '../../../../common/dtos/update-campai
 
 @Injectable()
 export class CampaignService {
-
-  constructor(
-              @Inject(CAMPAIGN_MANAGEMENT_SERVICE_NAME)
-              private readonly campaignManagementServiceProxy: ClientProxy
-  ) {}
+  private readonly campaignManagementServiceProxy;
 
   async getCampaignDetailsWithCustomer(): Promise<CampaignEntity[]> {
     return this.campaignManagementServiceProxy
-      .send<CampaignEntity[], Record<string, unknown> >({cmd: FIND_ALL_CAMPAIGNS}, {})
+      .send({cmd: FIND_ALL_CAMPAIGNS}, {})
       .toPromise();
   }
 
   async getAvailableCampaigns(): Promise<CampaignEntity[]> {
     return this.campaignManagementServiceProxy
-      .send<CampaignEntity[], Record<string, unknown> >({cmd: GET_AVAILABLE_CAMPAIGNS}, {})
+      .send({cmd: GET_AVAILABLE_CAMPAIGNS}, {})
       .toPromise();
   }
 
   async viewDetail(id: number): Promise<CampaignEntity> {
     return this.campaignManagementServiceProxy
-      .send<CampaignEntity, number>({cmd: FIND_CAMPAIGN_BY_ID}, id)
+      .send({cmd: FIND_CAMPAIGN_BY_ID}, id)
       .toPromise();
   }
 
   async create(dto: CreateCampaignDto): Promise<CampaignEntity> {
     return this.campaignManagementServiceProxy
-      .send<CampaignEntity, CreateCampaignDto>({cmd: CREATE_CAMPAIGN}, dto)
+      .send({cmd: CREATE_CAMPAIGN}, dto)
       .toPromise();
   }
 
 
   async edit(dto: UpdateCampaignDto, id: number): Promise<CampaignEntity> {
     return this.campaignManagementServiceProxy
-      .send<CampaignEntity, UpdateCampaignPayloadType>
+      .send
       ({cmd: UPDATE_CAMPAIGN_BY_ID}, {dto: dto, id: id})
       .toPromise();
   }
 
   async delete(id: number): Promise<DeleteResult> {
     return this.campaignManagementServiceProxy
-      .send<DeleteResult, number>
+      .send
       ({cmd: DELETE_CAMPAIGN_BY_ID}, id)
       .toPromise();
   }

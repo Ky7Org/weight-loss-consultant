@@ -112,7 +112,6 @@ const ListItem = () => {
     setIsModalShow(true);
   }, [isModalShow]);
   const handleOnShowModal = (row) => {
-    console.log(row);
     handleRender();
   };
   const handleOk = () => {

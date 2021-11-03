@@ -41,7 +41,6 @@ const Profile = () => {
   };
   const handleUpdate = () => (setIsEditing(false), setIsSaved(true));
   useEffect(() => {
-    console.log(location);
     setcurrentSearchRole(location.state);
   }, [location]);
   return (

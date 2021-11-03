@@ -83,16 +83,15 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
   }
 
   async viewDetail(id): Promise<CustomerEntity> {
-    const query = this.repository.createQueryBuilder("customer")
+    return this.repository.createQueryBuilder("customer")
       .where("customer.email = :email", {email : id})
       .leftJoinAndSelect("customer.campaigns", "campaign")
-      .getOne();
-    const sql = this.repository.createQueryBuilder("customer")
-      .where("customer.email = :email", {email : id})
-      .leftJoinAndSelect("customer.campaigns", "campaign")
-      .getSql();
-    console.log(sql)
-    return query;
+      .getOneOrFail().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: `Not found customer with email: ${id}`
+        } as RpcExceptionModel);
+      });
   }
 
   async viewOnlyCampaignsOfCustomer(customerEmail: string) : Promise<any>  {

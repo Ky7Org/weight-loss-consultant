@@ -27,6 +27,32 @@ export const KAFKA_AUTHENTICATION_MESSAGE_PATTERN = {
   loginWithFirebase: 'authentication.firebase.login',
 }
 
+export const KAFKA_CONTRACTS_MANAGEMENT_MESSAGE_PATTERN = {
+  getAll: 'contracts.get-all',
+  getByID: 'contracts.get-by-id',
+  create: 'contracts.create',
+  update: 'contracts.update',
+  delete: 'contracts.delete',
+  getByCampaignIDOrPackageID: 'contracts.get-by-campaign-id-or-package-id',
+  expireContract: 'contracts.expire-contract',
+  getAnotherInTheSameContract: 'contracts.get-another-in-the-same-contract',
+};
+
+export const KAFKA_REPORTS_MANAGEMENT_MESSAGE_PATTERN = {
+  getAllReports: 'reports.get-all',
+  getAllReportMedias: 'reports.get-all-report-medias',
+  getByID: 'reports.get-by-id',
+  getMediaByID: 'reports.get-media-by-id',
+  create: 'reports.create',
+  createMedia: 'reports.create-media',
+  update: 'reports.update',
+  updateMedia: 'reports.update-media',
+  delete: 'reports.delete',
+  deleteMedia: 'reports.delete-media',
+  getByContractID: 'reports.get-by-contract-id',
+  approveReport: 'reports.approve-report',
+}
+
 export const KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN = {
   customers: {
     getAllCustomers: 'users.customers.get-all',

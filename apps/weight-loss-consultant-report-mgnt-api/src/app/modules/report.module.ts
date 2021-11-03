@@ -13,25 +13,14 @@ import {ReportMapper} from "../mappers/report/report.mapper";
 import {ReportController} from "../controllers/report.controller";
 import {ReportMediaRepository} from "../repositories/report-media.repository";
 import {ReportMediaMapper} from "../mappers/report-media/report-media.mapper";
+import { KAFKA_SERVICE } from '../../../../common/kafka-utils';
 
 
 @Module({
   imports: [ClientsModule.register([
     {
-      name: REPORT_MANAGEMENT_SERVICE_NAME,
-      transport: Transport.TCP,
-      options: {
-        host: HOST,
-        port: REPORT_MANAGEMENT_SERVICE_PORT
-      }
-    },
-    {
-      name: CONTRACT_MANAGEMENT_SERVICE_NAME,
-      transport: Transport.TCP,
-      options: {
-        host: HOST,
-        port: CONTRACT_MANAGEMENT_SERVICE_PORT
-      }
+      ...KAFKA_SERVICE,
+      name: 'SERVER'
     }
   ]),
     TypeOrmModule.forFeature([ReportRepository, ReportMediaRepository])],

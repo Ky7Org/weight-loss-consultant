@@ -8,16 +8,7 @@ import {
 import {HealthInfoService} from "../services/health.service";
 
 @Module({
-  imports: [ClientsModule.register([
-    {
-      name: HEALTH_MANAGEMENT_SERVICE_NAME,
-      transport: Transport.TCP,
-      options: {
-        host: HOST,
-        port: HEALTH_MANAGEMENT_SERVICE_PORT
-      }
-    }])
-  ],
+  imports: [],
   providers: [HealthInfoService],
   exports: [HealthInfoService],
   controllers: [HealthCheckController]

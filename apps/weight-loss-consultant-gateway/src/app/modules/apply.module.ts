@@ -9,16 +9,7 @@ import {AppliedService} from "../services/applied.service";
 import {ApplyController} from "../controllers/applies-management/apply.controller";
 
 @Module({
-  imports: [ClientsModule.register([
-    {
-      name: APPLIED_MANAGEMENT_SERVICE_NAME,
-      transport: Transport.TCP,
-      options: {
-        host: HOST,
-        port: APPLIED_MANAGEMENT_SERVICE_PORT
-      }
-    }])
-  ],
+  imports: [],
   providers: [AppliedService],
   exports: [AppliedService],
   controllers: [ApplyController]

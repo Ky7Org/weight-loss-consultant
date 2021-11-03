@@ -4,7 +4,7 @@ import {Client, ClientKafka, RpcException} from '@nestjs/microservices';
 import { AdminEntity } from '../entities/admin.entity';
 import { CustomerEntity } from '../entities/customer.entity';
 import { TrainerEntity } from '../entities/trainer.entity';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, lastValueFrom, Observable } from 'rxjs';
 import { catchError, defaultIfEmpty, map } from 'rxjs/operators';
 import { RpcExceptionModel } from '../filters/rpc-exception.model';
 import { LoginRequest } from '../models/login.req';
@@ -50,8 +50,6 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
   }
 
   private validateAdmin(username: string): Observable<AdminEntity> {
-    this.client
-      .send<AdminEntity, string>(MESSAGE_PATTERN.admins.getByEmail, username).toPromise().then((t) => console.log(JSON.stringify(t)));
     return this.client
       .send<AdminEntity, string>(MESSAGE_PATTERN.admins.getByEmail, username);
   }
@@ -67,22 +65,20 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
   }
 
   private async validateAccountWithoutPassword(username: string) {
-    const users = await combineLatest([this.validateAdmin(username).pipe(defaultIfEmpty(null)),
+    const users = await lastValueFrom(combineLatest([this.validateAdmin(username).pipe(defaultIfEmpty(null)),
       this.validateCustomer(username).pipe(defaultIfEmpty(null)),
       this.validateTrainer(username).pipe(defaultIfEmpty(null))])
       .pipe(map(([admin, customer, trainer]) => {
         return [admin, customer, trainer];
       }), catchError((e, u) => {
-        console.log(e);
         throw new RpcException({
           statusCode: HttpStatus.UNAUTHORIZED,
           message: 'Invalid username or password.'
         } as RpcExceptionModel);
         return u;
-      })).toPromise();
+      })));
     let user: AdminEntity | CustomerEntity | TrainerEntity;
     let userRole: Role;
-    console.log(users);
     if (users[0] !== undefined && users[0] !== null) {
       user = users[0] as AdminEntity;
       userRole = Role.Admin;
@@ -101,7 +97,6 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
         message: 'Invalid username or password.'
       } as RpcExceptionModel);
     }
-    console.log(user);
     return {
       ...user,
       role: userRole
@@ -114,10 +109,8 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
     let trainer : TrainerEntity;
     let customer : CustomerEntity;
     try {
-      admin  = await this.validateAdmin(username).toPromise();
-      console.log("admin tt" + JSON.stringify(admin, null, 2));
+      admin = await lastValueFrom<AdminEntity>(this.validateAdmin(username));
       if (admin && await bcrypt.compare(password, admin.password)) {
-        console.log("admin")
         return {
           ...admin,
           role: Role.Admin
@@ -127,9 +120,8 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
       //
     }
     try {
-      const trainer = await this.validateTrainer(username).toPromise();
+      const trainer = await lastValueFrom<TrainerEntity>(this.validateTrainer(username));
       if (trainer && await bcrypt.compare(password, trainer.password)) {
-        console.log("trainer")
         return {
           ...trainer,
           role: Role.Trainer
@@ -139,9 +131,8 @@ export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
       //
     }
     try {
-      const customer = await this.validateCustomer(username).toPromise();
+      const customer = await lastValueFrom<CustomerEntity>(this.validateCustomer(username));
       if (customer && await bcrypt.compare(password, customer.password)) {
-        console.log("customer")
         return {
           ...customer,
           role: Role.Customer

@@ -1,16 +1,7 @@
-import { Controller, UseFilters } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
 import { TrainerService } from '../services/impl/trainer.service.impl';
 import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import {
-  CREATE_TRAINER,
-  DELETE_TRAINER,
-  GET_ALL_TRAINERS,
-  GET_TRAINER_BY_EMAIL,
-  UPDATE_TRAINER,
-  VIEW_DETAIL_SPECIAL_TRAINER,
-  UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS
-} from '../../../../common/routes/users-management-service-routes';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
 import {UpdateTrainerPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
@@ -19,7 +10,9 @@ import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from '../../.
 import {IKafkaMessage} from "../../../../common/kafka-message.model";
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class TrainerController {
+
   constructor(private readonly trainerService: TrainerService) {
   }
 
@@ -53,9 +46,9 @@ export class TrainerController {
     return this.trainerService.delete(email.value);
   }
 
-  @MessagePattern({ cmd: UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS })
+  @MessagePattern(MESSAGE_PATTERN.trainers.updateProfileWithoutPasswordAndStatus)
   @UseFilters(new ExceptionFilter())
-  async updateAdmninWithoutPasswordAndStatus(@Payload() payload: UpdateTrainerPayload): Promise<UpdateResult> {
+  async updateAdminWithoutPasswordAndStatus(@Payload() payload: UpdateTrainerPayload): Promise<UpdateResult> {
     return this.trainerService.updateProfileWithoutPasswordAndStatus(payload);
   }
 

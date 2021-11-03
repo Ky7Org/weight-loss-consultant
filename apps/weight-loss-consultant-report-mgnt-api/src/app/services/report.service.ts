@@ -1,54 +1,60 @@
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import {ReportEntity} from "../entities/report.entity";
-import {Observable} from "rxjs";
 import {ReportRepository} from "../repositories/report.repository";
 import {ReportMediaRepository} from "../repositories/report-media.repository";
 import {CreateReportDto} from "../dtos/report/create-report.dto";
 import {ReportMediaEntity} from "../entities/report-media.entity";
 import {UpdateReportDto} from "../dtos/report/update-report.dto";
 import {DeleteResult, UpdateResult} from "typeorm";
-import {ClientProxy, RpcException} from "@nestjs/microservices";
+import {ClientKafka, ClientProxy, RpcException} from "@nestjs/microservices";
 import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
 import {CreateReportMediaDto} from "../dtos/report-media/create-report-media.dto";
 import {UpdateReportMediaDto} from "../dtos/report-media/update-report-media.dto";
 import {ContractEntity} from "../entities/contract.entity";
-import {CONTRACT_MANAGEMENT_SERVICE_NAME} from "../../../../../constant";
 import {FIND_CONTRACT_BY_ID} from "../../../../common/routes/contract-management-service-routes";
 import {ReportMapper} from "../mappers/report/report.mapper";
 import {ReportMediaMapper} from "../mappers/report-media/report-media.mapper";
 import {TrainerApproveReportPayload} from "../../../../common/dtos/update-trainer-dto.payload";
 import {TRAINER_APPROVAL} from "../../../../common/utils";
+import { lastValueFrom } from 'rxjs';
+import { KAFKA_CONTRACTS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 
 @Injectable()
-export class ReportService {
-  constructor(
-              private readonly reportRepository: ReportRepository,
-              private readonly reportMediaRepository: ReportMediaRepository,
-              private readonly reportMapper: ReportMapper,
-              // private readonly reportMediaMapper: ReportMediaMapper,
-              @Inject(CONTRACT_MANAGEMENT_SERVICE_NAME)
-              private readonly contractManagementServiceProxy: ClientProxy
-  ) {
+export class ReportService implements OnModuleInit, OnModuleDestroy {
 
+  @Inject('SERVER')
+  private readonly contractManagementClient: ClientKafka;
+
+  constructor(private readonly reportRepository: ReportRepository,
+              private readonly reportMediaRepository: ReportMediaRepository) {}
+
+  async onModuleInit() {
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN)) {
+      this.contractManagementClient.subscribeToResponseOf(value);
+    }
+    this.contractManagementClient.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.contractManagementClient.close();
   }
 
   async findReports(): Promise<ReportEntity[]> {
-    return await this.reportRepository.createQueryBuilder("report")
+    return this.reportRepository.createQueryBuilder("report")
       .leftJoinAndSelect("report.contract", "Contract")
       .getMany();
   }
 
   async findReportMedias() : Promise<ReportMediaEntity[]> {
-    return await this.reportMediaRepository.createQueryBuilder("media")
+    return this.reportMediaRepository.createQueryBuilder("media")
       .leftJoinAndSelect("media.report", "report")
       .getMany();
   }
 
   private async validateContract(id : number) : Promise<ContractEntity> {
-    return this.contractManagementServiceProxy
-      .send<ContractEntity, number>({cmd: FIND_CONTRACT_BY_ID}, id).toPromise();
+    return lastValueFrom<ContractEntity>(this.contractManagementClient
+      .send<ContractEntity, number>({cmd: FIND_CONTRACT_BY_ID}, id));
   }
-
 
   async createReport(dto: CreateReportDto): Promise<ReportEntity> {
     const contractID = dto.contractID;
@@ -78,7 +84,7 @@ export class ReportService {
         message: `Not found contract with id: ${dto.contractID}`
       } as RpcExceptionModel);
     }
-    const entity : ReportEntity = await ReportMapper.mapUpdateReportDtoToEntity(dto, contract);
+    const entity: ReportEntity = await ReportMapper.mapUpdateReportDtoToEntity(dto, contract);
     return this.reportRepository.update(id, entity);
   }
 
@@ -128,13 +134,11 @@ export class ReportService {
   }
 
   async findReportByContractId(contractID: number) : Promise<ReportEntity[]> {
-    const result = await this.reportRepository.createQueryBuilder("report")
+    return this.reportRepository.createQueryBuilder("report")
       .where("report.contractID = :contractID", {contractID : contractID})
       .getMany();
-    return result;
   }
 
-  //GET
   async customerCreateReport(payload: CreateReportDto) : Promise<any> {
     const contractID = payload.contractID;
     const contract = await this.validateContract(contractID);
@@ -150,15 +154,11 @@ export class ReportService {
 
   //PUT
   async trainerApproveReport(payload: TrainerApproveReportPayload) : Promise<UpdateResult> {
-    // const trainerEmail = payload.trainerEmail ?? "";
     const trainerFeedback : string = payload.trainerFeedback ?? "";
     const trainerApproval : number = payload.trainerApproval ?? TRAINER_APPROVAL.APPROVED;
     const reportId : number = payload.reportID;
-
     const viewReport = await this.viewReportDetail(reportId);
-
-
-    const result = await this.reportRepository.createQueryBuilder("report")
+    return this.reportRepository.createQueryBuilder("report")
       .update(ReportEntity)
       .set({
           trainerFeedback : trainerFeedback,
@@ -166,6 +166,5 @@ export class ReportService {
       })
       .where("id = :id", {id : viewReport.id})
       .execute();
-    return result;
   }
 }

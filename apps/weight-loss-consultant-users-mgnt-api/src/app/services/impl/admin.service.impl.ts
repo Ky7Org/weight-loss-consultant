@@ -96,7 +96,7 @@ export class AdminService {
         message: `Param: ${payload.email} must match with request body email : ${payload.email} `
       } as RpcExceptionModel);
     }
-    const result = await this.repository.createQueryBuilder("admin")
+   return await this.repository.createQueryBuilder("admin")
       .update(AdminEntity)
       .set({
         fullname: payload.fullname,
@@ -108,6 +108,5 @@ export class AdminService {
       })
       .where("email = :email", {email : payload.email})
       .execute();
-    return result;
   }
 }

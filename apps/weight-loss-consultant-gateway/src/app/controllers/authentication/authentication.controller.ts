@@ -35,7 +35,7 @@ export class AuthenticationController {
       const result = await this.authenticationService.login(dto);
       res.status(HttpStatus.OK).send(result);
     } catch (error) {
-      this.logger.error(error.error);
+      this.logger.error(JSON.stringify(error, null, 2));
       res.status(error.error.statusCode).send(error.error);
     }
   }
@@ -48,7 +48,6 @@ export class AuthenticationController {
   })
   async loginWithFirebase(@Request() req: Request, @Res() res) {
     try {
-      console.log(req.headers['authorization']);
       const result = await this.authenticationService.loginWithFirebase(req.headers['authorization']);
       res.status(HttpStatus.OK).send(result);
     } catch ({ error }) {

@@ -5,7 +5,6 @@ import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateCustDto } from '../../dtos/customer/create-customer.dto';
 import { UpdateCustDto } from '../../dtos/customer/update-customer-dto';
 import {
-  UpdateAdminPayload,
   UpdateCustomerPayloadd
 } from "../../../../../common/dtos/update-without-password-and-status.payload";
 

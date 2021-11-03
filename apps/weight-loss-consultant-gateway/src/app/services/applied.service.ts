@@ -20,46 +20,41 @@ import {ApprovePayload} from "../../../../common/dtos/update-package-dto.payload
 
 @Injectable()
 export class AppliedService {
-
-  constructor(@Inject(APPLIED_MANAGEMENT_SERVICE_NAME)
-              private readonly appliedManagementServiceProxy: ClientProxy) {}
+  private appliedManagementServiceProxy: any;
 
   async getAll(): Promise<AppliedEntity[]> {
     return this.appliedManagementServiceProxy
-      .send<AppliedEntity[], Record<string, unknown>>({cmd: FIND_ALL_APPLIES}, {})
+      .send({cmd: FIND_ALL_APPLIES}, {})
       .toPromise();
   }
 
   async viewDetail(id: number): Promise<AppliedEntity> {
     return this.appliedManagementServiceProxy
-      .send<AppliedEntity, number>({cmd: FIND_APPLY_BY_ID}, id)
+      .send({cmd: FIND_APPLY_BY_ID}, id)
       .toPromise();
   }
 
   async create(dto: CreateAppliedDto): Promise<AppliedEntity> {
     return this.appliedManagementServiceProxy
-      .send<AppliedEntity, CreateAppliedDto>({cmd: CREATE_APPLY}, dto)
+      .send({cmd: CREATE_APPLY}, dto)
       .toPromise();
   }
 
 
   async edit(dto: UpdateAppliedDto, id: number): Promise<void> {
     return this.appliedManagementServiceProxy
-      .send<void, UpdateApplyPayloadType>
-      ({cmd: UPDATE_APPLY_BY_ID}, {dto: dto, id: id})
+      .send ({cmd: UPDATE_APPLY_BY_ID}, {dto: dto, id: id})
       .toPromise();
   }
 
   async delete(id: number): Promise<DeleteResult> {
     return this.appliedManagementServiceProxy
-      .send<DeleteResult, number>
-      ({cmd: DELETE_APPLY_BY_ID}, id)
+      .send({cmd: DELETE_APPLY_BY_ID}, id)
       .toPromise();
   }
   async getAppliedPackagesByCampaignID(campaignID: number): Promise<any> {
     const result =  this.appliedManagementServiceProxy
-      .send<PackageEntity[], number>
-      ({cmd: GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID}, campaignID)
+      .send ({cmd: GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID}, campaignID)
       .toPromise();
     return result;
   }

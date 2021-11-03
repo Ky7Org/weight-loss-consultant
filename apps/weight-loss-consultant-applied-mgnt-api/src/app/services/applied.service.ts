@@ -96,14 +96,12 @@ export class AppliedService {
       status: CAMPAIGN_STATUS.ACTIVE
     } as UpdateStatusCampaignPayload;
     const updateCampaignResult = await this.updateCampaignStatus(campaignPayload).toPromise();
-    console.log(updateCampaignResult)
     //3: update package status = APPLIED
     const packagePayload = {
       id: packageID,
       status: PACKAGE_STATUS.APPLIED
     } as UpdateStatusPackagePayload;
     const updatePackageResult = await this.updatePackageStatus(packagePayload).toPromise();
-    console.log(updatePackageResult)
     if (updateCampaignResult && updatePackageResult) {
       return await this.repository.save(entity);
     }

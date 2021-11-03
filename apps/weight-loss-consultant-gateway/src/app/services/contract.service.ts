@@ -22,40 +22,36 @@ import {
 
 @Injectable()
 export class ContractService {
-
-  constructor(@Inject(CONTRACT_MANAGEMENT_SERVICE_NAME)
-              private readonly contractManagementServiceProxy: ClientProxy) {}
+  private readonly contractManagementServiceProxy;
 
   async getHealthInfosWithCustomer(): Promise<ContractEntity[]> {
     return this.contractManagementServiceProxy
-      .send<ContractEntity[], Record<string, unknown>>({cmd: FIND_ALL_CONTRACT}, {})
+      .send({cmd: FIND_ALL_CONTRACT}, {})
       .toPromise();
   }
 
   async viewDetail(id: number): Promise<ContractEntity> {
     return this.contractManagementServiceProxy
-      .send<ContractEntity, number>({cmd: FIND_CONTRACT_BY_ID}, id)
+      .send({cmd: FIND_CONTRACT_BY_ID}, id)
       .toPromise();
   }
 
   async create(dto: CreateContractDto): Promise<ContractEntity> {
     return this.contractManagementServiceProxy
-      .send<ContractEntity, CreateContractDto>({cmd: CREATE_CONTRACT}, dto)
+      .send({cmd: CREATE_CONTRACT}, dto)
       .toPromise();
   }
 
 
   async edit(dto: UpdateContractDto, id: number): Promise<void> {
     return this.contractManagementServiceProxy
-      .send<void, UpdateContractPayloadType>
-      ({cmd: UPDATE_CONTRACT_BY_ID}, {dto: dto, id: id})
+      .send({cmd: UPDATE_CONTRACT_BY_ID}, {dto: dto, id: id})
       .toPromise();
   }
 
   async delete(id: number): Promise<DeleteResult> {
     return this.contractManagementServiceProxy
-      .send<DeleteResult, number>
-      ({cmd: DELETE_CONTRACT_BY_ID}, id)
+      .send({cmd: DELETE_CONTRACT_BY_ID}, id)
       .toPromise();
   }
 

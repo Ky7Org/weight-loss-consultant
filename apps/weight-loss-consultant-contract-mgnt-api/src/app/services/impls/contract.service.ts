@@ -8,7 +8,7 @@ import {CreateContractDto} from "../../dtos/contract/create-health-info.dto";
 import {UpdateContractDto} from "../../dtos/contract/update-health-info.dto";
 import {CAMPAIGN_MANAGEMENT_SERVICE_NAME, PACKAGES_MANAGEMENT_SERVICE_NAME,} from "../../../../../../constant";
 import {CampaignEntity} from "../../entities/campaign.entity";
-import {Observable} from "rxjs";
+import { lastValueFrom, Observable } from 'rxjs';
 import {FIND_CAMPAIGN_BY_ID, UPDATE_STATUS_CAMPAIGN} from "../../../../../common/routes/campaigns-management-routes";
 import {PackageEntity} from "../../entities/package.enttiy";
 import {FIND_PACKAGE_BY_ID, UPDATE_STATUS_PACKAGE} from "../../../../../common/routes/packages-management-routes";
@@ -33,7 +33,7 @@ export class ContractService {
   }
 
   async findAll(): Promise<ContractEntity[] | null> {
-    return await this.repository.createQueryBuilder("contract")
+    return this.repository.createQueryBuilder("contract")
       .leftJoinAndSelect("contract.campaign", "campaign")
       .leftJoinAndSelect("contract.package", "package")
       .getMany();
@@ -84,7 +84,7 @@ export class ContractService {
       } as RpcExceptionModel);
     }
     const entity: ContractEntity = await ContractMapper.mapCreateContractDtoToEntity(dto, findCampaign, findPackage);
-    return await this.repository.save(entity);
+    return this.repository.save(entity);
   }
 
   async edit(dto: UpdateContractDto, id: number): Promise<UpdateResult> {
@@ -118,7 +118,7 @@ export class ContractService {
       } as RpcExceptionModel);
     }
     const entity: ContractEntity = await ContractMapper.mapUpdateContractDtoToEntity(dto, findCampaign, findPackage);
-    return await this.repository.update(id, entity);
+    return this.repository.update(id, entity);
   }
 
   async del(id): Promise<DeleteResult> {
@@ -129,33 +129,39 @@ export class ContractService {
         message: `Not found contract with id: ${id}`
       } as RpcExceptionModel);
     }
-    return await this.repository.delete(id);
+    return this.repository.delete(id);
   }
 
   async viewDetail(id): Promise<ContractEntity> {
-    const query = this.repository.createQueryBuilder("contract")
+    return this.repository.createQueryBuilder("contract")
       .where("contract.id = :id", {id: id})
-      .getOne();
-    return query;
+      .getOneOrFail().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: `Not found contract with id: ${id}`
+        } as RpcExceptionModel);
+      });
   }
 
   async viewDetailWithCampaignAndPackage(id: number): Promise<ContractEntity> {
-    const query = this.repository.createQueryBuilder("contract")
+    return this.repository.createQueryBuilder("contract")
       .leftJoinAndSelect("contract.campaign", "campaign")
       .leftJoinAndSelect("contract.package", "package")
       .where("contract.id = :id", {id: id})
-      .getOne();
-    return query;
-  }
+      .getOneOrFail().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: `Not found contract with id: ${id}`
+        } as RpcExceptionModel);
+      });  }
 
   async getContractByPackageIdOrCampaignId(payload: GetContractByPackageIDOrCampaignIDPayload): Promise<any> {
     const packageID = payload.packageID ?? "";
     const campaignID = payload.campaignID ?? "";
-    const result = this.repository.createQueryBuilder("contract")
+    return this.repository.createQueryBuilder("contract")
       .where("contract.packageID = :packageID", {packageID: packageID})
       .orWhere("contract.campaignID = :campaignID", {campaignID: campaignID})
       .getMany();
-    return result;
   }
 
   //false is not exist, true is exist
@@ -221,10 +227,9 @@ export class ContractService {
       .where("contract.packageID = :packageId", {packageId: packageId})
       .getOne();
     if (result) {
-      const returnResult = {
+      return {
         campaignID: result.campaign.id
       }
-      return returnResult;
     }
   }
 
@@ -234,10 +239,9 @@ export class ContractService {
       .where("contract.campaignID = :campaignId", {campaignId: campaignId})
       .getOne();
     if (result) {
-      const returnResult = {
+      return {
         packageID : result.package.id
       }
-      return returnResult;
     }
 
   }
@@ -246,7 +250,7 @@ export class ContractService {
     const campaignId: number = payload.campaignID;
     const packageId: number = payload.packageID;
     if (campaignId) {
-      const validateCampaign = await this.validateCampaign(campaignId).toPromise();
+      const validateCampaign = await lastValueFrom(this.validateCampaign(campaignId));
       if (!validateCampaign) {
         throw new RpcException({
           statusCode: HttpStatus.NOT_FOUND,

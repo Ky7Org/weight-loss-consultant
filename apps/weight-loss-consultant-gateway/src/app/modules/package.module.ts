@@ -6,16 +6,7 @@ import { HOST, PACKAGES_MANAGEMENT_SERVICE_NAME, PACKAGES_MANAGEMENT_SERVICE_POR
 
 
 @Module({
-  imports: [ClientsModule.register([
-    {
-      name: PACKAGES_MANAGEMENT_SERVICE_NAME,
-      transport: Transport.TCP,
-      options: {
-        host: HOST,
-        port: PACKAGES_MANAGEMENT_SERVICE_PORT
-      }
-    }])
-  ],
+  imports: [],
   controllers: [PackageController],
   providers: [PackageService],
   exports: [PackageService]

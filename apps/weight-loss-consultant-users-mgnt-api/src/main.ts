@@ -23,7 +23,7 @@ async function bootstrap() {
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: ['bangmaple.tech:9092'],
+            brokers: [KAFKA_BROKER_ENDPOINT_1],
           },
           consumer: {
             groupId: `user.${uuid()}`,
@@ -31,7 +31,7 @@ async function bootstrap() {
         },
       },);
   await app.listen();
-  Logger.log(`Microservice ${USERS_MANAGEMENT_SERVICE_NAME} is registered on port ${USERS_MANAGEMENT_SERVICE_PORT}`);
+  Logger.log(`Microservice ${USERS_MANAGEMENT_SERVICE_NAME} is registered on port http://localhost:${USERS_MANAGEMENT_SERVICE_PORT}`);
 
 }
 

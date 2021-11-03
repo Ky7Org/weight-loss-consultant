@@ -1,4 +1,4 @@
-import { Controller, UseFilters } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
 import { SearchService } from '../services/search.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { SearchPaginationPayloadType } from '../../../../common/dtos/search-pagination-dto.payload';
@@ -17,7 +17,9 @@ import {UpdateDeviceIDPayload} from "../../../../common/dtos/update-trainer-dto.
 
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class SearchController {
+
   constructor(private readonly service: SearchService) {
   }
 
@@ -36,14 +38,13 @@ export class SearchController {
   @MessagePattern({cmd: UPDATE_STATUS})
   @UseFilters(new ExceptionFilter())
   async updateStatus(@Payload() payload: UpdateStatusPayload){
-    console.log(payload)
     return this.service.updateStatus(payload);
   }
 
   @MessagePattern({cmd: UPDATE_DEVICE_ID})
   @UseFilters(new ExceptionFilter())
   async updateDeviceID(@Payload() payload: UpdateDeviceIDPayload){
-    console.log(payload)
     return this.service.updateDeviceID(payload);
   }
+
 }
