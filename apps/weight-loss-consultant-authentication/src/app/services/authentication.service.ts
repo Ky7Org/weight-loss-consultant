@@ -11,7 +11,6 @@ import { LoginRequest } from '../models/login.req';
 import { Role } from '../constants/enums';
 import { FirebaseAuthService } from './firebase-auth.service';
 import * as bcrypt from 'bcrypt';
-import {KAFKA_USERS_MANAGEMENT_SERVICE} from "../../../../common/kafka-utils";
 import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from "../../../../common/kafka-utils";
 
 export interface UserIdentity {

@@ -6,25 +6,16 @@ import { JWT_CONFIG } from '../../constant';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {ClientsModule, Transport} from '@nestjs/microservices';
 import { FirebaseAuthService } from '../services/firebase-auth.service';
-import {KAFKA_USERS_MANAGEMENT_SERVICE} from "../../../../common/kafka-utils";
-import {v4 as uuid} from 'uuid';
+import {KAFKA_SERVICE} from "../../../../common/kafka-utils";
 
 @Module({
   imports: [
     PassportModule,
     ClientsModule.register([
       {
-        transport: Transport.KAFKA,
-        name: 'SERVER',
-        options: {
-          client: {
-            brokers: ['bangmaple.tech:9092'],
-          },
-          consumer: {
-            groupId: `user.${uuid()}`,
-          },
-        },
-      },
+        ...KAFKA_SERVICE,
+        name: 'SERVER'
+      }
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],

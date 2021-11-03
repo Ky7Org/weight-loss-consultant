@@ -1,15 +1,12 @@
 import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
-import {AdminService} from '../../services/admin.service';
 import {Response} from 'express';
 import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
 import {CreateAdminDto} from '../../dtos/admin/create-admin.dto';
 import {UpdateAdminDto} from '../../dtos/admin/update-admin.dto';
 import {PaginationDto} from "../../dtos/pagination/pagination.dto";
-import {Roles} from "../../decorators/roles.decorator";
-import {Role} from "../../constants/enums";
-import {UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS} from "../../../../../common/routes/users-management-service-routes";
 import {UpdateAdminPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
+import {AdminService} from "../../services/users-management/admin.service";
 
 
 @ApiTags('Admin')

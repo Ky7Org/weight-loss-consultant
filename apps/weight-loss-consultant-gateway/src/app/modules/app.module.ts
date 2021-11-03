@@ -13,61 +13,37 @@ import {
   HOST,
   PACKAGES_MANAGEMENT_SERVICE_NAME,
   PACKAGES_MANAGEMENT_SERVICE_PORT,
-  REPORT_MANAGEMENT_SERVICE_NAME, REPORT_MANAGEMENT_SERVICE_PORT,
+  REPORT_MANAGEMENT_SERVICE_NAME,
+  REPORT_MANAGEMENT_SERVICE_PORT,
   SCHEDULING_SERVICE_NAME,
   SCHEDULING_SERVICE_PORT,
   USERS_MANAGEMENT_SERVICE_NAME,
   USERS_MANAGEMENT_SERVICE_PORT
 } from '../../../../../constant';
-import {TrainerModule} from './trainer.module';
 import {PackageModule} from './package.module';
-import {AdminModule} from './admin.module';
 import {CampaignModule} from './campaign.module';
-import {CustomerModule} from './customer.module';
-import {AuthenticationModule} from './auth.module';
+import {AuthenticationModule} from './authentication.module';
 import * as Joi from 'joi';
 import {ENV_FILE_PATH} from '../constant';
 import {ContractModule} from "./contract.module";
 import {AppliedModule} from "./apply.module";
 import {ReportModule} from "./report.module";
-
-import {
-  KAFKA_AUTHENTICATION_SERVICE,
-  KAFKA_USERS_MANAGEMENT_SERVICE,
-} from "../../../../common/kafka-utils";
-
+import {UsersManagementModule} from "./users-management.module";
+import {KAFKA_SERVICE} from "../../../../common/kafka-utils";
 export class AppModule {
   static forRoot(settings): DynamicModule {
     return {
       module: AppModule,
       imports: [
-        TrainerModule,
-        PackageModule,
-        AdminModule,
-        CampaignModule,
-        CustomerModule,
         AuthenticationModule,
+        UsersManagementModule,
+        PackageModule,
+        CampaignModule,
         HealthCheckModule,
         ContractModule,
         AppliedModule,
         ReportModule,
         ClientsModule.register([
-          {
-            name: AUTHENTICATION_SERVICE_NAME,
-            transport: Transport.TCP,
-            options: {
-              host: HOST,
-              port: AUTHENTICATION_SERVICE_PORT,
-            }
-          },
-          {
-            name: USERS_MANAGEMENT_SERVICE_NAME,
-            transport: Transport.TCP,
-            options: {
-              host: HOST,
-              port: USERS_MANAGEMENT_SERVICE_PORT
-            }
-          },
           {
             name: PACKAGES_MANAGEMENT_SERVICE_NAME,
             transport: Transport.TCP,

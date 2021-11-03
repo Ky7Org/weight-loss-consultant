@@ -1,17 +1,17 @@
-import {Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
+import {Inject, Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
 import {Client, ClientKafka} from '@nestjs/microservices';
 import { LoginResponseModel } from '../../models/login-response-model';
 import { ResetPasswordConfirmRequestModel } from '../../models/reset-password-confirm-request-model';
 import { ResetPasswordRequestModel } from '../../models/reset-password-request-model';
 import { LoginRequest } from '../../models/login.req';
 import {lastValueFrom} from "rxjs";
-import {KAFKA_AUTHENTICATION_MESSAGE_PATTERN, KAFKA_AUTHENTICATION_SERVICE} from "../../../../../common/kafka-utils";
+import {KAFKA_AUTHENTICATION_MESSAGE_PATTERN} from "../../../../../common/kafka-utils";
 
 @Injectable()
 export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
 
-  @Client(KAFKA_AUTHENTICATION_SERVICE)
-  client: ClientKafka;
+  @Inject('SERVER')
+  private client: ClientKafka;
 
   async onModuleInit() {
     for (const [key, value] of Object.entries(KAFKA_AUTHENTICATION_MESSAGE_PATTERN)) {

@@ -6,20 +6,7 @@ export const KAFKA_BROKER_ENDPOINT_1 = 'bangmaple.tech:9092';
 export const KAFKA_CONSUMER_GROUP_ID = "test-consumer-group";
 export const KAFKA_CLIENT_ID = 'weight-loss-consultant';
 
-export const KAFKA_AUTHENTICATION_SERVICE = {
-  name: AUTHENTICATION_SERVICE_NAME,
-  transport: Transport.KAFKA,
-  options: {
-    client: {
-      brokers: [KAFKA_BROKER_ENDPOINT_1],
-    },
-    consumer: {
-      groupId: `authentication.${uuid()}`,
-    }
-  }
-} as ClientProviderOptions;
-
-export const KAFKA_USERS_MANAGEMENT_SERVICE = {
+export const KAFKA_SERVICE = {
   name: USERS_MANAGEMENT_SERVICE_NAME,
   transport: Transport.KAFKA,
   options: {
@@ -27,7 +14,7 @@ export const KAFKA_USERS_MANAGEMENT_SERVICE = {
       brokers: [KAFKA_BROKER_ENDPOINT_1],
     },
     consumer: {
-      groupId: `user.${uuid()}`,
+      groupId: `${uuid()}`,
     }
   }
 } as ClientProviderOptions;
@@ -42,12 +29,13 @@ export const KAFKA_AUTHENTICATION_MESSAGE_PATTERN = {
 
 export const KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN = {
   customers: {
-    getAllCustomers: 'users.customers.getAll',
-    getByEmail: 'users.customers.getByEmail',
-    getSpecial: 'users.customers.getSpecial',
+    getAllCustomers: 'users.customers.get-all',
+    getByEmail: 'users.customers.get-by-email',
+    getSpecial: 'users.customers.get-special',
     create: 'users.customers.create',
     update: 'users.customers.update',
     delete: 'users.customers.delete',
+    updateProfileWithoutPasswordAndStatus: 'users.customers.update-profile-without-password-and-status',
   },
   admins: {
     getAllAdmins: 'users.admins.get-all-admins',
@@ -55,6 +43,7 @@ export const KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN = {
     update: 'users.admins.update',
     delete: 'users.admins.delete',
     create: 'users.admins.create',
+    updateProfileWithoutPasswordAndStatus: 'users.admins.update-profile-without-password-and-status',
   },
   trainers: {
     getAllTrainers: 'users.trainers.getAll',
@@ -63,5 +52,6 @@ export const KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN = {
     update: 'users.trainers.update',
     delete: 'users.trainers.delete',
     getSpecial: 'users.trainers.getSpecial',
+    updateProfileWithoutPasswordAndStatus: 'users.trainers.update-profile-without-password-and-status',
   }
 };
