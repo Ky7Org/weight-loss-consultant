@@ -57,7 +57,9 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
       initAccount().then((value){
         TrainerService service = TrainerService();
         reportModel = service.getTodayReport(widget.packageId! as int, user);
-        setState(() {});
+        setState(() {
+
+        });
       });
     });
   }
@@ -325,7 +327,7 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
       },
       minWidth: double.infinity,
       child: const Text(
-        'Save Repost',
+        'Send Report',
         style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w700,
@@ -345,13 +347,14 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
         child: FutureBuilder<ReportModel?>(
           future: reportModel,
           builder: (context, snapshot) {
-            if (snapshot.hasData){
-              ReportModel report = snapshot.requireData as ReportModel;
-              if (report.trainerFeedback!.isNotEmpty){
-                Navigator.pop(context, report.id);
-                return Container();
+            if (snapshot.connectionState == ConnectionState.done){
+              if (snapshot.hasData){
+                ReportModel report = snapshot.requireData as ReportModel;
+                if (report.trainerFeedback?.isNotEmpty ?? true){
+                  Navigator.pop(context, report.id);
+                  return Container();
+                }
               }
-
               return Column(
                 children: [
                   Form(
@@ -369,6 +372,8 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
                   )
                 ],
               );
+
+
             }
             return const Center(
               child: CircularProgressIndicator(),

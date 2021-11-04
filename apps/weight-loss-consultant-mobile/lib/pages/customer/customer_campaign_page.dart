@@ -55,10 +55,52 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
     });
   }
 
-  Widget _campaign(int id, String date, String currentWeight, String targetWeight, String description) {
+  Widget _buildEditButtonGroup(CampaignModel campaignModel){
+    if (campaignModel.status == 0){
+      return Row(
+        children: [
+          IconButton(
+              onPressed: () async {
+                Navigator.pushNamed(context, RoutePath.customerUpdateCampaignPage, arguments: campaignModel.id).then((value){
+                  listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+                  setState(() {});
+                });
+              },
+              icon: Icon(
+                Icons.edit,
+                color: HexColor("#FF3939"),
+              )
+          ),
+          IconButton(
+              onPressed: () async {
+                bool result = await customerService.deleteCampaign(campaignModel.id as int, user);
+                if (result){
+                  CustomToast.makeToast("Delete successfully");
+                } else {
+                  CustomToast.makeToast("Some thing went wrong! Try again");
+                }
+                setState(() {
+                  listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+                });
+              },
+              icon: Icon(
+                Icons.highlight_remove_outlined,
+                color: HexColor("#FF3939"),
+              )
+          ),
+        ],
+      );
+    }
+    return Container();
+  }
+
+  Widget _campaign(CampaignModel campaignModel) {
+    String createDate = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(campaignModel.createDate ?? 0));
+    String startDate = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(campaignModel.startDate ?? DateTime.now().millisecond.toString()))).toString();
+    String endDate = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(campaignModel.endDate ?? DateTime.now().millisecond.toString()))).toString();
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RoutePath.customerAppliedPackagePage, arguments: id).then((value){
+        Navigator.pushNamed(context, RoutePath.customerAppliedPackagePage, arguments: campaignModel.id).then((value){
           listCampaign = customerService.getCustomerCampaign(user.email ?? "");
           setState(() {});
         });
@@ -76,59 +118,36 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 5, horizontal: 10),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      date,
-                      style: TextStyle(
-                          color: HexColor("#FF3939"),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w900),
-                    ),
-                    decoration: BoxDecoration(
-                        color: HexColor("#F0F3F6"),
-                        borderRadius:
-                        const BorderRadius.all(Radius.circular(5))),
-                  ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      IconButton(
-                          onPressed: () async {
-                            Navigator.pushNamed(context, RoutePath.customerUpdateCampaignPage, arguments: id).then((value){
-                              listCampaign = customerService.getCustomerCampaign(user.email ?? "");
-                              setState(() {});
-                            });
-                          },
-                          icon: Icon(
-                            Icons.edit,
-                            color: HexColor("#FF3939"),
-                          )
+                      Text(
+                        "Created at: ",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 13,
+                        ),
                       ),
-                      IconButton(
-                          onPressed: () async {
-                            bool result = await customerService.deleteCampaign(id, user);
-                            if (result){
-                              CustomToast.makeToast("Delete successfully");
-                            } else {
-                              CustomToast.makeToast("Some thing went wrong! Try again");
-                            }
-                            setState(() {
-                              listCampaign = customerService.getCustomerCampaign(user.email ?? "");
-                            });
-                          },
-                          icon: Icon(
-                            Icons.highlight_remove_outlined,
-                            color: HexColor("#FF3939"),
-                          )
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        child: Text(
+                          createDate,
+                          style: TextStyle(
+                              color: HexColor("#FF3939"),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w900),
+                        ),
+                        decoration: BoxDecoration(
+                            color: HexColor("#F0F3F6"),
+                            borderRadius:
+                            const BorderRadius.all(Radius.circular(5))),
                       ),
                     ],
-                  )
+                  ),
+                  _buildEditButtonGroup(campaignModel),
                 ],
-              ),
-              const SizedBox(
-                height: 10,
               ),
               Row(
                 children: [
@@ -143,7 +162,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
                     width: 5,
                   ),
                   Text(
-                    currentWeight,
+                    campaignModel.currentWeight.toString(),
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,
@@ -168,7 +187,57 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
                     width: 5,
                   ),
                   Text(
-                    targetWeight,
+                    campaignModel.targetWeight.toString(),
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13),
+
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Start date:',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    startDate,
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13),
+
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Text(
+                    'End date:',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    endDate,
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,
@@ -191,7 +260,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
                           fontSize: 13),
                     ),
                     TextSpan(
-                      text: description,
+                      text: campaignModel.description,
                       style: TextStyle(
                           color: AppColors.PRIMARY_WORD_COLOR,
                           fontWeight: FontWeight.w400,
@@ -212,14 +281,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
     List<Widget> widgets = [];
     for (CampaignModel model in data){
       if (model.status != 1) continue;
-      var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
-      var widget = _campaign(
-          model.id ?? 0,
-          date,
-          model.currentWeight.toString(),
-          model.targetWeight.toString(),
-          model.description ?? "",
-      );
+      var widget = _campaign(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 70,));
@@ -230,14 +292,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
     List<Widget> widgets = [];
     for (CampaignModel model in data){
       if (model.status != 0) continue;
-      var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
-      var widget = _campaign(
-        model.id ?? 0,
-        date,
-        model.currentWeight.toString(),
-        model.targetWeight.toString(),
-        model.description ?? "",
-      );
+      var widget = _campaign(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 70,));
@@ -248,14 +303,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
     List<Widget> widgets = [];
     for (CampaignModel model in data){
       if (model.status != 2) continue;
-      var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
-      var widget = _campaign(
-        model.id ?? 0,
-        date,
-        model.currentWeight.toString(),
-        model.targetWeight.toString(),
-        model.description ?? "",
-      );
+      var widget = _campaign(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 70,));
@@ -330,7 +378,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("List Campaigns"),
+      appBar: GenericAppBar.builder("My Campaign List"),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.white,

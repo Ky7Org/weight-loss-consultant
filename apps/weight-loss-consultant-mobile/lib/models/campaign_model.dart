@@ -4,15 +4,16 @@ part "campaign_model.g.dart";
 
 @JsonSerializable()
 class CampaignModel{
-  late int? id;
-  late String? description;
-  late int? status;
-  late String? startDate;
-  late String? endDate;
-  late String? feedback;
-  late int? targetWeight;
-  late int? currentWeight;
-  late int? spendTimeForTraining;
+  int? id;
+  String? description;
+  int? status;
+  String? startDate;
+  String? endDate;
+  String? feedback;
+  int? targetWeight;
+  int? currentWeight;
+  int? spendTimeForTraining;
+  int? createDate;
 
   CampaignModel(this.id,
       this.description,
@@ -30,8 +31,6 @@ class CampaignModel{
 
   @override
   String toString() {
-    return 'CampaignModel{id: $id, description: $description, status: $status, startDate: $startDate, endDate: $endDate, feedback: $feedback}';
+    return 'CampaignModel{id: $id, description: $description, status: $status, startDate: $startDate, endDate: $endDate, feedback: $feedback, targetWeight: $targetWeight, currentWeight: $currentWeight, spendTimeForTraining: $spendTimeForTraining, createDate: $createDate}';
   }
-
-
 }

@@ -73,6 +73,18 @@ class _CustomerAppliedPackagePageState
   }
 
   Widget _package(PackageModel model) {
+    var startDate = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
+    var endDate = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.endDate ?? DateTime.now().millisecond.toString()))).toString();
+    Image avatar;
+    if (model == null){
+      avatar = Image.asset("assets/fake-image/miku-avatar.png");
+    } else if (model.trainer == null){
+      avatar = Image.asset("assets/fake-image/miku-avatar.png");
+    } else if (model.trainer!.profileImage == null){
+      avatar = Image.asset("assets/fake-image/miku-avatar.png");
+    } else {
+      avatar = Image.network(model.trainer!.profileImage as String);
+    }
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, RoutePath.customerPackageDetailPage,
@@ -89,85 +101,158 @@ class _CustomerAppliedPackagePageState
         child: Container(
           padding: const EdgeInsets.all(20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Exercise Plan',
-                  style: TextStyle(
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  model.exercisePlan as String,
-                  style: TextStyle(
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Diet Plan',
-                  style: TextStyle(
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  model.dietPlan as String,
-                  style: TextStyle(
-                      color: AppColors.PRIMARY_WORD_COLOR,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: avatar,
+                  ),
+                  const SizedBox(width: 20,),
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        model.trainer!.fullname ?? "",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15
+                        ),
+                      ),
+                      const SizedBox(height: 10,),
+                      Text(
+                        model.trainer!.gender == "1" ? "Male" : "Female",
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
                   Row(
                     children: [
                       Text(
                         model.price.toString(),
                         style: TextStyle(
-                            color: AppColors.PRIMARY_WORD_COLOR,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 15),
+                          color: AppColors.PRIMARY_WORD_COLOR,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 15
+                        ),
                       ),
                       const Icon(
                         Icons.attach_money,
-                        color: Color(0xFFFF3939),
+                        color: Colors.red,
                         size: 17,
-                      ),
+                      )
                     ],
-                  )
+                  ),
                 ],
-              )
+              ),
+              const SizedBox(height: 10,),
+              RichText(
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Diet plan: ',
+                      style: TextStyle(
+                          color: AppColors.PRIMARY_WORD_COLOR,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 13),
+                    ),
+                    TextSpan(
+                      text: model.dietPlan,
+                      style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                      ),
+                    )
+                  ]
+                ),
+              ),
+              const SizedBox(height: 10,),
+              RichText(
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Exercise plan: ',
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 13),
+                      ),
+                      TextSpan(
+                        text: model.exercisePlan,
+                        style: TextStyle(
+                          color: AppColors.PRIMARY_WORD_COLOR,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                        ),
+                      )
+                    ]
+                ),
+              ),
+              const SizedBox(height: 10,),
+              Row(
+                children: [
+                  Text(
+                    'Start date:',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    startDate,
+                    style: TextStyle(
+                        color: HexColor("#FF3939"),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w900),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10,),
+              Row(
+                children: [
+                  Text(
+                    'End date:',
+                    style: TextStyle(
+                        color: AppColors.PRIMARY_WORD_COLOR,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    endDate,
+                    style: TextStyle(
+                        color: HexColor("#FF3939"),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w900),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
 
   Widget _buildEmptyPackageList() {
     return Column(

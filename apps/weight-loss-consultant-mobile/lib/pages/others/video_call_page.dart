@@ -9,7 +9,7 @@ import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 const String appId = "c99b02ecc0b940fe90959c6490af4d06";
-const String token = "006c99b02ecc0b940fe90959c6490af4d06IABj3dJYPd2lb7ND2ZG9T15IjyuCLZDzLJRD4hNYdJ4di8JBJDUAAAAAEABgmBKtZa1vYQEAAQBlrW9h";
+const String token = "006c99b02ecc0b940fe90959c6490af4d06IAD+r8f9ZdS9mEuqy/RS3T91r/l8YG7kZOHo1o89z20OYsXLnzAAAAAAEAC3nyPhwYKEYQEAAQDBgoRh";
 
 class VideoCallPage extends StatefulWidget {
   const VideoCallPage({Key? key}) : super(key: key);
@@ -70,7 +70,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
       });
     }));
     // Enable video
-    await _engine.joinChannel(token, 'abc', null, 0);
+    await _engine.joinChannel(token, 'tien', null, 0);
     await _engine.enableVideo();
 
   }

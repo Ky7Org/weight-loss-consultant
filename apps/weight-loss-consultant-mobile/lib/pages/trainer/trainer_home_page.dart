@@ -362,7 +362,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 const SizedBox(
                   width: double.infinity,
                 ),
-                Container(
+                /*Container(
                   margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
                       alignment: Alignment.topLeft,
@@ -378,7 +378,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 _phoneCard(
                     "17:00 Nov 30,2021", "Cardio Training", "Mr Duy Nghiem"),
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mr Son"),
-                _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mrs Thy"),
+                _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mrs Thy"),*/
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(

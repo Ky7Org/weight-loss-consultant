@@ -434,6 +434,14 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     );
   }
 
+  void callbackAfterPop(){
+    CustomerService customerService = CustomerService();
+    customerService.getCustomerCampaign(user.email ?? "").then((value){
+      ongoingCampaign = value.firstWhereOrNull((element) => element.status == 1);
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Image image;
@@ -446,13 +454,15 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         width: 50,
       );
     }
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       //drawer: CustomerDrawer.builder(user.fullname, Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
       appBar: MainAppBar.builder(user.fullname ?? "", context, image),
       body: SlidingUpPanel(
         controller: _pc,
-        panel: CategoryPanel(),
+        panel: CategoryPanel(callBackAfterPop: callbackAfterPop),
         minHeight: 0,
         maxHeight: 200,
         body: Padding(

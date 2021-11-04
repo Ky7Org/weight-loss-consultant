@@ -108,6 +108,7 @@ class _TrainerViewCampaignDetailPageState extends State<TrainerViewCampaignDetai
     } else {
       avatar = Image.network(campaignModel!.customer!.profileImage as String);
     }
+
     return Scaffold(
       appBar: GenericAppBar.builder("Detail Campaign"),
       body: SingleChildScrollView(
@@ -125,7 +126,7 @@ class _TrainerViewCampaignDetailPageState extends State<TrainerViewCampaignDetai
             ),
             Center(
               child: Text(
-                campaignModel!.customer!.fullname ?? "",
+                campaignModel?.customer?.fullname ?? "",
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,

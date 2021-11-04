@@ -212,6 +212,35 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
                   Column(
                     children: [
                       Icon(
+                        Icons.watch_later_outlined,
+                        color: HexColor("#0D3F67"),
+                        size: 30,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        model.sessionLength.toString(),
+                        style: TextStyle(
+                            color: HexColor("#0D3F67"),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "Mins",
+                        style: TextStyle(
+                            color: HexColor("#B6C5D1"),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Icon(
                         Icons.account_balance_wallet_outlined,
                         color: HexColor("#0D3F67"),
                         size: 30,

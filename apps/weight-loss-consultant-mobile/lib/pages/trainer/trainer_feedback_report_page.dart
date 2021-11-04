@@ -78,7 +78,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
       child: Column(
         children: [
           TextFormField(
-            enabled: report.trainerFeedback!.isEmpty,
+            enabled: report.trainerFeedback?.isEmpty ?? true,
             controller: controller,
             keyboardType: TextInputType.text,
             style: const TextStyle(fontSize: 15),
@@ -223,7 +223,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
   }
 
   Widget _buildApprovedAndDenyButton(ReportModel report) {
-    if (report.trainerFeedback!.isNotEmpty){
+    if (report.trainerFeedback?.isNotEmpty ?? false){
       return Container();
     }
     return Row(
@@ -300,11 +300,11 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
   }
 
   Widget _buildHasReportContainer(ReportModel model){
-    if (model.trainerFeedback!.isNotEmpty){
+    if (model.trainerFeedback?.isNotEmpty ?? false){
       return Column(
         children: [
           Text(
-              "You have feedback this report. In this we do not allow edit report",
+              "You have feedbacked this report. You cannot edit your feedback yet",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontWeight: FontWeight.w700,
@@ -345,7 +345,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
                       setState(() {});
                     });
                   });
-                  if (report.trainerFeedback!.isNotEmpty){
+                  if (report.trainerFeedback?.isNotEmpty ?? false){
                     _feedback.text = report.trainerFeedback ?? "";
                   }
                   return Column(
@@ -377,9 +377,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
                   );
                 }
                 return const Center(
-                  child: Text("There are no report yet",
-                      style:
-                      TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+                  child: CircularProgressIndicator(),
                 );
               })),
     );

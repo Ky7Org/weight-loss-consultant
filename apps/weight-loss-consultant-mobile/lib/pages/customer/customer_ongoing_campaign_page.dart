@@ -364,7 +364,6 @@ class _CustomerOnGoingCampaignPageState
   }
 
   Widget _buildCampaignContainer() {
-    print(campaignModel);
     return Column(
       children: [
         Container(
@@ -500,7 +499,7 @@ class _CustomerOnGoingCampaignPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Applying Package"),
+      appBar: GenericAppBar.builder("My Ongoing Campaign"),
       body: SlidingUpPanel(
         controller: _pc,
         panel: CategoryPanel(),
