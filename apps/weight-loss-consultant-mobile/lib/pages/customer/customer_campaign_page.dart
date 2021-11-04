@@ -29,8 +29,24 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
   Future<List<CampaignModel>>? listCampaign;
   AccountModel user = AccountModel(email: "", fullname: "");
   CustomerService customerService = CustomerService();
+  List<CampaignModel>? fullList;
 
   late TabController _tabController ;
+
+  Icon icon = Icon(
+    Icons.search,
+    color: AppColors.PRIMARY_WORD_COLOR,
+  );
+
+  Widget appBarTitle = Text(
+    "Search your campaign",
+    style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR),
+  );
+
+  final TextEditingController _controller = TextEditingController();
+  bool _isSearching = false;
+  String _searchText = "";
+  final globalKey = GlobalKey<ScaffoldState>();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -46,13 +62,31 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
     prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
   }
 
+
+
   @override
   void initState() {
+    _controller.addListener(() {
+      if (_controller.text.isEmpty) {
+        setState(() {
+          _isSearching = false;
+          _searchText = "";
+        });
+      } else {
+        setState(() {
+          _isSearching = true;
+          _searchText = _controller.text;
+        });
+      }
+    });
     _tabController = TabController(length: 3, vsync: this);
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
         listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+        listCampaign!.then((value){
+          fullList = value;
+        });
         setState(() {});
       });
     });
@@ -394,53 +428,141 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
   }
 
   Widget _buildEmptyCampaignList(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(
-          height: 60,
-        ),
-        Center(
-          child:
-          SvgPicture.asset("assets/fake-image/no-package.svg"),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        Center(
-          child: Text(
-            'No Campaign',
-            style: TextStyle(
-                color: AppColors.PRIMARY_WORD_COLOR,
-                fontSize: 36,
-                fontWeight: FontWeight.w700
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 60,
+          ),
+          Center(
+            child:
+            SvgPicture.asset("assets/fake-image/no-package.svg"),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Center(
+            child: Text(
+              'No Campaign',
+              style: TextStyle(
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w700
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        Center(
-          child: Text(
-            "You don't have any campaign.",
-            style: TextStyle(
-                color: AppColors.PRIMARY_WORD_COLOR,
-                fontSize: 15,
-                fontWeight: FontWeight.w400
+          const SizedBox(
+            height: 30,
+          ),
+          Center(
+            child: Text(
+              "You don't have any campaign.",
+              style: TextStyle(
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400
+              ),
             ),
           ),
-        ),
-        Center(
-          child: Text(
-            'Create one?',
-            style: TextStyle(
-                color: AppColors.PRIMARY_WORD_COLOR,
-                fontSize: 15,
-                fontWeight: FontWeight.w400
+          Center(
+            child: Text(
+              'Create one?',
+              style: TextStyle(
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400
+              ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  void _handleSearchStart() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _handleSearchEnd() {
+    setState(() {
+      icon = const Icon(
+        Icons.search,
+        color: Colors.white,
+      );
+      appBarTitle = const Text(
+        "Add workout",
+        style: TextStyle(color: Colors.white),
+      );
+      _isSearching = false;
+      _controller.clear();
+    });
+  }
+
+  Future<List<CampaignModel>> updateAndGetList(String searchText) async{
+    List<CampaignModel> searchresult = [];
+    print(fullList!.length);
+    for (int i = 0; i < fullList!.length; i++) {
+      CampaignModel data = fullList![i];
+      if (data.description!.toLowerCase().contains(searchText.toLowerCase())) {
+        searchresult.add(data);
+      }
+    }
+    return searchresult;
+  }
+
+  void searchOperation(String searchText) {
+    setState(() {
+      listCampaign = updateAndGetList(searchText);
+    });
+  }
+
+  AppBar _buildAppBar(){
+    return AppBar(
+      centerTitle: false,
+      titleSpacing: 0,
+      title: appBarTitle,
+      shadowColor: Colors.grey,
+      backgroundColor: Colors.white,
+      iconTheme: IconThemeData(
+        color: AppColors.PRIMARY_WORD_COLOR,
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
         ),
+      ),
+      actions: [
+        IconButton(
+            onPressed: () {
+              setState(() {
+                if (icon.icon == Icons.search) {
+                  icon = Icon(
+                    Icons.close,
+                    color: AppColors.PRIMARY_WORD_COLOR,
+                  );
+                  appBarTitle = TextField(
+                    controller: _controller,
+                    style: TextStyle(
+                      color: AppColors.PRIMARY_WORD_COLOR,
+                    ),
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search, color: AppColors.PRIMARY_WORD_COLOR),
+                        hintText: "Search...",
+                        hintStyle: TextStyle(color: AppColors.PRIMARY_WORD_COLOR)),
+                    onChanged: searchOperation,
+                  );
+                  _handleSearchStart();
+                } else {
+                  _handleSearchEnd();
+                }
+              });
+            },
+            icon: icon
+        )
       ],
     );
   }
@@ -448,7 +570,8 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("My Campaign List"),
+      key: globalKey,
+      appBar: _buildAppBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.white,

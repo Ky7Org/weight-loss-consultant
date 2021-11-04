@@ -247,7 +247,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
           const Align(
             alignment: Alignment.topLeft,
             child: Text(
-              'Total number of days to meet',
+              'Total number of time to meet per session',
               style: TextStyle(
                   color: Color(0xFF0D3F67),
                   fontSize: 11,
@@ -365,6 +365,11 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
       children: <Widget>[
         const Text(
           'End date',
+          style: TextStyle(
+              color: Color(0xFF0D3F67),
+              fontSize: 11,
+              fontWeight: FontWeight.bold
+          ),
         ),
         const SizedBox(height: 10.0),
         Container(
@@ -465,10 +470,16 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                         },
                       TextInputType.text
                     ),
-                    _dropdownInWeek(),
-                    _dropdownPerSession(),
                     _multiInput("Exercise Plan", "Do what?", _exercisePlan, 1000),
                     _multiInput("Diet Plan", "Eat what?", _dietPlan, 1000),
+                    const SizedBox(height: 10,),
+                    _buildStartDateTF(),
+                    const SizedBox(height: 20,),
+                    _buildEndDateTF(),
+                    const SizedBox(height: 10,),
+                    _dropdownInWeek(),
+                    _dropdownPerSession(),
+                    _multiInput("Schedule description", "Your description...", _schedule, 1000),
                     _singleInput("Training Fee", "000.00", false, true,
                         Icons.attach_money, _fee, (text){
                           if (text == null || text.isEmpty){
@@ -490,10 +501,6 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                         TextInputType.number
 
                     ),
-                    _multiInput("Schedule description", "Your description...", _schedule, 1000),
-                    _buildStartDateTF(),
-                    const SizedBox(height: 20,),
-                    _buildEndDateTF(),
                     const SizedBox(
                       height: 20,
                     ),

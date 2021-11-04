@@ -17,6 +17,7 @@ CampaignModel _$CampaignModelFromJson(Map<String, dynamic> json) =>
       json['targetWeight'] as int?,
       json['currentWeight'] as int?,
       json['spendTimeForTraining'] as int?,
+      json['sessionLength'] as int?,
     )..createDate = json['createDate'] as int?;
 
 Map<String, dynamic> _$CampaignModelToJson(CampaignModel instance) =>
@@ -31,4 +32,5 @@ Map<String, dynamic> _$CampaignModelToJson(CampaignModel instance) =>
       'currentWeight': instance.currentWeight,
       'spendTimeForTraining': instance.spendTimeForTraining,
       'createDate': instance.createDate,
+      'sessionLength': instance.sessionLength,
     };

@@ -259,6 +259,8 @@ class TrainerService{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200){
       Iterable list = json.decode(response.body);
       for (var item in list){

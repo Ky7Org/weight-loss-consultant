@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
@@ -29,6 +31,10 @@ class _TrainerUpdatePackagePageState extends State<TrainerUpdatePackagePage> {
   final TextEditingController _titles = TextEditingController();
   final TextEditingController _fee = TextEditingController();
   final TextEditingController _schedule = TextEditingController();
+  final TextEditingController _startDateController = TextEditingController();
+  final TextEditingController _endDateController = TextEditingController();
+  DateTime startDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime endDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   AccountModel user = AccountModel(email: "", fullname: "");
   PackageModel? packageModel;
@@ -60,6 +66,8 @@ class _TrainerUpdatePackagePageState extends State<TrainerUpdatePackagePage> {
           _titles.text = packageModel!.name ?? "";
           _fee.text = packageModel!.price.toString();
           _schedule.text = packageModel!.schedule ?? "";
+          startDate = DateTime.fromMillisecondsSinceEpoch(int.parse(packageModel!.startDate as String));
+          endDate = DateTime.fromMillisecondsSinceEpoch(int.parse(packageModel!.endDate as String));
           setState(() {});
         });
       });
@@ -69,6 +77,8 @@ class _TrainerUpdatePackagePageState extends State<TrainerUpdatePackagePage> {
 
   String dropdownValue = '1 day';
   int spendTimeToTraining = 1;
+  String perSessionValue = '30 mins';
+  int spendTimePerSession = 30;
 
   Widget _multiInput(
       String label, String hint, TextEditingController controller, int maxCharacter) {
@@ -179,7 +189,7 @@ class _TrainerUpdatePackagePageState extends State<TrainerUpdatePackagePage> {
     );
   }
 
-  Widget _dropdown(){
+  Widget _dropdownInWeek(){
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -239,8 +249,200 @@ class _TrainerUpdatePackagePageState extends State<TrainerUpdatePackagePage> {
         ],
       ),
     );
+  }
 
 
+
+  Widget _buildStartDateTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Start date',
+          style: TextStyle(
+              color: Color(0xFF0D3F67),
+              fontSize: 11,
+              fontWeight: FontWeight.bold
+          ),
+        ),
+        const SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.0),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          height: 60.0,
+          child: TextFormField(
+            readOnly: true,
+            controller: _startDateController,
+            keyboardType: TextInputType.number,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF0D3F67),
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+              hintText: DateFormat.yMMMd().format(startDate),
+              hintStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0D3F67),
+              ),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.calendar_today),
+                onPressed: (){
+                  DatePicker.showDatePicker(context, showTitleActions: true,
+                      minTime: DateTime.now(),
+                      onConfirm: (date) {
+                        startDate = DateTime(date.year, date.month, date.day);
+                        _startDateController.text = DateFormat.yMMMd().format(date);
+                      },
+                      currentTime: DateTime.now());
+                },
+              ),
+            ),
+            validator: (weight) {
+              return null;
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEndDateTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'End date',
+          style: TextStyle(
+              color: Color(0xFF0D3F67),
+              fontSize: 11,
+              fontWeight: FontWeight.bold
+          ),
+        ),
+        const SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.0),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          height: 60.0,
+          child: TextFormField(
+            readOnly: true,
+            controller: _endDateController,
+            keyboardType: TextInputType.number,
+            style: const TextStyle(
+              fontFamily: 'OpenSans',
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF0D3F67),
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+              hintText: DateFormat.yMMMd().format(startDate),
+              hintStyle: const TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0D3F67),
+
+              ),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.calendar_today),
+                onPressed: (){
+                  DatePicker.showDatePicker(context, showTitleActions: true,
+                      minTime: startDate.add(const Duration(days: 1)),
+                      onConfirm: (date) {
+                        endDate = DateTime(date.year, date.month, date.day);
+                        _endDateController.text =  DateFormat.yMMMd().format(date);
+                      },
+                      currentTime: DateTime.now());
+                },
+              ),
+            ),
+            validator: (weight) {
+              return null;
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _dropdownPerSession(){
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+          color: AppColors.INPUT_COLOR,
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child:  Column(
+        children: [
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Total number of time to meet per session',
+              style: TextStyle(
+                  color: Color(0xFF0D3F67),
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          DropdownButton<String>(
+            value: perSessionValue,
+            icon: const Icon(Icons.arrow_drop_down_sharp),
+            iconSize: 24,
+            elevation: 16,
+            isExpanded: true,
+            style: const TextStyle(color: Color(0xFF0D3F67), fontWeight: FontWeight.w400, fontSize: 15),
+            underline: const SizedBox(),
+            onChanged: (String? newValue) {
+              setState(() {
+                perSessionValue = newValue!;
+                switch (newValue){
+                  case '30 mins':
+                    spendTimePerSession = 30;
+                    break;
+                  case '45 mins':
+                    spendTimePerSession = 45;
+                    break;
+                  case "60 mins":
+                    spendTimePerSession = 60;
+                    break;
+                  case "90 mins":
+                    spendTimePerSession = 90;
+                    break;
+                }
+              });
+            },
+            items: <String>['30 mins','45 mins', '60 mins', '90 mins']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -278,9 +480,14 @@ class _TrainerUpdatePackagePageState extends State<TrainerUpdatePackagePage> {
                           return null;
                         }
                     ),
-                    _dropdown(),
                     _multiInput("Exercise Plan", "Do what?", _exercisePlan, 1000),
                     _multiInput("Diet Plan", "Eat what?", _dietPlan, 1000),
+                    _buildStartDateTF(),
+                    const SizedBox(height: 20,),
+                    _buildEndDateTF(),
+                    _dropdownInWeek(),
+                    _dropdownPerSession(),
+                    _multiInput("Schedule description", "Your description...", _schedule, 1000),
                     _singleInput("Training Fee", "000.00", false, true,
                         Icons.attach_money, _fee, (text){
                           if (text == null || text.isEmpty){
@@ -299,7 +506,6 @@ class _TrainerUpdatePackagePageState extends State<TrainerUpdatePackagePage> {
                           }
                           return null;
                         }),
-                    _multiInput("Schedule description", "Your description...", _schedule, 1000),
                     const SizedBox(
                       height: 20,
                     ),
@@ -317,6 +523,9 @@ class _TrainerUpdatePackagePageState extends State<TrainerUpdatePackagePage> {
                           packageModel!.status = 1;
                           packageModel!.dietPlan = _dietPlan.text;
                           packageModel!.name = _titles.text;
+                          packageModel!.endDate = endDate.millisecondsSinceEpoch.toString();
+                          packageModel!.startDate = startDate.millisecondsSinceEpoch.toString();
+                          packageModel!.sessionLength = spendTimePerSession;
                           bool result = await trainerService.updatePackage(packageModel!, user);
                           if (result){
                             CustomerCampaignModel? campaignModel = await trainerService.getAppliedCampaignByPackageID(packageModel!.id as int, user);

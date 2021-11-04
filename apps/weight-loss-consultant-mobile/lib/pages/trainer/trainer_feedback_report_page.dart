@@ -345,52 +345,56 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
           child: FutureBuilder<ReportModel?>(
               future: reportModel,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  TrainerService service = TrainerService();
-                  ReportModel report = snapshot.requireData as ReportModel;
-                  service
-                      .getExerciseReportMediaModelByReportId(
-                      report.id as int, user)
-                      .then((value) {
-                    exerciseImages = value.map((e) => e.url ?? "").toList();
+                if (snapshot.connectionState == ConnectionState.done){
+                  print("AAAA");
+                  if (snapshot.hasData) {
+                    print(snapshot.requireData);
+                    TrainerService service = TrainerService();
+                    ReportModel report = snapshot.requireData as ReportModel;
                     service
-                        .getDietReportMediaModelByReportId(
+                        .getExerciseReportMediaModelByReportId(
                         report.id as int, user)
                         .then((value) {
-                      dietImages = value.map((e) => e.url ?? "").toList();
-                      setState(() {});
+                      exerciseImages = value.map((e) => e.url ?? "").toList();
+                      service
+                          .getDietReportMediaModelByReportId(
+                          report.id as int, user)
+                          .then((value) {
+                        dietImages = value.map((e) => e.url ?? "").toList();
+                        setState(() {});
+                      });
                     });
-                  });
-                  if (report.trainerFeedback?.isNotEmpty ?? false){
-                    _feedback.text = report.trainerFeedback ?? "";
+                    if (report.trainerFeedback?.isNotEmpty ?? false){
+                      _feedback.text = report.trainerFeedback ?? "";
+                    }
+                    return Column(
+                      children: [
+                        Column(
+                          children: [
+                            _buildHasReportContainer(report),
+                            _buildDietCard(snapshot.requireData as ReportModel),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            _buildExerciseCard(
+                                snapshot.requireData as ReportModel),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            _multiInput("Your feedback", "Noice", _feedback, report),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            // const SizedBox(
+                            //   height: 30,
+                            // ),
+                            // _buildFeedbackButton(report),
+                            _buildApprovedAndDenyButton(report)
+                          ],
+                        )
+                      ],
+                    );
                   }
-                  return Column(
-                    children: [
-                      Column(
-                        children: [
-                          _buildHasReportContainer(report),
-                          _buildDietCard(snapshot.requireData as ReportModel),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          _buildExerciseCard(
-                              snapshot.requireData as ReportModel),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          _multiInput("Your feedback", "Noice", _feedback, report),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          // const SizedBox(
-                          //   height: 30,
-                          // ),
-                          // _buildFeedbackButton(report),
-                          _buildApprovedAndDenyButton(report)
-                        ],
-                      )
-                    ],
-                  );
                 }
                 return const Center(
                   child: CircularProgressIndicator(),

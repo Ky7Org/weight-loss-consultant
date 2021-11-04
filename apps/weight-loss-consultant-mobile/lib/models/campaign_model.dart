@@ -14,6 +14,7 @@ class CampaignModel{
   int? currentWeight;
   int? spendTimeForTraining;
   int? createDate;
+  int? sessionLength;
 
   CampaignModel(this.id,
       this.description,
@@ -23,7 +24,8 @@ class CampaignModel{
       this.feedback,
       this.targetWeight,
       this.currentWeight,
-      this.spendTimeForTraining);
+      this.spendTimeForTraining,
+      this.sessionLength);
 
   factory CampaignModel.fromJson(Map<String,dynamic> data) => _$CampaignModelFromJson(data);
 
