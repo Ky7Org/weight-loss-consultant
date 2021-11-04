@@ -142,6 +142,8 @@ class TrainerService{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 201){
       return true;
     }
@@ -328,6 +330,24 @@ class TrainerService{
         "trainerApproval" : trainerApproval
       })
     );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> undoApplyPackage(int packageId, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.deleteApplyByPackageId + "/$packageId");
+    print(url);
+    var response = await http.delete(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200){
       return true;
     }

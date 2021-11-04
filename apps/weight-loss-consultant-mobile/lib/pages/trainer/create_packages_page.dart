@@ -521,8 +521,8 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                             spendTimePerSession: spendTimePerSession,
                             name: name,
                             user: user,
-                            endDate: endDate.microsecondsSinceEpoch,
-                            startDate: startDate.microsecondsSinceEpoch,
+                            endDate: endDate.millisecondsSinceEpoch,
+                            startDate: startDate.millisecondsSinceEpoch,
                           );
                           Navigator.pop(context);
                           if (result){

@@ -26,7 +26,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
 
   Future<List<PackageModel>>? listPackage;
   AccountModel user = AccountModel(email: "", fullname: "");
-  TrainerService service = TrainerService();
+  TrainerService trainerService = TrainerService();
   late TabController _tabController;
 
   Future<void> initAccount() async {
@@ -49,13 +49,84 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        listPackage = service.getTrainerPackage(user);
+        listPackage = trainerService.getTrainerPackage(user);
         setState(() {});
       });
     });
   }
 
   Future _showConfirmDeleteDialog(int packageID) async{
+    return showDialog(
+        context: context,
+        builder: (ctx) => Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                SizedBox(
+                  height: 180,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+                    child: Column(children: [
+                      const Center(
+                          child: Text(
+                            "Are you sure to delete this package?",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                            ),
+                          )),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RaisedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            color: Colors.redAccent,
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(width: 20,),
+                          RaisedButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop(true);
+                            },
+                            color: Colors.redAccent,
+                            child: const Text(
+                              'Okay',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ]),
+                  ),
+                ),
+                const Positioned(
+                    top: -35,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.redAccent,
+                      radius: 40,
+                      child: Icon(
+                        Icons.warning,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    )),
+              ],
+            )));
+  }
+
+  Future _showConfirmUndoDialog(int packageID) async{
     return showDialog(
         context: context,
         builder: (ctx) => Dialog(
@@ -134,7 +205,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
           IconButton(
               onPressed: () async {
                 Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
-                  listPackage = service.getTrainerPackage(user);
+                  listPackage = trainerService.getTrainerPackage(user);
                   setState(() {});
                 });
               },
@@ -147,14 +218,14 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
               onPressed: () async {
                 _showConfirmDeleteDialog(model.id as int).then((value) async{
                   if (value){
-                    bool result = await service.deletePackage(model.id ?? 0, user);
+                    bool result = await trainerService.deletePackage(model.id ?? 0, user);
                     if (result){
                       CustomToast.makeToast("Delete successfully");
                     } else {
                       CustomToast.makeToast("Some thing went wrong! Try again");
                     }
                     setState(() {
-                      listPackage = service.getTrainerPackage(user);
+                      listPackage = trainerService.getTrainerPackage(user);
                     });
                   }
                 });
@@ -173,7 +244,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
           IconButton(
               onPressed: () async {
                 Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
-                  listPackage = service.getTrainerPackage(user);
+                  listPackage = trainerService.getTrainerPackage(user);
                   setState(() {});
                 });
               },
@@ -184,10 +255,21 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
           ),
           IconButton(
               onPressed: () async {
-
+                bool confirmResult = await _showConfirmDeleteDialog(model.id as int);
+                if (confirmResult){
+                  bool result = await trainerService.undoApplyPackage(model.id as int, user);
+                  if (result){
+                    CustomToast.makeToast("Undo apply successfully");
+                  } else {
+                    CustomToast.makeToast("Some thing went wrong! Try again");
+                  }
+                  setState(() {
+                    listPackage = trainerService.getTrainerPackage(user);
+                  });
+                }
               },
               icon: Icon(
-                Icons.highlight_remove_outlined,
+                Icons.undo_rounded,
                 color: HexColor("#FF3939"),
               )
           ),
@@ -449,7 +531,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
         backgroundColor: Colors.white,
         onPressed: (){
           Navigator.pushNamed(context, RoutePath.createPackagesPage).then((value) {
-            listPackage = service.getTrainerPackage(user);
+            listPackage = trainerService.getTrainerPackage(user);
             setState(() {
 
             });

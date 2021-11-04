@@ -71,6 +71,8 @@ class _AppState extends State<App> {
               _navKey.currentState!.pushNamed(
                   RoutePath.trainerViewCampaignDetailPage,
                   arguments: int.parse(campaignID));
+            } else if (typeOfMessage == "Update Campaign"){
+              print("Update Campaign");
             }
           }
         });
@@ -95,6 +97,8 @@ class _AppState extends State<App> {
             _navKey.currentState!.pushNamed(
                 RoutePath.trainerOnGoingPackageDetailPage,
                 arguments: int.parse(packageID));
+          } else if (typeOfMessage == "Update Campaign"){
+            print("Update Campaign");
           }
         });
 

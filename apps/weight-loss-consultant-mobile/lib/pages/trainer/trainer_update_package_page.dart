@@ -309,7 +309,6 @@ class _TrainerUpdatePackagePageState extends State<TrainerUpdatePackagePage> {
                         if (_formKey.currentState!.validate()){
                           _formKey.currentState?.save();
                           TrainerService trainerService = TrainerService();
-
                           packageModel!.exercisePlan = _exercisePlan.text;
                           packageModel!.schedule = _schedule.text;
                           packageModel!.price = double.parse(_fee.text);

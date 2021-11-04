@@ -28,7 +28,7 @@ class CustomerAppliedPackagePage extends StatefulWidget {
 
 class _CustomerAppliedPackagePageState
     extends State<CustomerAppliedPackagePage> {
-  Future<List<PackageModel>>? listCampaign;
+  Future<List<PackageModel>>? listPackage;
   AccountModel user = AccountModel(email: "", fullname: "");
   TrainerService trainerService = TrainerService();
   CustomerService customerService = CustomerService();
@@ -52,7 +52,7 @@ class _CustomerAppliedPackagePageState
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       initAccount().then((value) {
-        listCampaign =
+        listPackage =
             trainerService.getAppliedPackage(widget.campaignId ?? 0, user);
         setState(() {});
       });
@@ -73,8 +73,8 @@ class _CustomerAppliedPackagePageState
   }
 
   Widget _package(PackageModel model) {
-    var startDate = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
-    var endDate = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.endDate ?? DateTime.now().millisecond.toString()))).toString();
+    var startDate = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecondsSinceEpoch.toString()))).toString();
+    var endDate = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.endDate ?? DateTime.now().millisecondsSinceEpoch.toString()))).toString();
     Image avatar;
     if (model == null){
       avatar = Image.asset("assets/fake-image/miku-avatar.png");
@@ -311,7 +311,7 @@ class _CustomerAppliedPackagePageState
         margin: const EdgeInsets.only(top: 20),
         child: SingleChildScrollView(
           child: FutureBuilder<List<PackageModel>>(
-              future: listCampaign,
+              future: listPackage,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.requireData.isEmpty) {
