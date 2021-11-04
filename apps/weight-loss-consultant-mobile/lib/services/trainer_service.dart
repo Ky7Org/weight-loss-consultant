@@ -361,8 +361,6 @@ class TrainerService{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200){
       CustomerCampaignModel model = CustomerCampaignModel.fromJson(jsonDecode(response.body)[0]);
       return model;

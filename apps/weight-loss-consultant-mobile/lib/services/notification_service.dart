@@ -75,6 +75,28 @@ class NotificationService{
     );
   }
 
+  Future<void> updatePackage(String token) async {
+    var url = Uri.parse(ApiConstant.firebaseMessagingApi);
+    var response = await http.post(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'key=AAAA3JynyF8:APA91bGoTp1Dp9BLffDIP7aLOFEumWqtb5tDHXnStPlS5H6ELu67IuEW1vC-L44IKFXDZspMuRCfUmFs5v1jrV4C9O4pXWQ5-SWXBoeQUZQK2p_jL0xXqrLSNr5RlooOurPg_2wXNxLQ',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "to": token,
+        "notification": {
+          "body": "A package to has been updated",
+          "title": "Updated package",
+        },
+        "direct_boot_ok": true,
+        "data": {
+          "type": "Update Package",
+        },
+      }),
+    );
+  }
+
   Future<void> customerMakeReport(String token, int packageID) async {
     var url = Uri.parse(ApiConstant.firebaseMessagingApi);
     var response = await http.post(

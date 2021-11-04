@@ -58,6 +58,8 @@ class LocalNotificationService {
         LocalNotificationService._navKey.currentState!.pushNamed(
             RoutePath.trainerViewCampaignDetailPage,
             arguments: int.parse(campaignID));
+      } else if (typeOfMessage == "Update Package") {
+        print("Update package");
       }
     });
   }
