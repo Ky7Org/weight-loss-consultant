@@ -5,8 +5,8 @@ import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter
 import {AppliedService} from "../services/applied.service";
 import {
   APPROVED_PACKAGE,
-  CREATE_APPLY,
-  DELETE_APPLY_BY_ID,
+  CREATE_APPLY, DELETE_APPLY_BY_CAMPAIGN_ID,
+  DELETE_APPLY_BY_ID, DELETE_APPLY_BY_PACKAGE_ID,
   FIND_ALL_APPLIES,
   FIND_APPLY_BY_ID, GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
   UPDATE_APPLY_BY_ID, UpdateApplyPayloadType
@@ -64,5 +64,17 @@ export class AppliedController {
   @UseFilters(new ExceptionFilter())
   async approvePackage(@Payload() payload: ApprovePayload) {
     return this.appliedService.approvePackageByCustomer(payload);
+  }
+
+  @MessagePattern({cmd: DELETE_APPLY_BY_PACKAGE_ID})
+  @UseFilters(new ExceptionFilter())
+  async deleteApplyByPackageId(@Payload() packageId: number) {
+    return this.appliedService.deleteApplyByPackageId(packageId);
+  }
+
+  @MessagePattern({cmd: DELETE_APPLY_BY_CAMPAIGN_ID})
+  @UseFilters(new ExceptionFilter())
+  async deleteApplyByCampaignId(@Payload() campaignId: number) {
+    return this.appliedService.deleteApplyByCampaignId(campaignId);
   }
 }
