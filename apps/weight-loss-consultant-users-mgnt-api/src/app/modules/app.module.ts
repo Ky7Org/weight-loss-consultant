@@ -12,6 +12,7 @@ import { CampaignEntity } from '../entities/campaign.entity';
 import { ProfileStyleEntity } from '../entities/profile-trainer.entity';
 import { TrainerStyleEntity } from '../entities/trainer-style.entity';
 import { PackageEntity } from '../entities/package.entity';
+import { SearchModule } from './search.module';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {
@@ -46,6 +47,7 @@ export class AppModule {
         AdminModule,
         TrainerModule,
         CustomerModule,
+        SearchModule,
       ],
     };
   }
