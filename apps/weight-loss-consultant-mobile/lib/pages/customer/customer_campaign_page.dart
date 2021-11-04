@@ -57,6 +57,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
 
   Widget _buildEditButtonGroup(CampaignModel campaignModel){
     if (campaignModel.status == 0){
+      //Active campaign
       return Row(
         children: [
           IconButton(
@@ -73,7 +74,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
           ),
           IconButton(
               onPressed: () async {
-                bool result = await customerService.deleteCampaign(campaignModel.id as int, user);
+                bool result = await customerService.removeActiveCampaign(campaignModel.id as int, user);
                 if (result){
                   CustomToast.makeToast("Delete successfully");
                 } else {
@@ -308,19 +309,6 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
     }
     widgets.add(const SizedBox(height: 70,));
     return widgets;
-  }
-
-  Widget _title(String title) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Text(
-        title,
-        style: const TextStyle(
-            color: Color(0xFF0D3F67),
-            fontWeight: FontWeight.w700,
-            fontSize: 18),
-      ),
-    );
   }
 
   Widget _buildEmptyCampaignList(){

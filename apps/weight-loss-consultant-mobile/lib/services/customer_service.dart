@@ -321,6 +321,24 @@ class CustomerService{
     }
   }
 
+  Future<bool> removeActiveCampaign(int campaignID, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.deleteApplyByCampaignId + "/$campaignID");
+    var response = await http.delete(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode != 200){
+      return false;
+    }
+    bool result = await deleteCampaign(campaignID, user);
+    if (result){
+      return true;
+    }
+    return false;
+  }
 
 
 
