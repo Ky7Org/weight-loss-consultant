@@ -101,7 +101,7 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
       .getOneOrFail().catch((err) => {
         throw new RpcException({
           statusCode: HttpStatus.BAD_REQUEST,
-          message: `Not found campaigns customer with email: ${id}`
+          message: `Not found campaigns customer with email: ${customerEmail}`
         } as RpcExceptionModel);
       });
   }

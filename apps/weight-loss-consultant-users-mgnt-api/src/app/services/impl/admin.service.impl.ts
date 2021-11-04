@@ -21,11 +21,14 @@ export class AdminService {
     private readonly pagingService: SortingAndFilteringService) {
   }
 
-  async findAll(payload : PaginationDto): Promise<PaginatedResultDto> {
+  async findAll(payload: PaginationDto): Promise<PaginatedResultDto> {
     if (payload) {
-      const result = await this.pagingService.sortingAndFiltering(payload);
-      return result;
+      return this.pagingService.sortingAndFiltering(payload);
     }
+    throw new RpcException({
+      statusCode: HttpStatus.CONFLICT,
+      message: `Pagination payload is required for this operation.`,
+    } as RpcExceptionModel);
   }
 
   async create(dto: CreateAdminDto): Promise<AdminEntity> {
@@ -96,7 +99,7 @@ export class AdminService {
         message: `Param: ${payload.email} must match with request body email : ${payload.email} `
       } as RpcExceptionModel);
     }
-   return await this.repository.createQueryBuilder("admin")
+   return this.repository.createQueryBuilder("admin")
       .update(AdminEntity)
       .set({
         fullname: payload.fullname,
