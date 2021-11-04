@@ -255,7 +255,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
           ),
           IconButton(
               onPressed: () async {
-                bool confirmResult = await _showConfirmDeleteDialog(model.id as int);
+                bool confirmResult = await _showConfirmUndoDialog(model.id as int);
                 if (confirmResult){
                   bool result = await trainerService.undoApplyPackage(model.id as int, user);
                   if (result){
