@@ -5,8 +5,8 @@ import {DeleteResult} from 'typeorm';
 import {AppliedEntity} from "../entities/applied.entity";
 import {
   APPROVED_PACKAGE,
-  CREATE_APPLY,
-  DELETE_APPLY_BY_ID,
+  CREATE_APPLY, DELETE_APPLY_BY_CAMPAIGN_ID,
+  DELETE_APPLY_BY_ID, DELETE_APPLY_BY_PACKAGE_ID,
   FIND_ALL_APPLIES,
   FIND_APPLY_BY_ID,
   GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
@@ -67,6 +67,20 @@ export class AppliedService {
   async approvePackage(payload: ApprovePayload) : Promise<any> {
     const result = this.appliedManagementServiceProxy
       .send({cmd: APPROVED_PACKAGE}, payload)
+      .toPromise();
+    return result;
+  }
+
+  async deleteByCampaignId(id: number) : Promise<boolean> {
+    const result = this.appliedManagementServiceProxy
+      .send({cmd: DELETE_APPLY_BY_CAMPAIGN_ID}, id)
+      .toPromise();
+    return result;
+  }
+
+  async deleteByPackageId(id: number) : Promise<boolean> {
+    const result = this.appliedManagementServiceProxy
+      .send({cmd: DELETE_APPLY_BY_PACKAGE_ID}, id)
       .toPromise();
     return result;
   }

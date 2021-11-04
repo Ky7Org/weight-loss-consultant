@@ -7,6 +7,9 @@ export class AppliedEntity extends BaseEntity{
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({type: 'bigint'})
+  applyDate: number;
+
   @ManyToOne(() => CampaignEntity, campaign => campaign.applies)
   campaign: CampaignEntity
 

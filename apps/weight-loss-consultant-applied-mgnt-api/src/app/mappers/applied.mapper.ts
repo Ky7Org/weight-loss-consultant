@@ -16,6 +16,7 @@ export class AppliedMapper {
 
     entity.campaign = campaign;
     entity.package = p;
+    entity.applyDate = new Date().getTime();
 
     return entity;
   }
