@@ -130,7 +130,14 @@ export class TrainerController {
   async viewSpecial(@Res() res, @Param('email') email) {
     try {
       const result = await this.trainerService.viewSpecial(email);
-      res.status(HttpStatus.OK).send(result);
+      if (!result) {
+        const error = {
+          message: `Not found trainer with email : ${email}`,
+          statusCode: HttpStatus.NOT_FOUND
+        }
+        res.status(error.statusCode).send(error);
+      }
+      res.status(HttpStatus.OK).send(result.packages);
     } catch ({error}) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
