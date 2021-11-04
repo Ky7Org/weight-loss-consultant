@@ -3,16 +3,8 @@ import { PackageService } from '../services/impls/package.service.impl';
 import { CreatePackageDto } from '../dtos/package/create-package';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import {
-  CREATE_PACKAGE,
-  DELETE_PACKAGE_BY_ID,
-  FIND_ALL_PACKAGES,
-  FIND_PACKAGE_BY_ID,
-  UPDATE_PACKAGE_BY_ID, UPDATE_STATUS_PACKAGE,
-  UpdatePackagePayloadType
-} from '../../../../common/routes/packages-management-routes';
-import {UpdateStatusPackagePayload} from "../../../../common/dtos/update-package-dto.payload";
-import { KAFKA_PACKAGES_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from '../../../../common/kafka-utils';
+import { UpdateStatusPackagePayload } from '../../../../common/dtos/update-package-dto.payload';
+import { KAFKA_PACKAGES_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 import { IKafkaMessage } from '../../../../common/kafka-message.model';
 
 @Controller()

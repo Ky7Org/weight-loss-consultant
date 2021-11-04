@@ -1,12 +1,12 @@
-import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
-import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
-import {CreateCampaignDto} from '../../dtos/campaign/create-campaign';
-import {UpdateCampaignDto} from '../../dtos/campaign/update-campaign';
-import {AppliedService} from "../../services/applied.service";
-import {CreateAppliedDto} from "../../dtos/applied/create_applied_dto";
-import {UpdateAppliedDto} from "../../dtos/applied/update_applied_dto";
-import {ApprovePayload} from "../../../../../common/dtos/update-package-dto.payload";
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { CreateCampaignDto } from '../../dtos/campaign/create-campaign';
+import { UpdateCampaignDto } from '../../dtos/campaign/update-campaign';
+import { AppliedService } from '../../services/applied.service';
+import { CreateAppliedDto } from '../../dtos/applied/create_applied_dto';
+import { UpdateAppliedDto } from '../../dtos/applied/update_applied_dto';
+import { ApprovePayload } from '../../../../../common/dtos/update-package-dto.payload';
 
 @ApiTags('Apply')
 @ApiBearerAuth()

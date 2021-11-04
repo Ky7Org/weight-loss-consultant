@@ -6,9 +6,9 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
-import {UpdateAdminPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
-import {IKafkaMessage} from "../../../../common/kafka-message.model";
-import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from "../../../../common/kafka-utils";
+import { UpdateAdminPayload } from '../../../../common/dtos/update-without-password-and-status.payload';
+import { IKafkaMessage } from '../../../../common/kafka-message.model';
+import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 
 export type UpdateCustomerPayload = {
   email: string;

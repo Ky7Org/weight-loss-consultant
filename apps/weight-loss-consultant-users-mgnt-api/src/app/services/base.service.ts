@@ -1,6 +1,6 @@
-import {BaseEntity, DeleteResult, Repository} from 'typeorm';
-import {EntityId} from 'typeorm/browser/repository/EntityId';
-import {IBaseService} from './i.base.service';
+import { BaseEntity, DeleteResult, Repository } from 'typeorm';
+import { EntityId } from 'typeorm/browser/repository/EntityId';
+import { IBaseService } from './i.base.service';
 
 //T represent for Model, R represent for Repository
 export class BaseService<T extends BaseEntity, R extends Repository<T>> implements IBaseService<T> {

@@ -1,6 +1,6 @@
-import {HttpStatus, Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import {Client, ClientKafka, RpcException} from '@nestjs/microservices';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
 import { AdminEntity } from '../entities/admin.entity';
 import { CustomerEntity } from '../entities/customer.entity';
 import { TrainerEntity } from '../entities/trainer.entity';
@@ -11,7 +11,7 @@ import { LoginRequest } from '../models/login.req';
 import { Role } from '../constants/enums';
 import { FirebaseAuthService } from './firebase-auth.service';
 import * as bcrypt from 'bcrypt';
-import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from "../../../../common/kafka-utils";
+import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 
 export interface UserIdentity {
   email: string;

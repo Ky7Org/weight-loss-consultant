@@ -1,14 +1,12 @@
-import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
-import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
-import {Roles} from '../../decorators/roles.decorator';
-import {Role} from '../../constants/enums';
-import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
-import {ReportService} from "../../services/reports-management/report.service";
-import {CreateReportDto} from "../../dtos/report/create-report.dto";
-import {UpdateReportDto} from "../../dtos/report/update-report.dto";
-import {CreateReportMediaDto} from "../../dtos/report-media/create-report-media.dto";
-import {UpdateReportMediaDto} from "../../dtos/report-media/update-report-media.dto";
-import {TrainerApproveReportPayload} from "../../../../../common/dtos/update-trainer-dto.payload";
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { ReportService } from '../../services/reports-management/report.service';
+import { CreateReportDto } from '../../dtos/report/create-report.dto';
+import { UpdateReportDto } from '../../dtos/report/update-report.dto';
+import { CreateReportMediaDto } from '../../dtos/report-media/create-report-media.dto';
+import { UpdateReportMediaDto } from '../../dtos/report-media/update-report-media.dto';
+import { TrainerApproveReportPayload } from '../../../../../common/dtos/update-trainer-dto.payload';
 
 @ApiTags('Report')
 @ApiBearerAuth()

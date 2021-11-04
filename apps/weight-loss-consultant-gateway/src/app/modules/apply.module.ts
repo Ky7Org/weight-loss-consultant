@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import {AppliedService} from "../services/applied.service";
-import {ApplyController} from "../controllers/applies-management/apply.controller";
+import { AppliedService } from '../services/applied.service';
+import { ApplyController } from '../controllers/applies-management/apply.controller';
 import { ClientsModule } from '@nestjs/microservices';
 import { KAFKA_SERVICE } from '../../../../common/kafka-utils';
 

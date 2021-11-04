@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {ContractRepository} from "../repositories/contract.repository";
-import {ContractMapper} from "../mappers/health-info.mapper";
-import {ContractService} from "../services/impls/contract.service";
-import {ClientsModule} from "@nestjs/microservices";
-import {ContractController} from "../controllers/contract.controller";
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ContractRepository } from '../repositories/contract.repository';
+import { ContractMapper } from '../mappers/health-info.mapper';
+import { ContractService } from '../services/impls/contract.service';
+import { ClientsModule } from '@nestjs/microservices';
+import { ContractController } from '../controllers/contract.controller';
 import { KAFKA_SERVICE } from '../../../../common/kafka-utils';
 
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import {CreateReportDto} from "../../dtos/report/create-report.dto";
-import {ContractEntity} from "../../entities/contract.entity";
-import {ReportEntity} from "../../entities/report.entity";
-import {UpdateReportDto} from "../../dtos/report/update-report.dto";
+import { CreateReportDto } from '../../dtos/report/create-report.dto';
+import { ContractEntity } from '../../entities/contract.entity';
+import { ReportEntity } from '../../entities/report.entity';
+import { UpdateReportDto } from '../../dtos/report/update-report.dto';
 
 @Injectable()
 export class ReportMapper {

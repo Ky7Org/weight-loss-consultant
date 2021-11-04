@@ -1,7 +1,7 @@
-import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import {CampaignEntity} from "./campaign.entity";
-import {PackageEntity} from "./package.entity";
-import {ReportEntity} from "./report.entity";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { CampaignEntity } from './campaign.entity';
+import { PackageEntity } from './package.entity';
+import { ReportEntity } from './report.entity';
 
 @Entity('Contract')
 export class ContractEntity extends BaseEntity{

@@ -1,12 +1,5 @@
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { DeleteResult } from 'typeorm';
-import {
-  CREATE_CAMPAIGN,
-  DELETE_CAMPAIGN_BY_ID,
-  FIND_ALL_CAMPAIGNS,
-  FIND_CAMPAIGN_BY_ID, GET_AVAILABLE_CAMPAIGNS,
-  UPDATE_CAMPAIGN_BY_ID
-} from '../../../../common/routes/campaigns-management-routes';
 import { CampaignEntity } from '../entities/campaign.entity';
 import { UpdateCampaignDto } from '../dtos/campaign/update-campaign';
 import { CreateCampaignDto } from '../dtos/campaign/create-campaign';

@@ -8,9 +8,9 @@ import { TrainerModule } from './trainer.module';
 import { CustomerModule } from './customer.module';
 import { CustomerEntity } from '../entities/customer.entity';
 import { ENV_FILE_PATH } from '../constants/env-file-path';
-import {CampaignEntity} from "../entities/campaign.entity";
-import {ProfileStyleEntity} from "../entities/profile-trainer.entity";
-import {TrainerStyleEntity} from "../entities/trainer-style.entity";
+import { CampaignEntity } from '../entities/campaign.entity';
+import { ProfileStyleEntity } from '../entities/profile-trainer.entity';
+import { TrainerStyleEntity } from '../entities/trainer-style.entity';
 import { PackageEntity } from '../entities/package.entity';
 
 export class AppModule {

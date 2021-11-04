@@ -1,27 +1,21 @@
-import {
-  ClassSerializerInterceptor,
-  Controller,
-  HttpStatus,
-  UseFilters,
-  UseInterceptors
-} from '@nestjs/common';
-import {AuthenticationService} from '../services/authentication.service';
-import {MailService} from '../services/mail.service';
-import {ResetPasswordRequestModel} from '../models/reset-password-request-model';
-import {generateOtp} from '../utils/otp-generator';
-import {ResetPasswordTokenService} from '../services/reset-password-token.service';
-import {ResetPasswordTokenEntity} from '../entities/reset-password-token.entity';
-import {v4 as uuidv4} from 'uuid';
-import {ResetPasswordConfirmRequestModel} from '../models/reset-password-confirm-request-model';
-import {AccountDTO} from '../dtos/acount.dto';
-import {RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status} from '../../constant';
-import {MessagePattern, Payload, RpcException} from '@nestjs/microservices';
-import {ExceptionFilter} from '../filters/rpc-exception.filter';
-import {LoginRequest} from '../models/login.req';
-import {LoginResponse} from '../models/login.res';
-import {RpcExceptionModel} from '../filters/rpc-exception.model';
-import {IKafkaMessage} from "../../../../common/kafka-message.model";
-import {KAFKA_AUTHENTICATION_MESSAGE_PATTERN} from "../../../../common/kafka-utils";
+import { ClassSerializerInterceptor, Controller, HttpStatus, UseFilters, UseInterceptors } from '@nestjs/common';
+import { AuthenticationService } from '../services/authentication.service';
+import { MailService } from '../services/mail.service';
+import { ResetPasswordRequestModel } from '../models/reset-password-request-model';
+import { generateOtp } from '../utils/otp-generator';
+import { ResetPasswordTokenService } from '../services/reset-password-token.service';
+import { ResetPasswordTokenEntity } from '../entities/reset-password-token.entity';
+import { v4 as uuidv4 } from 'uuid';
+import { ResetPasswordConfirmRequestModel } from '../models/reset-password-confirm-request-model';
+import { AccountDTO } from '../dtos/acount.dto';
+import { RESET_PASSWORD_TOKEN_EXPIRED_TIME, Status } from '../../constant';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
+import { ExceptionFilter } from '../filters/rpc-exception.filter';
+import { LoginRequest } from '../models/login.req';
+import { LoginResponse } from '../models/login.res';
+import { RpcExceptionModel } from '../filters/rpc-exception.model';
+import { IKafkaMessage } from '../../../../common/kafka-message.model';
+import { KAFKA_AUTHENTICATION_MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)

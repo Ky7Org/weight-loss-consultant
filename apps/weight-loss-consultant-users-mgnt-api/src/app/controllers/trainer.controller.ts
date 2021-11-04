@@ -4,10 +4,10 @@ import { CreateTrainerDto } from '../dtos/trainer/create-trainer';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { UpdateTrainerPayloadType } from '../../../../common/dtos/update-trainer-dto.payload';
-import {UpdateTrainerPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
-import {UpdateResult} from "typeorm";
-import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from '../../../../common/kafka-utils'
-import {IKafkaMessage} from "../../../../common/kafka-message.model";
+import { UpdateTrainerPayload } from '../../../../common/dtos/update-without-password-and-status.payload';
+import { UpdateResult } from 'typeorm';
+import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
+import { IKafkaMessage } from '../../../../common/kafka-message.model';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)

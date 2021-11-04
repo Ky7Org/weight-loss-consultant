@@ -1,14 +1,14 @@
 import { ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
-import {ExceptionFilter} from '../../../../common/filters/rpc-exception.filter';
-import {MessagePattern, Payload} from '@nestjs/microservices';
-import {ReportService} from "../services/report.service";
-import {CreateReportDto} from "../dtos/report/create-report.dto";
+import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { ReportService } from '../services/report.service';
+import { CreateReportDto } from '../dtos/report/create-report.dto';
 import {
   TrainerApproveReportPayload,
   UpdateReportMediaPayload,
   UpdateReportPayload
-} from "../../../../common/dtos/update-trainer-dto.payload";
-import {CreateReportMediaDto} from "../dtos/report-media/create-report-media.dto";
+} from '../../../../common/dtos/update-trainer-dto.payload';
+import { CreateReportMediaDto } from '../dtos/report-media/create-report-media.dto';
 import { KAFKA_REPORTS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 import { IKafkaMessage } from '../../../../common/kafka-message.model';
 

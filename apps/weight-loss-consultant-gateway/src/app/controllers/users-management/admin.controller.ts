@@ -1,12 +1,12 @@
-import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
-import {Response} from 'express';
-import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
-import {CreateAdminDto} from '../../dtos/admin/create-admin.dto';
-import {UpdateAdminDto} from '../../dtos/admin/update-admin.dto';
-import {PaginationDto} from "../../dtos/pagination/pagination.dto";
-import {UpdateAdminPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
-import {AdminService} from "../../services/users-management/admin.service";
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { CreateAdminDto } from '../../dtos/admin/create-admin.dto';
+import { UpdateAdminDto } from '../../dtos/admin/update-admin.dto';
+import { PaginationDto } from '../../dtos/pagination/pagination.dto';
+import { UpdateAdminPayload } from '../../../../../common/dtos/update-without-password-and-status.payload';
+import { AdminService } from '../../services/users-management/admin.service';
 
 
 @ApiTags('Admin')

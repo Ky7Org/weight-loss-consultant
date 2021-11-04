@@ -1,22 +1,15 @@
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import {USERS_MANAGEMENT_SERVICE_NAME} from '../../../../../../constant';
-import { ClientKafka, ClientProxy } from '@nestjs/microservices';
-import {
-  SEARCH_USERS,
-  UPDATE_DEVICE_ID,
-  UPDATE_PASSWORD,
-  UPDATE_STATUS
-} from '../../../../../common/routes/users-management-service-routes';
-import {SearchPaginationPayloadType} from '../../../../../common/dtos/search-pagination-dto.payload';
-import {PaginatedResultDto} from '../../dtos/pagination/paginated-result.dto';
-import {PaginationDto} from '../../dtos/pagination/pagination.dto';
+import { ClientKafka } from '@nestjs/microservices';
+import { PaginatedResultDto } from '../../dtos/pagination/paginated-result.dto';
+import { PaginationDto } from '../../dtos/pagination/pagination.dto';
 import {
   ResponseUpdateStatus,
   UpdatePasswordPayload,
   UpdateStatusPayload
-} from "../../../../../common/dtos/update-without-password-and-status.payload";
-import {UpdateDeviceIDPayload} from "../../../../../common/dtos/update-trainer-dto.payload";
-import { KAFKA_AUTHENTICATION_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../../common/kafka-utils';
+} from '../../../../../common/dtos/update-without-password-and-status.payload';
+import { UpdateDeviceIDPayload } from '../../../../../common/dtos/update-trainer-dto.payload';
+import { KAFKA_SEARCH_USERS_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../../common/kafka-utils';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class SearchService implements OnModuleInit, OnModuleDestroy {
@@ -36,22 +29,18 @@ export class SearchService implements OnModuleInit, OnModuleDestroy {
   }
 
   async search(pagination: PaginationDto, search: string): Promise<PaginatedResultDto> {
-    return this.client.send<PaginatedResultDto, SearchPaginationPayloadType>
-    ({cmd: SEARCH_USERS}, {pagination, search}).toPromise();
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.search, {pagination, search}));
   }
 
   async updatePassword(payload: UpdatePasswordPayload) : Promise<UpdatePasswordPayload> {
-    const pattern = {cmd: UPDATE_PASSWORD};
-    return this.client.send<UpdatePasswordPayload>(pattern, payload).toPromise();
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.updatePassword, payload));
   }
 
   async updateStatus(payload: UpdateStatusPayload) : Promise<ResponseUpdateStatus>{
-    const pattern = {cmd: UPDATE_STATUS};
-    return this.client.send<UpdateStatusPayload>(pattern, payload).toPromise();
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.updateStatus, payload));
   }
 
   async updateDeviceID(payload: UpdateDeviceIDPayload) : Promise<boolean> {
-    const pattern = {cmd: UPDATE_DEVICE_ID};
-    return this.client.send(pattern, payload).toPromise();
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.updateDeviceID, payload));
   }
 }

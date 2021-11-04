@@ -1,16 +1,6 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany, ManyToOne,
-  OneToMany,
-  PrimaryColumn,
-  PrimaryGeneratedColumn
-} from "typeorm";
-import {PackageEntity} from "./package.entity";
-import {TrainerEntity} from "./trainer.entity";
-import {TrainerStyleEntity} from "./trainer-style.entity";
+import { BaseEntity, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { TrainerEntity } from './trainer.entity';
+import { TrainerStyleEntity } from './trainer-style.entity';
 
 @Entity("ProfileStyle")
 export class ProfileStyleEntity extends BaseEntity {

@@ -1,21 +1,12 @@
-import {Inject, Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
-import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../../constant';
-import {ClientKafka, ClientProxy} from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import {
-  CREATE_TRAINER,
-  DELETE_TRAINER,
-  GET_ALL_TRAINERS,
-  GET_TRAINER_BY_EMAIL,
-  UPDATE_TRAINER, UPDATE_TRAINER_WITHOUT_PASSWORD_AND_STATUS, VIEW_DETAIL_SPECIAL_TRAINER,
-} from '../../../../../common/routes/users-management-service-routes';
-import { UpdateTrainerPayloadType } from '../../../../../common/dtos/update-trainer-dto.payload';
 import { TrainerEntity } from '../../entities/trainer.entity';
 import { UpdateTrainerDto } from '../../dtos/trainer/update-trainer';
 import { CreateTrainerDto } from '../../dtos/trainer/create-trainer';
-import {UpdateTrainerPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
-import {KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from "../../../../../common/kafka-utils";
-import {lastValueFrom} from "rxjs";
+import { UpdateTrainerPayload } from '../../../../../common/dtos/update-without-password-and-status.payload';
+import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../../common/kafka-utils';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class TrainerService implements OnModuleInit, OnModuleDestroy {

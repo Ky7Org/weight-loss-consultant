@@ -1,13 +1,10 @@
-import { Body, ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
-import {AppliedService} from "../services/applied.service";
-import {
-  UpdateApplyPayloadType
-} from "../../../../common/routes/applies-management-routes";
-import {CreateAppliedDto} from "../dtos/applied/create_applied_dto";
-import {ApprovePayload} from "../../../../common/dtos/update-package-dto.payload";
+import { AppliedService } from '../services/applied.service';
+import { UpdateApplyPayloadType } from '../../../../common/routes/applies-management-routes';
+import { CreateAppliedDto } from '../dtos/applied/create_applied_dto';
+import { ApprovePayload } from '../../../../common/dtos/update-package-dto.payload';
 import { KAFKA_APPLIED_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 import { IKafkaMessage } from '../../../../common/kafka-message.model';
 

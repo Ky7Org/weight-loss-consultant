@@ -1,14 +1,14 @@
-import {ConflictException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import {HeathInfoEntity} from "../../entities/health-info.entity";
-import {BaseService} from "../base.service";
-import {HealthRepository} from "../../repositories/health-info.repository";
-import {HealthInfoMapper} from "../../mappers/health-info.mapper";
-import {CustomerService} from "./customer.service.impl";
-import {CreateHealthInfoDto} from "../../dtos/heath-info/create-health-info.dto";
-import {UpdateHealthInfoDto} from "../../dtos/heath-info/update-health-info.dto";
-import {RpcException} from "@nestjs/microservices";
-import {RpcExceptionModel} from "../../../../../common/filters/rpc-exception.model";
+import { HeathInfoEntity } from '../../entities/health-info.entity';
+import { BaseService } from '../base.service';
+import { HealthRepository } from '../../repositories/health-info.repository';
+import { HealthInfoMapper } from '../../mappers/health-info.mapper';
+import { CustomerService } from './customer.service.impl';
+import { CreateHealthInfoDto } from '../../dtos/heath-info/create-health-info.dto';
+import { UpdateHealthInfoDto } from '../../dtos/heath-info/update-health-info.dto';
+import { RpcException } from '@nestjs/microservices';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
 
 @Injectable()
 export class HealthInfoService extends BaseService<HeathInfoEntity, HealthRepository> {

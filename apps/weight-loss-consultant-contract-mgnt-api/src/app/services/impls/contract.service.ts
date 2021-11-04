@@ -1,27 +1,25 @@
 import { HttpStatus, Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import {DeleteResult, UpdateResult} from 'typeorm';
-import {ContractEntity} from "../../entities/contract.entity";
-import { ClientKafka, ClientProxy, RpcException } from '@nestjs/microservices';
-import {RpcExceptionModel} from "../../../../../common/filters/rpc-exception.model";
-import {ContractMapper} from "../../mappers/health-info.mapper";
-import {CreateContractDto} from "../../dtos/contract/create-health-info.dto";
-import {UpdateContractDto} from "../../dtos/contract/update-health-info.dto";
-import {CAMPAIGN_MANAGEMENT_SERVICE_NAME, PACKAGES_MANAGEMENT_SERVICE_NAME,} from "../../../../../../constant";
-import {CampaignEntity} from "../../entities/campaign.entity";
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { ContractEntity } from '../../entities/contract.entity';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
+import { ContractMapper } from '../../mappers/health-info.mapper';
+import { CreateContractDto } from '../../dtos/contract/create-health-info.dto';
+import { UpdateContractDto } from '../../dtos/contract/update-health-info.dto';
+import { CampaignEntity } from '../../entities/campaign.entity';
 import { lastValueFrom, Observable } from 'rxjs';
-import {FIND_CAMPAIGN_BY_ID, UPDATE_STATUS_CAMPAIGN} from "../../../../../common/routes/campaigns-management-routes";
-import {PackageEntity} from "../../entities/package.enttiy";
-import {FIND_PACKAGE_BY_ID, UPDATE_STATUS_PACKAGE} from "../../../../../common/routes/packages-management-routes";
-import {ContractRepository} from "../../repositories/contract.repository";
+import { PackageEntity } from '../../entities/package.enttiy';
+import { ContractRepository } from '../../repositories/contract.repository';
 import {
   CampaignAndPackageIdPayload,
   GetContractByPackageIDOrCampaignIDPayload
-} from "../../../../../common/dtos/update-trainer-dto.payload";
-import {CAMPAIGN_STATUS, CONTRACT_STATUS, PACKAGE_STATUS} from "../../../../../common/utils";
-import {UpdateStatusCampaignPayload} from "../../../../../common/dtos/update-campaign-dto.payload";
-import {UpdateStatusPackagePayload} from "../../../../../common/dtos/update-package-dto.payload";
-import { KAFKA_CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN as CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN,
-  KAFKA_PACKAGES_MANAGEMENT_MESSAGE_PATTERN as PACKAGES_MANAGEMENT_MESSAGE_PATTERN,
+} from '../../../../../common/dtos/update-trainer-dto.payload';
+import { CAMPAIGN_STATUS, CONTRACT_STATUS, PACKAGE_STATUS } from '../../../../../common/utils';
+import { UpdateStatusCampaignPayload } from '../../../../../common/dtos/update-campaign-dto.payload';
+import { UpdateStatusPackagePayload } from '../../../../../common/dtos/update-package-dto.payload';
+import {
+  KAFKA_CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN as CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN,
+  KAFKA_PACKAGES_MANAGEMENT_MESSAGE_PATTERN as PACKAGES_MANAGEMENT_MESSAGE_PATTERN
 } from '../../../../../common/kafka-utils';
 
 @Injectable()

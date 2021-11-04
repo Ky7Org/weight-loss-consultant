@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import {CreateHealthInfoDto} from "../dtos/heath-info/create-health-info.dto";
-import {CustomerEntity} from "../entities/customer.entity";
-import {HeathInfoEntity} from "../entities/health-info.entity";
-import {UpdateHealthInfoDto} from "../dtos/heath-info/update-health-info.dto";
+import { CreateHealthInfoDto } from '../dtos/heath-info/create-health-info.dto';
+import { CustomerEntity } from '../entities/customer.entity';
+import { HeathInfoEntity } from '../entities/health-info.entity';
+import { UpdateHealthInfoDto } from '../dtos/heath-info/update-health-info.dto';
 
 @Injectable()
 export class HealthInfoMapper {

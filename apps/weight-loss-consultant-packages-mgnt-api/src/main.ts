@@ -13,7 +13,7 @@ import { ENV_FILE_PATH } from './app/constants/env-file-path';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { HOST, PACKAGES_MANAGEMENT_SERVICE_NAME, PACKAGES_MANAGEMENT_SERVICE_PORT } from '../../../constant';
 import { KAFKA_BROKER_ENDPOINT_1 } from '../../common/kafka-utils';
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 async function bootstrap() {
 const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));

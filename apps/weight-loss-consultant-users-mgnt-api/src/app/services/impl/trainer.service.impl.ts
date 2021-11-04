@@ -1,16 +1,16 @@
-import {HttpStatus, Injectable} from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 
-import {BaseService} from '../base.service';
-import {DeleteResult, getManager, UpdateResult} from 'typeorm';
-import {TrainerEntity} from '../../entities/trainer.entity';
-import {TrainerRepository} from '../../repositories/trainer.repository';
-import {TrainerMapper} from '../../mappers/trainer.mapper';
-import {CreateTrainerDto} from '../../dtos/trainer/create-trainer';
-import {UpdateTrainerDto} from '../../dtos/trainer/update-trainer';
-import {EMAIL_EXISTED_ERR} from '../../constants/validation-err-message';
-import {RpcException} from '@nestjs/microservices';
-import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
-import {UpdateTrainerPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
+import { BaseService } from '../base.service';
+import { DeleteResult, getManager, UpdateResult } from 'typeorm';
+import { TrainerEntity } from '../../entities/trainer.entity';
+import { TrainerRepository } from '../../repositories/trainer.repository';
+import { TrainerMapper } from '../../mappers/trainer.mapper';
+import { CreateTrainerDto } from '../../dtos/trainer/create-trainer';
+import { UpdateTrainerDto } from '../../dtos/trainer/update-trainer';
+import { EMAIL_EXISTED_ERR } from '../../constants/validation-err-message';
+import { RpcException } from '@nestjs/microservices';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
+import { UpdateTrainerPayload } from '../../../../../common/dtos/update-without-password-and-status.payload';
 
 @Injectable()
 export class TrainerService extends BaseService<TrainerEntity, TrainerRepository> {

@@ -4,9 +4,9 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_CONFIG } from '../../constant';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import {ClientsModule, Transport} from '@nestjs/microservices';
+import { ClientsModule } from '@nestjs/microservices';
 import { FirebaseAuthService } from '../services/firebase-auth.service';
-import {KAFKA_SERVICE} from "../../../../common/kafka-utils";
+import { KAFKA_SERVICE } from '../../../../common/kafka-utils';
 
 @Module({
   imports: [

@@ -1,11 +1,11 @@
-import {Inject, Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
-import {ClientKafka} from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { LoginResponseModel } from '../../models/login-response-model';
 import { ResetPasswordConfirmRequestModel } from '../../models/reset-password-confirm-request-model';
 import { ResetPasswordRequestModel } from '../../models/reset-password-request-model';
 import { LoginRequest } from '../../models/login.req';
-import {lastValueFrom} from "rxjs";
-import {KAFKA_AUTHENTICATION_MESSAGE_PATTERN as MESSAGE_PATTERN} from "../../../../../common/kafka-utils";
+import { lastValueFrom } from 'rxjs';
+import { KAFKA_AUTHENTICATION_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../../common/kafka-utils';
 
 @Injectable()
 export class AuthenticationService implements OnModuleInit, OnModuleDestroy {

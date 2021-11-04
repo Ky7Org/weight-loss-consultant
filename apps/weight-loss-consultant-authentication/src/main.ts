@@ -13,8 +13,8 @@ import { ENV_FILE_PATH } from './constant';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AUTHENTICATION_SERVICE_NAME, AUTHENTICATION_SERVICE_PORT, HOST } from '../../../constant';
 import * as admin from 'firebase-admin';
-import {KAFKA_BROKER_ENDPOINT_1, KAFKA_CLIENT_ID, KAFKA_CONSUMER_GROUP_ID} from "../../common/kafka-utils";
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
+import { KAFKA_BROKER_ENDPOINT_1 } from '../../common/kafka-utils';
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
@@ -23,7 +23,7 @@ async function bootstrap() {
       transport: Transport.KAFKA,
       options: {
         client: {
-          brokers: ['bangmaple.tech:9092'],
+          brokers: [KAFKA_BROKER_ENDPOINT_1],
         },
         consumer: {
           groupId: `user.${uuid()}`,

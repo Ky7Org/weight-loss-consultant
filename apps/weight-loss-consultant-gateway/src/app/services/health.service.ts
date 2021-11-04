@@ -1,15 +1,9 @@
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import {HEALTH_MANAGEMENT_SERVICE_NAME} from '../../../../../constant';
-import { ClientKafka, ClientProxy } from '@nestjs/microservices';
+import { ClientKafka } from '@nestjs/microservices';
 import { DeleteResult } from 'typeorm';
-import {HeathInfoEntity} from "../entities/health-info.entity";
-import {
-  CREATE_HEALTH_INFO, DELETE_HEALTH_INFO_BY_ID,
-  FIND_ALL_HEALTH_INFO,
-  FIND_HEALTH_INFO_BY_ID, UPDATE_HEALTH_INFO_BY_ID, UpdateHealthInfoPayloadType
-} from "../../../../common/routes/health-info-management-routes";
-import {CreateHealthInfoDto} from "../dtos/heath-info/create-health-info.dto";
-import {UpdateHealthInfoDto} from "../dtos/heath-info/update-health-info.dto";
+import { HeathInfoEntity } from '../entities/health-info.entity';
+import { CreateHealthInfoDto } from '../dtos/heath-info/create-health-info.dto';
+import { UpdateHealthInfoDto } from '../dtos/heath-info/update-health-info.dto';
 import { KAFKA_HEALTH_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 import { lastValueFrom } from 'rxjs';
 

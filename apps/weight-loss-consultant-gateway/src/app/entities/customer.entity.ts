@@ -1,6 +1,6 @@
-import {BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn} from 'typeorm';
+import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
 import { CampaignEntity } from './campaign.entity';
-import {HeathInfoEntity} from "./health-info.entity";
+import { HeathInfoEntity } from './health-info.entity';
 
 @Entity('Customer')
 export class CustomerEntity extends BaseEntity{

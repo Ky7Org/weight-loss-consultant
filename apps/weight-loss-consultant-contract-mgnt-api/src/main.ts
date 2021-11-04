@@ -12,9 +12,8 @@ import * as dotenv from 'dotenv';
 import { ENV_FILE_PATH } from './constant';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { CONTRACT_MANAGEMENT_SERVICE_NAME, CONTRACT_MANAGEMENT_SERVICE_PORT, HOST } from '../../../constant';
-import * as admin from 'firebase-admin';
 import { KAFKA_BROKER_ENDPOINT_1 } from '../../common/kafka-utils';
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 async function bootstrap() {
   const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));

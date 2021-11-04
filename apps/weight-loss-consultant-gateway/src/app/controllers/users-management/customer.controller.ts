@@ -4,9 +4,7 @@ import { CustomerService } from '../../services/users-management/customer.servic
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CreateCustDto } from '../../dtos/customer/create-customer.dto';
 import { UpdateCustDto } from '../../dtos/customer/update-customer-dto';
-import {
-  UpdateCustomerPayloadd
-} from "../../../../../common/dtos/update-without-password-and-status.payload";
+import { UpdateCustomerPayloadd } from '../../../../../common/dtos/update-without-password-and-status.payload';
 
 @ApiTags('Customer')
 @ApiBearerAuth()

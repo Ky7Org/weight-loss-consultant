@@ -1,14 +1,10 @@
 import { ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import {HealthInfoService} from "../services/impls/health.service";
-import {
-  CREATE_HEALTH_INFO, DELETE_HEALTH_INFO_BY_ID,
-  FIND_ALL_HEALTH_INFO,
-  FIND_HEALTH_INFO_BY_ID, UPDATE_HEALTH_INFO_BY_ID, UpdateHealthInfoPayloadType
-} from "../../../../common/routes/health-info-management-routes";
-import {CreateHealthInfoDto} from "../dtos/heath-info/create-health-info.dto";
-import { KAFKA_HEALTH_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN} from '../../../../common/kafka-utils';
+import { HealthInfoService } from '../services/impls/health.service';
+import { UpdateHealthInfoPayloadType } from '../../../../common/routes/health-info-management-routes';
+import { CreateHealthInfoDto } from '../dtos/heath-info/create-health-info.dto';
+import { KAFKA_HEALTH_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 import { IKafkaMessage } from '../../../../common/kafka-message.model';
 
 @Controller()

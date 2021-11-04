@@ -1,5 +1,5 @@
-import {BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {ReportEntity} from "./report.entity";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ReportEntity } from './report.entity';
 
 @Entity('ReportMedia')
 export class ReportMediaEntity extends BaseEntity{

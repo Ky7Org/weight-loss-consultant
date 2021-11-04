@@ -1,16 +1,16 @@
 import { HttpStatus, Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import {DeleteResult, UpdateResult} from 'typeorm';
-import {ClientKafka, RpcException} from "@nestjs/microservices";
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
 import { lastValueFrom, Observable } from 'rxjs';
-import {CustomerEntity} from "../entities/customer.entity";
-import {CUSTOMER_VIEW_DETAIL} from "../../../../common/routes/users-management-service-routes";
-import {CampaignMapper} from "../mappers/campaign.mapper";
-import {CampaignRepository} from "../repositories/campaign.repository";
-import {CampaignEntity} from "../entities/campaign.entity";
-import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
-import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
-import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
-import {UpdateStatusCampaignPayload} from "../../../../common/dtos/update-campaign-dto.payload";
+import { CustomerEntity } from '../entities/customer.entity';
+import { CUSTOMER_VIEW_DETAIL } from '../../../../common/routes/users-management-service-routes';
+import { CampaignMapper } from '../mappers/campaign.mapper';
+import { CampaignRepository } from '../repositories/campaign.repository';
+import { CampaignEntity } from '../entities/campaign.entity';
+import { CreateCampaignDto } from '../dtos/campaign/create-campaign';
+import { UpdateCampaignDto } from '../dtos/campaign/update-campaign';
+import { RpcExceptionModel } from '../../../../common/filters/rpc-exception.model';
+import { UpdateStatusCampaignPayload } from '../../../../common/dtos/update-campaign-dto.payload';
 import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 
 @Injectable()

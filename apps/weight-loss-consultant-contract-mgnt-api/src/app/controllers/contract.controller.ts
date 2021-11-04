@@ -1,15 +1,13 @@
 import { ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
-import {ExceptionFilter} from '../../../../common/filters/rpc-exception.filter';
-import {MessagePattern, Payload} from '@nestjs/microservices';
-import {ContractService} from "../services/impls/contract.service";
-import {
-  UpdateContractPayloadType
-} from "../../../../common/routes/contract-management-service-routes";
-import {CreateContractDto} from "../dtos/contract/create-health-info.dto";
+import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { ContractService } from '../services/impls/contract.service';
+import { UpdateContractPayloadType } from '../../../../common/routes/contract-management-service-routes';
+import { CreateContractDto } from '../dtos/contract/create-health-info.dto';
 import {
   CampaignAndPackageIdPayload,
   GetContractByPackageIDOrCampaignIDPayload
-} from "../../../../common/dtos/update-trainer-dto.payload";
+} from '../../../../common/dtos/update-trainer-dto.payload';
 import { KAFKA_CONTRACTS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 import { IKafkaMessage } from '../../../../common/kafka-message.model';
 

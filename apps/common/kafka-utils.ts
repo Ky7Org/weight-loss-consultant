@@ -89,6 +89,13 @@ export const KAFKA_APPLIED_MANAGEMENT_MESSAGE_PATTERN = {
   approvePackage: 'applied.approve-package',
 };
 
+export const KAFKA_SEARCH_USERS_MESSAGE_PATTERN = {
+  search: 'search.search-users',
+  updatePassword: 'search.update-password',
+  updateStatus: 'search.update-status',
+  updateDeviceID: 'search.update-device-id',
+};
+
 export const KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN = {
   customers: {
     getAllCustomers: 'users.customers.get-all',

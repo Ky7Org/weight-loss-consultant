@@ -1,13 +1,12 @@
-import { Body, ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
-import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
-import {CreateCampaignDto} from '../dtos/campaign/create-campaign';
-import {MessagePattern, Payload} from '@nestjs/microservices';
-import {ExceptionFilter} from '../../../../common/filters/rpc-exception.filter';
+import { ClassSerializerInterceptor, UseFilters, UseInterceptors } from '@nestjs/common';
+import { CreateCampaignDto } from '../dtos/campaign/create-campaign';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
 import {
   UpdateCampaignPayloadType,
   UpdateStatusCampaignPayload
 } from '../../../../common/dtos/update-campaign-dto.payload';
-import {CampaignService} from "../services/campaign.service";
+import { CampaignService } from '../services/campaign.service';
 import { KAFKA_CAMPAIGNS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 import { IKafkaMessage } from '../../../../common/kafka-message.model';
 

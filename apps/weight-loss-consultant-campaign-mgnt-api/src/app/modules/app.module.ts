@@ -2,9 +2,9 @@ import { DynamicModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_FILE_PATH } from '../constants/env-file-path';
-import {CampaignEntity} from "../entities/campaign.entity";
-import {CampaignModule} from "./campaign.module";
-import {CustomerEntity} from "../entities/customer.entity";
+import { CampaignEntity } from '../entities/campaign.entity';
+import { CampaignModule } from './campaign.module';
+import { CustomerEntity } from '../entities/customer.entity';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {

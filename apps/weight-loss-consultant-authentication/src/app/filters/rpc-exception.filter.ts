@@ -1,6 +1,6 @@
-import {ArgumentsHost, Catch} from '@nestjs/common';
-import {BaseRpcExceptionFilter, KafkaContext, RpcException} from '@nestjs/microservices';
-import {Observable, throwError} from 'rxjs';
+import { ArgumentsHost, Catch } from '@nestjs/common';
+import { BaseRpcExceptionFilter, KafkaContext, RpcException } from '@nestjs/microservices';
+import { Observable, throwError } from 'rxjs';
 
 @Catch(RpcException)
 export class ExceptionFilter extends BaseRpcExceptionFilter {

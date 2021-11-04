@@ -1,17 +1,16 @@
 import { HttpStatus, Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import {DeleteResult, UpdateResult} from 'typeorm';
-import {PackageEntity} from '../../entities/package.enttiy';
-import {PackageMapper} from '../../mappers/package.mapper';
-import {CreatePackageDto} from '../../dtos/package/create-package';
-import {UpdatePackageDto} from '../../dtos/package/update-package';
-import {BaseService} from '../base.service';
-import {ClientKafka, RpcException} from '@nestjs/microservices';
-import {TrainerEntity} from '../../entities/trainer.entity';
-import {TRAINER_VIEW_DETAIL} from '../../../../../common/routes/users-management-service-routes';
-import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { PackageEntity } from '../../entities/package.enttiy';
+import { PackageMapper } from '../../mappers/package.mapper';
+import { CreatePackageDto } from '../../dtos/package/create-package';
+import { UpdatePackageDto } from '../../dtos/package/update-package';
+import { BaseService } from '../base.service';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
+import { TrainerEntity } from '../../entities/trainer.entity';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
 import { lastValueFrom, Observable } from 'rxjs';
-import {PackageRepository} from "../../repositories/package.repository";
-import {UpdateStatusPackagePayload} from "../../../../../common/dtos/update-package-dto.payload";
+import { PackageRepository } from '../../repositories/package.repository';
+import { UpdateStatusPackagePayload } from '../../../../../common/dtos/update-package-dto.payload';
 import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../../common/kafka-utils';
 
 @Injectable()
