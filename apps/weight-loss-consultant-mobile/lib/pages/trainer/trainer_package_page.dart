@@ -13,6 +13,7 @@ import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class TrainerPackagePage extends StatefulWidget {
@@ -55,7 +56,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     });
   }
 
-  Future _showConfirmDeleteDialog(int packageID) async{
+  Future _showConfirmDeleteDialog() async{
     return showDialog(
         context: context,
         builder: (ctx) => Dialog(
@@ -143,7 +144,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                     child: Column(children: [
                       const Center(
                           child: Text(
-                            "Are you sure to delete this package?",
+                            "Are you sure to unapply this package?",
                             style: TextStyle(
                               color: Colors.redAccent,
                             ),
@@ -216,7 +217,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
           ),
           IconButton(
               onPressed: () async {
-                _showConfirmDeleteDialog(model.id as int).then((value) async{
+                _showConfirmDeleteDialog().then((value) async{
                   if (value){
                     bool result = await trainerService.deletePackage(model.id ?? 0, user);
                     if (result){
@@ -257,8 +258,11 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
               onPressed: () async {
                 bool confirmResult = await _showConfirmUndoDialog(model.id as int);
                 if (confirmResult){
+                  CustomerCampaignModel? campaignModel = await trainerService.getAppliedCampaignByPackageID(model.id as int, user);
                   bool result = await trainerService.undoApplyPackage(model.id as int, user);
                   if (result){
+                    NotificationService notificationService = NotificationService();
+                    await notificationService.trainerUnapply(campaignModel!.customer!.deviceID ?? "", campaignModel.id as int);
                     CustomToast.makeToast("Undo apply successfully");
                   } else {
                     CustomToast.makeToast("Some thing went wrong! Try again");

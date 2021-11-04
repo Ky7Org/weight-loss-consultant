@@ -112,152 +112,154 @@ class _UpcomingTrainingPageState extends State<UpcomingTrainingPage> {
         .toString();
     return Scaffold(
       appBar: GenericAppBar.builder("Call Your Trainer"),
-      body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+      body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(18),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3),
-                )
-              ]),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  avatarOfUser(),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Expanded(
-                      flex: 8,
-                      child: SizedBox(
-                        height: 70,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  widget.packageModel!.trainer!.fullname ?? "",
-                                  style: TextStyle(
-                                    color: Color(0xFF0D3F67),
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.more_horiz,
-                                  color: Color(0xFF0D3F67),
-                                )
-                              ],
-                            ),
-                            Text(
-                              widget.packageModel!.trainer!.phone ?? "",
-                              style: TextStyle(
-                                  color: Color(0xFFB6C5D1),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w900),
-                            ),
-                            Text(
-                              date,
-                              style: TextStyle(
-                                  color: Color(0xFF0D3F67),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400),
-                            )
-                          ],
-                        ),
-                      ))
-                ],
-              ),
-              Divider(
-                thickness: 1,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    child: Row(
-                      children: [
-                        Container(
-                            width: 42,
-                            height: 42,
-                            margin: EdgeInsets.only(right: 10),
-                            child: Icon(
-                              Icons.play_arrow_outlined,
-                              color: AppColors.PRIMARY_COLOR,
-                              size: 28,
-                            ),
-                            decoration: BoxDecoration(
-                                color: Color(0xFFFDD9D9),
-                                borderRadius: BorderRadius.circular(10))),
-                        Text(
-                          'Video Call',
-                          style: TextStyle(
-                              color: AppColors.PRIMARY_WORD_COLOR,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ],
-                    ),
-                  ),
-                  FlatButton(
-                    color: AppColors.PRIMARY_COLOR,
-                    onPressed: () {
-                      Navigator.pushNamed(context, RoutePath.videoCallPage);
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          'Start Now',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 13),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 18,
-                        )
-                      ],
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18)),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
                   )
-                ],
-              ),
-              Divider(
-                thickness: 1,
-              ),
-              _heading("Applied Package"),
-              const SizedBox(height: 10),
-              _content("Package name", widget.packageModel!.name ?? ""),
-              _content(
-                  "Exercise Plan", widget.packageModel!.exercisePlan ?? ""),
-              _content("Diet Plan", widget.packageModel!.dietPlan ?? ""),
-              const Divider(
-                thickness: 1,
-              ),
-              _heading("Note"),
-              const SizedBox(height: 10),
-              _content(
-                  "Schedule Description", widget.packageModel!.schedule ?? ""),
-            ],
+                ]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    avatarOfUser(),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                        flex: 8,
+                        child: SizedBox(
+                          height: 70,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    widget.packageModel!.trainer!.fullname ?? "",
+                                    style: TextStyle(
+                                      color: Color(0xFF0D3F67),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.more_horiz,
+                                    color: Color(0xFF0D3F67),
+                                  )
+                                ],
+                              ),
+                              Text(
+                                widget.packageModel!.trainer!.phone ?? "",
+                                style: TextStyle(
+                                    color: Color(0xFFB6C5D1),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w900),
+                              ),
+                              Text(
+                                date,
+                                style: TextStyle(
+                                    color: Color(0xFF0D3F67),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400),
+                              )
+                            ],
+                          ),
+                        ))
+                  ],
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: Row(
+                        children: [
+                          Container(
+                              width: 42,
+                              height: 42,
+                              margin: EdgeInsets.only(right: 10),
+                              child: Icon(
+                                Icons.play_arrow_outlined,
+                                color: AppColors.PRIMARY_COLOR,
+                                size: 28,
+                              ),
+                              decoration: BoxDecoration(
+                                  color: Color(0xFFFDD9D9),
+                                  borderRadius: BorderRadius.circular(10))),
+                          Text(
+                            'Video Call',
+                            style: TextStyle(
+                                color: AppColors.PRIMARY_WORD_COLOR,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    ),
+                    FlatButton(
+                      color: AppColors.PRIMARY_COLOR,
+                      onPressed: () {
+                        Navigator.pushNamed(context, RoutePath.videoCallPage);
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            'Start Now',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                            size: 18,
+                          )
+                        ],
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18)),
+                    )
+                  ],
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                _heading("Applied Package"),
+                const SizedBox(height: 10),
+                _content("Package name", widget.packageModel!.name ?? ""),
+                _content(
+                    "Exercise Plan", widget.packageModel!.exercisePlan ?? ""),
+                _content("Diet Plan", widget.packageModel!.dietPlan ?? ""),
+                const Divider(
+                  thickness: 1,
+                ),
+                _heading("Note"),
+                const SizedBox(height: 10),
+                _content(
+                    "Schedule Description", widget.packageModel!.schedule ?? ""),
+              ],
+            ),
           ),
         ),
       ),

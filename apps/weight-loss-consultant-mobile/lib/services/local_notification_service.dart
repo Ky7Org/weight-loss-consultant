@@ -48,6 +48,16 @@ class LocalNotificationService {
         LocalNotificationService._navKey.currentState!.pushNamed(
             RoutePath.customerReportDetailPage,
             arguments: int.parse(reportID));
+      } else if (typeOfMessage == "Trainer Undo Apply") {
+        final campaignID = myDataFromMessage['campaignID'];
+        LocalNotificationService._navKey.currentState!.pushNamed(
+            RoutePath.customerAppliedPackagePage,
+            arguments: int.parse(campaignID));
+      } else if (typeOfMessage == "Customer Remove Package") {
+        final campaignID = myDataFromMessage['campaignID'];
+        LocalNotificationService._navKey.currentState!.pushNamed(
+            RoutePath.trainerViewCampaignDetailPage,
+            arguments: int.parse(campaignID));
       }
     });
   }

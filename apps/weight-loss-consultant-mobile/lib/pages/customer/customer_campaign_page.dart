@@ -9,10 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class CustomerCampaignPage extends StatefulWidget {
   const CustomerCampaignPage({Key? key}) : super(key: key);
@@ -55,6 +58,77 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
     });
   }
 
+  Future _showConfirmDeleteDialog() async{
+    return showDialog(
+        context: context,
+        builder: (ctx) => Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                SizedBox(
+                  height: 180,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+                    child: Column(children: [
+                      const Center(
+                          child: Text(
+                            "Are you sure to delete this campaign?",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                            ),
+                          )),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RaisedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            color: Colors.redAccent,
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(width: 20,),
+                          RaisedButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop(true);
+                            },
+                            color: Colors.redAccent,
+                            child: const Text(
+                              'Okay',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ]),
+                  ),
+                ),
+                const Positioned(
+                    top: -35,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.redAccent,
+                      radius: 40,
+                      child: Icon(
+                        Icons.warning,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    )),
+              ],
+            )));
+  }
+
   Widget _buildEditButtonGroup(CampaignModel campaignModel){
     if (campaignModel.status == 0){
       //Active campaign
@@ -74,15 +148,23 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
           ),
           IconButton(
               onPressed: () async {
-                bool result = await customerService.removeActiveCampaign(campaignModel.id as int, user);
+                bool result = await _showConfirmDeleteDialog();
                 if (result){
-                  CustomToast.makeToast("Delete successfully");
-                } else {
-                  CustomToast.makeToast("Some thing went wrong! Try again");
+                  TrainerService trainerService = TrainerService();
+                  CustomerCampaignModel? customerCampaignModel = await trainerService.getCampaignById(campaignModel.id as int, user);
+                  result = await customerService.removeActiveCampaign(campaignModel.id as int, user);
+                  if (result){
+                    NotificationService notificationService = NotificationService();
+                    await notificationService.customerRemoveActiveCampaign(customerCampaignModel!.customer!.deviceID ?? "", campaignModel.id as int);
+
+                    CustomToast.makeToast("Delete successfully");
+                  } else {
+                    CustomToast.makeToast("Some thing went wrong! Try again");
+                  }
+                  setState(() {
+                    listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+                  });
                 }
-                setState(() {
-                  listCampaign = customerService.getCustomerCampaign(user.email ?? "");
-                });
               },
               icon: Icon(
                 Icons.highlight_remove_outlined,
