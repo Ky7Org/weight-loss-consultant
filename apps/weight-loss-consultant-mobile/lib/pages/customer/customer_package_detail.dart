@@ -168,7 +168,7 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
                 width: double.infinity,
               ),
               Align(
-                alignment: Alignment.topLeft,
+                alignment: Alignment.center,
                 child: Text(
                   model.name ?? "",
                   style: TextStyle(
@@ -568,7 +568,9 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator()
+                );
               }),
         ),
       ),

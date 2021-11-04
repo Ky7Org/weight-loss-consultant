@@ -23,7 +23,8 @@ export class CampaignEntity extends BaseEntity{
   spendTimeForTraining: number;
   @Column({ type: 'float'})
   createDate: number;
-
+  @Column({ type: 'int'})
+  sessionLength: number;
   @OneToMany(() => ContractEntity, contract => contract.campaign)
   contracts : ContractEntity[];
 

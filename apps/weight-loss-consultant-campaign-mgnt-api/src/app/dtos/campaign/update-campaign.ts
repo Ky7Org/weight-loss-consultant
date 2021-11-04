@@ -21,4 +21,6 @@ export class UpdateCampaignDto{
   currentWeight?: number;
   @ApiProperty()
   spendTimeForTraining?: number;
+  @ApiProperty()
+  sessionLength?: number;
 }
