@@ -462,6 +462,7 @@ class _CreateCampaignPageState extends State<CreateCampaignPage> {
                         startDate: startDate,
                         endDate: endDate,
                       );
+                      Navigator.pop(context);
                       if (result){
                         CustomToast.makeToast("Create successfully");
                       } else {

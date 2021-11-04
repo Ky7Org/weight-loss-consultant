@@ -30,7 +30,7 @@ class NotificationService{
     );
   }
 
-  Future<void> approvePackage(String toToken, String userEmail, int campaignID) async {
+  Future<void> approvePackage(String toToken, String userEmail, int packageID) async {
     var url = Uri.parse(ApiConstant.firebaseMessagingApi);
     var response = await http.post(
       url,
@@ -47,7 +47,7 @@ class NotificationService{
         "direct_boot_ok": true,
         "data": {
           "type": "Apply Campaign",
-          "campaignID": campaignID.toString(),
+          "packageID": packageID.toString(),
         },
       }),
     );

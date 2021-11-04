@@ -155,6 +155,7 @@ class TrainerService{
     int status = 0,
     String dietPlan = "",
     int spendTimeToTraining = 0,
+    int spendTimePerSession = 0,
     String name = "",
     int endDate = 0,
     int startDate = 0,
@@ -171,6 +172,7 @@ class TrainerService{
     data["trainerEmail"] = user!.email ?? "";
     data["endDate"] = endDate;
     data["startDate"] = startDate;
+    data["sessionLength"] = spendTimePerSession;
     var url = Uri.parse(ApiConstant.createPackageApi);
     var response = await http.post(
       url,
@@ -194,6 +196,7 @@ class TrainerService{
     data["status"] = package.status ;
     data["dietPlan"] = package.dietPlan;
     data["spendTimeToTraining"] = package.spendTimeToTraining;
+    data["sessionLength"] = package.sessionLength;
     data["name"] = package.name;
     data["trainerEmail"] = user.email ?? "";
     data["id"] = package.id;

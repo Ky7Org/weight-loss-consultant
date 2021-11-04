@@ -81,8 +81,8 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const Image(
-                image: AssetImage("assets/fake-image/fake-trainer-avatar.jpg"),
+              Image(
+                image: NetworkImage(model.profileImage as String),
                 width: 73,
                 height: 73,
                 fit: BoxFit.fill),
@@ -202,6 +202,35 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
                       ),
                       Text(
                         "Day/Week",
+                        style: TextStyle(
+                            color: HexColor("#B6C5D1"),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Icon(
+                        Icons.watch_later_outlined,
+                        color: HexColor("#0D3F67"),
+                        size: 30,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        model.sessionLength.toString(),
+                        style: TextStyle(
+                            color: HexColor("#0D3F67"),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "Mins",
                         style: TextStyle(
                             color: HexColor("#B6C5D1"),
                             fontSize: 16,
@@ -441,11 +470,12 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
             notificationService.approvePackage(
                 packageModel.trainer!.deviceID as String,
                 packageModel.trainer!.email as String,
-                campaignID as int);
+                packageID as int);
             CustomToast.makeToast("Approve successfully");
           } else {
             CustomToast.makeToast("Some thing went wrong! Try again");
           }
+          Navigator.pop(context);
         },
         label: const Text("Approve this package"),
         icon: const Icon(Icons.add),

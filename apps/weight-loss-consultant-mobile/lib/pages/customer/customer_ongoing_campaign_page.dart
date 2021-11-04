@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -122,7 +123,25 @@ class _CustomerOnGoingCampaignPageState
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Center(child: avatarOfUser()),
+            Center(
+                child: Stack(
+                  children: [
+                    const SizedBox(width: double.infinity,),
+                    Center(child: avatarOfUser()),
+                    Positioned(
+                      height: 100,
+                      right: 10,
+                      child: IconButton(
+                        iconSize: 48,
+                        onPressed: () {
+                          Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
+                        },
+                        icon: SvgPicture.asset("assets/icon/call-icon.svg"),
+                      ),
+                    )
+                  ],
+                )
+            ),
             const SizedBox(
               height: 15,
             ),
@@ -155,51 +174,6 @@ class _CustomerOnGoingCampaignPageState
                 ),
               ],
             ),
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   mainAxisSize: MainAxisSize.max,
-            //   children: [
-            //     Text(
-            //       model.fullname ?? "",
-            //       style: TextStyle(
-            //           color: HexColor("#0D3F67"),
-            //           fontSize: 20,
-            //           fontWeight: FontWeight.w700),
-            //     ),
-            //     const SizedBox(
-            //       height: 10,
-            //     ),
-            //     Text(
-            //       "${model.gender == "1" ? "Male" : "Female"} | ${model.phone ?? ""}",
-            //       style: TextStyle(
-            //           color: HexColor("#B6C5D1"),
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.w500),
-            //     ),
-            //     const SizedBox(
-            //       height: 10,
-            //     ),
-            //     Row(
-            //       crossAxisAlignment: CrossAxisAlignment.center,
-            //       children: [
-            //         RatingBarIndicator(
-            //           rating: model.rating ?? 0,
-            //           itemBuilder: (context, index) => Icon(
-            //             Icons.star,
-            //             color: HexColor("#1EE0CC"),
-            //           ),
-            //           itemCount: 5,
-            //           itemSize: 20.0,
-            //           direction: Axis.horizontal,
-            //         ),
-            //         const SizedBox(
-            //           width: 30,
-            //         ),
-            //         Text("${model.yearOfExp ?? 0} year(s)")
-            //       ],
-            //     )
-            //   ],
-            // ),
           ],
         ),
       ),
@@ -364,7 +338,6 @@ class _CustomerOnGoingCampaignPageState
   }
 
   Widget _buildCampaignContainer() {
-    print(campaignModel);
     return Column(
       children: [
         Container(
@@ -418,7 +391,11 @@ class _CustomerOnGoingCampaignPageState
       child: GestureDetector(
         onTap: () {
           Navigator.pushNamed(context, RoutePath.customerMakeReportPage,
-              arguments: packageModel.id);
+              arguments: packageModel.id).then((value){
+                if (value != null){
+                  Navigator.pushNamed(context, RoutePath.customerReportDetailPage, arguments: value);
+                }
+          });
         },
         child: Card(
           elevation: 10,
@@ -496,7 +473,7 @@ class _CustomerOnGoingCampaignPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Applying Package"),
+      appBar: GenericAppBar.builder("My Ongoing Campaign"),
       body: SlidingUpPanel(
         controller: _pc,
         panel: CategoryPanel(),
@@ -532,6 +509,7 @@ class _CustomerOnGoingCampaignPageState
                     Tab(
                       child: Text(
                         'Campaign Detail',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w700),
                       ),
@@ -539,13 +517,15 @@ class _CustomerOnGoingCampaignPageState
                     Tab(
                       child: Text(
                         'Trainer Info',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w700),
                       ),
                     ),
                     Tab(
                       child: Text(
-                        'Package\n Detail',
+                        'Package Detail',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w700),
                       ),

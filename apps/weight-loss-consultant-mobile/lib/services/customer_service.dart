@@ -39,6 +39,7 @@ class CustomerService{
         models.add(model);
       }
     }
+    models.sort((a, b) => (b.createDate as int) - (a.createDate as int));
     return models;
   }
 
@@ -57,7 +58,7 @@ class CustomerService{
     data["customerEmail"] = user!.email ?? "";
     data["description"] = description;
     data["startDate"] = startDate.millisecondsSinceEpoch.toString();
-    data["endDate"] = endDate.microsecondsSinceEpoch.toString();
+    data["endDate"] = endDate.millisecondsSinceEpoch.toString();
     data["feedback"] = "";
     data["targetWeight"] = targetWeight;
     data["currentWeight"] = currentWeight;
@@ -162,7 +163,6 @@ class CustomerService{
   }
 
   Future<ContractModel> getContractByCampaignId(int campaignID, AccountModel user) async{
-    print(campaignID);
     var url = Uri.parse(ApiConstant.getContractByPackageIDorCampaignIDApi);
     List<ContractModel> models = [];
     var response = await http.post(
@@ -268,6 +268,7 @@ class CustomerService{
         models.add(model);
       }
     }
+    models.sort((a,b) => int.parse(b.createDate as String) - int.parse(a.createDate as String));
     return models;
   }
 
