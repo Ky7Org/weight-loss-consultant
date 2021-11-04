@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import {CreateReportDto} from "../../dtos/report/create-report.dto";
-import {ContractEntity} from "../../entities/contract.entity";
-import {ReportEntity} from "../../entities/report.entity";
-import {UpdateReportDto} from "../../dtos/report/update-report.dto";
-import {CreateReportMediaDto} from "../../dtos/report-media/create-report-media.dto";
-import {ReportMediaEntity} from "../../entities/report-media.entity";
-import {UpdateReportMediaDto} from "../../dtos/report-media/update-report-media.dto";
+import { ReportEntity } from '../../entities/report.entity';
+import { CreateReportMediaDto } from '../../dtos/report-media/create-report-media.dto';
+import { ReportMediaEntity } from '../../entities/report-media.entity';
+import { UpdateReportMediaDto } from '../../dtos/report-media/update-report-media.dto';
 
 @Injectable()
 export class ReportMediaMapper {

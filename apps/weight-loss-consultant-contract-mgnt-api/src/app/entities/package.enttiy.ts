@@ -1,5 +1,5 @@
-import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import {ContractEntity} from "./contract.entity";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ContractEntity } from './contract.entity';
 
 @Entity('Package')
 export class PackageEntity extends BaseEntity{

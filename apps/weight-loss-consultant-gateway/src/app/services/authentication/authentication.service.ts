@@ -1,60 +1,47 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { AUTHENTICATION_SERVICE_NAME } from '../../../../../../constant';
-import { ClientProxy } from '@nestjs/microservices';
-import {
-  CONFIRM_CHANGE_PASSWORD,
-  EMAIL_PASSWORD_AUTHENTICATE_USER,
-  GOOGLE_FIREBASE_AUTHENTICATE_USER,
-  RESET_PASSWORD,
-  VALIDATE_ACCOUNT
-} from '../../../../../common/routes/authentication-routes';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { LoginResponseModel } from '../../models/login-response-model';
 import { ResetPasswordConfirmRequestModel } from '../../models/reset-password-confirm-request-model';
 import { ResetPasswordRequestModel } from '../../models/reset-password-request-model';
 import { LoginRequest } from '../../models/login.req';
+import { lastValueFrom } from 'rxjs';
+import { KAFKA_AUTHENTICATION_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../../common/kafka-utils';
 
 @Injectable()
-export class AuthenticationService {
+export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
 
-  constructor(@Inject(AUTHENTICATION_SERVICE_NAME)
-              private readonly authenticationServiceProxy: ClientProxy) {}
+  @Inject('SERVER')
+  private client: ClientKafka;
 
-  async login(dto: LoginRequest): Promise<LoginResponseModel> {
-    const pattern = { cmd: EMAIL_PASSWORD_AUTHENTICATE_USER };
-    const payload = dto;
-
-      return this.authenticationServiceProxy.send(pattern, payload)
-        // .toPromise<LoginResponseModel>();
-        .toPromise();
+  async onModuleInit() {
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN)) {
+      this.client.subscribeToResponseOf(value);
+    }
+    this.client.connect();
   }
 
-
-  async resetPassword(dto: ResetPasswordRequestModel): Promise<any> {
-    const pattern = { cmd: RESET_PASSWORD };
-    const payload = dto;
-    // return this.authenticationServiceProxy.send(pattern, payload).toPromise<any>();
-    return this.authenticationServiceProxy.send(pattern, payload).toPromise();
+  async onModuleDestroy() {
+    await this.client.close();
   }
 
-  async confirmChangePassword(dto: ResetPasswordConfirmRequestModel) {
-    const pattern = { cmd: CONFIRM_CHANGE_PASSWORD };
-    const payload = dto;
-    // return this.authenticationServiceProxy.send(pattern, payload).toPromise<any>();
-    return this.authenticationServiceProxy.send(pattern, payload).toPromise();
+  login(dto: LoginRequest): Promise<LoginResponseModel> {
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.login, dto));
   }
 
-  async validateAccount(email: string, password: string) {
-    const pattern = { cmd: VALIDATE_ACCOUNT };
-    const payload = {email: email, password: password};
-    // return this.authenticationServiceProxy.send(pattern, payload).toPromise<any>();
-    return this.authenticationServiceProxy.send(pattern, payload).toPromise();
+  resetPassword(dto: ResetPasswordRequestModel) {
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.resetPassword, dto));
   }
 
-  async loginWithFirebase(firebaseUserToken: any): Promise<any> {
-    const pattern = {cmd: GOOGLE_FIREBASE_AUTHENTICATE_USER}
-    return this.authenticationServiceProxy.send<any, any>(pattern, firebaseUserToken)
-      // .toPromise<any>();
-      .toPromise();
-    return this.authenticationServiceProxy.send<any, any>(pattern, firebaseUserToken).toPromise();
+  confirmChangePassword(dto: ResetPasswordConfirmRequestModel) {
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.confirmResetPassword, dto));
+  }
+
+  validateAccount(email: string, password: string) {
+    return lastValueFrom(this.client
+      .send(MESSAGE_PATTERN.validateAccount, {email: email, password: password}));
+  }
+
+  loginWithFirebase(firebaseUserToken: string) {
+    return lastValueFrom(this.client.send(MESSAGE_PATTERN.loginWithFirebase, firebaseUserToken))
   }
 }

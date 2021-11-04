@@ -1,13 +1,13 @@
-import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
-import {JwtAuthGuard} from "../../guards/jwt-auth.guard";
-import {ApiBody, ApiParam, ApiResponse} from "@nestjs/swagger";
-import {ContractService} from "../../services/contract.service";
-import {CreateContractDto} from "../../dtos/contract/create-health-info.dto";
-import {UpdateContractDto} from "../../dtos/contract/update-health-info.dto";
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { ApiBody, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ContractService } from '../../services/contract.service';
+import { CreateContractDto } from '../../dtos/contract/create-health-info.dto';
+import { UpdateContractDto } from '../../dtos/contract/update-health-info.dto';
 import {
   CampaignAndPackageIdPayload,
   GetContractByPackageIDOrCampaignIDPayload
-} from "../../../../../common/dtos/update-trainer-dto.payload";
+} from '../../../../../common/dtos/update-trainer-dto.payload';
 
 
 @Controller()

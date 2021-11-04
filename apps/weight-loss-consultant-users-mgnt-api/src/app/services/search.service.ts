@@ -1,22 +1,23 @@
-import {HttpStatus, Injectable} from '@nestjs/common';
-import {TrainerRepository} from '../repositories/trainer.repository';
-import {AdminRepository} from '../repositories/admin.repository';
-import {PaginationDto} from '../dtos/pagination/pagination.dto';
-import {PaginatedResultDto} from '../dtos/pagination/paginated-result.dto';
-import {CustomerRepository} from '../repositories/customer.repository';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { TrainerRepository } from '../repositories/trainer.repository';
+import { AdminRepository } from '../repositories/admin.repository';
+import { PaginationDto } from '../dtos/pagination/pagination.dto';
+import { PaginatedResultDto } from '../dtos/pagination/paginated-result.dto';
+import { CustomerRepository } from '../repositories/customer.repository';
 import {
-  ResponseUpdatePassword, ResponseUpdateStatus,
-  UpdatePasswordPayload, UpdateStatusPayload
-} from "../../../../common/dtos/update-without-password-and-status.payload";
-import {UpdateResult} from "typeorm";
-import {Role} from "../constants/enums";
-import {AdminEntity} from "../entities/admin.entity";
-import {TrainerEntity} from "../entities/trainer.entity";
-import {CustomerEntity} from "../entities/customer.entity";
-import * as bcrypt from "bcrypt";
-import {RpcException} from "@nestjs/microservices";
-import {RpcExceptionModel} from "../../../../common/filters/rpc-exception.model";
-import {UpdateDeviceIDPayload} from "../../../../common/dtos/update-trainer-dto.payload";
+  ResponseUpdatePassword,
+  ResponseUpdateStatus,
+  UpdatePasswordPayload,
+  UpdateStatusPayload
+} from '../../../../common/dtos/update-without-password-and-status.payload';
+import { Role } from '../constants/enums';
+import { AdminEntity } from '../entities/admin.entity';
+import { TrainerEntity } from '../entities/trainer.entity';
+import { CustomerEntity } from '../entities/customer.entity';
+import * as bcrypt from 'bcrypt';
+import { RpcException } from '@nestjs/microservices';
+import { RpcExceptionModel } from '../../../../common/filters/rpc-exception.model';
+import { UpdateDeviceIDPayload } from '../../../../common/dtos/update-trainer-dto.payload';
 
 
 @Injectable()

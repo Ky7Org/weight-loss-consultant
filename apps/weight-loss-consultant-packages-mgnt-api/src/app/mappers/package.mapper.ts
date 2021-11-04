@@ -3,7 +3,7 @@ import { CreatePackageDto } from '../dtos/package/create-package';
 import { PackageEntity } from '../entities/package.enttiy';
 import { UpdatePackageDto } from '../dtos/package/update-package';
 import { TrainerEntity } from '../entities/trainer.entity';
-import {PACKAGE_STATUS} from "../../../../common/utils";
+import { PACKAGE_STATUS } from '../../../../common/utils';
 
 @Injectable()
 export class PackageMapper {

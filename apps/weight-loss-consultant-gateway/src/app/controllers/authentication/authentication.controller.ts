@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Logger, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Logger, Post, Request, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { Public } from '../../decorators/public.decorator';
@@ -7,6 +7,7 @@ import { LoginRequestModel } from '../../models/login-request-model';
 import { ResetPasswordRequestModel } from '../../models/reset-password-request-model';
 import { ResetPasswordConfirmRequestModel } from '../../models/reset-password-confirm-request-model';
 import { LoginRequest } from '../../models/login.req';
+
 @ApiTags('Authentication')
 @ApiBearerAuth()
 @Controller(`/v1/auth`)
@@ -34,9 +35,9 @@ export class AuthenticationController {
     try {
       const result = await this.authenticationService.login(dto);
       res.status(HttpStatus.OK).send(result);
-    } catch ({ error }) {
-      this.logger.error(error);
-      res.status(error.statusCode).send(error);
+    } catch (error) {
+      this.logger.error(JSON.stringify(error, null, 2));
+      res.status(error.error.statusCode).send(error.error);
     }
   }
 
@@ -48,7 +49,6 @@ export class AuthenticationController {
   })
   async loginWithFirebase(@Request() req: Request, @Res() res) {
     try {
-      console.log(req.headers['authorization']);
       const result = await this.authenticationService.loginWithFirebase(req.headers['authorization']);
       res.status(HttpStatus.OK).send(result);
     } catch ({ error }) {

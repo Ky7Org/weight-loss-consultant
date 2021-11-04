@@ -1,31 +1,44 @@
-import {HttpStatus, Inject, Injectable} from '@nestjs/common';
-import {DeleteResult, UpdateResult} from 'typeorm';
-import {PackageEntity} from '../../entities/package.enttiy';
-import {PackageMapper} from '../../mappers/package.mapper';
-import {CreatePackageDto} from '../../dtos/package/create-package';
-import {UpdatePackageDto} from '../../dtos/package/update-package';
-import {BaseService} from '../base.service';
-import {USERS_MANAGEMENT_SERVICE_NAME} from '../../../../../../constant';
-import {ClientProxy, RpcException} from '@nestjs/microservices';
-import {TrainerEntity} from '../../entities/trainer.entity';
-import {TRAINER_VIEW_DETAIL} from '../../../../../common/routes/users-management-service-routes';
-import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
-import {Observable} from "rxjs";
-import {PackageRepository} from "../../repositories/package.repository";
-import {UpdateStatusPackagePayload} from "../../../../../common/dtos/update-package-dto.payload";
+import { HttpStatus, Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { PackageEntity } from '../../entities/package.enttiy';
+import { PackageMapper } from '../../mappers/package.mapper';
+import { CreatePackageDto } from '../../dtos/package/create-package';
+import { UpdatePackageDto } from '../../dtos/package/update-package';
+import { BaseService } from '../base.service';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
+import { TrainerEntity } from '../../entities/trainer.entity';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
+import { lastValueFrom, Observable } from 'rxjs';
+import { PackageRepository } from '../../repositories/package.repository';
+import { UpdateStatusPackagePayload } from '../../../../../common/dtos/update-package-dto.payload';
+import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../../common/kafka-utils';
 
 @Injectable()
-export class PackageService extends BaseService<PackageEntity, PackageRepository> {
-  constructor(repository: PackageRepository,
-              private readonly packageMapper: PackageMapper,
-              @Inject(USERS_MANAGEMENT_SERVICE_NAME)
-                private readonly usersManagementServiceProxy: ClientProxy) {
+export class PackageService extends BaseService<PackageEntity, PackageRepository>
+  implements OnModuleInit, OnModuleDestroy {
+
+  @Inject('SERVER')
+  private readonly usersManagementClient: ClientKafka;
+
+  constructor(repository: PackageRepository) {
     super(repository);
   }
 
+  async onModuleInit() {
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN)) {
+      for (const [key2, value2] of Object.entries(value)) {
+        this.usersManagementClient.subscribeToResponseOf(value2);
+      }    }
+    this.usersManagementClient.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.usersManagementClient.close();
+  }
+
   private validateTrainer(username: string): Observable<TrainerEntity> {
-    return this.usersManagementServiceProxy
-      .send<TrainerEntity, string>({ cmd: TRAINER_VIEW_DETAIL }, username);
+    return this.usersManagementClient
+      .send<TrainerEntity, string>(MESSAGE_PATTERN.trainers.getByEmail, username);
   }
 
   async findAll(): Promise<PackageEntity[]> {
@@ -34,7 +47,7 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
 
   async create(dto: CreatePackageDto): Promise<PackageEntity> {
     const trainerEmail = dto.trainerEmail;
-    const findTrainer = await this.validateTrainer(trainerEmail).toPromise();
+    const findTrainer = await lastValueFrom(this.validateTrainer(trainerEmail));
     if (findTrainer === undefined) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
@@ -82,11 +95,15 @@ export class PackageService extends BaseService<PackageEntity, PackageRepository
   }
 
   async viewDetail(id): Promise<PackageEntity> {
-    const result = await this.repository.createQueryBuilder("p")
+    return this.repository.createQueryBuilder("p")
       .leftJoinAndSelect("p.trainer", "trainer")
       .where("p.id = :id", {id : id})
-      .getOne();
-    return result;
+      .getOneOrFail().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: `Not found package with id: ${id}`
+        } as RpcExceptionModel);
+      });
   }
 
   async getPackageDetailsWithTrainer(): Promise<PackageEntity[] | null> {

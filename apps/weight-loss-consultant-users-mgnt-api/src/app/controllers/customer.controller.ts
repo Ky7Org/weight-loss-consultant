@@ -1,19 +1,14 @@
-import { Controller, UseFilters } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
 import { CustomerService } from '../services/impl/customer.service.impl';
 import { CreateCustDto } from '../dtos/customer/create-customer.dto';
 import { UpdateCustDto } from '../dtos/customer/update-customer-dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import {
-  CREATE_CUSTOMER,
-  DELETE_CUSTOMER,
-  GET_ALL_CUSTOMER, UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS,
-  UPDATE_CUSTOMER, UPDATE_CUSTOMER_WITHOUT_PASSWORD_AND_STATUS,
-  VIEW_DETAIL_CUSTOMER, VIEW_DETAIL_SPECIAL
-} from '../../../../common/routes/users-management-service-routes';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CustomerEntity } from '../entities/customer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
-import {UpdateAdminPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
+import { UpdateAdminPayload } from '../../../../common/dtos/update-without-password-and-status.payload';
+import { IKafkaMessage } from '../../../../common/kafka-message.model';
+import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 
 export type UpdateCustomerPayload = {
   email: string;
@@ -21,51 +16,52 @@ export type UpdateCustomerPayload = {
 }
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class CustomerController {
 
   constructor(private readonly customerService: CustomerService) {
   }
 
-  @MessagePattern({ cmd: GET_ALL_CUSTOMER })
+  @MessagePattern(MESSAGE_PATTERN.customers.getAllCustomers)
   @UseFilters(new ExceptionFilter())
-  async index(): Promise<CustomerEntity[]> {
+  index(): Promise<CustomerEntity[]> {
     return this.customerService.findAll();
   }
 
-  @MessagePattern({ cmd: VIEW_DETAIL_CUSTOMER })
+  @MessagePattern(MESSAGE_PATTERN.customers.getByEmail)
   @UseFilters(new ExceptionFilter())
-  async getByEmail(@Payload() email: string): Promise<CustomerEntity> {
-    return this.customerService.viewDetail(email);
+  getByEmail(@Payload() email: IKafkaMessage<string>): Promise<CustomerEntity> {
+    return this.customerService.viewDetail(email.value);
   }
 
-  @MessagePattern({ cmd: VIEW_DETAIL_SPECIAL })
+  @MessagePattern(MESSAGE_PATTERN.customers.getSpecial)
   @UseFilters(new ExceptionFilter())
-  async getSpecial(@Payload() email: string) : Promise<any>{
-    return this.customerService.viewOnlyCampaignsOfCustomer(email);
+  getSpecial(@Payload() email: IKafkaMessage<string>) {
+    return this.customerService.viewOnlyCampaignsOfCustomer(email.value);
   }
 
-  @MessagePattern({ cmd: CREATE_CUSTOMER })
+  @MessagePattern(MESSAGE_PATTERN.customers.create)
   @UseFilters(new ExceptionFilter())
-  async create(@Payload() dto: CreateCustDto): Promise<CustomerEntity> {
-    return this.customerService.create(dto);
+  create(@Payload() dto: IKafkaMessage<CreateCustDto>): Promise<CustomerEntity> {
+    return this.customerService.create(dto.value);
   }
 
-  @MessagePattern({ cmd: UPDATE_CUSTOMER })
+  @MessagePattern(MESSAGE_PATTERN.customers.update)
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() payload: UpdateCustomerPayload): Promise<UpdateResult> {
-    return this.customerService.edit(payload);
+  update(@Payload() payload: IKafkaMessage<UpdateCustomerPayload>): Promise<UpdateResult> {
+    return this.customerService.edit(payload.value);
   }
 
-  @MessagePattern({ cmd: DELETE_CUSTOMER })
+  @MessagePattern(MESSAGE_PATTERN.customers.delete)
   @UseFilters(new ExceptionFilter())
-  async delete(@Payload() email): Promise<DeleteResult> {
-    return this.customerService.delete(email);
+  delete(@Payload() email: IKafkaMessage<string>): Promise<DeleteResult> {
+    return this.customerService.delete(email.value);
   }
 
-  @MessagePattern({ cmd: UPDATE_CUSTOMER_WITHOUT_PASSWORD_AND_STATUS })
+  @MessagePattern(MESSAGE_PATTERN.customers.updateProfileWithoutPasswordAndStatus)
   @UseFilters(new ExceptionFilter())
-  async updateAdmninWithoutPasswordAndStatus(@Payload() payload: UpdateAdminPayload): Promise<UpdateResult> {
-    return this.customerService.updateProfileWithoutPasswordAndStatus(payload);
+  async updateAdminWithoutPasswordAndStatus(@Payload() payload: IKafkaMessage<UpdateAdminPayload>): Promise<UpdateResult> {
+    return this.customerService.updateProfileWithoutPasswordAndStatus(payload.value);
   }
 
 }

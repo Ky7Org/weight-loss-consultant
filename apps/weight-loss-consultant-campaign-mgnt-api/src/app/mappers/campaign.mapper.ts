@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CampaignEntity } from '../entities/campaign.entity';
 import { CustomerEntity } from '../entities/customer.entity';
 import { CampaignStatus } from '../constants/enums';
-import {CreateCampaignDto} from "../dtos/campaign/create-campaign";
-import {UpdateCampaignDto} from "../dtos/campaign/update-campaign";
+import { CreateCampaignDto } from '../dtos/campaign/create-campaign';
+import { UpdateCampaignDto } from '../dtos/campaign/update-campaign';
 
 @Injectable()
 export class CampaignMapper {

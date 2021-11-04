@@ -83,24 +83,27 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
   }
 
   async viewDetail(id): Promise<CustomerEntity> {
-    const query = this.repository.createQueryBuilder("customer")
+    return this.repository.createQueryBuilder("customer")
       .where("customer.email = :email", {email : id})
       .leftJoinAndSelect("customer.campaigns", "campaign")
-      .getOne();
-    const sql = this.repository.createQueryBuilder("customer")
-      .where("customer.email = :email", {email : id})
-      .leftJoinAndSelect("customer.campaigns", "campaign")
-      .getSql();
-    console.log(sql)
-    return query;
+      .getOneOrFail().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: `Not found customer with email: ${id}`
+        } as RpcExceptionModel);
+      });
   }
 
   async viewOnlyCampaignsOfCustomer(customerEmail: string) : Promise<CustomerEntity>  {
-    const query = await this.repository.createQueryBuilder("customer")
+    return this.repository.createQueryBuilder("customer")
       .leftJoinAndSelect("customer.campaigns", "campaign")
       .where("customer.email = :email" , {email : customerEmail})
-      .getOne();
-    return query;
+      .getOneOrFail().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: `Not found campaigns customer with email: ${customerEmail}`
+        } as RpcExceptionModel);
+      });
   }
 
   async updateProfileWithoutPasswordAndStatus(payload : UpdateCustomerPayloadd) : Promise<UpdateResult> {
@@ -110,7 +113,7 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
         message: `Param: ${payload.email} must match with request body email : ${payload.email} `
       } as RpcExceptionModel);
     }
-    const result = await this.repository.createQueryBuilder("customer")
+    return this.repository.createQueryBuilder("customer")
       .update(CustomerEntity)
       .set({
         fullname: payload.fullname,
@@ -122,7 +125,6 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
       })
       .where("email = :email", {email : payload.email})
       .execute();
-    return result;
   }
 
 }

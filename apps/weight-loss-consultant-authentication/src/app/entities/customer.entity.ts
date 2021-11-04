@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, Index, PrimaryColumn} from 'typeorm';
+import { BaseEntity, Column, Entity, Index, PrimaryColumn } from 'typeorm';
 import { Status } from '../../constant';
 
 

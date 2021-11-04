@@ -1,20 +1,17 @@
-import {Module} from '@nestjs/common';
-import {ClientsModule, Transport} from '@nestjs/microservices';
-import {HOST, REPORT_MANAGEMENT_SERVICE_NAME, REPORT_MANAGEMENT_SERVICE_PORT} from '../../../../../constant';
-import {ReportController} from "../controllers/report-management/report.controller";
-import {ReportService} from "../services/report.service";
+import { Module } from '@nestjs/common';
+import { ClientsModule } from '@nestjs/microservices';
+import { ReportController } from '../controllers/report-management/report.controller';
+import { ReportService } from '../services/reports-management/report.service';
+import { KAFKA_SERVICE } from '../../../../common/kafka-utils';
 
 
 @Module({
   imports: [ClientsModule.register([
     {
-      name: REPORT_MANAGEMENT_SERVICE_NAME,
-      transport: Transport.TCP,
-      options: {
-        host: HOST,
-        port: REPORT_MANAGEMENT_SERVICE_PORT
-      }
-    }])
+      ...KAFKA_SERVICE,
+      name: 'SERVER',
+    }
+  ]),
   ],
   controllers: [ReportController],
   providers: [ReportService],

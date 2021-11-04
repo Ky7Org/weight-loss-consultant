@@ -1,6 +1,6 @@
-import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import {ContractEntity} from "./contract.entity";
-import {ReportMediaEntity} from "./report-media.entity";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ContractEntity } from './contract.entity';
+import { ReportMediaEntity } from './report-media.entity';
 
 @Entity('Report')
 export class ReportEntity extends BaseEntity{

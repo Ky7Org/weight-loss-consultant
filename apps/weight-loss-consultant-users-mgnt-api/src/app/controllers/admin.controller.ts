@@ -1,26 +1,16 @@
-import { Controller, UseFilters } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
 import { AdminService } from '../services/impl/admin.service.impl';
 import { CreateAdminDto } from '../dtos/admin/create-admin.dto';
 import { UpdateAdminDto } from '../dtos/admin/update-admin.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import {
-  ADMIN_VIEW_DETAIL,
-  CREATE_ADMIN, CUSTOMER_VIEW_DETAIL,
-  DELETE_ADMIN,
-  GET_ADMIN_BY_EMAIL,
-  GET_ALL_ADMINS, TRAINER_VIEW_DETAIL,
-  UPDATE_ADMIN, UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS
-} from '../../../../common/routes/users-management-service-routes';
 import { AdminEntity } from '../entities/admin.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { CustomerEntity } from '../entities/customer.entity';
-import { CustomerService } from '../services/impl/customer.service.impl';
-import { TrainerService } from '../services/impl/trainer.service.impl';
-import { TrainerEntity } from '../entities/trainer.entity';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
-import {PaginationDto} from "../dtos/pagination/pagination.dto";
-import {PaginatedResultDto} from "../dtos/pagination/paginated-result.dto";
-import {UpdateAdminPayload} from "../../../../common/dtos/update-without-password-and-status.payload";
+import { PaginationDto } from '../dtos/pagination/pagination.dto';
+import { PaginatedResultDto } from '../dtos/pagination/paginated-result.dto';
+import { UpdateAdminPayload } from '../../../../common/dtos/update-without-password-and-status.payload';
+import { IKafkaMessage } from '../../../../common/kafka-message.model';
+import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 
 export type UpdateAdminType = {
   email: string;
@@ -28,65 +18,45 @@ export type UpdateAdminType = {
 };
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class AdminController {
 
-  constructor(private readonly adminService: AdminService,
-              private readonly customerService: CustomerService,
-              private readonly trainerService: TrainerService) {
+  constructor(private readonly adminService: AdminService) {
   }
 
-  @MessagePattern({ cmd: GET_ALL_ADMINS })
+  @MessagePattern(MESSAGE_PATTERN.admins.getAllAdmins)
   @UseFilters(new ExceptionFilter())
-  async index(@Payload() payload: PaginationDto): Promise<PaginatedResultDto> {
-    return this.adminService.findAll(payload);
+  async index(@Payload() payload: IKafkaMessage<PaginationDto>): Promise<PaginatedResultDto> {
+    return this.adminService.findAll(payload.value);
   }
 
-  @MessagePattern({ cmd: ADMIN_VIEW_DETAIL })
+  @MessagePattern(MESSAGE_PATTERN.admins.getByEmail)
   @UseFilters(new ExceptionFilter())
-  async viewAdminDetailByUsername(@Payload() username: string): Promise<AdminEntity> {
-    return this.adminService.viewDetail(username);
+  async getByEmail(@Payload() email: IKafkaMessage<string>): Promise<AdminEntity> {
+    return this.adminService.viewDetail(email.value);
   }
 
-  @MessagePattern({ cmd: CUSTOMER_VIEW_DETAIL })
+  @MessagePattern(MESSAGE_PATTERN.admins.create)
   @UseFilters(new ExceptionFilter())
-  async viewCustomerDetailByUsername(@Payload() username: string): Promise<CustomerEntity> {
-    return this.customerService.findOneCustomer(username);
+  async create(@Payload() dto: IKafkaMessage<CreateAdminDto>): Promise<AdminEntity> {
+    return this.adminService.create(dto.value);
   }
 
-  @MessagePattern({ cmd: TRAINER_VIEW_DETAIL })
+  @MessagePattern(MESSAGE_PATTERN.admins.update)
   @UseFilters(new ExceptionFilter())
-  async viewTrainerDetailByUsername(@Payload() username: string): Promise<TrainerEntity> {
-    return this.trainerService.findOneTrainer(username);
+  async update(@Payload() payload: IKafkaMessage<UpdateAdminType>): Promise<UpdateResult> {
+    return this.adminService.edit(payload.value);
   }
 
-  @MessagePattern({ cmd: GET_ADMIN_BY_EMAIL })
+  @MessagePattern(MESSAGE_PATTERN.admins.delete)
   @UseFilters(new ExceptionFilter())
-  async getByEmail(@Payload() email: string): Promise<AdminEntity> {
-    return this.adminService.viewDetail(email);
+  async delete(@Payload() email: IKafkaMessage<string>): Promise<DeleteResult> {
+    return this.adminService.delete(email.value);
   }
-
-  @MessagePattern({ cmd: CREATE_ADMIN })
+  @MessagePattern(MESSAGE_PATTERN.admins.updateProfileWithoutPasswordAndStatus)
   @UseFilters(new ExceptionFilter())
-  async create(@Payload() dto: CreateAdminDto): Promise<AdminEntity> {
-    return this.adminService.create(dto);
-  }
-
-  @MessagePattern({ cmd: UPDATE_ADMIN })
-  @UseFilters(new ExceptionFilter())
-  async update(@Payload() payload: UpdateAdminType): Promise<UpdateResult> {
-    return this.adminService.edit(payload);
-  }
-
-  @MessagePattern({ cmd: DELETE_ADMIN })
-  @UseFilters(new ExceptionFilter())
-  async delete(@Payload() email): Promise<DeleteResult> {
-    return this.adminService.delete(email);
-  }
-
-  @MessagePattern({ cmd: UPDATE_ADMIN_WITHOUT_PASSWORD_AND_STATUS })
-  @UseFilters(new ExceptionFilter())
-  async updateAdmninWithoutPasswordAndStatus(@Payload() payload: UpdateAdminPayload): Promise<UpdateResult> {
-    return this.adminService.updateProfileWithoutPasswordAndStatus(payload);
+  async updateAdminWithoutPasswordAndStatus(@Payload() payload: IKafkaMessage<UpdateAdminPayload>): Promise<UpdateResult> {
+    return this.adminService.updateProfileWithoutPasswordAndStatus(payload.value);
   }
 
 }

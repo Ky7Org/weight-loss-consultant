@@ -1,31 +1,34 @@
-import {HttpStatus, Injectable} from '@nestjs/common';
-import {DeleteResult, UpdateResult} from 'typeorm';
-import {AdminRepository} from '../../repositories/admin.repository';
-import {AdminEntity} from '../../entities/admin.entity';
-import {AdminMapper} from '../../mappers/admin.mapper';
-import {CreateAdminDto} from '../../dtos/admin/create-admin.dto';
-import {EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG} from '../../constants/validation-err-message';
-import {RpcException} from '@nestjs/microservices';
-import {RpcExceptionModel} from '../../../../../common/filters/rpc-exception.model';
-import {UpdateAdminType} from "../../controllers/admin.controller";
-import {SortingAndFilteringService} from "../sorting-filtering.service";
-import {PaginationDto} from "../../dtos/pagination/pagination.dto";
-import {PaginatedResultDto} from "../../dtos/pagination/paginated-result.dto";
-import {UpdateAdminPayload} from "../../../../../common/dtos/update-without-password-and-status.payload";
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { AdminRepository } from '../../repositories/admin.repository';
+import { AdminEntity } from '../../entities/admin.entity';
+import { AdminMapper } from '../../mappers/admin.mapper';
+import { CreateAdminDto } from '../../dtos/admin/create-admin.dto';
+import { EMAIL_EXISTED_ERR, NOT_FOUND_ERR_MSG } from '../../constants/validation-err-message';
+import { RpcException } from '@nestjs/microservices';
+import { RpcExceptionModel } from '../../../../../common/filters/rpc-exception.model';
+import { UpdateAdminType } from '../../controllers/admin.controller';
+import { PaginationDto } from '../../dtos/pagination/pagination.dto';
+import { PaginatedResultDto } from '../../dtos/pagination/paginated-result.dto';
+import { UpdateAdminPayload } from '../../../../../common/dtos/update-without-password-and-status.payload';
+import { SortingAndFilteringService } from '../sorting-filtering.service';
 
 @Injectable()
 export class AdminService {
 
   constructor(
     private readonly repository: AdminRepository,
-    private readonly pagingService : SortingAndFilteringService) {
+    private readonly pagingService: SortingAndFilteringService) {
   }
 
-  async findAll(payload : PaginationDto): Promise<PaginatedResultDto> {
+  async findAll(payload: PaginationDto): Promise<PaginatedResultDto> {
     if (payload) {
-      const result = await this.pagingService.sortingAndFiltering(payload);
-      return result;
+      return this.pagingService.sortingAndFiltering(payload);
     }
+    throw new RpcException({
+      statusCode: HttpStatus.CONFLICT,
+      message: `Pagination payload is required for this operation.`,
+    } as RpcExceptionModel);
   }
 
   async create(dto: CreateAdminDto): Promise<AdminEntity> {
@@ -96,7 +99,7 @@ export class AdminService {
         message: `Param: ${payload.email} must match with request body email : ${payload.email} `
       } as RpcExceptionModel);
     }
-    const result = await this.repository.createQueryBuilder("admin")
+   return this.repository.createQueryBuilder("admin")
       .update(AdminEntity)
       .set({
         fullname: payload.fullname,
@@ -108,6 +111,5 @@ export class AdminService {
       })
       .where("email = :email", {email : payload.email})
       .execute();
-    return result;
   }
 }

@@ -1,23 +1,17 @@
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AccountService } from './account.service';
-import { USERS_MANAGEMENT_SERVICE_NAME } from '../../../../../constant';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
 import { AdminEntity } from '../entities/admin.entity';
 import { CustomerEntity } from '../entities/customer.entity';
 import { TrainerEntity } from '../entities/trainer.entity';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, lastValueFrom, Observable } from 'rxjs';
 import { catchError, defaultIfEmpty, map } from 'rxjs/operators';
 import { RpcExceptionModel } from '../filters/rpc-exception.model';
 import { LoginRequest } from '../models/login.req';
 import { Role } from '../constants/enums';
-import {
-  ADMIN_VIEW_DETAIL,
-  CUSTOMER_VIEW_DETAIL,
-  TRAINER_VIEW_DETAIL
-} from '../../../../common/routes/users-management-service-routes';
 import { FirebaseAuthService } from './firebase-auth.service';
 import * as bcrypt from 'bcrypt';
+import { KAFKA_USERS_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
 
 export interface UserIdentity {
   email: string;
@@ -27,49 +21,64 @@ export interface UserIdentity {
 }
 
 @Injectable()
-export class AuthenticationService {
+export class AuthenticationService implements OnModuleInit, OnModuleDestroy {
 
   private readonly logger = new Logger(AuthenticationService.name);
 
-  constructor(private readonly accountService: AccountService,
-              @Inject(USERS_MANAGEMENT_SERVICE_NAME)
-              private readonly usersManagementServiceProxy: ClientProxy,
-              private readonly jwtService: JwtService,
+  @Inject('SERVER')
+  private readonly client: ClientKafka;
+
+  constructor(private readonly jwtService: JwtService,
               private readonly firebaseAuthService: FirebaseAuthService) {
   }
 
+  async onModuleInit() {
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN.admins)) {
+      this.client.subscribeToResponseOf(value);
+    }
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN.trainers)) {
+      this.client.subscribeToResponseOf(value);
+    }
+    for (const [key, value] of Object.entries(MESSAGE_PATTERN.customers)) {
+      this.client.subscribeToResponseOf(value);
+    }
+    await this.client.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.client.close();
+  }
+
   private validateAdmin(username: string): Observable<AdminEntity> {
-    return this.usersManagementServiceProxy
-      .send<AdminEntity, string>({ cmd: ADMIN_VIEW_DETAIL }, username);
+    return this.client
+      .send<AdminEntity, string>(MESSAGE_PATTERN.admins.getByEmail, username);
   }
 
   private validateCustomer(username: string): Observable<CustomerEntity> {
-    return this.usersManagementServiceProxy
-      .send<CustomerEntity, string>({ cmd: CUSTOMER_VIEW_DETAIL }, username);
+    return this.client
+      .send<CustomerEntity, string>(MESSAGE_PATTERN.customers.getByEmail, username);
   }
 
   private validateTrainer(username: string): Observable<TrainerEntity> {
-    return this.usersManagementServiceProxy
-      .send<TrainerEntity, string>({ cmd: TRAINER_VIEW_DETAIL }, username);
+    return this.client
+      .send<TrainerEntity, string>(MESSAGE_PATTERN.trainers.getByEmail, username);
   }
 
   private async validateAccountWithoutPassword(username: string) {
-    const users = await combineLatest([this.validateAdmin(username).pipe(defaultIfEmpty(null)),
+    const users = await lastValueFrom(combineLatest([this.validateAdmin(username).pipe(defaultIfEmpty(null)),
       this.validateCustomer(username).pipe(defaultIfEmpty(null)),
       this.validateTrainer(username).pipe(defaultIfEmpty(null))])
       .pipe(map(([admin, customer, trainer]) => {
         return [admin, customer, trainer];
       }), catchError((e, u) => {
-        console.log(e);
         throw new RpcException({
           statusCode: HttpStatus.UNAUTHORIZED,
           message: 'Invalid username or password.'
         } as RpcExceptionModel);
         return u;
-      })).toPromise();
+      })));
     let user: AdminEntity | CustomerEntity | TrainerEntity;
     let userRole: Role;
-    console.log(users);
     if (users[0] !== undefined && users[0] !== null) {
       user = users[0] as AdminEntity;
       userRole = Role.Admin;
@@ -88,7 +97,6 @@ export class AuthenticationService {
         message: 'Invalid username or password.'
       } as RpcExceptionModel);
     }
-    console.log(user);
     return {
       ...user,
       role: userRole
@@ -101,9 +109,8 @@ export class AuthenticationService {
     let trainer : TrainerEntity;
     let customer : CustomerEntity;
     try {
-      admin  = await this.validateAdmin(username).toPromise();
+      admin = await lastValueFrom<AdminEntity>(this.validateAdmin(username));
       if (admin && await bcrypt.compare(password, admin.password)) {
-        console.log("admin")
         return {
           ...admin,
           role: Role.Admin
@@ -113,9 +120,8 @@ export class AuthenticationService {
       //
     }
     try {
-      const trainer = await this.validateTrainer(username).toPromise();
+      const trainer = await lastValueFrom<TrainerEntity>(this.validateTrainer(username));
       if (trainer && await bcrypt.compare(password, trainer.password)) {
-        console.log("trainer")
         return {
           ...trainer,
           role: Role.Trainer
@@ -125,9 +131,8 @@ export class AuthenticationService {
       //
     }
     try {
-      const customer = await this.validateCustomer(username).toPromise();
+      const customer = await lastValueFrom<CustomerEntity>(this.validateCustomer(username));
       if (customer && await bcrypt.compare(password, customer.password)) {
-        console.log("customer")
         return {
           ...customer,
           role: Role.Customer
@@ -154,6 +159,12 @@ export class AuthenticationService {
     }
 
     user = await this.validateAccount(user.email, user.password);
+    if (user === undefined) {
+      throw new RpcException({
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid username or password.'
+      } as RpcExceptionModel);
+    }
     return {
       accessToken: this.jwtService.sign(user),
       ...user,

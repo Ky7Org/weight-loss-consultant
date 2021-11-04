@@ -12,14 +12,20 @@ import * as fs from 'fs';
 import { ENV_FILE_PATH } from './app/constants/env-file-path';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { HOST, PACKAGES_MANAGEMENT_SERVICE_NAME, PACKAGES_MANAGEMENT_SERVICE_PORT } from '../../../constant';
+import { KAFKA_BROKER_ENDPOINT_1 } from '../../common/kafka-utils';
+import { v4 as uuid } from 'uuid';
 
 async function bootstrap() {
 const settings = dotenv.parse(fs.readFileSync(ENV_FILE_PATH));
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule.forRoot(settings), {
-    transport: Transport.TCP,
+    transport: Transport.KAFKA,
     options: {
-      host: HOST,
-      port: PACKAGES_MANAGEMENT_SERVICE_PORT
+      client: {
+        brokers: [KAFKA_BROKER_ENDPOINT_1],
+      },
+      consumer: {
+        groupId: `${uuid()}`,
+      }
     }
   });
   await app.listen();

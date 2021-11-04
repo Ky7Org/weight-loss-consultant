@@ -2,10 +2,10 @@ import { DynamicModule } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import {HeathInfoEntity} from "../entities/health-info.entity";
-import {CustomerEntity} from "../entities/customer.entity";
-import {HealthCheckModule} from "./health-check.module";
-import {CampaignEntity} from "../entities/campaign.entity";
+import { HeathInfoEntity } from '../entities/health-info.entity';
+import { CustomerEntity } from '../entities/customer.entity';
+import { HealthCheckModule } from './health-check.module';
+import { CampaignEntity } from '../entities/campaign.entity';
 import { ENV_FILE_PATH } from '../constants/env-file-path';
 
 export class AppModule {

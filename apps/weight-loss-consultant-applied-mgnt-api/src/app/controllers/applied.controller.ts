@@ -1,68 +1,59 @@
-import { Body, Controller, UseFilters } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ClassSerializerInterceptor, Controller, UseFilters, UseInterceptors } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ExceptionFilter } from '../../../../common/filters/rpc-exception.filter';
-import {AppliedService} from "../services/applied.service";
-import {
-  APPROVED_PACKAGE,
-  CREATE_APPLY,
-  DELETE_APPLY_BY_ID,
-  FIND_ALL_APPLIES,
-  FIND_APPLY_BY_ID, GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
-  UPDATE_APPLY_BY_ID, UpdateApplyPayloadType
-} from "../../../../common/routes/applies-management-routes";
-import {CreateAppliedDto} from "../dtos/applied/create_applied_dto";
-import {ApprovePayload} from "../../../../common/dtos/update-package-dto.payload";
+import { AppliedService } from '../services/applied.service';
+import { UpdateApplyPayloadType } from '../../../../common/routes/applies-management-routes';
+import { CreateAppliedDto } from '../dtos/applied/create_applied_dto';
+import { ApprovePayload } from '../../../../common/dtos/update-package-dto.payload';
+import { KAFKA_APPLIED_MANAGEMENT_MESSAGE_PATTERN as MESSAGE_PATTERN } from '../../../../common/kafka-utils';
+import { IKafkaMessage } from '../../../../common/kafka-message.model';
 
-
-
-@ApiTags()
-@ApiBearerAuth()
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class AppliedController {
 
   constructor(private readonly appliedService: AppliedService) {
   }
 
-  @MessagePattern({cmd: FIND_ALL_APPLIES})
+  @MessagePattern(MESSAGE_PATTERN.getAll)
   @UseFilters(new ExceptionFilter())
   async index() {
     return this.appliedService.findAll();
   }
 
-  @MessagePattern({cmd: FIND_APPLY_BY_ID})
+  @MessagePattern(MESSAGE_PATTERN.getByID)
   @UseFilters(new ExceptionFilter())
-  async getByID(@Payload() id: string) {
-    return this.appliedService.viewDetail(id);
+  async getByID(@Payload() payload: IKafkaMessage<number>) {
+    return this.appliedService.viewDetail(payload.value);
   }
 
-  @MessagePattern({cmd: CREATE_APPLY})
+  @MessagePattern(MESSAGE_PATTERN.create)
   @UseFilters(new ExceptionFilter())
-  async create(@Body() dto: CreateAppliedDto) {
-    return this.appliedService.create(dto);
+  async create(@Payload() payload: IKafkaMessage<CreateAppliedDto>) {
+    return this.appliedService.create(payload.value);
   }
 
-  @MessagePattern({cmd: UPDATE_APPLY_BY_ID})
+  @MessagePattern(MESSAGE_PATTERN.update)
   @UseFilters(new ExceptionFilter())
-  async update(@Payload() updatePayload: UpdateApplyPayloadType) {
-    return this.appliedService.edit(updatePayload.dto, updatePayload.id);
+  async update(@Payload() payload: IKafkaMessage<UpdateApplyPayloadType>) {
+    return this.appliedService.edit(payload.value.dto, payload.value.id);
   }
 
-  @MessagePattern({cmd: DELETE_APPLY_BY_ID})
+  @MessagePattern(MESSAGE_PATTERN.delete)
   @UseFilters(new ExceptionFilter())
-  async delete(@Payload() id: number) {
-    return this.appliedService.del(id);
+  async delete(@Payload() payload: IKafkaMessage<number>) {
+    return this.appliedService.del(payload.value);
   }
 
-  @MessagePattern({cmd: GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID})
+  @MessagePattern(MESSAGE_PATTERN.getByCampaignID)
   @UseFilters(new ExceptionFilter())
-  async getPackages(@Payload() id: number) {
-    return this.appliedService.getAppliedPackagesByCampaignID(id);
+  async getPackages(@Payload() payload: IKafkaMessage<number>) {
+    return this.appliedService.getAppliedPackagesByCampaignID(payload.value);
   }
 
-  @MessagePattern({cmd: APPROVED_PACKAGE})
+  @MessagePattern(MESSAGE_PATTERN.approvePackage)
   @UseFilters(new ExceptionFilter())
-  async approvePackage(@Payload() payload: ApprovePayload) {
-    return this.appliedService.approvePackageByCustomer(payload);
+  async approvePackage(@Payload() payload: IKafkaMessage<ApprovePayload>) {
+    return this.appliedService.approvePackageByCustomer(payload.value);
   }
 }

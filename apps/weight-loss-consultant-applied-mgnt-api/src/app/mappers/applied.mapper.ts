@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import {CampaignEntity} from "../entities/campaign.entity";
-import {PackageEntity} from "../entities/package.enttiy";
-import {CreateAppliedDto} from "../dtos/applied/create_applied_dto";
-import {AppliedEntity} from "../entities/applied.entity";
-import {UpdateAppliedDto} from "../dtos/applied/update_applied_dto";
+import { CampaignEntity } from '../entities/campaign.entity';
+import { PackageEntity } from '../entities/package.enttiy';
+import { CreateAppliedDto } from '../dtos/applied/create_applied_dto';
+import { AppliedEntity } from '../entities/applied.entity';
+import { UpdateAppliedDto } from '../dtos/applied/update_applied_dto';
 
 @Injectable()
 export class AppliedMapper {

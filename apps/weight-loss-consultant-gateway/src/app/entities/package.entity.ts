@@ -1,7 +1,7 @@
-import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { TrainerEntity } from './trainer.entity';
-import {ContractEntity} from "./contract.entity";
-import {AppliedEntity} from "./applied.entity";
+import { ContractEntity } from './contract.entity';
+import { AppliedEntity } from './applied.entity';
 
 @Entity('Package')
 export class PackageEntity extends BaseEntity{

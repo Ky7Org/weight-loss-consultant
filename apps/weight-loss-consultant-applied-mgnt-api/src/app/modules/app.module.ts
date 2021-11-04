@@ -2,11 +2,11 @@ import { DynamicModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_FILE_PATH } from '../constants/env-file-path';
-import {AppliedEntity} from "../entities/applied.entity";
-import {CampaignEntity} from "../entities/campaign.entity";
-import {PackageEntity} from "../entities/package.enttiy";
-import {AppliedModule} from "./applied.module";
-import {TrainerEntity} from "../entities/trainer.entity";
+import { AppliedEntity } from '../entities/applied.entity';
+import { CampaignEntity } from '../entities/campaign.entity';
+import { PackageEntity } from '../entities/package.enttiy';
+import { AppliedModule } from './applied.module';
+import { TrainerEntity } from '../entities/trainer.entity';
 
 export class AppModule {
   static forRoot(settings): DynamicModule {

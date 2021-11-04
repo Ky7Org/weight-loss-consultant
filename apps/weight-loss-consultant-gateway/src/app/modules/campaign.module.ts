@@ -1,25 +1,18 @@
 import { Module } from '@nestjs/common';
 
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import {
-  CAMPAIGN_MANAGEMENT_SERVICE_NAME, CAMPAIGN_MANAGEMENT_SERVICE_PORT,
-  HOST,
-} from '../../../../../constant';
 import { CampaignController } from '../controllers/campaigns-management/campaign.controller';
 import { CampaignService } from '../services/campaign.service';
+import { ClientsModule } from '@nestjs/microservices';
+import { KAFKA_SERVICE } from '../../../../common/kafka-utils';
 
 
 @Module({
   imports: [ClientsModule.register([
     {
-      name: CAMPAIGN_MANAGEMENT_SERVICE_NAME,
-      transport: Transport.TCP,
-      options: {
-        host: HOST,
-        port: CAMPAIGN_MANAGEMENT_SERVICE_PORT
-      }
-    }])
-  ],
+      ...KAFKA_SERVICE,
+      name: 'SERVER',
+    }
+  ]),],
   controllers: [CampaignController],
   providers: [CampaignService],
   exports: [CampaignService]

@@ -1,12 +1,24 @@
-import { ArgumentsHost, Catch } from '@nestjs/common';
-import { BaseRpcExceptionFilter, RpcException } from '@nestjs/microservices';
-import { Observable, throwError } from 'rxjs';
-import { RpcExceptionModel } from './rpc-exception.model';
+import {ArgumentsHost, Catch} from '@nestjs/common';
+import {BaseRpcExceptionFilter, KafkaContext, RpcException} from '@nestjs/microservices';
+import {Observable, throwError} from 'rxjs';
 
 @Catch(RpcException)
 export class ExceptionFilter extends BaseRpcExceptionFilter {
-  catch(e: RpcException, host: ArgumentsHost): Observable<RpcExceptionModel> {
-    console.log(e)
-    return throwError(e);
+  catch(e: RpcException, host: ArgumentsHost): Observable<any> {
+    const ctx = host.switchToRpc().getContext<KafkaContext>();
+    return throwError(() => Buffer.from(JSON.stringify({
+        error: {
+          statusCode: e.getError()["statusCode"] || 500,
+          message: e.getError()["message"] || "Internal Server Error",
+          timestamp: new Date().toISOString(),
+          trace: e.stack || "No stack trace available.",
+          kafka: {
+            topic: ctx.getTopic(),
+            message: ctx.getMessage(),
+            partition: ctx.getPartition(),
+          }
+        }
+      }
+    )));
   }
 }

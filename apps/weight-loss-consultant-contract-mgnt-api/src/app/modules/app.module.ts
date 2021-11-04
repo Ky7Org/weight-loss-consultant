@@ -4,11 +4,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { ENV_FILE_PATH } from '../../constant';
-import {ContractModule} from "./contract.module";
-import {ContractController} from "../controllers/contract.controller";
-import {CampaignEntity} from "../entities/campaign.entity";
-import {ContractEntity} from "../entities/contract.entity";
-import {PackageEntity} from "../entities/package.enttiy";
+import { ContractModule } from './contract.module';
+import { ContractController } from '../controllers/contract.controller';
+import { CampaignEntity } from '../entities/campaign.entity';
+import { ContractEntity } from '../entities/contract.entity';
+import { PackageEntity } from '../entities/package.enttiy';
 
 
 export class AppModule {

@@ -3,10 +3,10 @@ import { DynamicModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_FILE_PATH } from '../constants/env-file-path';
-import {ReportEntity} from "../entities/report.entity";
-import {ReportMediaEntity} from "../entities/report-media.entity";
-import {ReportModule} from "./report.module";
-import {ContractEntity} from "../entities/contract.entity";
+import { ReportEntity } from '../entities/report.entity';
+import { ReportMediaEntity } from '../entities/report-media.entity';
+import { ReportModule } from './report.module';
+import { ContractEntity } from '../entities/contract.entity';
 
 
 export class AppModule {
