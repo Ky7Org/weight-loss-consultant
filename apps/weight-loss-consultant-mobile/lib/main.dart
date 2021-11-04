@@ -8,6 +8,8 @@ import 'package:weight_loss_consultant_mobile/services/local_notification_servic
 
 //Receive message when app is in background solution for on message
 Future<void> backgroundHandler(RemoteMessage message) async {
+  print(message.notification!.title);
+  print(message.notification!.body);
 }
 
 void main() async {
@@ -89,10 +91,10 @@ class _AppState extends State<App> {
             _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
                 arguments: mapData);
           } else if (typeOfMessage == 'Apply Campaign') {
-            final campaignID = message.data['campaignID'];
+            final packageID = message.data['packageID'];
             _navKey.currentState!.pushNamed(
-                RoutePath.trainerViewCampaignDetailPage,
-                arguments: int.parse(campaignID));
+                RoutePath.trainerOnGoingPackageDetailPage,
+                arguments: int.parse(packageID));
           }
         });
 

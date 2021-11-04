@@ -73,8 +73,8 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
     );
   }
 
-  void _showLoginError(int packageID) {
-    showDialog(
+  Future _showLoginError(int packageID) async{
+    return showDialog(
         context: context,
         builder: (ctx) => Dialog(
             shape: RoundedRectangleBorder(
@@ -84,7 +84,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
               alignment: Alignment.topCenter,
               children: [
                 SizedBox(
-                  height: 200,
+                  height: 180,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
                     child: Column(children: [
@@ -127,12 +127,10 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
                               bool result = await service.applyPackageToCampaign(packageID, widget.campaignId as int, user);
                               if (result){
                                 CustomToast.makeToast("Save successfully");
-
                               } else {
                                 CustomToast.makeToast("Some thing went wrong! Try again");
                               }
-                              Navigator.of(context).pop();
-
+                              Navigator.of(context).pop(result);
                             },
                             color: Colors.redAccent,
                             child: const Text(
@@ -166,7 +164,11 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
   Widget _package(PackageModel model) {
     return GestureDetector(
       onTap: () {
-        _showLoginError(model.id as int);
+        _showLoginError(model.id as int).then((value){
+          if (value){
+            Navigator.pop(context);
+          }
+        });
       },
       child: Card(
         elevation: 5,
@@ -363,7 +365,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         ),
         Center(
           child: Text(
-            'No Campaign',
+            'No Package',
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 36,
@@ -376,7 +378,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         ),
         Center(
           child: Text(
-            "You don't have any campaign.",
+            "You don't have any active package.",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,
@@ -436,7 +438,8 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
               future: listPackage,
               builder: (context, snapshot) {
                 if (snapshot.hasData){
-                  if (snapshot.requireData.isEmpty){
+                  List<PackageModel> activePackage = snapshot.requireData.where((element) => element.status == 0).toList();
+                  if (activePackage.isEmpty){
                     return _buildEmptyCampaignList();
                   }
                   return Column(

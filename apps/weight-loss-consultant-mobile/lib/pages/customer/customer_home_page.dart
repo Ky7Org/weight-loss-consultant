@@ -82,7 +82,13 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         ),
         GestureDetector(
           onTap: (){
-            Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
+            Navigator.pushNamed(context, RoutePath.upcomingTrainingPage).then((value){
+              CustomerService customerService = CustomerService();
+              customerService.getCustomerCampaign(user.email ?? "").then((value){
+                ongoingCampaign = value.firstWhereOrNull((element) => element.status == 1);
+                setState(() {});
+              });
+            });
           },
           child: Card(
             elevation: 5,
@@ -167,7 +173,13 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
           children: [
             GestureDetector(
               onTap: (){
-                Navigator.pushNamed(context, RoutePath.customerTodoPage);
+                Navigator.pushNamed(context, RoutePath.customerTodoPage).then((value){
+                  CustomerService customerService = CustomerService();
+                  customerService.getCustomerCampaign(user.email ?? "").then((value){
+                    ongoingCampaign = value.firstWhereOrNull((element) => element.status == 1);
+                    setState(() {});
+                  });
+                });
               },
               child: SizedBox(
                 height: 118,
@@ -203,7 +215,13 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             ),
             GestureDetector(
               onTap: (){
-                Navigator.pushNamed(context, RoutePath.myMessagePage);
+                Navigator.pushNamed(context, RoutePath.myMessagePage).then((value){
+                  CustomerService customerService = CustomerService();
+                  customerService.getCustomerCampaign(user.email ?? "").then((value){
+                    ongoingCampaign = value.firstWhereOrNull((element) => element.status == 1);
+                    setState(() {});
+                  });
+                });
               },
               child: SizedBox(
                 height: 118,
@@ -294,8 +312,13 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         ),
         GestureDetector(
           onTap: () {
-            print(ongoingCampaign);
-            Navigator.pushNamed(context, RoutePath.customerOngoingCampaignPage, arguments: ongoingCampaign!.id);
+            Navigator.pushNamed(context, RoutePath.customerOngoingCampaignPage, arguments: ongoingCampaign!.id).then((value){
+              CustomerService customerService = CustomerService();
+              customerService.getCustomerCampaign(user.email ?? "").then((value){
+                ongoingCampaign = value.firstWhereOrNull((element) => element.status == 1);
+                setState(() {});
+              });
+            });
           },
           child: Card(
             elevation: 5,
@@ -411,15 +434,43 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     );
   }
 
+  void callbackAfterPop(){
+    CustomerService customerService = CustomerService();
+    customerService.getCustomerCampaign(user.email ?? "").then((value){
+      ongoingCampaign = value.firstWhereOrNull((element) => element.status == 1);
+      setState(() {});
+    });
+  }
+
+  void updateProfileAfterPop() {
+    initAccount().then((value) {
+      setState(() {
+
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    Image image;
+    if (user.profileImage == null){
+      image = Image.asset("assets/fake-image/miku-avatar.png", width: 50, height: 50,);
+    } else {
+      image = Image.network(
+        user.profileImage as String,
+        height: 50,
+        width: 50,
+      );
+    }
+
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       //drawer: CustomerDrawer.builder(user.fullname, Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
-      appBar: MainAppBar.builder(user.fullname ?? "", context),
+      appBar: MainAppBar.builder(user.fullname ?? "", context, image, updateProfileAfterPop),
       body: SlidingUpPanel(
         controller: _pc,
-        panel: CategoryPanel(),
+        panel: CategoryPanel(callBackAfterPop: callbackAfterPop),
         minHeight: 0,
         maxHeight: 200,
         body: Padding(
@@ -429,7 +480,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               const SizedBox(width: double.infinity,),
               SvgPicture.asset("assets/panel-image/customer-home-panel.svg"),
               SvgPicture.asset("assets/fake-image/fake-chart.svg"),
-              _buildUpcomingTraining(),
+              //_buildUpcomingTraining(),
               //_buildTopCategory(),
               _buildCurrentCampaign(),
               const SizedBox(height: 250,),

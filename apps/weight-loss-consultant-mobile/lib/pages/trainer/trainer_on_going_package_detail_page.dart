@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -118,15 +119,30 @@ class _TrainerOnGoingPackageDetailPageState
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Center(child: avatarOfUser()),
-            const SizedBox(
-              height: 15,
+            Center(
+                child: Stack(
+                  children: [
+                    const SizedBox(width: double.infinity,),
+                    Center(child: avatarOfUser()),
+                    Positioned(
+                      height: 100,
+                      right: 10,
+                      child: IconButton(
+                        iconSize: 48,
+                        onPressed: () {
+                          Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
+                        },
+                        icon: SvgPicture.asset("assets/icon/call-icon.svg"),
+                      ),
+                    )
+                  ],
+                )
             ),
             _content("Name of trainer", campaignModel!.customer!.fullname ?? ""),
             _content("Email", campaignModel!.customer!.email ?? ""),
             _content("Gender", "${campaignModel!.customer!.gender == "1" ? "Male" : "Female"} "),
             _content("Phone number", campaignModel!.customer!.phone ?? ""),
-            _content("Date of birth", date ?? ""),
+            _content("Date of birth", date),
           ],
         ),
       ),
@@ -211,6 +227,26 @@ class _TrainerOnGoingPackageDetailPageState
               ),
               Text(
                 model.dietPlan ?? "",
+                style: TextStyle(
+                    color: HexColor("#0D3F67"),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                "Schedule Plan",
+                style: TextStyle(
+                    color: HexColor("#0D3F67"),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                model.schedule ?? "",
                 style: TextStyle(
                     color: HexColor("#0D3F67"),
                     fontSize: 15,
@@ -426,6 +462,7 @@ class _TrainerOnGoingPackageDetailPageState
                     Tab(
                       child: Text(
                         'Customer Campaign',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w700),
                       ),
@@ -433,13 +470,15 @@ class _TrainerOnGoingPackageDetailPageState
                     Tab(
                       child: Text(
                         'Customer Info',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w700),
                       ),
                     ),
                     Tab(
                       child: Text(
-                        'Package\n Detail',
+                        'Package Detail',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w700),
                       ),

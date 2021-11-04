@@ -20,7 +20,8 @@ PackageModel _$PackageModelFromJson(Map<String, dynamic> json) => PackageModel()
   ..name = json['name'] as String?
   ..createDate = json['createDate'] as int?
   ..startDate = json['startDate'] as String?
-  ..endDate = json['endDate'] as String?;
+  ..endDate = json['endDate'] as String?
+  ..sessionLength = json['sessionLength'] as int?;
 
 Map<String, dynamic> _$PackageModelToJson(PackageModel instance) =>
     <String, dynamic>{
@@ -36,4 +37,5 @@ Map<String, dynamic> _$PackageModelToJson(PackageModel instance) =>
       'createDate': instance.createDate,
       'startDate': instance.startDate,
       'endDate': instance.endDate,
+      'sessionLength': instance.sessionLength,
     };

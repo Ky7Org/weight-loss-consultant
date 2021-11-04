@@ -56,6 +56,16 @@ class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignP
 
   Widget _campaign(CustomerCampaignModel model) {
     var date = DateFormat("MMMM-dd-yyyy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(model.startDate ?? DateTime.now().millisecond.toString()))).toString();
+    Image avatar;
+    if (model == null){
+      avatar = Image.asset("assets/fake-image/miku-avatar.png");
+    } else if (model.customer == null){
+      avatar = Image.asset("assets/fake-image/miku-avatar.png");
+    } else if (model.customer!.profileImage == null){
+      avatar = Image.asset("assets/fake-image/miku-avatar.png");
+    } else {
+      avatar = Image.network(model.customer!.profileImage as String);
+    }
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, RoutePath.trainerViewCampaignDetailPage, arguments: model.id);
@@ -75,8 +85,7 @@ class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignP
                   SizedBox(
                     height: 60,
                     width: 60,
-                    child: Image.asset(
-                        'assets/fake-image/fake-trainer-avatar.jpg'),
+                    child: avatar,
                   ),
                   const SizedBox(width: 20,),
                   Column(

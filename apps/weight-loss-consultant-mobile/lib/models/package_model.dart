@@ -19,6 +19,7 @@ class PackageModel{
   int? createDate;
   String? startDate;
   String? endDate;
+  int? sessionLength;
 
   PackageModel();
 

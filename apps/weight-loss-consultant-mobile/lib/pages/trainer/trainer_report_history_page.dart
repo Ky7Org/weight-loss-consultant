@@ -84,7 +84,7 @@ class _TrainerReportHistoryPageState extends State<TrainerReportHistoryPage> {
               Row(
                 children: [
                   Text(
-                    DateFormat.yMMMd().format(DateTime.now()),
+                    DateFormat.yMMMd().format(DateTime.fromMillisecondsSinceEpoch(int.parse(data.createDate as String))),
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontSize: 17,

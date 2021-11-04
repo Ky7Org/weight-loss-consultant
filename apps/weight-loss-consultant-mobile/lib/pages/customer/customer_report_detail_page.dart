@@ -81,7 +81,7 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
       } catch (e){
         image = Image.asset("assets/fake-image/miku-avatar.png");
       }
-      if(file.contains('http://')){
+      if(file.contains('https://')){
         listWidget.add(image);
       }
     }
@@ -290,7 +290,6 @@ class _CustomerReportDetailPageState extends State<CustomerReportDetailPage> {
                     service.getDietReportMediaModelByReportId(report.id as int, user).then((value) {
                       dietImages = value.map((e) => e.url ?? "").toList();
                       setState(() {
-
                       });
                     });
                   });

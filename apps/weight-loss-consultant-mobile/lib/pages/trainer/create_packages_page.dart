@@ -60,7 +60,9 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
 
 
   String dropdownValue = '1 day';
+  String perSessionValue = '30 mins';
   int spendTimeToTraining = 1;
+  int spendTimePerSession = 30;
 
   Widget _multiInput(
       String label, String hint, TextEditingController controller, int maxCharacter) {
@@ -110,7 +112,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
   }
 
   Widget _singleInput(String label, String hint, bool haveSuffixIcon,
-      bool havePrefixIcon, IconData icon, TextEditingController controller, FormFieldValidator<String> validator) {
+      bool havePrefixIcon, IconData icon, TextEditingController controller, FormFieldValidator<String> validator, TextInputType type) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -143,7 +145,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
               Expanded(
                 child: TextFormField(
                   controller: controller,
-                  keyboardType: TextInputType.phone,
+                  keyboardType: type,
                   validator: validator,
                   style: const TextStyle(fontSize: 15),
                   decoration: InputDecoration(
@@ -171,7 +173,7 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
     );
   }
 
-  Widget _dropdown(){
+  Widget _dropdownInWeek(){
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -221,6 +223,65 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
               });
             },
             items: <String>['1 day','2 days', '3 days', '4 days', '5 days']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dropdownPerSession(){
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+          color: AppColors.INPUT_COLOR,
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child:  Column(
+        children: [
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Total number of days to meet',
+              style: TextStyle(
+                  color: Color(0xFF0D3F67),
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          DropdownButton<String>(
+            value: perSessionValue,
+            icon: const Icon(Icons.arrow_drop_down_sharp),
+            iconSize: 24,
+            elevation: 16,
+            isExpanded: true,
+            style: const TextStyle(color: Color(0xFF0D3F67), fontWeight: FontWeight.w400, fontSize: 15),
+            underline: const SizedBox(),
+            onChanged: (String? newValue) {
+              setState(() {
+                perSessionValue = newValue!;
+                switch (newValue){
+                  case '30 mins':
+                    spendTimeToTraining = 30;
+                    break;
+                  case '45 mins':
+                    spendTimeToTraining = 45;
+                    break;
+                  case "60 mins":
+                    spendTimeToTraining = 60;
+                    break;
+                  case "90 mins":
+                    spendTimeToTraining = 90;
+                    break;
+                }
+              });
+            },
+            items: <String>['30 mins','45 mins', '60 mins', '90 mins']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -401,9 +462,11 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                             return "Title cannot be bigger than 30 characters";
                           }
                           return null;
-                        }
+                        },
+                      TextInputType.text
                     ),
-                    _dropdown(),
+                    _dropdownInWeek(),
+                    _dropdownPerSession(),
                     _multiInput("Exercise Plan", "Do what?", _exercisePlan, 1000),
                     _multiInput("Diet Plan", "Eat what?", _dietPlan, 1000),
                     _singleInput("Training Fee", "000.00", false, true,
@@ -423,7 +486,10 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                             return "Fee must be a number";
                           }
                           return null;
-                        }),
+                        },
+                        TextInputType.number
+
+                    ),
                     _multiInput("Schedule description", "Your description...", _schedule, 1000),
                     _buildStartDateTF(),
                     const SizedBox(height: 20,),
@@ -452,11 +518,13 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                             status: status,
                             dietPlan: dietPlan,
                             spendTimeToTraining: spendTimeToTraining,
+                            spendTimePerSession: spendTimePerSession,
                             name: name,
                             user: user,
                             endDate: endDate.microsecondsSinceEpoch,
                             startDate: startDate.microsecondsSinceEpoch,
                           );
+                          Navigator.pop(context);
                           if (result){
                             CustomToast.makeToast("Create successfully");
                           } else {

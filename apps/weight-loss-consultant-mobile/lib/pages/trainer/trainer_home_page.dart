@@ -9,13 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/customer_bottom_navigator_index.dart';
-import 'package:weight_loss_consultant_mobile/constants/trainer_bottom_navigator_index.dart';
 import 'package:weight_loss_consultant_mobile/main.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/cusomter_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/main_app_bar.dart';
-import 'package:weight_loss_consultant_mobile/pages/components/trainer_bottom_navigator.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/trainer_sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
@@ -31,7 +29,7 @@ class TrainerHomePage extends StatefulWidget {
 class _TrainerHomePageState extends State<TrainerHomePage> {
   int selectedIndex = 0;
   final PanelController _pc = PanelController();
-  PackageModel? onGoingPackage;
+  List<PackageModel>? onGoingPackage;
 
   AccountModel user = AccountModel(email: "", fullname: "");
 
@@ -57,7 +55,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
         TrainerService trainerService = TrainerService();
         trainerService.getTrainerPackage(user).then((value) {
           onGoingPackage =
-              value.firstWhereOrNull((element) => element.status == 2);
+              value.where((element) => element.status == 2).toList();
           setState(() {});
         });
       });
@@ -67,7 +65,14 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
   Widget _phoneCard(String date, String nameTraining, String nameCustomer) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
+        Navigator.pushNamed(context, RoutePath.upcomingTrainingPage).then((value){
+          TrainerService trainerService = TrainerService();
+          trainerService.getTrainerPackage(user).then((value) {
+            onGoingPackage =
+                value.where((element) => element.status == 2).toList();
+            setState(() {});
+          });
+        });
       },
       child: Card(
         elevation: 5,
@@ -134,7 +139,14 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     return GestureDetector(
       onTap: () {
         if (title == "Message") {
-          Navigator.pushNamed(context, RoutePath.myMessagePage);
+          Navigator.pushNamed(context, RoutePath.myMessagePage).then((value){
+            TrainerService trainerService = TrainerService();
+            trainerService.getTrainerPackage(user).then((value) {
+              onGoingPackage =
+                  value.where((element) => element.status == 2).toList();
+              setState(() {});
+            });
+          });
         }
       },
       child: SizedBox(
@@ -169,12 +181,28 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     );
   }
 
-  Widget _buildCurrentCampaign() {
-    if (onGoingPackage == null) return Container();
+  List<Widget> _buildCurrentCampaignList(){
+    List<Widget> widgets = [];
+    if (onGoingPackage == null) return widgets;
+    for (PackageModel packageModel in onGoingPackage!){
+      Widget widget = _buildCurrentCampaign(packageModel);
+      widgets.add(widget);
+    }
+    return widgets;
+  }
+
+  Widget _buildCurrentCampaign(PackageModel model) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, RoutePath.trainerOnGoingPackageDetailPage,
-            arguments: onGoingPackage!.id as int);
+            arguments: model.id as int).then((value){
+          TrainerService trainerService = TrainerService();
+          trainerService.getTrainerPackage(user).then((value) {
+            onGoingPackage =
+                value.where((element) => element.status == 2).toList();
+            setState(() {});
+          });
+        });
       },
       child: Card(
         elevation: 5,
@@ -190,7 +218,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    onGoingPackage!.name ?? "",
+                    model.name ?? "",
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w900,
@@ -211,7 +239,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                         fontSize: 15),
                   ),
                   TextSpan(
-                    text: onGoingPackage!.exercisePlan ?? "",
+                    text: model.exercisePlan ?? "",
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,
@@ -232,7 +260,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                         fontSize: 15),
                   ),
                   TextSpan(
-                    text: onGoingPackage!.dietPlan ?? "",
+                    text: model.dietPlan ?? "",
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,
@@ -254,7 +282,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                   ),
                   TextSpan(
                     text:
-                        "${onGoingPackage!.spendTimeToTraining.toString()} day(s)",
+                        "${model.spendTimeToTraining.toString()} day(s)",
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,
@@ -296,7 +324,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                         fontSize: 15),
                   ),
                   Text(
-                    onGoingPackage!.price.toString(),
+                    model.price.toString(),
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,
@@ -316,11 +344,29 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     );
   }
 
+  void updateProfileAfterPop() {
+    initAccount().then((value) {
+      setState(() {
+
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Image image;
+    if (user.profileImage == null){
+      image = Image.asset("assets/fake-image/miku-avatar.png", width: 50, height: 50,);
+    } else {
+      image = Image.network(
+        user.profileImage as String,
+        height: 50,
+        width: 50,
+      );
+    }
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: MainAppBar.builder(user.fullname ?? "", context),
+        appBar: MainAppBar.builder(user.fullname ?? "", context, image, updateProfileAfterPop),
         body: SlidingUpPanel(
           controller: _pc,
           panel: TrainerCategoryPanel(),
@@ -333,7 +379,8 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 const SizedBox(
                   width: double.infinity,
                 ),
-                Container(
+                SvgPicture.asset("assets/panel-image/customer-home-panel.svg"),
+                /*Container(
                   margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
                       alignment: Alignment.topLeft,
@@ -349,7 +396,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 _phoneCard(
                     "17:00 Nov 30,2021", "Cardio Training", "Mr Duy Nghiem"),
                 _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mr Son"),
-                _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mrs Thy"),
+                _phoneCard("17:00 Nov 30,2021", "Cardio Training", "Mrs Thy"),*/
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
@@ -363,7 +410,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                         ),
                       )),
                 ),
-                _buildCurrentCampaign(),
+                ..._buildCurrentCampaignList(),
                 const SizedBox(
                   height: 250,
                 ),
@@ -371,9 +418,9 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
             ),
           ),
         ),
-        bottomNavigationBar: TrainerBottomNavigator(
+        bottomNavigationBar: CustomerBottomNavigator(
           pc: _pc,
-          selectedIndex: TrainerBottomNavigatorIndex.HOME,
+          selectedIndex: CustomerBottomNavigatorIndex.HOME,
         ));
   }
 }

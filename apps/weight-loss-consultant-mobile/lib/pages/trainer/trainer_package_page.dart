@@ -55,7 +55,149 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     });
   }
 
-  Widget _package(PackageModel model) {
+  Future _showConfirmDeleteDialog(int packageID) async{
+    return showDialog(
+        context: context,
+        builder: (ctx) => Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                SizedBox(
+                  height: 180,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+                    child: Column(children: [
+                      const Center(
+                          child: Text(
+                            "Are you sure to delete this package?",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                            ),
+                          )),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RaisedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            color: Colors.redAccent,
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(width: 20,),
+                          RaisedButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop(true);
+                            },
+                            color: Colors.redAccent,
+                            child: const Text(
+                              'Okay',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ]),
+                  ),
+                ),
+                const Positioned(
+                    top: -35,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.redAccent,
+                      radius: 40,
+                      child: Icon(
+                        Icons.warning,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    )),
+              ],
+            )));
+  }
+
+  Widget _editButtonGroup(PackageModel model){
+    if (model.status == 0){
+      //Active package
+      return Row(
+        children: [
+          IconButton(
+              onPressed: () async {
+                Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
+                  listPackage = service.getTrainerPackage(user);
+                  setState(() {});
+                });
+              },
+              icon: Icon(
+                Icons.edit,
+                color: HexColor("#FF3939"),
+              )
+          ),
+          IconButton(
+              onPressed: () async {
+                _showConfirmDeleteDialog(model.id as int).then((value) async{
+                  if (value){
+                    bool result = await service.deletePackage(model.id ?? 0, user);
+                    if (result){
+                      CustomToast.makeToast("Delete successfully");
+                    } else {
+                      CustomToast.makeToast("Some thing went wrong! Try again");
+                    }
+                    setState(() {
+                      listPackage = service.getTrainerPackage(user);
+                    });
+                  }
+                });
+              },
+              icon: Icon(
+                Icons.highlight_remove_outlined,
+                color: HexColor("#FF3939"),
+              )
+          ),
+        ],
+      );
+    } else if (model.status == 1){
+      //Applied package
+      return Row(
+        children: [
+          IconButton(
+              onPressed: () async {
+                Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
+                  listPackage = service.getTrainerPackage(user);
+                  setState(() {});
+                });
+              },
+              icon: Icon(
+                Icons.edit,
+                color: HexColor("#FF3939"),
+              )
+          ),
+          IconButton(
+              onPressed: () async {
+
+              },
+              icon: Icon(
+                Icons.highlight_remove_outlined,
+                color: HexColor("#FF3939"),
+              )
+          ),
+        ],
+      );
+    }
+    return Container();
+  }
+
+  Widget _activePackage(PackageModel model) {
     return GestureDetector(
       onTap: () {
       },
@@ -80,35 +222,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                         fontSize: 19),
                   ),
                   const Spacer(),
-                  IconButton(
-                      onPressed: () async {
-                        Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
-                          listPackage = service.getTrainerPackage(user);
-                          setState(() {});
-                        });
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        color: HexColor("#FF3939"),
-                      )
-                  ),
-                  IconButton(
-                      onPressed: () async {
-                        bool result = await service.deletePackage(model.id ?? 0, user);
-                        if (result){
-                          CustomToast.makeToast("Delete successfully");
-                        } else {
-                          CustomToast.makeToast("Some thing went wrong! Try again");
-                        }
-                        setState(() {
-                          listPackage = service.getTrainerPackage(user);
-                        });
-                      },
-                      icon: Icon(
-                        Icons.highlight_remove_outlined,
-                        color: HexColor("#FF3939"),
-                      )
-                  ),
+                  _editButtonGroup(model),
                 ],
               ),
               RichText(
@@ -194,7 +308,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                             fontSize: 15),
                       ),
                       TextSpan(
-                        text: "45 minutes",
+                        text: "${model.sessionLength} minutes",
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontWeight: FontWeight.w400,
@@ -236,6 +350,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
       ),
     );
   }
+
 
   Widget _buildEmptyCampaignList(){
     return Column(
@@ -283,7 +398,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     List<Widget> widgets = [];
     for (PackageModel model in data){
       if (model.status != 0) continue;
-      var widget = _package(model);
+      var widget = _activePackage(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 60,));
@@ -294,7 +409,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     List<Widget> widgets = [];
     for (PackageModel model in data){
       if (model.status != 1) continue;
-      var widget = _package(model);
+      var widget = _activePackage(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 60,));
@@ -305,7 +420,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     List<Widget> widgets = [];
     for (PackageModel model in data){
       if (model.status != 2) continue;
-      var widget = _package(model);
+      var widget = _activePackage(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 60,));
@@ -316,7 +431,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     List<Widget> widgets = [];
     for (PackageModel model in data){
       if (model.status != 3) continue;
-      var widget = _package(model);
+      var widget = _activePackage(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 60,));
