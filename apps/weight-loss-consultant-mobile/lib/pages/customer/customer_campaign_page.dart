@@ -489,13 +489,13 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
 
   void _handleSearchEnd() {
     setState(() {
-      icon = const Icon(
+      icon = Icon(
         Icons.search,
-        color: Colors.white,
+        color: AppColors.PRIMARY_WORD_COLOR,
       );
-      appBarTitle = const Text(
-        "Add workout",
-        style: TextStyle(color: Colors.white),
+      appBarTitle = Text(
+        "Search your campaign",
+        style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR,),
       );
       _isSearching = false;
       _controller.clear();
@@ -504,7 +504,6 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
 
   Future<List<CampaignModel>> updateAndGetList(String searchText) async{
     List<CampaignModel> searchresult = [];
-    print(fullList!.length);
     for (int i = 0; i < fullList!.length; i++) {
       CampaignModel data = fullList![i];
       if (data.description!.toLowerCase().contains(searchText.toLowerCase())) {

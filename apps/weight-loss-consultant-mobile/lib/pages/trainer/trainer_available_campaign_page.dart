@@ -28,6 +28,23 @@ class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignP
   AccountModel user = AccountModel(email: "", fullname: "");
   TrainerService service = TrainerService();
 
+  List<CustomerCampaignModel>? fullList;
+
+  Icon icon = Icon(
+    Icons.search,
+    color: AppColors.PRIMARY_WORD_COLOR,
+  );
+
+  Widget appBarTitle = Text(
+    "Search available campaign list",
+    style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR),
+  );
+
+  final TextEditingController _controller = TextEditingController();
+  bool _isSearching = false;
+  String _searchText = "";
+  final globalKey = GlobalKey<ScaffoldState>();
+
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userJSON = prefs.getString('ACCOUNT');
@@ -45,9 +62,25 @@ class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignP
   @override
   void initState() {
     super.initState();
+    _controller.addListener(() {
+      if (_controller.text.isEmpty) {
+        setState(() {
+          _isSearching = false;
+          _searchText = "";
+        });
+      } else {
+        setState(() {
+          _isSearching = true;
+          _searchText = _controller.text;
+        });
+      }
+    });
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
         listCampaign = service.getAvailableCampaign(user);
+        listCampaign!.then((value){
+          fullList = value;
+        });
         setState(() {});
       });
     });
@@ -281,10 +314,96 @@ class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignP
     );
   }
 
+  void _handleSearchStart() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _handleSearchEnd() {
+    setState(() {
+      icon = Icon(
+        Icons.search,
+        color: AppColors.PRIMARY_WORD_COLOR,
+      );
+      appBarTitle = Text(
+        "Search available campaign list",
+        style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR,),
+      );
+      _isSearching = false;
+      _controller.clear();
+    });
+  }
+
+  Future<List<CustomerCampaignModel>> updateAndGetList(String searchText) async{
+    List<CustomerCampaignModel> searchresult = [];
+    for (int i = 0; i < fullList!.length; i++) {
+      CustomerCampaignModel data = fullList![i];
+      if (data.customer!.fullname!.toLowerCase().contains(searchText.toLowerCase())) {
+        searchresult.add(data);
+      }
+    }
+    return searchresult;
+  }
+
+  void searchOperation(String searchText) {
+    setState(() {
+      listCampaign = updateAndGetList(searchText);
+    });
+  }
+
+  AppBar _buildAppBar(){
+    return AppBar(
+      centerTitle: false,
+      titleSpacing: 0,
+      title: appBarTitle,
+      shadowColor: Colors.grey,
+      backgroundColor: Colors.white,
+      iconTheme: IconThemeData(
+        color: AppColors.PRIMARY_WORD_COLOR,
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
+      actions: [
+        IconButton(
+            onPressed: () {
+              setState(() {
+                if (icon.icon == Icons.search) {
+                  icon = Icon(
+                    Icons.close,
+                    color: AppColors.PRIMARY_WORD_COLOR,
+                  );
+                  appBarTitle = TextField(
+                    controller: _controller,
+                    style: TextStyle(
+                      color: AppColors.PRIMARY_WORD_COLOR,
+                    ),
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search, color: AppColors.PRIMARY_WORD_COLOR),
+                        hintText: "Search...",
+                        hintStyle: TextStyle(color: AppColors.PRIMARY_WORD_COLOR)),
+                    onChanged: searchOperation,
+                  );
+                  _handleSearchStart();
+                } else {
+                  _handleSearchEnd();
+                }
+              });
+            },
+            icon: icon
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("List Available Campaigns"),
+      key: globalKey,
+      appBar: _buildAppBar(),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         margin: const EdgeInsets.only(top: 20),

@@ -33,6 +33,23 @@ class _CustomerAppliedPackagePageState
   TrainerService trainerService = TrainerService();
   CustomerService customerService = CustomerService();
 
+  List<PackageModel>? fullList;
+
+  Icon icon = Icon(
+    Icons.search,
+    color: AppColors.PRIMARY_WORD_COLOR,
+  );
+
+  Widget appBarTitle = Text(
+    "Search package list",
+    style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR),
+  );
+
+  final TextEditingController _controller = TextEditingController();
+  bool _isSearching = false;
+  String _searchText = "";
+  final globalKey = GlobalKey<ScaffoldState>();
+
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userJSON = prefs.getString('ACCOUNT');
@@ -49,11 +66,28 @@ class _CustomerAppliedPackagePageState
 
   @override
   void initState() {
+
     super.initState();
+    _controller.addListener(() {
+      if (_controller.text.isEmpty) {
+        setState(() {
+          _isSearching = false;
+          _searchText = "";
+        });
+      } else {
+        setState(() {
+          _isSearching = true;
+          _searchText = _controller.text;
+        });
+      }
+    });
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       initAccount().then((value) {
         listPackage =
             trainerService.getAppliedPackage(widget.campaignId ?? 0, user);
+        listPackage!.then((value){
+          fullList = value;
+        });
         setState(() {});
       });
     });
@@ -153,6 +187,30 @@ class _CustomerAppliedPackagePageState
                     ],
                   ),
                 ],
+              ),
+              const SizedBox(height: 10,),
+              RichText(
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Name: ',
+                        style: TextStyle(
+                            color: AppColors.PRIMARY_WORD_COLOR,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 13),
+                      ),
+                      TextSpan(
+                        text: model.name,
+                        style: TextStyle(
+                          color: AppColors.PRIMARY_WORD_COLOR,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                        ),
+                      )
+                    ]
+                ),
               ),
               const SizedBox(height: 10,),
               RichText(
@@ -302,10 +360,96 @@ class _CustomerAppliedPackagePageState
     return widgets;
   }
 
+  void _handleSearchStart() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _handleSearchEnd() {
+    setState(() {
+      icon = Icon(
+        Icons.search,
+        color: AppColors.PRIMARY_WORD_COLOR,
+      );
+      appBarTitle = Text(
+        "Search package list",
+        style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR,),
+      );
+      _isSearching = false;
+      _controller.clear();
+    });
+  }
+
+  Future<List<PackageModel>> updateAndGetList(String searchText) async{
+    List<PackageModel> searchresult = [];
+    for (int i = 0; i < fullList!.length; i++) {
+      PackageModel data = fullList![i];
+      if (data.trainer!.fullname!.toLowerCase().contains(searchText.toLowerCase())) {
+        searchresult.add(data);
+      }
+    }
+    return searchresult;
+  }
+
+  void searchOperation(String searchText) {
+    setState(() {
+      listPackage = updateAndGetList(searchText);
+    });
+  }
+
+  AppBar _buildAppBar(){
+    return AppBar(
+      centerTitle: false,
+      titleSpacing: 0,
+      title: appBarTitle,
+      shadowColor: Colors.grey,
+      backgroundColor: Colors.white,
+      iconTheme: IconThemeData(
+        color: AppColors.PRIMARY_WORD_COLOR,
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
+      actions: [
+        IconButton(
+            onPressed: () {
+              setState(() {
+                if (icon.icon == Icons.search) {
+                  icon = Icon(
+                    Icons.close,
+                    color: AppColors.PRIMARY_WORD_COLOR,
+                  );
+                  appBarTitle = TextField(
+                    controller: _controller,
+                    style: TextStyle(
+                      color: AppColors.PRIMARY_WORD_COLOR,
+                    ),
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search, color: AppColors.PRIMARY_WORD_COLOR),
+                        hintText: "Search...",
+                        hintStyle: TextStyle(color: AppColors.PRIMARY_WORD_COLOR)),
+                    onChanged: searchOperation,
+                  );
+                  _handleSearchStart();
+                } else {
+                  _handleSearchEnd();
+                }
+              });
+            },
+            icon: icon
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("List Packages"),
+      key: globalKey,
+      appBar: _buildAppBar(),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         margin: const EdgeInsets.only(top: 20),
