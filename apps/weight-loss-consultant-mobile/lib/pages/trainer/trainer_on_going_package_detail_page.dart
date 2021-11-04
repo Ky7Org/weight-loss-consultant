@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
-import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/models/trainer_model.dart';
@@ -18,28 +17,25 @@ import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
-class CustomerOnGoingCampaignPage extends StatefulWidget {
-  int? campaignId;
+class TrainerOnGoingPackageDetailPage extends StatefulWidget {
+  int? packageId;
 
-  CustomerOnGoingCampaignPage({Key? key, this.campaignId}) : super(key: key);
+  TrainerOnGoingPackageDetailPage({Key? key, this.packageId}) : super(key: key);
 
   @override
-  _CustomerOnGoingCampaignPageState createState() =>
-      _CustomerOnGoingCampaignPageState();
+  _TrainerOnGoingPackageDetailPageState createState() =>
+      _TrainerOnGoingPackageDetailPageState();
 }
 
-class _CustomerOnGoingCampaignPageState
-    extends State<CustomerOnGoingCampaignPage>
-    with SingleTickerProviderStateMixin {
+class _TrainerOnGoingPackageDetailPageState
+    extends State<TrainerOnGoingPackageDetailPage>  with SingleTickerProviderStateMixin {
   Future<PackageModel?>? packageModel;
   CustomerCampaignModel? campaignModel;
-
+  final PanelController _pc = PanelController();
+  late TabController _tabController;
   AccountModel user = AccountModel(email: "", fullname: "");
   CustomerService customerService = CustomerService();
   TrainerService trainerService = TrainerService();
-
-  final PanelController _pc = PanelController();
-  late TabController _tabController;
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -68,10 +64,9 @@ class _CustomerOnGoingCampaignPageState
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       initAccount().then((value) {
         //packageModel = service.getPackageById(widget.packageID as int, user);
-
-        customerService.getPackageIdByCampaignIdWithSameContract(widget.campaignId as int, user).then((value){
-          packageModel = customerService.getPackageById(value as int, user);
-          trainerService.getCampaignById(widget.campaignId as int, user).then((value){
+        packageModel = customerService.getPackageById(widget.packageId as int, user);
+        customerService.getCampaignIdByPackageIdWithSameContract(widget.packageId as int, user).then((value){
+          trainerService.getCampaignById(value as int, user).then((value){
             campaignModel = value;
             setState(() {});
           });
@@ -80,11 +75,13 @@ class _CustomerOnGoingCampaignPageState
     });
   }
 
-  Widget _buildTrainerContainer(TrainerModel model) {
+  Widget _buildCustomerContainer(TrainerModel model) {
+
     Widget avatarOfUser() {
-      if (model.profileImage!.isNotEmpty) {
+      if (campaignModel!.customer!.profileImage != null ||
+          campaignModel!.customer!.profileImage!.isNotEmpty) {
         return Image(
-            image: NetworkImage(model.profileImage!),
+            image: NetworkImage(campaignModel!.customer!.profileImage!),
             width: 100,
             height: 100,
             fit: BoxFit.fill);
@@ -96,110 +93,40 @@ class _CustomerOnGoingCampaignPageState
           fit: BoxFit.fill);
     }
 
+    var date = DateFormat("MMMM-dd-yyyy").format(
+        DateTime.fromMillisecondsSinceEpoch(
+            int.parse(campaignModel!.customer!.dob.toString())));
+
     return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 7,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
-        ),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3),
+              )
+            ]),
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Center(child: avatarOfUser()),
             const SizedBox(
               height: 15,
             ),
-            _content("Name of trainer", model.fullname ?? ""),
-            _content("Gender", "${model.gender == "1" ? "Male" : "Female"} "),
-            _content("Phone number", model.phone ?? ""),
-            _content("Year of exp", "${model.yearOfExp ?? 0} year(s)"),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                'Rating',
-                style: TextStyle(
-                  fontSize:15,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.PRIMARY_WORD_COLOR
-                )
-              ),
-            ),
-            Row(
-              children: [
-                RatingBarIndicator(
-                  rating: model.rating ?? 0,
-                  itemBuilder: (context, index) => Icon(
-                    Icons.star,
-                    color: HexColor("#1EE0CC"),
-                  ),
-                  itemCount: 5,
-                  itemSize: 20.0,
-                  direction: Axis.horizontal,
-                ),
-              ],
-            ),
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   mainAxisSize: MainAxisSize.max,
-            //   children: [
-            //     Text(
-            //       model.fullname ?? "",
-            //       style: TextStyle(
-            //           color: HexColor("#0D3F67"),
-            //           fontSize: 20,
-            //           fontWeight: FontWeight.w700),
-            //     ),
-            //     const SizedBox(
-            //       height: 10,
-            //     ),
-            //     Text(
-            //       "${model.gender == "1" ? "Male" : "Female"} | ${model.phone ?? ""}",
-            //       style: TextStyle(
-            //           color: HexColor("#B6C5D1"),
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.w500),
-            //     ),
-            //     const SizedBox(
-            //       height: 10,
-            //     ),
-            //     Row(
-            //       crossAxisAlignment: CrossAxisAlignment.center,
-            //       children: [
-            //         RatingBarIndicator(
-            //           rating: model.rating ?? 0,
-            //           itemBuilder: (context, index) => Icon(
-            //             Icons.star,
-            //             color: HexColor("#1EE0CC"),
-            //           ),
-            //           itemCount: 5,
-            //           itemSize: 20.0,
-            //           direction: Axis.horizontal,
-            //         ),
-            //         const SizedBox(
-            //           width: 30,
-            //         ),
-            //         Text("${model.yearOfExp ?? 0} year(s)")
-            //       ],
-            //     )
-            //   ],
-            // ),
+            _content("Name of trainer", campaignModel!.customer!.fullname ?? ""),
+            _content("Email", campaignModel!.customer!.email ?? ""),
+            _content("Gender", "${campaignModel!.customer!.gender == "1" ? "Male" : "Female"} "),
+            _content("Phone number", campaignModel!.customer!.phone ?? ""),
+            _content("Date of birth", date ?? ""),
           ],
         ),
       ),
@@ -207,31 +134,24 @@ class _CustomerOnGoingCampaignPageState
   }
 
   Widget _buildPackageContainer(PackageModel model) {
-    var date = DateFormat("MMMM-dd-yyyy").format(
-        DateTime.fromMillisecondsSinceEpoch(
-            int.parse(model.createDate.toString())));
     return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3),
+                )
+              ]),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,29 +160,15 @@ class _CustomerOnGoingCampaignPageState
                 width: double.infinity,
               ),
               Text(
-                "Create of date",
-                style: TextStyle(
-                    color: HexColor("#0D3F67"),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w900),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                date,
-                style: TextStyle(
-                    color: HexColor("#0D3F67"),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 15),
-              Text(
                 "Name of package",
                 style: TextStyle(
                     color: HexColor("#0D3F67"),
                     fontSize: 15,
                     fontWeight: FontWeight.w900),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(
+                  height: 5
+              ),
               Text(
                 model.name ?? "",
                 style: TextStyle(
@@ -341,7 +247,6 @@ class _CustomerOnGoingCampaignPageState
                     fontSize: 15,
                     fontWeight: FontWeight.w500)),
           ),
-
           const SizedBox(
             height: 10,
           ),
@@ -364,50 +269,40 @@ class _CustomerOnGoingCampaignPageState
   }
 
   Widget _buildCampaignContainer() {
-    print(campaignModel);
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
-          padding: const EdgeInsets.all(10),
-          width: double.infinity,
-          decoration: BoxDecoration(
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10)),
+            borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 1,
+                spreadRadius: 5,
                 blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _title("Detail of Campaign"),
-              const SizedBox(
-                height: 10,
-              ),
-              _content('Your target weight',
-                  '${campaignModel?.targetWeight ?? 0} kg'),
-              _content('Your current weight',
-                  '${campaignModel?.currentWeight ?? 0} kg'),
-              _content('Day per week can spend for training',
-                  '${campaignModel?.spendTimeForTraining ?? 0} day(s)'),
-              _content('Description', campaignModel?.description ?? ""),
-            ],
-          ),
+                offset: const Offset(0, 3),
+              )
+            ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _title("Detail of Campaign"),
+            const SizedBox(
+              height: 10,
+            ),
+            _content(
+                'Your target weight', '${campaignModel?.targetWeight ?? 0} kg'),
+            _content('Your current weight',
+                '${campaignModel?.currentWeight ?? 0} kg'),
+            _content('Day per week can spend for training',
+                '${campaignModel?.spendTimeForTraining ?? 0} day(s)'),
+            _content('Description', campaignModel?.description ?? ""),
+          ],
         ),
-        const SizedBox(
-          height: 30,
-        ),
-      ],
+      ),
     );
   }
 
@@ -417,7 +312,7 @@ class _CustomerOnGoingCampaignPageState
       height: 100,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, RoutePath.customerMakeReportPage,
+          Navigator.pushNamed(context, RoutePath.trainerFeedbackReportPage,
               arguments: packageModel.id);
         },
         child: Card(
@@ -426,21 +321,19 @@ class _CustomerOnGoingCampaignPageState
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
-            children: [
-              Icon(
-                Icons.assignment,
-                color: AppColors.PRIMARY_WORD_COLOR,
-              ),
+            children:  [
+              Icon(Icons.assignment, color: AppColors.PRIMARY_WORD_COLOR,),
               SizedBox(
                 height: 10,
               ),
               Text(
-                'Report progress',
+                'Feedback progress',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                    color: AppColors.PRIMARY_WORD_COLOR),
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                  fontSize: 15,
+                ),
               ),
             ],
           ),
@@ -449,14 +342,14 @@ class _CustomerOnGoingCampaignPageState
     );
   }
 
-  Widget _buildHistoryButton(PackageModel model) {
+  Widget _buildHistoryButton(PackageModel packageModel) {
     return SizedBox(
       width: 100,
       height: 100,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, RoutePath.customerReportHistoryPage,
-              arguments: model.id);
+          Navigator.pushNamed(context, RoutePath.trainerReportHistoryPage,
+              arguments: packageModel.id as int);
         },
         child: Card(
           elevation: 10,
@@ -464,8 +357,8 @@ class _CustomerOnGoingCampaignPageState
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
-            children: [
-              Icon(Icons.bar_chart, color: AppColors.PRIMARY_WORD_COLOR),
+            children:  [
+              Icon(Icons.bar_chart, color: AppColors.PRIMARY_WORD_COLOR,),
               SizedBox(
                 height: 10,
               ),
@@ -473,9 +366,10 @@ class _CustomerOnGoingCampaignPageState
                 'Report history',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                    color: AppColors.PRIMARY_WORD_COLOR),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15,
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                ),
               ),
             ],
           ),
@@ -496,7 +390,7 @@ class _CustomerOnGoingCampaignPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Applying Package"),
+      appBar: GenericAppBar.builder("Package detail"),
       body: SlidingUpPanel(
         controller: _pc,
         panel: CategoryPanel(),
@@ -531,14 +425,14 @@ class _CustomerOnGoingCampaignPageState
                   tabs: const [
                     Tab(
                       child: Text(
-                        'Campaign Detail',
+                        'Customer Campaign',
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w700),
                       ),
                     ),
                     Tab(
                       child: Text(
-                        'Trainer Info',
+                        'Customer Info',
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w700),
                       ),
@@ -556,8 +450,7 @@ class _CustomerOnGoingCampaignPageState
               const SizedBox(
                 height: 20,
               ),
-              Expanded(
-                  child: TabBarView(
+              Expanded(child: TabBarView(
                 controller: _tabController,
                 children: [
                   Column(
@@ -574,12 +467,15 @@ class _CustomerOnGoingCampaignPageState
                           return Column(
                             children: [
                               _buildCampaignContainer(),
+                              const SizedBox(
+                                height: 15
+                              ),
                               _buildButtonGroup(
                                   snapshot.requireData as PackageModel),
                             ],
                           );
                         },
-                      )
+                      ),
                     ],
                   ),
                   Column(
@@ -593,11 +489,14 @@ class _CustomerOnGoingCampaignPageState
                               child: CircularProgressIndicator(),
                             );
                           }
-                          return Center(
-                              child: _buildTrainerContainer(snapshot
-                                  .requireData!.trainer as TrainerModel));
+                          return Column(
+                            children: [
+                              _buildCustomerContainer(
+                                  snapshot.requireData!.trainer as TrainerModel),
+                            ],
+                          );
                         },
-                      )
+                      ),
                     ],
                   ),
                   Column(
@@ -614,11 +513,11 @@ class _CustomerOnGoingCampaignPageState
                           return Column(
                             children: [
                               _buildPackageContainer(
-                                  snapshot.requireData as PackageModel)
+                              snapshot.requireData as PackageModel),
                             ],
                           );
                         },
-                      )
+                      ),
                     ],
                   ),
                 ],
@@ -626,7 +525,7 @@ class _CustomerOnGoingCampaignPageState
             ],
           ),
         ),
-      ),
+      )
     );
   }
 }

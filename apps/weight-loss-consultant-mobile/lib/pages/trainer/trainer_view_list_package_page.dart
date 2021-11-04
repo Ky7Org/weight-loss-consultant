@@ -425,7 +425,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
             });
           });
         },
-        label: const Text("Add new campaign"),
+        label: const Text("Add new package"),
         icon: const Icon(Icons.add),
       ),
       body: Container(
@@ -452,7 +452,10 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
+
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
           ),
         ),

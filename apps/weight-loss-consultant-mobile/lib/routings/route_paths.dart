@@ -37,5 +37,8 @@ class RoutePath{
   static const String trainerFeedbackReportPage = "/trainerFeedbackReportPage";
   static const String customerReportHistoryPage = "/customerReportHistoryPage";
   static const String customerReportDetailPage = "/customerReportDetailPage";
+  static const String trainerOnGoingPackageDetailPage = "/trainerOnGoingPackageDetailPage";
+  static const String trainerReportHistoryPage = "/trainerReportHistoryPage";
+  static const String trainerReportDetailPage = "/trainerReportDetailPage";
 
 }

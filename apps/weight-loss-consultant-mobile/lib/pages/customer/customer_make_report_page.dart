@@ -291,7 +291,11 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
       color: AppColors.PRIMARY_COLOR,
       onPressed: () async {
         CustomerService customerService = CustomerService();
-        ContractModel contract = await customerService.getContractByPackageId(widget.packageId as int, user);
+        ContractModel? contract = await customerService.getContractByPackageId(widget.packageId as int, user);
+        if (contract == null){
+          CustomToast.makeToast("Some thing went wrong! Try again");
+          return;
+        }
         ReportModel? report = await customerService.customerCreateReport(
           contract.id.toString(), _todayExercise.text, _todayDiet.text, userWeight, user
         );

@@ -276,7 +276,7 @@ class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignP
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("List Campaigns"),
+      appBar: GenericAppBar.builder("List Available Campaigns"),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         margin: const EdgeInsets.only(top: 20),
@@ -301,7 +301,9 @@ class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignP
                   ],
                 );
               }
-              return const CircularProgressIndicator();
+              return const Center(
+                child: CircularProgressIndicator()
+              );
             }
           ),
         ),

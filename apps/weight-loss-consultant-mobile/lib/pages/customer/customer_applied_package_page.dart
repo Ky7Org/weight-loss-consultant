@@ -18,14 +18,16 @@ import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class CustomerAppliedPackagePage extends StatefulWidget {
   int? campaignId;
+
   CustomerAppliedPackagePage({Key? key, this.campaignId}) : super(key: key);
 
   @override
-  _CustomerAppliedPackagePageState createState() => _CustomerAppliedPackagePageState();
+  _CustomerAppliedPackagePageState createState() =>
+      _CustomerAppliedPackagePageState();
 }
 
-class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage> {
-
+class _CustomerAppliedPackagePageState
+    extends State<CustomerAppliedPackagePage> {
   Future<List<PackageModel>>? listCampaign;
   AccountModel user = AccountModel(email: "", fullname: "");
   TrainerService trainerService = TrainerService();
@@ -34,7 +36,7 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userJSON = prefs.getString('ACCOUNT');
-    if (userJSON is String){
+    if (userJSON is String) {
       Map<String, dynamic> userMap = jsonDecode(userJSON);
       user = AccountModel.fromJson(userMap);
     }
@@ -48,14 +50,14 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_){
-      initAccount().then((value){
-        listCampaign = trainerService.getAppliedPackage(widget.campaignId ?? 0, user);
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      initAccount().then((value) {
+        listCampaign =
+            trainerService.getAppliedPackage(widget.campaignId ?? 0, user);
         setState(() {});
       });
     });
   }
-
 
   Widget _title(String title) {
     return Align(
@@ -70,14 +72,14 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
     );
   }
 
-
   Widget _package(PackageModel model) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, RoutePath.customerPackageDetailPage, arguments: {
-          "packageID" : model.id,
-          "campaignID": widget.campaignId,
-        });
+        Navigator.pushNamed(context, RoutePath.customerPackageDetailPage,
+            arguments: {
+              "packageID": model.id,
+              "campaignID": widget.campaignId,
+            });
       },
       child: Card(
         elevation: 5,
@@ -167,7 +169,7 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
     );
   }
 
-  Widget _buildEmptyPackageList(){
+  Widget _buildEmptyPackageList() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -176,20 +178,18 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
           height: 60,
         ),
         Center(
-          child:
-          SvgPicture.asset("assets/fake-image/no-package.svg"),
+          child: SvgPicture.asset("assets/fake-image/no-package.svg"),
         ),
         const SizedBox(
           height: 30,
         ),
         Center(
           child: Text(
-            'No Campaign',
+            'No Package',
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 36,
-                fontWeight: FontWeight.w700
-            ),
+                fontWeight: FontWeight.w700),
           ),
         ),
         const SizedBox(
@@ -197,37 +197,35 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
         ),
         Center(
           child: Text(
-            "You don't have any package applied to this campaign.",
+            "You don't have any package\n applied to this campaignsss.",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,
-                fontWeight: FontWeight.w400
-            ),
+                fontWeight: FontWeight.w400),
           ),
         ),
+        SizedBox(height: 5),
         Center(
           child: Text(
             'Create one?',
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,
-                fontWeight: FontWeight.w400
-            ),
+                fontWeight: FontWeight.w400),
           ),
         ),
       ],
     );
   }
 
-  List<Widget> _buildCampaignList(List<PackageModel> data){
+  List<Widget> _buildCampaignList(List<PackageModel> data) {
     List<Widget> widgets = [];
-    for (PackageModel model in data){
+    for (PackageModel model in data) {
       var widget = _package(model);
       widgets.add(widget);
     }
     return widgets;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -240,8 +238,8 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
           child: FutureBuilder<List<PackageModel>>(
               future: listCampaign,
               builder: (context, snapshot) {
-                if (snapshot.hasData){
-                  if (snapshot.requireData.isEmpty){
+                if (snapshot.hasData) {
+                  if (snapshot.requireData.isEmpty) {
                     return _buildEmptyPackageList();
                   }
                   return Column(
@@ -257,9 +255,8 @@ class _CustomerAppliedPackagePageState extends State<CustomerAppliedPackagePage>
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
-              }
-          ),
+                return const Center(child: CircularProgressIndicator());
+              }),
         ),
       ),
     );
