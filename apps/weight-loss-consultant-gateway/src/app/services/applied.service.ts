@@ -8,7 +8,7 @@ import {
   CREATE_APPLY, DELETE_APPLY_BY_CAMPAIGN_ID,
   DELETE_APPLY_BY_ID, DELETE_APPLY_BY_PACKAGE_ID,
   FIND_ALL_APPLIES,
-  FIND_APPLY_BY_ID,
+  FIND_APPLY_BY_ID, GET_APPLIED_CAMPAIGNS_BY_PACKAGE_ID,
   GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
   UPDATE_APPLY_BY_ID,
   UpdateApplyPayloadType
@@ -60,6 +60,14 @@ export class AppliedService {
     const result =  this.appliedManagementServiceProxy
       .send<PackageEntity[], number>
       ({cmd: GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID}, campaignID)
+      .toPromise();
+    return result;
+  }
+
+  async getAppliedCampaignsByPackageID(packageId: number): Promise<any> {
+    const result =  this.appliedManagementServiceProxy
+      .send<PackageEntity[], number>
+      ({cmd: GET_APPLIED_CAMPAIGNS_BY_PACKAGE_ID}, packageId)
       .toPromise();
     return result;
   }
