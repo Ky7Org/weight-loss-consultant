@@ -29,7 +29,7 @@ class TrainerHomePage extends StatefulWidget {
 class _TrainerHomePageState extends State<TrainerHomePage> {
   int selectedIndex = 0;
   final PanelController _pc = PanelController();
-  PackageModel? onGoingPackage;
+  List<PackageModel>? onGoingPackage;
 
   AccountModel user = AccountModel(email: "", fullname: "");
 
@@ -55,7 +55,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
         TrainerService trainerService = TrainerService();
         trainerService.getTrainerPackage(user).then((value) {
           onGoingPackage =
-              value.firstWhereOrNull((element) => element.status == 2);
+              value.where((element) => element.status == 2).toList();
           setState(() {});
         });
       });
@@ -69,7 +69,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
           TrainerService trainerService = TrainerService();
           trainerService.getTrainerPackage(user).then((value) {
             onGoingPackage =
-                value.firstWhereOrNull((element) => element.status == 2);
+                value.where((element) => element.status == 2).toList();
             setState(() {});
           });
         });
@@ -143,7 +143,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
             TrainerService trainerService = TrainerService();
             trainerService.getTrainerPackage(user).then((value) {
               onGoingPackage =
-                  value.firstWhereOrNull((element) => element.status == 2);
+                  value.where((element) => element.status == 2).toList();
               setState(() {});
             });
           });
@@ -181,16 +181,25 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     );
   }
 
-  Widget _buildCurrentCampaign() {
-    if (onGoingPackage == null) return Container();
+  List<Widget> _buildCurrentCampaignList(){
+    List<Widget> widgets = [];
+    if (onGoingPackage == null) return widgets;
+    for (PackageModel packageModel in onGoingPackage!){
+      Widget widget = _buildCurrentCampaign(packageModel);
+      widgets.add(widget);
+    }
+    return widgets;
+  }
+
+  Widget _buildCurrentCampaign(PackageModel model) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, RoutePath.trainerOnGoingPackageDetailPage,
-            arguments: onGoingPackage!.id as int).then((value){
+            arguments: model.id as int).then((value){
           TrainerService trainerService = TrainerService();
           trainerService.getTrainerPackage(user).then((value) {
             onGoingPackage =
-                value.firstWhereOrNull((element) => element.status == 2);
+                value.where((element) => element.status == 2).toList();
             setState(() {});
           });
         });
@@ -209,7 +218,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    onGoingPackage!.name ?? "",
+                    model.name ?? "",
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w900,
@@ -230,7 +239,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                         fontSize: 15),
                   ),
                   TextSpan(
-                    text: onGoingPackage!.exercisePlan ?? "",
+                    text: model.exercisePlan ?? "",
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,
@@ -251,7 +260,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                         fontSize: 15),
                   ),
                   TextSpan(
-                    text: onGoingPackage!.dietPlan ?? "",
+                    text: model.dietPlan ?? "",
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,
@@ -273,7 +282,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                   ),
                   TextSpan(
                     text:
-                        "${onGoingPackage!.spendTimeToTraining.toString()} day(s)",
+                        "${model.spendTimeToTraining.toString()} day(s)",
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,
@@ -315,7 +324,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                         fontSize: 15),
                   ),
                   Text(
-                    onGoingPackage!.price.toString(),
+                    model.price.toString(),
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,
@@ -335,6 +344,14 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     );
   }
 
+  void updateProfileAfterPop() {
+    initAccount().then((value) {
+      setState(() {
+
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Image image;
@@ -349,7 +366,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
     }
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: MainAppBar.builder(user.fullname ?? "", context, image),
+        appBar: MainAppBar.builder(user.fullname ?? "", context, image, updateProfileAfterPop),
         body: SlidingUpPanel(
           controller: _pc,
           panel: TrainerCategoryPanel(),
@@ -362,6 +379,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                 const SizedBox(
                   width: double.infinity,
                 ),
+                SvgPicture.asset("assets/panel-image/customer-home-panel.svg"),
                 /*Container(
                   margin: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                   child: Align(
@@ -392,7 +410,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                         ),
                       )),
                 ),
-                _buildCurrentCampaign(),
+                ..._buildCurrentCampaignList(),
                 const SizedBox(
                   height: 250,
                 ),

@@ -442,6 +442,13 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     });
   }
 
+  void updateProfileAfterPop() {
+    initAccount().then((value) {
+      setState(() {
+
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     Image image;
@@ -456,10 +463,11 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     }
 
 
+
     return Scaffold(
       backgroundColor: Colors.white,
       //drawer: CustomerDrawer.builder(user.fullname, Image.asset("assets/fake-image/miku-avatar.png"), "Customer"),
-      appBar: MainAppBar.builder(user.fullname ?? "", context, image),
+      appBar: MainAppBar.builder(user.fullname ?? "", context, image, updateProfileAfterPop),
       body: SlidingUpPanel(
         controller: _pc,
         panel: CategoryPanel(callBackAfterPop: callbackAfterPop),
@@ -472,7 +480,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
               const SizedBox(width: double.infinity,),
               SvgPicture.asset("assets/panel-image/customer-home-panel.svg"),
               SvgPicture.asset("assets/fake-image/fake-chart.svg"),
-              _buildUpcomingTraining(),
+              //_buildUpcomingTraining(),
               //_buildTopCategory(),
               _buildCurrentCampaign(),
               const SizedBox(height: 250,),

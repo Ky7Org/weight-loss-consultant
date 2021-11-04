@@ -39,7 +39,7 @@ class CustomerService{
         models.add(model);
       }
     }
-    models.sort((a, b) => int.parse(b.createDate as String) - int.parse(a.createDate as String));
+    models.sort((a, b) => (b.createDate as int) - (a.createDate as int));
     return models;
   }
 
@@ -163,7 +163,6 @@ class CustomerService{
   }
 
   Future<ContractModel> getContractByCampaignId(int campaignID, AccountModel user) async{
-    print(campaignID);
     var url = Uri.parse(ApiConstant.getContractByPackageIDorCampaignIDApi);
     List<ContractModel> models = [];
     var response = await http.post(
