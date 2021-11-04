@@ -38,7 +38,7 @@ export class CustomerController {
         }
         res.status(error.statusCode).send(error);
       }
-      res.status(HttpStatus.OK).send(customer);
+      res.status(HttpStatus.OK).send(customer.campaigns);
     } catch ({ error }) {
       this.logger.error(error);
       res.status(error.statusCode).send(error);
@@ -92,7 +92,6 @@ export class CustomerController {
       res.status(error.statusCode).send(error);
     }
   }
-
 
   @Put('/v1/customers/:email')
   @UseGuards(JwtAuthGuard)

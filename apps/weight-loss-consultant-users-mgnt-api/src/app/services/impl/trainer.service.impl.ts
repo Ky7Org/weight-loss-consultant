@@ -94,23 +94,11 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   async findOneTrainer(id): Promise<TrainerEntity> {
     return this.repository.findOne(id);
   }
-  async viewOnlyPackagesOfTrainer(trainerEmail: string) : Promise<any>  {
-    const entityManager = getManager();
-    const query = entityManager.query(
-      `SELECT \`package\`.\`id\`                     AS \`id\`,
-              \`package\`.\`exercisePlan\`                 AS \`exercisePlan\`,
-              \`package\`.\`schedule\`                     AS \`schedule\`,
-              \`package\`.\`price\`                        AS \`price\`,
-              \`package\`.\`status\`                       AS \`status\`,
-              \`package\`.\`dietPlan\`                     AS \`dietPlan\`,
-              \`package\`.\`trainerEmail\`                 AS \`trainerEmail\`,
-              \`package\`.\`name\`                         AS \`name\`,
-              \`package\`.\`spendTimeToTraining\`          AS \`spendTimeToTraining\`
-       FROM \`Trainer\` \`trainer\`
-              LEFT JOIN \`Package\` \`package\` ON \`package\`.\`trainerEmail\` = \`trainer\`.\`email\`
-       WHERE \`trainer\`.\`email\` = ?
-      `,[trainerEmail]
-    )
+  async viewOnlyPackagesOfTrainer(trainerEmail: string) : Promise<TrainerEntity>  {
+    const query = await this.repository.createQueryBuilder("trainer")
+      .leftJoinAndSelect("trainer.packages", "packages")
+      .where("trainer.email = :email", {email : trainerEmail})
+      .getOne();
     return query;
   }
 
