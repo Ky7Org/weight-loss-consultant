@@ -3,7 +3,7 @@ import {BaseService} from '../base.service';
 import {CustomerRepository} from '../../repositories/customer.repository';
 import {CustomerEntity} from '../../entities/customer.entity';
 import {EMAIL_EXISTED_ERR} from '../../constants/validation-err-message';
-import {DeleteResult, getManager, UpdateResult} from 'typeorm';
+import {DeleteResult, UpdateResult} from 'typeorm';
 import {CustomerMapper} from '../../mappers/customer.mapper';
 import {CreateCustDto} from '../../dtos/customer/create-customer.dto';
 import {RpcException} from '@nestjs/microservices';
@@ -95,26 +95,11 @@ export class CustomerService extends BaseService<CustomerEntity, CustomerReposit
     return query;
   }
 
-  async viewOnlyCampaignsOfCustomer(customerEmail: string) : Promise<any>  {
-    const entityManager = getManager();
-    const query = entityManager.query(
-    `SELECT \`campaign\`.\`id\`               AS \`id\`,
-              \`campaign\`.\`description\`          AS \`description\`,
-              \`campaign\`.\`status\`               AS \`status\`,
-              \`campaign\`.\`startDate\`            AS \`startDate\`,
-              \`campaign\`.\`endDate\`              AS \`endDate\`,
-              \`campaign\`.\`feedback\`             AS \`feedback\`,
-              \`campaign\`.\`targetWeight\`         AS \`targetWeight\`,
-              \`campaign\`.\`currentWeight\`        AS \`currentWeight\`,
-              \`campaign\`.\`spendTimeForTraining\` AS \`spendTimeForTraining\`,
-              \`campaign\`.\`customerEmail\`        AS \`customerEmail\`
-       FROM \`Customer\` \`customer\`
-              LEFT JOIN \`Campaign\` \`campaign\` ON \`campaign\`.\`customerEmail\` = \`customer\`.\`email\`
-              LEFT JOIN \`HealthInformation\` \`healthInfo\`
-                        ON \`healthInfo\`.\`customerEmail\` = \`customer\`.\`email\`
-       WHERE \`customer\`.\`email\` = ?
-      `,[customerEmail]
-    )
+  async viewOnlyCampaignsOfCustomer(customerEmail: string) : Promise<CustomerEntity>  {
+    const query = await this.repository.createQueryBuilder("customer")
+      .leftJoinAndSelect("customer.campaigns", "campaign")
+      .where("customer.email = :email" , {email : customerEmail})
+      .getOne();
     return query;
   }
 
