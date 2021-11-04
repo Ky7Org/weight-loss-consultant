@@ -1,8 +1,5 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ProfileStyleEntity } from './profile-trainer.entity';
-// import {ProfileStyleEntity} from "./profile-trainer.entity";
-// import {TrainerStyleEntity} from "./trainer-style.entity";
-
 
 @Entity("TrainerStyle")
 export class TrainerStyleEntity extends BaseEntity {

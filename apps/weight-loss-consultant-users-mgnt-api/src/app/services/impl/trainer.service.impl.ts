@@ -20,12 +20,11 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   }
 
   async findAll(): Promise<TrainerEntity[]> {
-    const result = await this.repository.createQueryBuilder("trainer")
+    return this.repository.createQueryBuilder("trainer")
       .leftJoinAndSelect("trainer.profileStyles", "profileStyles")
       .leftJoinAndSelect("profileStyles.style", "style")
       .leftJoinAndSelect("trainer.packages", "package")
       .getMany();
-    return result;
   }
 
   async create(dto: CreateTrainerDto): Promise<TrainerEntity> {
@@ -79,13 +78,17 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
   }
 
   async viewDetail(id): Promise<TrainerEntity> {
-    const result = await this.repository.createQueryBuilder("trainer")
+    return this.repository.createQueryBuilder("trainer")
       .leftJoinAndSelect("trainer.profileStyles", "profileStyles")
       .leftJoinAndSelect("profileStyles.style", "style")
       .leftJoinAndSelect("trainer.packages", "package")
       .where("trainer.email = :email", {email : id})
-      .getOne();
-    return result;
+      .getOneOrFail().catch((err) => {
+        throw new RpcException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: `Not found trainer with email : ${id}`
+        } as RpcExceptionModel);
+      });
   }
 
   async findOneTrainer(id): Promise<TrainerEntity> {
@@ -118,7 +121,7 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
         message: `Param: ${payload.email} must match with request body email : ${payload.email} `
       } as RpcExceptionModel);
     }
-    const result = await this.repository.createQueryBuilder("trainer")
+    return this.repository.createQueryBuilder("trainer")
       .update(TrainerEntity)
       .set({
         fullname: payload.fullname,
@@ -132,6 +135,5 @@ export class TrainerService extends BaseService<TrainerEntity, TrainerRepository
       })
       .where("email = :email", {email : payload.email})
       .execute();
-    return result;
   }
 }
