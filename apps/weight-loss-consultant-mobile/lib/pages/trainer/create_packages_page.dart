@@ -267,16 +267,16 @@ class _CreatePackagesPageState extends State<CreatePackagesPage> {
                 perSessionValue = newValue!;
                 switch (newValue){
                   case '30 mins':
-                    spendTimeToTraining = 30;
+                    spendTimePerSession = 30;
                     break;
                   case '45 mins':
-                    spendTimeToTraining = 45;
+                    spendTimePerSession = 45;
                     break;
                   case "60 mins":
-                    spendTimeToTraining = 60;
+                    spendTimePerSession = 60;
                     break;
                   case "90 mins":
-                    spendTimeToTraining = 90;
+                    spendTimePerSession = 90;
                     break;
                 }
               });
