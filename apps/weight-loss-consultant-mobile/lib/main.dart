@@ -73,6 +73,16 @@ class _AppState extends State<App> {
                   arguments: int.parse(campaignID));
             } else if (typeOfMessage == "Update Campaign"){
               print("Update Campaign");
+            } else if (typeOfMessage == "Customer Report"){
+              final packageID = message.data['packageID'];
+              _navKey.currentState!.pushNamed(
+                  RoutePath.trainerFeedbackReportPage,
+                  arguments: int.parse(packageID));
+            } else if (typeOfMessage == "Trainer Feedback"){
+              final reportID = message.data['reportID'];
+              _navKey.currentState!.pushNamed(
+                  RoutePath.customerReportDetailPage,
+                  arguments: int.parse(reportID));
             }
           }
         });
@@ -99,6 +109,16 @@ class _AppState extends State<App> {
                 arguments: int.parse(packageID));
           } else if (typeOfMessage == "Update Campaign"){
             print("Update Campaign");
+          } else if (typeOfMessage == "Customer Report"){
+            final packageID = message.data['packageID'];
+            _navKey.currentState!.pushNamed(
+                RoutePath.trainerFeedbackReportPage,
+                arguments: int.parse(packageID));
+          } else if (typeOfMessage == "Trainer Feedback"){
+            final reportID = message.data['reportID'];
+            _navKey.currentState!.pushNamed(
+                RoutePath.customerReportDetailPage,
+                arguments: int.parse(reportID));
           }
         });
 

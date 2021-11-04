@@ -233,6 +233,7 @@ class RouteGenerator{
         }
         return _errorRoute();
       case RoutePath.customerReportDetailPage:
+        print(args.runtimeType);
         if (args is int){
           return MaterialPageRoute(builder: (_){
             return CustomerReportDetailPage(reportId: args,);

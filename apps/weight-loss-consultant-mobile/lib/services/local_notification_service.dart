@@ -38,6 +38,16 @@ class LocalNotificationService {
             arguments: int.parse(packageID));
       } else if (typeOfMessage == "Update Campaign"){
         print("Update Campaign");
+      } else if (typeOfMessage == "Customer Report"){
+        final packageID = myDataFromMessage['packageID'];
+        LocalNotificationService._navKey.currentState!.pushNamed(
+            RoutePath.trainerFeedbackReportPage,
+            arguments: int.parse(packageID));
+      } else if (typeOfMessage == "Trainer Feedback"){
+        final reportID = myDataFromMessage['reportID'];
+        LocalNotificationService._navKey.currentState!.pushNamed(
+            RoutePath.customerReportDetailPage,
+            arguments: int.parse(reportID));
       }
     });
   }
@@ -59,6 +69,7 @@ class LocalNotificationService {
       myDataFromMessage['type'] = message.data["type"];
       myDataFromMessage['campaignID'] = message.data["campaignID"];
       myDataFromMessage['packageID'] = message.data["packageID"];
+      myDataFromMessage['reportID'] = message.data["reportID"];
       await _notificationsPlugin.show(
         id,
         message.notification!.title,

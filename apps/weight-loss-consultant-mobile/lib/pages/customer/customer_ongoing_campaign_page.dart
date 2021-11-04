@@ -484,7 +484,6 @@ class _CustomerOnGoingCampaignPageState
           child: Column(
             children: [
               Container(
-                margin: const EdgeInsets.only(top: 20),
                 height: 48,
                 decoration: BoxDecoration(
                     color: const Color(0xFFF0F3F6),
