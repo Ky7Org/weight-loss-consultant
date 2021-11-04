@@ -24,6 +24,8 @@ export class CampaignEntity extends BaseEntity{
   spendTimeForTraining: number;
   @Column({ type: 'float'})
   createDate: number;
+  @Column({ type: 'int'})
+  sessionLength: number;
   @OneToMany(() => AppliedEntity, applied => applied.campaign)
   applies: AppliedEntity[];
   @ManyToOne(() => CustomerEntity, customer => customer.campaigns)
