@@ -173,6 +173,15 @@ export class AppliedService {
     return query;
   }
 
+  async getAppliedCampaignsByPackageId(packageID: number) : Promise<any> {
+    const query = await this.repository.createQueryBuilder("applied")
+      .where("applied.packageID = :id", {id : packageID})
+      .leftJoinAndSelect("applied.campaign", "campaign")
+      .leftJoinAndSelect("campaign.customer", "customer")
+      .getMany()
+    return query;
+  }
+
   async approvePackageByCustomer(payload: ApprovePayload): Promise<any> {
     // : Promise<ApproveResponse>{
     const campaignID: number = payload.campaignID;

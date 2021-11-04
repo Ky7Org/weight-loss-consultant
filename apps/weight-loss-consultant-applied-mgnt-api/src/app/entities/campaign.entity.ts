@@ -1,5 +1,6 @@
-import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {AppliedEntity} from "./applied.entity";
+import {CustomerEntity} from "./customer.entity";
 
 @Entity('Campaign')
 export class CampaignEntity extends BaseEntity{
@@ -25,5 +26,6 @@ export class CampaignEntity extends BaseEntity{
   createDate: number;
   @OneToMany(() => AppliedEntity, applied => applied.campaign)
   applies: AppliedEntity[];
-
+  @ManyToOne(() => CustomerEntity, customer => customer.campaigns)
+  customer : CustomerEntity;
 }
