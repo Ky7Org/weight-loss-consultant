@@ -363,7 +363,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         ),
         Center(
           child: Text(
-            'No Campaign',
+            'No Package',
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 36,
@@ -376,7 +376,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         ),
         Center(
           child: Text(
-            "You don't have any active campaign.",
+            "You don't have any active package.",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,

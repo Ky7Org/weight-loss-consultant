@@ -81,8 +81,8 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const Image(
-                image: AssetImage("assets/fake-image/fake-trainer-avatar.jpg"),
+              Image(
+                image: NetworkImage(model.profileImage as String),
                 width: 73,
                 height: 73,
                 fit: BoxFit.fill),
@@ -441,7 +441,7 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
             notificationService.approvePackage(
                 packageModel.trainer!.deviceID as String,
                 packageModel.trainer!.email as String,
-                campaignID as int);
+                packageID as int);
             CustomToast.makeToast("Approve successfully");
           } else {
             CustomToast.makeToast("Some thing went wrong! Try again");

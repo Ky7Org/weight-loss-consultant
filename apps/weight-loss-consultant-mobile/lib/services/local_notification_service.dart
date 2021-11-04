@@ -32,10 +32,10 @@ class LocalNotificationService {
         _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
             arguments: mapData);
       } else if (typeOfMessage == 'Apply Campaign') {
-        final campaignID = myDataFromMessage['campaignID'];
+        final packageID = myDataFromMessage['packageID'];
         LocalNotificationService._navKey.currentState!.pushNamed(
-            RoutePath.trainerViewCampaignDetailPage,
-            arguments: int.parse(campaignID));
+            RoutePath.trainerOnGoingPackageDetailPage,
+            arguments: int.parse(packageID));
       }
     });
   }
