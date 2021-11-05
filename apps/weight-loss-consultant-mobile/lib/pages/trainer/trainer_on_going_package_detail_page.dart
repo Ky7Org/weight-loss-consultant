@@ -350,87 +350,108 @@ class _TrainerOnGoingPackageDetailPageState
   }
 
   Widget _buildReportButton(PackageModel packageModel) {
-    return SizedBox(
-      width: 100,
+    return Container(
+      width: 150,
       height: 100,
-      child: GestureDetector(
-        onTap: () {
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            )
+          ]),
+      child: FlatButton(
+        onPressed: () {
           Navigator.pushNamed(context, RoutePath.trainerFeedbackReportPage,
               arguments: packageModel.id);
         },
-        child: Card(
-          elevation: 10,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Icon(
-                Icons.assignment,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.assignment,
+              color: AppColors.PRIMARY_WORD_COLOR,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Feedback progress',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
                 color: AppColors.PRIMARY_WORD_COLOR,
+                fontSize: 15,
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Feedback progress',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.PRIMARY_WORD_COLOR,
-                  fontSize: 15,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildHistoryButton(PackageModel packageModel) {
-    return SizedBox(
-      width: 100,
+    return Container(
+      width: 150,
       height: 100,
-      child: GestureDetector(
-        onTap: () {
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            )
+          ]),
+      child: FlatButton(
+        onPressed: () {
           Navigator.pushNamed(context, RoutePath.trainerReportHistoryPage,
               arguments: packageModel.id as int);
         },
-        child: Card(
-          elevation: 10,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Icon(
-                Icons.bar_chart,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Icon(
+              Icons.bar_chart,
+              color: AppColors.PRIMARY_WORD_COLOR,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Report history',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
                 color: AppColors.PRIMARY_WORD_COLOR,
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Report history',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
-                  color: AppColors.PRIMARY_WORD_COLOR,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildButtonGroup(PackageModel packageModel) {
-    return Wrap(
+    return Row(
+     mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildReportButton(packageModel),
+        const SizedBox(
+          width: 20,
+        ),
         _buildHistoryButton(packageModel),
       ],
     );
@@ -518,9 +539,10 @@ class _TrainerOnGoingPackageDetailPageState
                               );
                             }
                             return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 _buildCampaignContainer(),
-                                const SizedBox(height: 15),
+                                const SizedBox(height: 55),
                                 _buildButtonGroup(
                                     snapshot.requireData as PackageModel),
                               ],

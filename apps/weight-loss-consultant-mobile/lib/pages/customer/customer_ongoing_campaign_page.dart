@@ -70,9 +70,14 @@ class _CustomerOnGoingCampaignPageState
       initAccount().then((value) {
         //packageModel = service.getPackageById(widget.packageID as int, user);
 
-        customerService.getPackageIdByCampaignIdWithSameContract(widget.campaignId as int, user).then((value){
+        customerService
+            .getPackageIdByCampaignIdWithSameContract(
+                widget.campaignId as int, user)
+            .then((value) {
           packageModel = customerService.getPackageById(value as int, user);
-          trainerService.getCampaignById(widget.campaignId as int, user).then((value){
+          trainerService
+              .getCampaignById(widget.campaignId as int, user)
+              .then((value) {
             campaignModel = value;
             setState(() {});
           });
@@ -126,23 +131,26 @@ class _CustomerOnGoingCampaignPageState
           children: [
             Center(
                 child: Stack(
-                  children: [
-                    const SizedBox(width: double.infinity,),
-                    Center(child: avatarOfUser()),
-                    Positioned(
-                      height: 100,
-                      right: 10,
-                      child: IconButton(
-                        iconSize: 48,
-                        onPressed: () {
-                          Navigator.pushNamed(context, RoutePath.upcomingTrainingPage, arguments: packageModel);
-                        },
-                        icon: SvgPicture.asset("assets/icon/call-icon.svg"),
-                      ),
-                    )
-                  ],
+              children: [
+                const SizedBox(
+                  width: double.infinity,
+                ),
+                Center(child: avatarOfUser()),
+                Positioned(
+                  height: 100,
+                  right: 10,
+                  child: IconButton(
+                    iconSize: 48,
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, RoutePath.upcomingTrainingPage,
+                          arguments: packageModel);
+                    },
+                    icon: SvgPicture.asset("assets/icon/call-icon.svg"),
+                  ),
                 )
-            ),
+              ],
+            )),
             const SizedBox(
               height: 15,
             ),
@@ -152,14 +160,11 @@ class _CustomerOnGoingCampaignPageState
             _content("Year of exp", "${model.yearOfExp ?? 0} year(s)"),
             Align(
               alignment: Alignment.topLeft,
-              child: Text(
-                'Rating',
-                style: TextStyle(
-                  fontSize:15,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.PRIMARY_WORD_COLOR
-                )
-              ),
+              child: Text('Rating',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.PRIMARY_WORD_COLOR)),
             ),
             Row(
               children: [
@@ -316,7 +321,6 @@ class _CustomerOnGoingCampaignPageState
                     fontSize: 15,
                     fontWeight: FontWeight.w500)),
           ),
-
           const SizedBox(
             height: 10,
           ),
@@ -386,86 +390,114 @@ class _CustomerOnGoingCampaignPageState
   }
 
   Widget _buildReportButton(PackageModel packageModel) {
-    return SizedBox(
-      width: 100,
+    return Container(
+      width: 150,
       height: 100,
-      child: GestureDetector(
-        onTap: () {
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            )
+          ]),
+      child: FlatButton(
+        onPressed: () {
           Navigator.pushNamed(context, RoutePath.customerMakeReportPage,
-              arguments: packageModel.id).then((value){
-                if (value != null){
-                  Navigator.pushNamed(context, RoutePath.customerReportDetailPage, arguments: value);
-                }
+                  arguments: packageModel.id)
+              .then((value) {
+            if (value != null) {
+              Navigator.pushNamed(context, RoutePath.customerReportDetailPage,
+                  arguments: value);
+            }
           });
         },
-        child: Card(
-          elevation: 10,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Icon(
-                Icons.assignment,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.assignment,
+              color: AppColors.PRIMARY_WORD_COLOR,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Feedback progress',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
                 color: AppColors.PRIMARY_WORD_COLOR,
+                fontSize: 15,
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Report progress',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                    color: AppColors.PRIMARY_WORD_COLOR),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildHistoryButton(PackageModel model) {
-    return SizedBox(
-      width: 100,
+    return Container(
+      width: 150,
       height: 100,
-      child: GestureDetector(
-        onTap: () {
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            )
+          ]),
+      child: FlatButton(
+        onPressed: () {
           Navigator.pushNamed(context, RoutePath.customerReportHistoryPage,
               arguments: model.id);
         },
-        child: Card(
-          elevation: 10,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Icon(Icons.bar_chart, color: AppColors.PRIMARY_WORD_COLOR),
-              SizedBox(
-                height: 10,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Icon(
+              Icons.bar_chart,
+              color: AppColors.PRIMARY_WORD_COLOR,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Report history',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
+                color: AppColors.PRIMARY_WORD_COLOR,
               ),
-              Text(
-                'Report history',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                    color: AppColors.PRIMARY_WORD_COLOR),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildButtonGroup(PackageModel packageModel) {
-    return Wrap(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildReportButton(packageModel),
+       const SizedBox(
+         width: 20,
+       ),
         _buildHistoryButton(packageModel),
       ],
     );
@@ -554,6 +586,7 @@ class _CustomerOnGoingCampaignPageState
                           return Column(
                             children: [
                               _buildCampaignContainer(),
+                              const SizedBox(height: 55),
                               _buildButtonGroup(
                                   snapshot.requireData as PackageModel),
                             ],
@@ -574,8 +607,8 @@ class _CustomerOnGoingCampaignPageState
                             );
                           }
                           return Center(
-                              child: _buildTrainerContainer(snapshot
-                                  .requireData as PackageModel));
+                              child: _buildTrainerContainer(
+                                  snapshot.requireData as PackageModel));
                         },
                       )
                     ],
