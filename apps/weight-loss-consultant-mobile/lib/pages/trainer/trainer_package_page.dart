@@ -709,13 +709,15 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                           Tab(
                             child: Text(
                               'Active',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w700),
                             ),
                           ),
                           Tab(
                             child: Text(
-                              'Applied',
+                              'Applying',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w700),
                             ),
@@ -723,6 +725,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                           Tab(
                             child: Text(
                               'Approve',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w700),
                             ),
@@ -730,6 +733,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                           Tab(
                             child: Text(
                               'Decline',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w700),
                             ),
