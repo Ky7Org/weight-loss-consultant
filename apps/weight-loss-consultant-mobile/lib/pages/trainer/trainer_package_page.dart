@@ -38,7 +38,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
   );
 
   Widget appBarTitle = Text(
-    "Search package list",
+    "Your Package List",
     style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR),
   );
 
@@ -572,7 +572,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
         color: AppColors.PRIMARY_WORD_COLOR,
       );
       appBarTitle = Text(
-        "Search package list",
+        "Your Package List",
         style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR,),
       );
       _isSearching = false;

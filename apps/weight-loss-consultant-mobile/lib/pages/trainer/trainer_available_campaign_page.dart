@@ -36,7 +36,7 @@ class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignP
   );
 
   Widget appBarTitle = Text(
-    "Search available campaign list",
+    "Available Campaign List",
     style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR),
   );
 
@@ -327,7 +327,7 @@ class _TrainerAvailableCampaignPageState extends State<TrainerAvailableCampaignP
         color: AppColors.PRIMARY_WORD_COLOR,
       );
       appBarTitle = Text(
-        "Search available campaign list",
+        "Available Campaign List",
         style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR,),
       );
       _isSearching = false;

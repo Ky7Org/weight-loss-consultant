@@ -39,7 +39,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
   );
 
   Widget appBarTitle = Text(
-    "Search your campaign",
+    "Your Campaign List",
     style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR),
   );
 
@@ -494,7 +494,7 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
         color: AppColors.PRIMARY_WORD_COLOR,
       );
       appBarTitle = Text(
-        "Search your campaign",
+        "Your Campaign List",
         style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR,),
       );
       _isSearching = false;

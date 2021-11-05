@@ -41,7 +41,7 @@ class _CustomerAppliedPackagePageState
   );
 
   Widget appBarTitle = Text(
-    "Search package list",
+    "Package List",
     style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR),
   );
 
@@ -373,7 +373,7 @@ class _CustomerAppliedPackagePageState
         color: AppColors.PRIMARY_WORD_COLOR,
       );
       appBarTitle = Text(
-        "Search package list",
+        "Package List",
         style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR,),
       );
       _isSearching = false;
