@@ -170,7 +170,19 @@ class _TrainerReportHistoryPageState extends State<TrainerReportHistoryPage> {
 
   List<Widget> _generateReportCardList(List<ReportModel>? data){
     List<Widget> widgetList = [];
-    for (ReportModel reportString in data!){
+    if (data!.isEmpty){
+      widgetList.add(Center(
+        child: Text(
+          "There is no report yet",
+          style: TextStyle(
+            color: AppColors.PRIMARY_WORD_COLOR,
+            fontSize: 17,
+            fontWeight: FontWeight.bold
+          ),
+        ),
+      ));
+    }
+    for (ReportModel reportString in data){
       Widget widget = _buildReportCard(reportString);
       widgetList.add(widget);
     }

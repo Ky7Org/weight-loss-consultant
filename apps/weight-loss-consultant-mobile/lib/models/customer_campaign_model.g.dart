@@ -22,7 +22,7 @@ CustomerCampaignModel _$CustomerCampaignModelFromJson(
           ? null
           : CampaignAccountModel.fromJson(
               json['customer'] as Map<String, dynamic>),
-    );
+    )..sessionLength = json['sessionLength'] as int?;
 
 Map<String, dynamic> _$CustomerCampaignModelToJson(
         CustomerCampaignModel instance) =>
@@ -37,4 +37,5 @@ Map<String, dynamic> _$CustomerCampaignModelToJson(
       'currentWeight': instance.currentWeight,
       'spendTimeForTraining': instance.spendTimeForTraining,
       'customer': instance.customer,
+      'sessionLength': instance.sessionLength,
     };

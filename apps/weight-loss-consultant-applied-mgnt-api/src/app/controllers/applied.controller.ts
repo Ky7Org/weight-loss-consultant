@@ -8,7 +8,7 @@ import {
   CREATE_APPLY, DELETE_APPLY_BY_CAMPAIGN_ID,
   DELETE_APPLY_BY_ID, DELETE_APPLY_BY_PACKAGE_ID,
   FIND_ALL_APPLIES,
-  FIND_APPLY_BY_ID, GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
+  FIND_APPLY_BY_ID, GET_APPLIED_CAMPAIGNS_BY_PACKAGE_ID, GET_APPLIED_PACKAGES_BY_CAMPAIGN_ID,
   UPDATE_APPLY_BY_ID, UpdateApplyPayloadType
 } from "../../../../common/routes/applies-management-routes";
 import {CreateAppliedDto} from "../dtos/applied/create_applied_dto";
@@ -58,6 +58,12 @@ export class AppliedController {
   @UseFilters(new ExceptionFilter())
   async getPackages(@Payload() id: number) {
     return this.appliedService.getAppliedPackagesByCampaignID(id);
+  }
+
+  @MessagePattern({cmd: GET_APPLIED_CAMPAIGNS_BY_PACKAGE_ID})
+  @UseFilters(new ExceptionFilter())
+  async getCampaigns(@Payload() id: number) {
+    return this.appliedService.getAppliedCampaignsByPackageId(id);
   }
 
   @MessagePattern({cmd: APPROVED_PACKAGE})

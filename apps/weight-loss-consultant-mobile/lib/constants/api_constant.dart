@@ -30,4 +30,7 @@ class ApiConstant{
   static const String trainerFeedbackApi = routePath + "/api/v1/reports/trainerApproval";
   static const String getReportById = routePath + "/api/v1/reports";
   static const String getAnotherId = routePath + "/api/v1/contracts/getAnother";
+  static const String deleteApplyByPackageId = routePath + "/api/v1/applies/deleteByPackageId";
+  static const String deleteApplyByCampaignId = routePath + "/api/v1/applies/deleteByCampaignId";
+  static const String getAppliedCampaignApi = routePath + "/api/v1/applies/getAppliedCampaigns";
 }

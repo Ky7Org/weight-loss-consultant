@@ -108,7 +108,7 @@ class TrainerService{
   }
 
   Future<List<PackageModel>> getAppliedPackage(int campaignId, AccountModel user) async{
-    var url = Uri.parse(ApiConstant.getAppliedPackageApi + "/$campaignId}");
+    var url = Uri.parse(ApiConstant.getAppliedPackageApi + "/$campaignId");
     List<PackageModel> models = [];
     var response = await http.get(
       url,
@@ -142,6 +142,8 @@ class TrainerService{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 201){
       return true;
     }
@@ -257,6 +259,8 @@ class TrainerService{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200){
       Iterable list = json.decode(response.body);
       for (var item in list){
@@ -332,5 +336,36 @@ class TrainerService{
       return true;
     }
     return false;
+  }
+
+  Future<bool> undoApplyPackage(int packageId, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.deleteApplyByPackageId + "/$packageId");
+    var response = await http.delete(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
+
+  Future<CustomerCampaignModel?> getAppliedCampaignByPackageID(int packageID, AccountModel user) async{
+    print(packageID);
+    var url = Uri.parse(ApiConstant.getAppliedCampaignApi + "/$packageID");
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      CustomerCampaignModel model = CustomerCampaignModel.fromJson(jsonDecode(response.body)[0]);
+      return model;
+    }
   }
 }
