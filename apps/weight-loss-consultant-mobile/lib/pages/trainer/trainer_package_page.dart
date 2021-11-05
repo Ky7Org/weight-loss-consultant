@@ -240,6 +240,9 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
               onPressed: () async {
                 Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
                   listPackage = trainerService.getTrainerPackage(user);
+                  listPackage!.then((value){
+                    fullList = value;
+                  });
                   setState(() {});
                 });
               },
@@ -279,6 +282,9 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
               onPressed: () async {
                 Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
                   listPackage = trainerService.getTrainerPackage(user);
+                  listPackage!.then((value){
+                    fullList = value;
+                  });
                   setState(() {});
                 });
               },
@@ -656,6 +662,9 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
         onPressed: (){
           Navigator.pushNamed(context, RoutePath.createPackagesPage).then((value) {
             listPackage = trainerService.getTrainerPackage(user);
+            listPackage!.then((value){
+              fullList = value;
+            });
             setState(() {
 
             });
