@@ -172,6 +172,9 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
               onPressed: () async {
                 Navigator.pushNamed(context, RoutePath.customerUpdateCampaignPage, arguments: campaignModel.id).then((value){
                   listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+                  listCampaign!.then((value){
+                    fullList = value;
+                  });
                   setState(() {});
                 });
               },
@@ -219,6 +222,9 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
       onTap: () {
         Navigator.pushNamed(context, RoutePath.customerAppliedPackagePage, arguments: campaignModel.id).then((value){
           listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+          listCampaign!.then((value){
+            fullList = value;
+          });
           setState(() {});
         });
       },
@@ -577,6 +583,9 @@ class _CustomerCampaignPageState extends State<CustomerCampaignPage> with Single
         onPressed: (){
           Navigator.pushNamed(context, RoutePath.createCampaignPage).then((value){
             listCampaign = customerService.getCustomerCampaign(user.email ?? "");
+            listCampaign!.then((value){
+              fullList = value;
+            });
             setState(() {});
           });
         },
