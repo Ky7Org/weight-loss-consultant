@@ -6,16 +6,18 @@ part "customer_campaign_model.g.dart";
 
 @JsonSerializable()
 class CustomerCampaignModel{
-  late int? id;
-  late String? description;
-  late int? status;
-  late String? startDate;
-  late String? endDate;
-  late String? feedback;
-  late int? targetWeight;
-  late int? currentWeight;
-  late int? spendTimeForTraining;
-  late CampaignAccountModel? customer;
+   int? id;
+   String? description;
+   int? status;
+   String? startDate;
+   String? endDate;
+   String? feedback;
+   int? targetWeight;
+   int? currentWeight;
+   int? spendTimeForTraining;
+   CampaignAccountModel? customer;
+   int? sessionLength;
+
 
   CustomerCampaignModel(this.id,
       this.description,

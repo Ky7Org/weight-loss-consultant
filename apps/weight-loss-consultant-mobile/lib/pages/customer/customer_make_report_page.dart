@@ -12,6 +12,7 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/models/contract_model.dart';
+import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/models/report_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
@@ -20,6 +21,7 @@ import 'package:path/path.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class CustomerMakeReportPage extends StatefulWidget {
@@ -322,6 +324,11 @@ class _CustomerMakeReportPageState extends State<CustomerMakeReportPage> {
               report.id as int, url as String, 1, user
           );
         }
+
+        PackageModel? packageModel = await customerService.getPackageById(widget.packageId as int, user);
+        NotificationService notificationService = NotificationService();
+        notificationService.customerMakeReport(packageModel?.trainer?.deviceID ?? "", widget.packageId as int);
+
         CustomToast.makeToast("Update successfully");
 
       },

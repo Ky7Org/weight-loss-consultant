@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/report_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class TrainerFeedbackReportPage extends StatefulWidget {
@@ -27,6 +31,8 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
   List<String> exerciseImages = [];
   final TextEditingController _feedback = TextEditingController();
   int trainerApproval = 0;
+  CustomerService customerService = CustomerService();
+  TrainerService trainerService = TrainerService();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -237,9 +243,14 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
               int reportId = report.id as int;
               String trainerFeedback = _feedback.text;
               TrainerService service = TrainerService();
-              bool result = await service.sendFeedBack(
-                  reportId, trainerFeedback, 1, user);
+              bool result = await service.sendFeedBack(reportId, trainerFeedback, 1, user);
               if (result) {
+                CustomerService customerService = CustomerService();
+                int? campaignID = await customerService.getCampaignIdByPackageIdWithSameContract(widget.packageId as int, user);
+                CustomerCampaignModel? campaignModel = await trainerService.getCampaignById(campaignID as int, user);
+                NotificationService notificationService = NotificationService();
+                await notificationService.trainerFeedbackReport(campaignModel?.customer?.deviceID ?? "", report.id as int);
+                Navigator.pop(context);
                 CustomToast.makeToast("Feedback successfully");
               } else {
                 CustomToast.makeToast("Some thing went wrong! Try again");
@@ -275,9 +286,14 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
               int reportId = report.id as int;
               String trainerFeedback = _feedback.text;
               TrainerService service = TrainerService();
-              bool result = await service.sendFeedBack(
-                  reportId, trainerFeedback, 0, user);
+              bool result = await service.sendFeedBack(reportId, trainerFeedback, 0, user);
               if (result) {
+                CustomerService customerService = CustomerService();
+                int? campaignID = await customerService.getCampaignIdByPackageIdWithSameContract(widget.packageId as int, user);
+                CustomerCampaignModel? campaignModel = await trainerService.getCampaignById(campaignID as int, user);
+                NotificationService notificationService = NotificationService();
+                await notificationService.trainerFeedbackReport(campaignModel?.customer?.deviceID ?? "", report.id as int);
+                Navigator.pop(context);
                 CustomToast.makeToast("Feedback successfully");
               } else {
                 CustomToast.makeToast("Some thing went wrong! Try again");
@@ -329,52 +345,56 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
           child: FutureBuilder<ReportModel?>(
               future: reportModel,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  TrainerService service = TrainerService();
-                  ReportModel report = snapshot.requireData as ReportModel;
-                  service
-                      .getExerciseReportMediaModelByReportId(
-                      report.id as int, user)
-                      .then((value) {
-                    exerciseImages = value.map((e) => e.url ?? "").toList();
+                if (snapshot.connectionState == ConnectionState.done){
+                  print("AAAA");
+                  if (snapshot.hasData) {
+                    print(snapshot.requireData);
+                    TrainerService service = TrainerService();
+                    ReportModel report = snapshot.requireData as ReportModel;
                     service
-                        .getDietReportMediaModelByReportId(
+                        .getExerciseReportMediaModelByReportId(
                         report.id as int, user)
                         .then((value) {
-                      dietImages = value.map((e) => e.url ?? "").toList();
-                      setState(() {});
+                      exerciseImages = value.map((e) => e.url ?? "").toList();
+                      service
+                          .getDietReportMediaModelByReportId(
+                          report.id as int, user)
+                          .then((value) {
+                        dietImages = value.map((e) => e.url ?? "").toList();
+                        setState(() {});
+                      });
                     });
-                  });
-                  if (report.trainerFeedback?.isNotEmpty ?? false){
-                    _feedback.text = report.trainerFeedback ?? "";
+                    if (report.trainerFeedback?.isNotEmpty ?? false){
+                      _feedback.text = report.trainerFeedback ?? "";
+                    }
+                    return Column(
+                      children: [
+                        Column(
+                          children: [
+                            _buildHasReportContainer(report),
+                            _buildDietCard(snapshot.requireData as ReportModel),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            _buildExerciseCard(
+                                snapshot.requireData as ReportModel),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            _multiInput("Your feedback", "Noice", _feedback, report),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            // const SizedBox(
+                            //   height: 30,
+                            // ),
+                            // _buildFeedbackButton(report),
+                            _buildApprovedAndDenyButton(report)
+                          ],
+                        )
+                      ],
+                    );
                   }
-                  return Column(
-                    children: [
-                      Column(
-                        children: [
-                          _buildHasReportContainer(report),
-                          _buildDietCard(snapshot.requireData as ReportModel),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          _buildExerciseCard(
-                              snapshot.requireData as ReportModel),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          _multiInput("Your feedback", "Noice", _feedback, report),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          // const SizedBox(
-                          //   height: 30,
-                          // ),
-                          // _buildFeedbackButton(report),
-                          _buildApprovedAndDenyButton(report)
-                        ],
-                      )
-                    ],
-                  );
                 }
                 return const Center(
                   child: CircularProgressIndicator(),

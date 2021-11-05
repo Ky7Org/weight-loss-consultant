@@ -64,33 +64,31 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) {
           return const TrainerRegisterPage();
         });
-      case RoutePath.trainerRegisterSuccessfullyPage:
-        if (args is Map<dynamic, dynamic>) {
-          return MaterialPageRoute(builder: (_) {
-            return RegisterSuccessfulPage(
-              data: args,
-            );
+      case RoutePath.trainerRegisterSuccessfullyPage :
+        if (args is Map<dynamic, dynamic>){
+          return MaterialPageRoute(builder: (_){
+            return RegisterSuccessfulPage(data: args,);
           });
         }
         return _errorRoute();
       case RoutePath.loginPage:
-        return MaterialPageRoute(builder: (_) {
+        return MaterialPageRoute(builder: (_){
           return const LoginPage();
         });
       case RoutePath.recoverPasswordPage:
-        return MaterialPageRoute(builder: (_) {
+        return MaterialPageRoute(builder: (_){
           return const RecoverPasswordPage();
         });
       case RoutePath.customerHomePage:
-        return MaterialPageRoute(builder: (_) {
-          return const CustomerHomePage();
+          return MaterialPageRoute(builder: (_){
+            return const CustomerHomePage();
         });
       case RoutePath.chatPage:
-        return MaterialPageRoute(builder: (_) {
+        return MaterialPageRoute(builder: (_){
           return const ChatPage();
         });
       case RoutePath.customerDetailPage:
-        return MaterialPageRoute(builder: (_) {
+        return MaterialPageRoute(builder: (_){
           return const CustomerDetailPage();
         });
       case RoutePath.resetPasswordPage:
@@ -273,11 +271,9 @@ class RouteGenerator {
         }
         return _errorRoute();
       case RoutePath.customerReportDetailPage:
-        if (args is int) {
-          return MaterialPageRoute(builder: (_) {
-            return CustomerReportDetailPage(
-              reportId: args,
-            );
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return CustomerReportDetailPage(reportId: args,);
           });
         }
         return _errorRoute();
@@ -300,11 +296,9 @@ class RouteGenerator {
         }
         return _errorRoute();
       case RoutePath.trainerReportDetailPage:
-        if (args is int) {
-          return MaterialPageRoute(builder: (_) {
-            return TrainerReportDetailPage(
-              reportId: args,
-            );
+        if (args is int){
+          return MaterialPageRoute(builder: (_){
+            return TrainerReportDetailPage(reportId: args,);
           });
         }
         return _errorRoute();
@@ -313,8 +307,8 @@ class RouteGenerator {
     }
   }
 
-  static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(builder: (_) {
+  static Route<dynamic> _errorRoute(){
+    return MaterialPageRoute(builder: (_){
       return Scaffold(
         appBar: GenericAppBar.builder("Something went wrong"),
         body: const Center(
