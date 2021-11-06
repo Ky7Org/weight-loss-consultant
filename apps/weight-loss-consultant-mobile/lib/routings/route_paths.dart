@@ -40,5 +40,6 @@ class RoutePath{
   static const String trainerOnGoingPackageDetailPage = "/trainerOnGoingPackageDetailPage";
   static const String trainerReportHistoryPage = "/trainerReportHistoryPage";
   static const String trainerReportDetailPage = "/trainerReportDetailPage";
+  static const String trainerUpcomingPage = "/trainerUpcomingPage";
 
 }

@@ -29,7 +29,8 @@ class TrainerOnGoingPackageDetailPage extends StatefulWidget {
 }
 
 class _TrainerOnGoingPackageDetailPageState
-    extends State<TrainerOnGoingPackageDetailPage>  with SingleTickerProviderStateMixin {
+    extends State<TrainerOnGoingPackageDetailPage>
+    with SingleTickerProviderStateMixin {
   Future<PackageModel?>? packageModel;
   CustomerCampaignModel? campaignModel;
   final PanelController _pc = PanelController();
@@ -65,9 +66,13 @@ class _TrainerOnGoingPackageDetailPageState
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       initAccount().then((value) {
         //packageModel = service.getPackageById(widget.packageID as int, user);
-        packageModel = customerService.getPackageById(widget.packageId as int, user);
-        customerService.getCampaignIdByPackageIdWithSameContract(widget.packageId as int, user).then((value){
-          trainerService.getCampaignById(value as int, user).then((value){
+        packageModel =
+            customerService.getPackageById(widget.packageId as int, user);
+        customerService
+            .getCampaignIdByPackageIdWithSameContract(
+                widget.packageId as int, user)
+            .then((value) {
+          trainerService.getCampaignById(value as int, user).then((value) {
             campaignModel = value;
             setState(() {});
           });
@@ -77,7 +82,6 @@ class _TrainerOnGoingPackageDetailPageState
   }
 
   Widget _buildCustomerContainer(TrainerModel model) {
-
     Widget avatarOfUser() {
       if (campaignModel!.customer!.profileImage != null ||
           campaignModel!.customer!.profileImage!.isNotEmpty) {
@@ -121,26 +125,31 @@ class _TrainerOnGoingPackageDetailPageState
           children: [
             Center(
                 child: Stack(
-                  children: [
-                    const SizedBox(width: double.infinity,),
-                    Center(child: avatarOfUser()),
-                    Positioned(
-                      height: 100,
-                      right: 10,
-                      child: IconButton(
-                        iconSize: 48,
-                        onPressed: () {
-                          Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
-                        },
-                        icon: SvgPicture.asset("assets/icon/call-icon.svg"),
-                      ),
-                    )
-                  ],
+              children: [
+                const SizedBox(
+                  width: double.infinity,
+                ),
+                Center(child: avatarOfUser()),
+                Positioned(
+                  height: 100,
+                  right: 10,
+                  child: IconButton(
+                    iconSize: 48,
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, RoutePath.trainerUpcomingPage,
+                          arguments: campaignModel);
+                    },
+                    icon: SvgPicture.asset("assets/icon/call-icon.svg"),
+                  ),
                 )
-            ),
-            _content("Name of trainer", campaignModel!.customer!.fullname ?? ""),
+              ],
+            )),
+            _content(
+                "Name of customer", campaignModel!.customer!.fullname ?? ""),
             _content("Email", campaignModel!.customer!.email ?? ""),
-            _content("Gender", "${campaignModel!.customer!.gender == "1" ? "Male" : "Female"} "),
+            _content("Gender",
+                "${campaignModel!.customer!.gender == "1" ? "Male" : "Female"} "),
             _content("Phone number", campaignModel!.customer!.phone ?? ""),
             _content("Date of birth", date),
           ],
@@ -182,9 +191,7 @@ class _TrainerOnGoingPackageDetailPageState
                     fontSize: 15,
                     fontWeight: FontWeight.w900),
               ),
-              const SizedBox(
-                  height: 5
-              ),
+              const SizedBox(height: 5),
               Text(
                 model.name ?? "",
                 style: TextStyle(
@@ -357,8 +364,11 @@ class _TrainerOnGoingPackageDetailPageState
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
-            children:  [
-              Icon(Icons.assignment, color: AppColors.PRIMARY_WORD_COLOR,),
+            children: [
+              Icon(
+                Icons.assignment,
+                color: AppColors.PRIMARY_WORD_COLOR,
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -393,8 +403,11 @@ class _TrainerOnGoingPackageDetailPageState
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
-            children:  [
-              Icon(Icons.bar_chart, color: AppColors.PRIMARY_WORD_COLOR,),
+            children: [
+              Icon(
+                Icons.bar_chart,
+                color: AppColors.PRIMARY_WORD_COLOR,
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -426,145 +439,138 @@ class _TrainerOnGoingPackageDetailPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Package detail"),
-      body: SlidingUpPanel(
-        controller: _pc,
-        panel: CategoryPanel(),
-        minHeight: 0,
-        maxHeight: 400,
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                height: 48,
-                decoration: BoxDecoration(
-                    color: const Color(0xFFF0F3F6),
-                    borderRadius: BorderRadius.circular(18),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: const Offset(0, 3),
-                      )
-                    ]),
-                child: TabBar(
-                  controller: _tabController,
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    color: Colors.white,
+        appBar: GenericAppBar.builder("Package detail"),
+        body: SlidingUpPanel(
+          controller: _pc,
+          panel: CategoryPanel(),
+          minHeight: 0,
+          maxHeight: 400,
+          body: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  height: 48,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFF0F3F6),
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3),
+                        )
+                      ]),
+                  child: TabBar(
+                    controller: _tabController,
+                    indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      color: Colors.white,
+                    ),
+                    labelColor: const Color(0xFF0D3F67),
+                    unselectedLabelColor: const Color(0xFFB6C5D1),
+                    tabs: const [
+                      Tab(
+                        child: Text(
+                          'Customer Campaign',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Customer Info',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          'Package Detail',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ],
                   ),
-                  labelColor: const Color(0xFF0D3F67),
-                  unselectedLabelColor: const Color(0xFFB6C5D1),
-                  tabs: const [
-                    Tab(
-                      child: Text(
-                        'Customer Campaign',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w700),
-                      ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Expanded(
+                    child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        FutureBuilder<PackageModel?>(
+                          future: packageModel,
+                          builder: (context, snapshot) {
+                            while (!snapshot.hasData) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            return Column(
+                              children: [
+                                _buildCampaignContainer(),
+                                const SizedBox(height: 15),
+                                _buildButtonGroup(
+                                    snapshot.requireData as PackageModel),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                    Tab(
-                      child: Text(
-                        'Customer Info',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w700),
-                      ),
+                    FutureBuilder<PackageModel?>(
+                      future: packageModel,
+                      builder: (context, snapshot) {
+                        while (!snapshot.hasData) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return Column(
+                          children: [
+                            _buildCustomerContainer(
+                                snapshot.requireData!.trainer as TrainerModel),
+                          ],
+                        );
+                      },
                     ),
-                    Tab(
-                      child: Text(
-                        'Package Detail',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w700),
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        FutureBuilder<PackageModel?>(
+                          future: packageModel,
+                          builder: (context, snapshot) {
+                            while (!snapshot.hasData) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            return Column(
+                              children: [
+                                _buildPackageContainer(
+                                    snapshot.requireData as PackageModel),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Expanded(child: TabBarView(
-                controller: _tabController,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      FutureBuilder<PackageModel?>(
-                        future: packageModel,
-                        builder: (context, snapshot) {
-                          while (!snapshot.hasData) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          return Column(
-                            children: [
-                              _buildCampaignContainer(),
-                              const SizedBox(
-                                height: 15
-                              ),
-                              _buildButtonGroup(
-                                  snapshot.requireData as PackageModel),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      FutureBuilder<PackageModel?>(
-                        future: packageModel,
-                        builder: (context, snapshot) {
-                          while (!snapshot.hasData) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          return Column(
-                            children: [
-                              _buildCustomerContainer(
-                                  snapshot.requireData!.trainer as TrainerModel),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      FutureBuilder<PackageModel?>(
-                        future: packageModel,
-                        builder: (context, snapshot) {
-                          while (!snapshot.hasData) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          return Column(
-                            children: [
-                              _buildPackageContainer(
-                              snapshot.requireData as PackageModel),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ))
-            ],
+                ))
+              ],
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
 }

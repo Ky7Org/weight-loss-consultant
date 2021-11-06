@@ -71,6 +71,30 @@ class _AppState extends State<App> {
               _navKey.currentState!.pushNamed(
                   RoutePath.trainerViewCampaignDetailPage,
                   arguments: int.parse(campaignID));
+            } else if (typeOfMessage == "Update Campaign"){
+              print("Update Campaign");
+            } else if (typeOfMessage == "Customer Report"){
+              final packageID = message.data['packageID'];
+              _navKey.currentState!.pushNamed(
+                  RoutePath.trainerFeedbackReportPage,
+                  arguments: int.parse(packageID));
+            } else if (typeOfMessage == "Trainer Feedback"){
+              final reportID = message.data['reportID'];
+              _navKey.currentState!.pushNamed(
+                  RoutePath.customerReportDetailPage,
+                  arguments: int.parse(reportID));
+            } else if (typeOfMessage == "Trainer Undo Apply") {
+              final campaignID = message.data['campaignID'];
+              _navKey.currentState!.pushNamed(
+                  RoutePath.customerAppliedPackagePage,
+                  arguments: int.parse(campaignID));
+            } else if (typeOfMessage == "Customer Remove Package") {
+              final campaignID = message.data['campaignID'];
+              _navKey.currentState!.pushNamed(
+                  RoutePath.trainerViewCampaignDetailPage,
+                  arguments: int.parse(campaignID));
+            } else if (typeOfMessage == "Update Package") {
+              print("Update package");
             }
           }
         });
@@ -95,6 +119,30 @@ class _AppState extends State<App> {
             _navKey.currentState!.pushNamed(
                 RoutePath.trainerOnGoingPackageDetailPage,
                 arguments: int.parse(packageID));
+          } else if (typeOfMessage == "Update Campaign"){
+            print("Update Campaign");
+          } else if (typeOfMessage == "Customer Report"){
+            final packageID = message.data['packageID'];
+            _navKey.currentState!.pushNamed(
+                RoutePath.trainerFeedbackReportPage,
+                arguments: int.parse(packageID));
+          } else if (typeOfMessage == "Trainer Feedback"){
+            final reportID = message.data['reportID'];
+            _navKey.currentState!.pushNamed(
+                RoutePath.customerReportDetailPage,
+                arguments: int.parse(reportID));
+          } else if (typeOfMessage == "Trainer Undo Apply") {
+            final campaignID = message.data['campaignID'];
+            _navKey.currentState!.pushNamed(
+                RoutePath.customerAppliedPackagePage,
+                arguments: int.parse(campaignID));
+          } else if (typeOfMessage == "Customer Remove Package") {
+            final campaignID = message.data['campaignID'];
+            _navKey.currentState!.pushNamed(
+                RoutePath.trainerViewCampaignDetailPage,
+                arguments: int.parse(campaignID));
+          } else if (typeOfMessage == "Update Package") {
+            print("Update package");
           }
         });
 

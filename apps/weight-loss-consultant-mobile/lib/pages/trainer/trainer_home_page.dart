@@ -303,7 +303,7 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
                         fontSize: 15),
                   ),
                   TextSpan(
-                    text: "45 minutes",
+                    text: "${model.sessionLength.toString()} minutes",
                     style: TextStyle(
                         color: AppColors.PRIMARY_WORD_COLOR,
                         fontWeight: FontWeight.w400,

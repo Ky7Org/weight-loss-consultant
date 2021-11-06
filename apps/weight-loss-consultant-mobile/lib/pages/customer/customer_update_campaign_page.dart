@@ -10,9 +10,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class CustomerUpdateCampaignPage extends StatefulWidget {
   late int? campaignID;
@@ -65,7 +68,8 @@ class _CustomerUpdateCampaignPageState extends State<CustomerUpdateCampaignPage>
           _description.text = campaignModel!.description ?? "";
           _weightTarget.text = campaignModel!.targetWeight.toString();
           _currentWeight.text = campaignModel!.currentWeight.toString();
-
+          startDate = DateTime.fromMillisecondsSinceEpoch(int.parse(campaignModel!.startDate as String));
+          endDate = DateTime.fromMillisecondsSinceEpoch(int.parse(campaignModel!.endDate as String));
 
           setState(() {});
         });
@@ -287,7 +291,7 @@ class _CustomerUpdateCampaignPageState extends State<CustomerUpdateCampaignPage>
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
-              hintText: "Enter your journey's start date",
+              hintText: DateFormat.yMMMd().format(startDate),
               hintStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF0D3F67),
@@ -348,7 +352,7 @@ class _CustomerUpdateCampaignPageState extends State<CustomerUpdateCampaignPage>
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
-              hintText: "Enter your journey's end date",
+              hintText: DateFormat.yMMMd().format(endDate),
               hintStyle: const TextStyle(
                 fontFamily: 'OpenSans',
                 fontWeight: FontWeight.bold,
@@ -465,6 +469,13 @@ class _CustomerUpdateCampaignPageState extends State<CustomerUpdateCampaignPage>
                       CustomerService service = CustomerService();
                       bool result = await service.updateCampaign(campaignModel, user);
                       if (result){
+                        TrainerService trainerService = TrainerService();
+                        NotificationService notificationService = NotificationService();
+                        List<PackageModel> packageList = await trainerService.getAppliedPackage(widget.campaignID ?? 0, user);
+                        for (PackageModel model in packageList){
+                          notificationService.updateCampaign(model.trainer!.deviceID as String);
+                        }
+
                         CustomToast.makeToast("Update successfully");
                       } else {
                         CustomToast.makeToast("Some thing went wrong! Try again");

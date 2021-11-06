@@ -81,7 +81,8 @@ class _CustomerOnGoingCampaignPageState
     });
   }
 
-  Widget _buildTrainerContainer(TrainerModel model) {
+  Widget _buildTrainerContainer(PackageModel packageModel) {
+    TrainerModel model = packageModel.trainer as TrainerModel;
     Widget avatarOfUser() {
       if (model.profileImage!.isNotEmpty) {
         return Image(
@@ -134,7 +135,7 @@ class _CustomerOnGoingCampaignPageState
                       child: IconButton(
                         iconSize: 48,
                         onPressed: () {
-                          Navigator.pushNamed(context, RoutePath.upcomingTrainingPage);
+                          Navigator.pushNamed(context, RoutePath.upcomingTrainingPage, arguments: packageModel);
                         },
                         icon: SvgPicture.asset("assets/icon/call-icon.svg"),
                       ),
@@ -484,7 +485,6 @@ class _CustomerOnGoingCampaignPageState
           child: Column(
             children: [
               Container(
-                margin: const EdgeInsets.only(top: 20),
                 height: 48,
                 decoration: BoxDecoration(
                     color: const Color(0xFFF0F3F6),
@@ -575,7 +575,7 @@ class _CustomerOnGoingCampaignPageState
                           }
                           return Center(
                               child: _buildTrainerContainer(snapshot
-                                  .requireData!.trainer as TrainerModel));
+                                  .requireData as PackageModel));
                         },
                       )
                     ],

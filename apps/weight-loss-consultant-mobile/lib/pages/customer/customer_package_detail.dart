@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/constants/enums.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
@@ -14,6 +15,8 @@ import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 import 'package:weight_loss_consultant_mobile/models/trainer_model.dart';
+import 'package:collection/collection.dart';
+
 
 class CustomerPackageDetail extends StatefulWidget {
   Map<String, dynamic>? data;
@@ -165,7 +168,7 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
                 width: double.infinity,
               ),
               Align(
-                alignment: Alignment.topLeft,
+                alignment: Alignment.center,
                 child: Text(
                   model.name ?? "",
                   style: TextStyle(
@@ -446,6 +449,62 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
     );
   }
 
+  Future _showConfirmUndoDialog() async{
+    return showDialog(
+        context: context,
+        builder: (ctx) => Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                SizedBox(
+                  height: 180,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+                    child: Column(children: [
+                      const Center(
+                          child: Text(
+                            "You already have an ongoing campaign!",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                            ),
+                          )),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: RaisedButton(
+                          onPressed: () async {
+                            Navigator.of(context).pop(true);
+                          },
+                          color: Colors.redAccent,
+                          child: const Text(
+                            'Okay',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+
+                    ]),
+                  ),
+                ),
+                const Positioned(
+                    top: -35,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.redAccent,
+                      radius: 40,
+                      child: Icon(
+                        Icons.warning,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    )),
+              ],
+            )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -457,6 +516,13 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
           CustomerService customerService = CustomerService();
           TrainerService trainerService = TrainerService();
           NotificationService notificationService = NotificationService();
+
+          List<CampaignModel> userCampaignList = await customerService.getCustomerCampaign(user.email ?? "");
+          CampaignModel? ongoingCampaign = userCampaignList.firstWhereOrNull((element) => element.status == 1);
+          if (ongoingCampaign != null){
+            _showConfirmUndoDialog();
+            return;
+          }
 
           PackageModel? packageModel =
               await trainerService.getPackageById(packageID as int, user);
@@ -502,7 +568,9 @@ class _CustomerPackageDetailState extends State<CustomerPackageDetail> {
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator()
+                );
               }),
         ),
       ),

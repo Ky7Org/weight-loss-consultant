@@ -12,7 +12,8 @@ const String appId = "c99b02ecc0b940fe90959c6490af4d06";
 const String token = "006c99b02ecc0b940fe90959c6490af4d06IAD+r8f9ZdS9mEuqy/RS3T91r/l8YG7kZOHo1o89z20OYsXLnzAAAAAAEAC3nyPhwYKEYQEAAQDBgoRh";
 
 class VideoCallPage extends StatefulWidget {
-  const VideoCallPage({Key? key}) : super(key: key);
+  String? name;
+  VideoCallPage({Key? key, this.name}) : super(key: key);
 
   @override
   _VideoCallPageState createState() => _VideoCallPageState();
@@ -100,7 +101,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
   void _onCallEnd(BuildContext context) {
     _engine.leaveChannel();
     _engine.destroy();
-    Navigator.pushNamed(context, RoutePath.endCallPage);
+    Navigator.pop(context);
   }
 
   void _onVolumeOff(){
@@ -240,7 +241,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
 
   Widget _callInformation(){
     return Text(
-      "Mr. Bang Ngo",
+      "",
       style: TextStyle(
         color: HexColor("#0D3F67"),
         fontSize: 24,

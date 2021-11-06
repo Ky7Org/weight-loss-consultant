@@ -331,12 +331,19 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Text(
+                        "Created at: ",
+                        style: TextStyle(
+                          color: AppColors.PRIMARY_WORD_COLOR,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 13,
+                        ),
+                      ),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             vertical: 5, horizontal: 10),
-                        margin: const EdgeInsets.only(bottom: 10),
                         child: Text(
                           date,
                           style: TextStyle(
@@ -423,7 +430,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                             )
                           ]
                       )
-                  )
+                  ),
 
                 ],
               ),
