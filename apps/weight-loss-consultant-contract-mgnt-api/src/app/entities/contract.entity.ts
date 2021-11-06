@@ -1,6 +1,7 @@
 import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {CampaignEntity} from "./campaign.entity";
 import {PackageEntity} from "./package.enttiy";
+import {boolean} from "yup";
 
 @Entity('Contract')
 export class ContractEntity extends BaseEntity{
@@ -14,6 +15,10 @@ export class ContractEntity extends BaseEntity{
   timeOfCreate: number;
   @Column({ type: 'int'})
   status: number;
+  @Column({ type: 'tinyint'})
+  isTrainerCancel: number;
+  @Column({ type: 'tinyint'})
+  isCustomerCancel: number;
 
   @ManyToOne(() => CampaignEntity, campaign => campaign.contracts)
   campaign: CampaignEntity;

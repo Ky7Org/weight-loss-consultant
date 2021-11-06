@@ -21,7 +21,8 @@ export class ContractMapper {
     entity.status = CONTRACT_STATUS.ONGOING;
     entity.campaign = campaign;
     entity.package = p;
-
+    entity.isTrainerCancel = 0;
+    entity.isCustomerCancel = 0;
     return entity;
   }
 

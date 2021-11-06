@@ -4,11 +4,16 @@ import {MessagePattern, Payload} from '@nestjs/microservices';
 import {ContractService} from "../services/impls/contract.service";
 import {
   CREATE_CONTRACT,
+  CUSTOMER_CANCEL_ONGOING_CONTRACT,
+  CUSTOMER_UNDO_CANCEL_ONGOING_CONTRACT,
   DELETE_CONTRACT_BY_ID,
   EXPIRE_CONTRACT,
   FIND_ALL_CONTRACT,
-  FIND_CONTRACT_BY_ID, GET_ANOTHER_IN_THE_SAME_CONTRACT,
+  FIND_CONTRACT_BY_ID,
+  GET_ANOTHER_IN_THE_SAME_CONTRACT,
   GET_CONTRACT_BY_CAMPAIGN_ID_OR_PACKAGE_ID,
+  TRAINER_CANCEL_ONGOING_CONTRACT,
+  TRAINER_UNDO_CANCEL_ONGOING_CONTRACT,
   UPDATE_CONTRACT_BY_ID,
   UpdateContractPayloadType
 } from "../../../../common/routes/contract-management-service-routes";
@@ -72,4 +77,29 @@ export class ContractController {
   async getAnother(@Payload() payload: CampaignAndPackageIdPayload) {
     return this.contractService.getAnotherInTheSameContract(payload);
   }
+
+  @MessagePattern({ cmd: CUSTOMER_CANCEL_ONGOING_CONTRACT })
+  @UseFilters(new ExceptionFilter())
+  async customerCancelContract(@Payload() id: number) {
+    return this.contractService.customerCancelContract(id);
+  }
+
+  @MessagePattern({ cmd: TRAINER_CANCEL_ONGOING_CONTRACT })
+  @UseFilters(new ExceptionFilter())
+  async trainerCancelContract(@Payload() id: number) {
+    return this.contractService.trainerCancelContract(id);
+  }
+
+  @MessagePattern({ cmd: CUSTOMER_UNDO_CANCEL_ONGOING_CONTRACT })
+  @UseFilters(new ExceptionFilter())
+  async customerUndoCancelContract(@Payload() id: number) {
+    return this.contractService.customerUndoCancelContract(id);
+  }
+
+  @MessagePattern({ cmd: TRAINER_UNDO_CANCEL_ONGOING_CONTRACT })
+  @UseFilters(new ExceptionFilter())
+  async trainerUndoCancelContract(@Payload() id: number) {
+    return this.contractService.trainerUndoCancelContract(id);
+  }
+
 }

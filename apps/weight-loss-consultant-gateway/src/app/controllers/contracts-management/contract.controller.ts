@@ -6,7 +6,7 @@ import {CreateContractDto} from "../../dtos/contract/create-health-info.dto";
 import {UpdateContractDto} from "../../dtos/contract/update-health-info.dto";
 import {
   CampaignAndPackageIdPayload,
-  GetContractByPackageIDOrCampaignIDPayload
+  GetContractByPackageIDOrCampaignIDPayload, ProceedToCancelPayload
 } from "../../../../../common/dtos/update-trainer-dto.payload";
 
 
@@ -154,6 +154,54 @@ export class ContractController {
   async getAnother(@Body() payload: CampaignAndPackageIdPayload, @Res() res) {
     try {
       const result = await this.contractService.getAnother(payload);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Put('/v1/contracts/customerCancelContract/:id')
+  @UseGuards(JwtAuthGuard)
+  async customerCancelContract(@Param('id') id: number, @Res() res) {
+    try {
+      const result = await this.contractService.customerCancelContract(id);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Put('/v1/contracts/trainerCancelContract/:id')
+  @UseGuards(JwtAuthGuard)
+  async trainerCancelContract(@Param('id') id: number, @Res() res) {
+    try {
+      const result = await this.contractService.trainerCancelContract(id);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Put('/v1/contracts/customerUndoCancelContract/:id')
+  @UseGuards(JwtAuthGuard)
+  async customerUndoCancelContract(@Param('id') id: number, @Res() res) {
+    try {
+      const result = await this.contractService.customerUndoCancelContract(id);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Put('/v1/contracts/trainerUndoCancelContract/:id')
+  @UseGuards(JwtAuthGuard)
+  async trainerUndoCancelContract(@Param('id') id: number, @Res() res) {
+    try {
+      const result = await this.contractService.trainerUndoCancelContract(id);
       res.status(HttpStatus.OK).send(result);
     } catch ({error}) {
       this.logger.error(error);

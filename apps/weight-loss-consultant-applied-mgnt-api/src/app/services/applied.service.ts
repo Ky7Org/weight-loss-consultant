@@ -187,6 +187,20 @@ export class AppliedService {
     const campaignID: number = payload.campaignID;
     const packageID: number = payload.packageID;
 
+    const validateCampaign : CampaignEntity  = await this.validateCampaign(campaignID).toPromise();
+    if (!validateCampaign) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found campaign with id: ${campaignID}`
+      } as RpcExceptionModel);
+    }
+    const validatePackage : PackageEntity  = await this.validatePackage(packageID).toPromise();
+    if (!validatePackage) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found package with id: ${packageID}`
+      } as RpcExceptionModel);
+    }
     //1: get packages that have campaign id
     const packages = await this.getAppliedPackagesByCampaignID(campaignID);
     //2: find in array package matched with packageID
