@@ -5,11 +5,16 @@ import {DeleteResult} from 'typeorm';
 import {ContractEntity} from "../entities/contract.entity";
 import {
   CREATE_CONTRACT,
+  CUSTOMER_CANCEL_ONGOING_CONTRACT,
   DELETE_CONTRACT_BY_ID,
   EXPIRE_CONTRACT,
   FIND_ALL_CONTRACT,
-  FIND_CONTRACT_BY_ID, GET_ANOTHER_IN_THE_SAME_CONTRACT,
+  FIND_CONTRACT_BY_ID,
+  GET_ANOTHER_IN_THE_SAME_CONTRACT,
   GET_CONTRACT_BY_CAMPAIGN_ID_OR_PACKAGE_ID,
+  PROCEED_TO_CANCEL,
+  TRAINER_CANCEL_ONGOING_CONTRACT,
+  UNDO_CANCEL_ONGOING_CONTRACT,
   UPDATE_CONTRACT_BY_ID,
   UpdateContractPayloadType
 } from "../../../../common/routes/contract-management-service-routes";
@@ -17,7 +22,7 @@ import {CreateContractDto} from "../dtos/contract/create-health-info.dto";
 import {UpdateContractDto} from "../dtos/contract/update-health-info.dto";
 import {
   CampaignAndPackageIdPayload,
-  GetContractByPackageIDOrCampaignIDPayload
+  GetContractByPackageIDOrCampaignIDPayload, ProceedToCancelPayload
 } from "../../../../common/dtos/update-trainer-dto.payload";
 
 @Injectable()
@@ -77,6 +82,34 @@ export class ContractService {
     return this.contractManagementServiceProxy
       .send
       ({cmd: GET_ANOTHER_IN_THE_SAME_CONTRACT}, payload)
+      .toPromise();
+  }
+
+  async customerCancelContract(id: number) : Promise<void> {
+    return this.contractManagementServiceProxy
+      .send
+      ({cmd: CUSTOMER_CANCEL_ONGOING_CONTRACT}, id)
+      .toPromise();
+  }
+
+  async trainerCancelContract(id: number) : Promise<void> {
+    return this.contractManagementServiceProxy
+      .send
+      ({cmd: TRAINER_CANCEL_ONGOING_CONTRACT}, id)
+      .toPromise();
+  }
+
+  async undoCancelContract(id: number) : Promise<void>{
+    return this.contractManagementServiceProxy
+      .send
+      ({cmd: UNDO_CANCEL_ONGOING_CONTRACT}, id)
+      .toPromise();
+  }
+
+  async proceedToCancel(id: number) : Promise<void>{
+    return this.contractManagementServiceProxy
+      .send
+      ({cmd: PROCEED_TO_CANCEL}, id)
       .toPromise();
   }
 }

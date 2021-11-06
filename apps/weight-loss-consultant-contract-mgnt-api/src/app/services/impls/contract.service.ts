@@ -21,6 +21,11 @@ import {CAMPAIGN_STATUS, CONTRACT_STATUS, PACKAGE_STATUS} from "../../../../../c
 import {UpdateStatusCampaignPayload} from "../../../../../common/dtos/update-campaign-dto.payload";
 import {UpdateStatusPackagePayload} from "../../../../../common/dtos/update-package-dto.payload";
 
+export type ResponseCancelPayload =  {
+  status: number,
+  message: string
+}
+
 @Injectable()
 export class ContractService {
   constructor(private readonly repository: ContractRepository,
@@ -135,6 +140,8 @@ export class ContractService {
   async viewDetail(id): Promise<ContractEntity> {
     const query = this.repository.createQueryBuilder("contract")
       .where("contract.id = :id", {id: id})
+      .leftJoinAndSelect("contract.campaign" , "campaign")
+      .leftJoinAndSelect("contract.package", "package")
       .getOne();
     return query;
   }
@@ -281,4 +288,173 @@ export class ContractService {
     }
   }
 
+  async customerCancelContract(contractId: number) : Promise<ResponseCancelPayload> {
+    //find contract
+    const validateContract : ContractEntity = await this.viewDetail(contractId);
+    if (!validateContract) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found contract with id: ${contractId}`
+      } as RpcExceptionModel);
+    }
+    //cancel contract at customer side
+    const query  = await this.repository.createQueryBuilder()
+      .update(ContractEntity)
+      .set({
+        isCustomerCancel: 1
+      })
+      .where("id = :id" , {id: contractId})
+      .execute()
+    //if trainer approve cancel contract => change status of contract to CLOSED + change status of Campaign to CLOSED, package to DECLINED
+    if (validateContract.isTrainerCancel === 1) {
+      //change status of campaign to CLOSED
+      const campaignPayload = {
+        id: validateContract.campaign.id,
+        status: CAMPAIGN_STATUS.CLOSED
+      } as UpdateStatusCampaignPayload;
+      const updateCampaignResult = await this.updateCampaignStatus(campaignPayload).toPromise();
+      //change status of package to DECLINED
+      const packagePayload = {
+        id: validateContract.package.id,
+        status: PACKAGE_STATUS.DECLINED
+      } as UpdateStatusPackagePayload;
+      const updatePackageResult = await this.updatePackageStatus(packagePayload).toPromise();
+      if (updateCampaignResult && updatePackageResult) {
+        //change status of contract to CANCEL
+        const query = await this.repository.createQueryBuilder()
+          .update(ContractEntity)
+          .set({
+            status: CONTRACT_STATUS.CANCEL
+          })
+          .where("id = :id", {id : contractId})
+          .execute();
+        const res = {
+          status: 200,
+          message: 'Cancel contract completed!'
+        } as ResponseCancelPayload;
+        return res;
+      }
+    }
+    const res = {
+      status: 200,
+      message: 'Cancel contract at customer side successfully. Awaiting trainer to cancel...'
+    } as ResponseCancelPayload;
+    return res;
+  }
+
+  async trainerCancelContract(contractId: number) : Promise<ResponseCancelPayload> {
+    //find contract
+    const validateContract : ContractEntity = await this.viewDetail(contractId);
+    if (!validateContract) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found contract with id: ${contractId}`
+      } as RpcExceptionModel);
+    }
+    //cancel contract at trainer side
+    const query  = await this.repository.createQueryBuilder()
+      .update(ContractEntity)
+      .set({
+        isTrainerCancel: 1
+      })
+      .where("id = :id" , {id: contractId})
+      .execute()
+    //if customer approve cancel contract => change status of contract to CLOSED + change status of Campaign to CLOSED, package to DECLINED
+    if (validateContract.isCustomerCancel === 1) {
+      //change status of campaign to CLOSED
+      const campaignPayload = {
+        id: validateContract.campaign.id,
+        status: CAMPAIGN_STATUS.CLOSED
+      } as UpdateStatusCampaignPayload;
+      const updateCampaignResult = await this.updateCampaignStatus(campaignPayload).toPromise();
+      //change status of package to DECLINED
+      const packagePayload = {
+        id: validateContract.package.id,
+        status: PACKAGE_STATUS.DECLINED
+      } as UpdateStatusPackagePayload;
+      const updatePackageResult = await this.updatePackageStatus(packagePayload).toPromise();
+      if (updateCampaignResult && updatePackageResult) {
+        //change status of contract to CANCEL
+        const query = await this.repository.createQueryBuilder()
+          .update(ContractEntity)
+          .set({
+            status: CONTRACT_STATUS.CANCEL
+          })
+          .where("id = :id", {id : contractId})
+          .execute();
+        const res = {
+          status: 200,
+          message: 'Cancel contract completed!'
+        } as ResponseCancelPayload;
+        return res;
+      }
+    }
+    const res = {
+      status: 200,
+      message: 'Cancel contract at trainer side successfully. Awaiting customer to cancel...'
+    } as ResponseCancelPayload;
+    return res;
+  }
+
+  async cancelContract(id: number) : Promise<boolean> {
+    return false;
+  }
+
+  async customerUndoCancelContract(contractId: number) : Promise<boolean> {
+    const query  = await this.repository.createQueryBuilder()
+      .update(ContractEntity)
+      .set({
+        isCustomerCancel: 0
+      })
+      .where("id = :id" , {id: contractId})
+      .execute()
+    return await query.affected === 1 ? true : false;
+  }
+
+  async trainerUndoCancelContract(contractId: number) : Promise<boolean> {
+    const query  = await this.repository.createQueryBuilder()
+      .update(ContractEntity)
+      .set({
+        isTrainerCancel: 0
+      })
+      .where("id = :id" , {id: contractId})
+      .execute()
+    return await query.affected === 1 ? true : false;
+  }
+
+  async undoCancelContract(contractId: number, customerCancelResult : boolean,trainerCancelResult: boolean ) : Promise<UpdateResult> {
+    const validateContract : ContractEntity = await this.viewDetail(contractId);
+    if (!validateContract) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found contract with id: ${contractId}`
+      } as RpcExceptionModel);
+    }
+    //update status of package => APPROVED
+    const udpatePackagePayload = {
+      id : validateContract.package.id,
+      status: PACKAGE_STATUS.APPROVED
+    } as UpdateStatusPackagePayload
+    const updatePackageResult = await this.updatePackageStatus(udpatePackagePayload).toPromise();
+    //update status of campaign => ONGOING
+    const udpateCampaignPayload = {
+      id: validateContract.campaign.id,
+      status: CAMPAIGN_STATUS.ON_GOING
+    } as UpdateStatusCampaignPayload
+    const updateCampaignResult = await this.updateCampaignStatus(udpateCampaignPayload).toPromise();
+    //
+    // const customerCancelResult = await this.customerUndoCancelContract(contractId);
+    // const trainerCancelResult = await this.trainerUndoCancelContract(contractId);
+    if (customerCancelResult && trainerCancelResult && updateCampaignResult && updatePackageResult) {
+      //update status of contract => ONGOING
+      const query = await this.repository.createQueryBuilder()
+        .update(ContractEntity)
+        .set({
+          status: CONTRACT_STATUS.ONGOING
+        })
+        .where("id = :id", {id : contractId})
+        .execute()
+      return query;
+    }
+  }
 }
