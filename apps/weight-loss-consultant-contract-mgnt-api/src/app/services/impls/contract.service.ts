@@ -1,5 +1,5 @@
 import {HttpStatus, Inject, Injectable} from '@nestjs/common';
-import {DeleteResult, UpdateResult} from 'typeorm';
+import {DeleteResult, getManager, UpdateResult} from 'typeorm';
 import {ContractEntity} from "../../entities/contract.entity";
 import {ClientProxy, RpcException} from "@nestjs/microservices";
 import {RpcExceptionModel} from "../../../../../common/filters/rpc-exception.model";
@@ -37,11 +37,58 @@ export class ContractService {
   ) {
   }
 
-  async findAll(): Promise<ContractEntity[] | null> {
+  async findAll():
+    Promise<ContractEntity[] | null> {
     return await this.repository.createQueryBuilder("contract")
       .leftJoinAndSelect("contract.campaign", "campaign")
       .leftJoinAndSelect("contract.package", "package")
       .getMany();
+  }
+
+  async getAll() : Promise<ContractEntity[]> {
+    console.log("AAAAAAAAAA")
+    const entityManager = getManager();
+    const sql = entityManager.query(`
+    SELECT \`contract\`.\`id\` AS \`contract_id\`,
+       \`contract\`.\`totalPrice\` AS \`contract_totalPrice\`,
+       \`contract\`.\`timeOfExpired\` AS \`contract_timeOfExpired\`,
+       \`contract\`.\`timeOfCreate\` AS \`contract_timeOfCreate\`,
+       \`contract\`.\`status\` AS \`contract_status\`,
+       \`contract\`.\`isTrainerCancel\` AS \`contract_isTrainerCancel\`,
+       \`contract\`.\`isCustomerCancel\` AS \`contract_isCustomerCancel\`,
+       \`contract\`.\`campaignId\` AS \`contract_campaignId\`,
+       \`contract\`.\`packageId\` AS \`contract_packageId\`,
+       \`campaign\`.\`id\` AS \`campaign_id\`,
+       \`campaign\`.\`description\` AS \`campaign_description\`,
+       \`campaign\`.\`status\` AS \`campaign_status\`,
+       \`campaign\`.\`startDate\` AS \`campaign_startDate\`,
+       \`campaign\`.\`endDate\` AS \`campaign_endDate\`,
+       \`campaign\`.\`feedback\` AS \`campaign_feedback\`,
+       \`campaign\`.\`targetWeight\` AS \`campaign_targetWeight\`,
+       \`campaign\`.\`currentWeight\` AS \`campaign_currentWeight\`,
+       \`campaign\`.\`spendTimeForTraining\` AS \`campaign_spendTimeForTraining\`,
+       \`campaign\`.\`createDate\` AS \`campaign_createDate\`,
+       \`campaign\`.\`sessionLength\` AS \`campaign_sessionLength\`,
+       \`campaign\`.\`customerEmail\` AS \`campaign_customerEmail\`,
+       \`package\`.\`id\` AS \`package_id\`,
+       \`package\`.\`exercisePlan\` AS \`package_exercisePlan\`,
+       \`package\`.\`schedule\` AS \`package_schedule\`,
+       \`package\`.\`price\` AS \`package_price\`, \`package\`.\`status\` AS \`package_status\`,
+       \`package\`.\`dietPlan\` AS \`package_dietPlan\`,
+       \`package\`.\`spendTimeToTraining\` AS \`package_spendTimeToTraining\`,
+       \`package\`.\`trainerEmail\` AS \`package_trainerEmail\`,
+       \`package\`.\`sessionLength\` AS \`package_sessionLength\`,
+       \`package\`.\`createDate\` AS \`package_createDate\`,
+       \`package\`.\`startDate\` AS \`package_startDate\`,
+       \`package\`.\`endDate\` AS \`package_endDate\`,
+       \`customer\`.\`fullname\` AS \`campaign_fullname\`,
+       \`trainer\`.\`fullname\` AS \`package_fullname\`
+FROM \`Contract\` \`contract\`
+    LEFT JOIN \`Campaign\` \`campaign\` ON \`campaign\`.\`id\`=\`contract\`.\`campaignId\`
+    LEFT JOIN \`Package\` \`package\` ON \`package\`.\`id\`=\`contract\`.\`packageId\`
+    LEFT JOIN  \`Customer\` \`customer\` ON \`customer\`.\`email\`=\`campaign\`.\`customerEmail\`
+    LEFT JOIN  \`Trainer\` \`trainer\` ON \`trainer\`.\`email\`=\`package\`.\`trainerEmail\``)
+    return sql;
   }
 
   private validateCampaign(id: number): Observable<CampaignEntity> {
