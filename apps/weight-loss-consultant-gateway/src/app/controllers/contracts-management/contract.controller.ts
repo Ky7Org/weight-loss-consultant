@@ -32,6 +32,18 @@ export class ContractController {
     }
   }
 
+  @Get('/v1/contracts/fe/getAllContracts')
+  @UseGuards(JwtAuthGuard)
+  async getAllContract(@Res () res) {
+    try {
+      const result = await this.contractService.getAllContract();
+      res.status(200).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
   @Get('/v1/contracts/:id')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({status: HttpStatus.OK, description: 'Contract details has shown below:'})

@@ -9,7 +9,7 @@ import {
   DELETE_CONTRACT_BY_ID,
   EXPIRE_CONTRACT,
   FIND_ALL_CONTRACT,
-  FIND_CONTRACT_BY_ID,
+  FIND_CONTRACT_BY_ID, GET_ALL_CONTRACT,
   GET_ANOTHER_IN_THE_SAME_CONTRACT,
   GET_CONTRACT_BY_CAMPAIGN_ID_OR_PACKAGE_ID,
   TRAINER_CANCEL_ONGOING_CONTRACT,
@@ -34,6 +34,12 @@ export class ContractController {
   @UseFilters(new ExceptionFilter())
   async index() {
     return this.contractService.findAll();
+  }
+
+  @MessagePattern({ cmd: GET_ALL_CONTRACT })
+  @UseFilters(new ExceptionFilter())
+  async findAllContract() {
+    return this.contractService.getAll();
   }
 
   @MessagePattern({ cmd: FIND_CONTRACT_BY_ID })
