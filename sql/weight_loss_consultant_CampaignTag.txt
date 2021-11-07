@@ -1,0 +1,18 @@
+create table CampaignTag
+(
+    id         int not null
+        primary key,
+    campaignID int not null,
+    tagID      int not null,
+    constraint CampaignTag_Campaign_id_fk
+        foreign key (campaignID) references Campaign (id),
+    constraint CampaignTag_ibfk_2
+        foreign key (tagID) references Tag (id)
+);
+
+create index campaignID
+    on CampaignTag (campaignID);
+
+create index tagID
+    on CampaignTag (tagID);
+

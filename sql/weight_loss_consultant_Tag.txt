@@ -1,0 +1,10 @@
+create table Tag
+(
+    id          int                        not null
+        primary key,
+    name        varchar(1000) charset utf8 null,
+    description varchar(1000) charset utf8 null
+);
+
+INSERT INTO weight_loss_consultant.Tag (id, name, description) VALUES (1, 'Want to lose weight but dont have time', 'This tag is suitable for customer who want to save time ');
+INSERT INTO weight_loss_consultant.Tag (id, name, description) VALUES (2, 'Ready to practice with a trainer', 'This tag is suitable for customer who ready to practice with trainer full-time or part-time');

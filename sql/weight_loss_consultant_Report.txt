@@ -1,0 +1,18 @@
+create table Report
+(
+    id                  int auto_increment
+        primary key,
+    contractID          int                        not null,
+    exerciseDescription varchar(1000) charset utf8 not null,
+    dietDescription     varchar(1000) charset utf8 not null,
+    trainerFeedback     varchar(1000)              null,
+    trainerApproval     int                        null,
+    weight              int                        not null,
+    createDate          bigint                     null,
+    constraint Report_Contract_id_fk
+        foreign key (contractID) references Contract (id)
+);
+
+INSERT INTO weight_loss_consultant.Report (id, contractID, exerciseDescription, dietDescription, trainerFeedback, trainerApproval, weight, createDate) VALUES (19, 30, '132', 'abc', null, null, 30, 1635795107271);
+INSERT INTO weight_loss_consultant.Report (id, contractID, exerciseDescription, dietDescription, trainerFeedback, trainerApproval, weight, createDate) VALUES (20, 30, '132', 'abc', null, null, 71, 1635795516874);
+INSERT INTO weight_loss_consultant.Report (id, contractID, exerciseDescription, dietDescription, trainerFeedback, trainerApproval, weight, createDate) VALUES (21, 30, 'Hello friend', 'Hello world', null, null, 77, 1635795940127);

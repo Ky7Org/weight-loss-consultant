@@ -1,0 +1,15 @@
+create table DietModel
+(
+    id            int auto_increment,
+    name          varchar(250)  null,
+    videoPath     varchar(2000) null,
+    thumbnailPath varchar(2000) null,
+    details       varchar(1000) null,
+    calories      int           null,
+    constraint DietModel_id_uindex
+        unique (id)
+);
+
+alter table DietModel
+    add primary key (id);
+

@@ -1,0 +1,16 @@
+create table DietDetail
+(
+    id          int                        not null
+        primary key,
+    taskID      int                        not null,
+    note        varchar(300) charset utf8  null,
+    description varchar(1000) charset utf8 null,
+    period int not null,
+    calories    double                     null,
+    constraint DietDetail_ibfk_1
+        foreign key (taskID) references Task (id)
+);
+
+create index taskID
+    on DietDetail (taskID);
+

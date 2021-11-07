@@ -1,0 +1,28 @@
+create table Package
+(
+    id                  int auto_increment
+        primary key,
+    exercisePlan        varchar(1000) charset utf8 null,
+    schedule            varchar(1000) charset utf8 not null,
+    price               float                      not null,
+    trainerEmail        varchar(320)               null,
+    status              int                        not null,
+    dietPlan            varchar(1000) charset utf8 not null,
+    spendTimeToTraining int                        not null,
+    name                varchar(1000)              null,
+    createDate          float                      null,
+    sessionLength       int                        null,
+    endDate             bigint                     null,
+    startDate           bigint                     null,
+    constraint Package_ibfk_1
+        foreign key (trainerEmail) references Trainer (email)
+);
+
+create index status
+    on Package (status);
+
+create index trainerEmail
+    on Package (trainerEmail);
+
+INSERT INTO weight_loss_consultant.Package (id, exercisePlan, schedule, price, trainerEmail, status, dietPlan, spendTimeToTraining, name, createDate, sessionLength, endDate, startDate) VALUES (37, 'Tien', 'Tien', 123, 'bangtrainer@gmail.com', 2, 'Tien', 1, 'new package', 1635789960000, null, 1638464400000000, 1635786000000000);
+INSERT INTO weight_loss_consultant.Package (id, exercisePlan, schedule, price, trainerEmail, status, dietPlan, spendTimeToTraining, name, createDate, sessionLength, endDate, startDate) VALUES (38, '123', '123', 123, 'bangtrainer@gmail.com', 1, '123', 1, '2nd package', 1635800060000, null, 1638464400000000, 1635786000000000);

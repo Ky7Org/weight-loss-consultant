@@ -1,0 +1,13 @@
+create table ExerciseDetailMedia
+(
+    id               int           not null
+        primary key,
+    url              varchar(2000) not null,
+    exerciseDetailID int           not null,
+    constraint ExerciseDetailMedia_ibfk_1
+        foreign key (exerciseDetailID) references ExerciseDetail (id)
+);
+
+create index exerciseDetailID
+    on ExerciseDetailMedia (exerciseDetailID);
+

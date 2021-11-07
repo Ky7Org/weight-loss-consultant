@@ -1,0 +1,23 @@
+create table Campaign
+(
+    id                   int auto_increment
+        primary key,
+    customerEmail        varchar(320)               not null,
+    description          varchar(1000) charset utf8 null,
+    status               int                        not null,
+    startDate            bigint                     not null,
+    endDate              bigint                     not null,
+    feedback             varchar(1000) charset utf8 null,
+    targetWeight         float                      not null,
+    currentWeight        float                      not null,
+    spendTimeForTraining float                      not null,
+    createDate           float                      null,
+    constraint Campaign_Customer_email_fk
+        foreign key (customerEmail) references Customer (email)
+);
+
+create index status
+    on Campaign (status);
+
+INSERT INTO weight_loss_consultant.Campaign (id, customerEmail, description, status, startDate, endDate, feedback, targetWeight, currentWeight, spendTimeForTraining, createDate) VALUES (35, 'tien@gmail.com', 'New campaign', 1, 1635786000000, 1638464400000000, '', 75, 80, 1, 1635789960000);
+INSERT INTO weight_loss_consultant.Campaign (id, customerEmail, description, status, startDate, endDate, feedback, targetWeight, currentWeight, spendTimeForTraining, createDate) VALUES (36, 'tien@gmail.com', '2nd campaign', 0, 1635786000000, 1638464400000000, '', 80, 85, 2, 1635800060000);

@@ -1,0 +1,14 @@
+create table PackageApplyToCampaign
+(
+    id         int auto_increment
+        primary key,
+    packageID  int not null,
+    campaignID int not null,
+    constraint PackageApplyToCampaign_Campaign_id_fk
+        foreign key (campaignID) references Campaign (id),
+    constraint PackageApplyToCampaign_Package_id_fk
+        foreign key (packageID) references Package (id)
+);
+
+INSERT INTO weight_loss_consultant.PackageApplyToCampaign (id, packageID, campaignID) VALUES (37, 37, 35);
+INSERT INTO weight_loss_consultant.PackageApplyToCampaign (id, packageID, campaignID) VALUES (38, 38, 36);

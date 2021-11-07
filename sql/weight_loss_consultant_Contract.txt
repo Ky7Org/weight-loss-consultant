@@ -1,0 +1,23 @@
+create table Contract
+(
+    id            int auto_increment
+        primary key,
+    campaignID    int   not null,
+    packageID     int   not null,
+    totalPrice    float not null,
+    timeOfExpired float not null,
+    timeOfCreate  float not null,
+    status        int   not null,
+    constraint Contract_Campaign_id_fk
+        foreign key (campaignID) references Campaign (id),
+    constraint Contract_Package_id_fk
+        foreign key (packageID) references Package (id)
+);
+
+create index campaignID
+    on Contract (campaignID);
+
+create index packageID
+    on Contract (packageID);
+
+INSERT INTO weight_loss_consultant.Contract (id, campaignID, packageID, totalPrice, timeOfExpired, timeOfCreate, status) VALUES (30, 35, 37, 123, 1638459960000000, 1635789960000, 0);

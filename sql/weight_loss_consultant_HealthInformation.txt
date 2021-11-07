@@ -1,0 +1,22 @@
+create table HealthInformation
+(
+    id             int auto_increment
+        primary key,
+    weight         float                      not null,
+    height         float                      not null,
+    medicalHistory varchar(1000) charset utf8 not null,
+    exerciseHabit  varchar(1000) charset utf8 not null,
+    diet           varchar(1000) charset utf8 not null,
+    customerEmail  varchar(320)               not null,
+    timestamp      bigint                     not null,
+    constraint HealthInformation_Customer_email_fk
+        foreign key (customerEmail) references Customer (email)
+);
+
+INSERT INTO weight_loss_consultant.HealthInformation (id, weight, height, medicalHistory, exerciseHabit, diet, customerEmail, timestamp) VALUES (1, 78.5, 160.2, 'used TRANQUILLIZER and MORPHINE', 'doing exercise everyday in 30 mins', 'not yet', 'aalawayqt@skyrock.com', 1632070800000);
+INSERT INTO weight_loss_consultant.HealthInformation (id, weight, height, medicalHistory, exerciseHabit, diet, customerEmail, timestamp) VALUES (2, 89.5, 136.2, 'no medication', 'doing exercise everyday in 15 mins', 'not yet', 'tien@gmail.com', 1632070800000);
+INSERT INTO weight_loss_consultant.HealthInformation (id, weight, height, medicalHistory, exerciseHabit, diet, customerEmail, timestamp) VALUES (5, 80, 170.5, 'Theraworx Patented Foam Formulation', 'METOPROLOL SUCCINATE', 'PrismaSol', 'hgimbergj@ask.com', 10100110125);
+INSERT INTO weight_loss_consultant.HealthInformation (id, weight, height, medicalHistory, exerciseHabit, diet, customerEmail, timestamp) VALUES (6, 80, 170.5, 'Tunna pasen Foam Formulation', 'MEGA SUCCOINE', 'Klikso', 'hgimbergj@ask.com', 10100110125);
+INSERT INTO weight_loss_consultant.HealthInformation (id, weight, height, medicalHistory, exerciseHabit, diet, customerEmail, timestamp) VALUES (8, 80, 170.5, 'Tunna pasen Foam Formulation', 'MEGA SUCCOINE', 'Klikso', 'hgimbergj@ask.com', 10100110125);
+INSERT INTO weight_loss_consultant.HealthInformation (id, weight, height, medicalHistory, exerciseHabit, diet, customerEmail, timestamp) VALUES (10, 80, 170.5, 'Tunna pasen Foam Formulation', 'MEGA SUCCOINE', 'Klikso', 'abillinqx@arstechnica.com', 10100110125);
+INSERT INTO weight_loss_consultant.HealthInformation (id, weight, height, medicalHistory, exerciseHabit, diet, customerEmail, timestamp) VALUES (11, 80, 170.5, 'Tunna pasen Foam Formulation', 'MEGA SUCCOINE', 'Klikso', 'abillinqx@arstechnica.com', 10100110125);

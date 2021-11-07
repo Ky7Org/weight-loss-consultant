@@ -1,0 +1,13 @@
+create table ReportMedia
+(
+    id         int auto_increment
+        primary key,
+    reportID   int           not null,
+    url        varchar(2000) null,
+    type       int           null,
+    createDate bigint        null,
+    constraint ReportMedia_Report_id_fk
+        foreign key (reportID) references Report (id)
+);
+
+INSERT INTO weight_loss_consultant.ReportMedia (id, reportID, url, type, createDate) VALUES (4, 19, 'URL_03', 0, 1635795119860);
