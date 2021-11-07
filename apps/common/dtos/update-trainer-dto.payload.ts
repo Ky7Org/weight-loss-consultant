@@ -69,3 +69,7 @@ export type CampaignAndPackageIdPayload = {
   campaignID: number,
   packageID: number
 }
+
+export type ProceedToCancelPayload = {
+  contractId: number
+}
