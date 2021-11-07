@@ -8,11 +8,14 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class TrainerViewListPackagePage extends StatefulWidget {
@@ -28,6 +31,8 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
   Future<List<PackageModel>>? listPackage;
   AccountModel user = AccountModel(email: "", fullname: "");
   TrainerService service = TrainerService();
+  CustomerService customerService = CustomerService();
+  NotificationService notificationService = NotificationService();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -68,8 +73,8 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
     );
   }
 
-  void _showLoginError(int packageID) {
-    showDialog(
+  Future _showLoginError(int packageID) async{
+    return showDialog(
         context: context,
         builder: (ctx) => Dialog(
             shape: RoundedRectangleBorder(
@@ -79,7 +84,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
               alignment: Alignment.topCenter,
               children: [
                 SizedBox(
-                  height: 200,
+                  height: 180,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
                     child: Column(children: [
@@ -110,16 +115,22 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
                           SizedBox(width: 20,),
                           RaisedButton(
                             onPressed: () async {
-                              print(packageID);
-                              print(widget.campaignId );
+                              CustomerCampaignModel? campaignModel = await service.getCampaignById(widget.campaignId as int, user);
+                              if (campaignModel == null) {
+                                CustomToast.makeToast("Some thing went wrong! Try again");
+                                return;
+                              }
+
+                              notificationService.applyPackage(campaignModel.customer!.deviceID as String
+                                  , user.email as String, packageID, widget.campaignId as int);
+
                               bool result = await service.applyPackageToCampaign(packageID, widget.campaignId as int, user);
                               if (result){
                                 CustomToast.makeToast("Save successfully");
                               } else {
                                 CustomToast.makeToast("Some thing went wrong! Try again");
                               }
-                              Navigator.of(context).pop();
-
+                              Navigator.of(context).pop(result);
                             },
                             color: Colors.redAccent,
                             child: const Text(
@@ -153,7 +164,11 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
   Widget _package(PackageModel model) {
     return GestureDetector(
       onTap: () {
-        _showLoginError(model.id as int);
+        _showLoginError(model.id as int).then((value){
+          if (value){
+            Navigator.pop(context);
+          }
+        });
       },
       child: Card(
         elevation: 5,
@@ -350,7 +365,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         ),
         Center(
           child: Text(
-            'No Campaign',
+            'No Package',
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 36,
@@ -363,7 +378,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
         ),
         Center(
           child: Text(
-            "You don't have any campaign.",
+            "You don't have any active package.",
             style: TextStyle(
                 color: AppColors.PRIMARY_WORD_COLOR,
                 fontSize: 15,
@@ -412,7 +427,7 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
             });
           });
         },
-        label: const Text("Add new campaign"),
+        label: const Text("Add new package"),
         icon: const Icon(Icons.add),
       ),
       body: Container(
@@ -423,7 +438,8 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
               future: listPackage,
               builder: (context, snapshot) {
                 if (snapshot.hasData){
-                  if (snapshot.requireData.isEmpty){
+                  List<PackageModel> activePackage = snapshot.requireData.where((element) => element.status == 0).toList();
+                  if (activePackage.isEmpty){
                     return _buildEmptyCampaignList();
                   }
                   return Column(
@@ -439,7 +455,10 @@ class _TrainerViewListPackagePageState extends State<TrainerViewListPackagePage>
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
+
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
           ),
         ),

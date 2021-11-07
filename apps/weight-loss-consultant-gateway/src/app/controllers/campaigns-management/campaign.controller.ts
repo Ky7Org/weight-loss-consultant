@@ -1,9 +1,9 @@
-import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
-import { CampaignService } from '../../services/campaign.service';
-import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
-import { CreateCampaignDto } from '../../dtos/campaign/create-campaign';
-import { UpdateCampaignDto } from '../../dtos/campaign/update-campaign';
+import {ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Res, UseGuards} from '@nestjs/common';
+import {CampaignService} from '../../services/campaign.service';
+import {JwtAuthGuard} from '../../guards/jwt-auth.guard';
+import {CreateCampaignDto} from '../../dtos/campaign/create-campaign';
+import {UpdateCampaignDto} from '../../dtos/campaign/update-campaign';
 
 @ApiTags('Campaign')
 @ApiBearerAuth()
@@ -58,6 +58,13 @@ export class CampaignController {
   async getByID(@Param('id') id: number, @Res() res) {
     try {
       const campaign = await this.campaignService.viewDetail(id);
+      if (!campaign) {
+        const error = {
+          message: `Not found campaign with id : ${id}`,
+          statusCode: HttpStatus.NOT_FOUND
+        }
+        res.status(error.statusCode).send(error)
+      }
       res.status(200).send(campaign);
     } catch ({ error }) {
       this.logger.error(error);

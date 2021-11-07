@@ -17,5 +17,11 @@ export enum PACKAGE_STATUS  {
 
 export enum CONTRACT_STATUS {
   ONGOING = 0,
-  EXPIRED = 1
+  EXPIRED = 1,
+  CANCEL = 2
+}
+
+export enum TRAINER_APPROVAL {
+  APPROVED = 1,
+  DECLINED = 2,
 }

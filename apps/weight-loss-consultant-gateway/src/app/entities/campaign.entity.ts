@@ -25,6 +25,8 @@ export class CampaignEntity extends BaseEntity{
   spendTimeForTraining: number;
   @Column({ type: 'float'})
   createDate: number;
+  @Column({ type: 'int'})
+  sessionLength: number;
   @ManyToOne(() => CustomerEntity, customer => customer.campaigns)
   customer : CustomerEntity;
 

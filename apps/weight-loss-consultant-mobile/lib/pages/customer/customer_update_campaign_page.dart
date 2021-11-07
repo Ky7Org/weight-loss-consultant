@@ -4,13 +4,18 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class CustomerUpdateCampaignPage extends StatefulWidget {
   late int? campaignID;
@@ -29,6 +34,10 @@ class _CustomerUpdateCampaignPageState extends State<CustomerUpdateCampaignPage>
   final TextEditingController _weightTarget = TextEditingController();
   final TextEditingController _description = TextEditingController();
   final TextEditingController _currentWeight = TextEditingController();
+  final TextEditingController _startDateController = TextEditingController();
+  final TextEditingController _endDateController = TextEditingController();
+  DateTime startDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime endDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   String dropdownValue = '1 day';
   int spendTimeForTraining = 1;
@@ -59,7 +68,8 @@ class _CustomerUpdateCampaignPageState extends State<CustomerUpdateCampaignPage>
           _description.text = campaignModel!.description ?? "";
           _weightTarget.text = campaignModel!.targetWeight.toString();
           _currentWeight.text = campaignModel!.currentWeight.toString();
-
+          startDate = DateTime.fromMillisecondsSinceEpoch(int.parse(campaignModel!.startDate as String));
+          endDate = DateTime.fromMillisecondsSinceEpoch(int.parse(campaignModel!.endDate as String));
 
           setState(() {});
         });
@@ -241,14 +251,140 @@ class _CustomerUpdateCampaignPageState extends State<CustomerUpdateCampaignPage>
         ],
       ),
     );
+  }
 
+  Widget _buildStartDateTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Start date',
+          style: TextStyle(
+              color: Color(0xFF0D3F67),
+              fontSize: 11,
+              fontWeight: FontWeight.bold
+          ),
+        ),
+        const SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.0),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          height: 60.0,
+          child: TextFormField(
+            readOnly: true,
+            controller: _startDateController,
+            keyboardType: TextInputType.number,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF0D3F67),
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+              hintText: DateFormat.yMMMd().format(startDate),
+              hintStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0D3F67),
+              ),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.calendar_today),
+                onPressed: (){
+                  DatePicker.showDatePicker(context, showTitleActions: true,
+                      minTime: DateTime.now(),
+                      onConfirm: (date) {
+                        startDate = DateTime(date.year, date.month, date.day);
+                        _startDateController.text = DateFormat.yMMMd().format(date);
+                      },
+                      currentTime: DateTime.now());
+                },
+              ),
+            ),
+            validator: (weight) {
+              return null;
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
+  Widget _buildEndDateTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'End date',
+        ),
+        const SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.0),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          height: 60.0,
+          child: TextFormField(
+            readOnly: true,
+            controller: _endDateController,
+            keyboardType: TextInputType.number,
+            style: const TextStyle(
+              fontFamily: 'OpenSans',
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF0D3F67),
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+              hintText: DateFormat.yMMMd().format(endDate),
+              hintStyle: const TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0D3F67),
+
+              ),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.calendar_today),
+                onPressed: (){
+                  DatePicker.showDatePicker(context, showTitleActions: true,
+                      minTime: startDate.add(const Duration(days: 1)),
+                      onConfirm: (date) {
+                        endDate = DateTime(date.year, date.month, date.day);
+                        _endDateController.text = DateFormat.yMMMd().format(date);
+                      },
+                      currentTime: DateTime.now());
+                },
+              ),
+            ),
+            validator: (weight) {
+              return null;
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Campaign"),
+      appBar: GenericAppBar.builder("Update campaign"),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         margin: const EdgeInsets.only(top: 20),
@@ -314,7 +450,9 @@ class _CustomerUpdateCampaignPageState extends State<CustomerUpdateCampaignPage>
                 }),
                 _dropdown(),
                 _multiInput("Your description", "Your description...", _description, 1000),
-
+                _buildStartDateTF(),
+                const SizedBox(height: 20,),
+                _buildEndDateTF(),
                 const SizedBox(
                   height: 30,
                 ),
@@ -331,6 +469,13 @@ class _CustomerUpdateCampaignPageState extends State<CustomerUpdateCampaignPage>
                       CustomerService service = CustomerService();
                       bool result = await service.updateCampaign(campaignModel, user);
                       if (result){
+                        TrainerService trainerService = TrainerService();
+                        NotificationService notificationService = NotificationService();
+                        List<PackageModel> packageList = await trainerService.getAppliedPackage(widget.campaignID ?? 0, user);
+                        for (PackageModel model in packageList){
+                          notificationService.updateCampaign(model.trainer!.deviceID as String);
+                        }
+
                         CustomToast.makeToast("Update successfully");
                       } else {
                         CustomToast.makeToast("Some thing went wrong! Try again");

@@ -3,7 +3,7 @@ import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 
 class MainAppBar{
-  static PreferredSizeWidget builder(String fullname, BuildContext context) {
+  static PreferredSizeWidget builder(String fullname, BuildContext context, Image image, Function callback) {
     return AppBar(
       toolbarHeight: 80,
       title: Text("Hi, $fullname",
@@ -20,12 +20,18 @@ class MainAppBar{
       ),
       actions: <Widget>[
         Container(
-          margin: EdgeInsets.only(right: 20),
+          margin: const EdgeInsets.only(right: 20),
           child: IconButton(
-            padding: new EdgeInsets.all(0.0),
-            icon: Image.asset("assets/fake-image/miku-avatar.png", width: 50, height: 50,),
+            padding: const EdgeInsets.all(0.0),
+            icon: CircleAvatar(
+              radius: 30.0,
+              backgroundImage: image.image,
+              backgroundColor: Colors.transparent,
+            ),//Image.asset("assets/fake-image/miku-avatar.png", width: 50, height: 50,),
             onPressed: () {
-              Navigator.pushNamed(context, RoutePath.customerDetailPage);
+              Navigator.pushNamed(context, RoutePath.customerDetailPage).then((value){
+                callback.call();
+              });
             },
           ),
         )

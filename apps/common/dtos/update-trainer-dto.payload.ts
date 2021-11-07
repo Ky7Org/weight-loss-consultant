@@ -52,3 +52,24 @@ export type UpdateDeviceIDPayload = {
   deviceID: string,
   role: string
 }
+
+export type GetContractByPackageIDOrCampaignIDPayload = {
+  packageID: number,
+  campaignID: number,
+}
+
+export type TrainerApproveReportPayload = {
+  // trainerEmail: string,
+  reportID: number;
+  trainerFeedback: string,
+  trainerApproval: number
+}
+
+export type CampaignAndPackageIdPayload = {
+  campaignID: number,
+  packageID: number
+}
+
+export type ProceedToCancelPayload = {
+  contractId: number
+}

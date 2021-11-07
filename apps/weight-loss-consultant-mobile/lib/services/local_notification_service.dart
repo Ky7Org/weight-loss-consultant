@@ -14,28 +14,52 @@ class LocalNotificationService {
   static void initialize(GlobalKey<NavigatorState> _navKey) {
     LocalNotificationService._navKey = _navKey;
     const InitializationSettings initializationSettings =
-        const InitializationSettings(
+        InitializationSettings(
             android: AndroidInitializationSettings("@mipmap/ic_launcher"));
 
     _notificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String? data) async {
       Map<String, dynamic> myDataFromMessage = jsonDecode(data!);
 
-      if (data != null) {
-        final typeOfMessage = myDataFromMessage['type'];
+      final typeOfMessage = myDataFromMessage['type'];
+
+      if (typeOfMessage == 'Apply Package') {
         final packageID = myDataFromMessage["packageID"];
         final campaignID = myDataFromMessage["campaignID"];
         Map<String, dynamic> mapData = {};
-        mapData["packageID"] = packageID;
-        mapData["campaignID"] = campaignID;
-        if (typeOfMessage == 'Apply Package') {
-          _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
-              arguments: mapData);
-        } else if (typeOfMessage == 'Apply Campaign') {
-          LocalNotificationService._navKey.currentState!.pushNamed(
-              RoutePath.trainerViewCampaignDetailPage,
-              arguments: int.parse(campaignID));
-        }
+        mapData["packageID"] = int.parse(packageID);
+        mapData["campaignID"] = int.parse(campaignID);
+        _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
+            arguments: mapData);
+      } else if (typeOfMessage == 'Apply Campaign') {
+        final packageID = myDataFromMessage['packageID'];
+        LocalNotificationService._navKey.currentState!.pushNamed(
+            RoutePath.trainerOnGoingPackageDetailPage,
+            arguments: int.parse(packageID));
+      } else if (typeOfMessage == "Update Campaign"){
+        print("Update Campaign");
+      } else if (typeOfMessage == "Customer Report"){
+        final packageID = myDataFromMessage['packageID'];
+        LocalNotificationService._navKey.currentState!.pushNamed(
+            RoutePath.trainerFeedbackReportPage,
+            arguments: int.parse(packageID));
+      } else if (typeOfMessage == "Trainer Feedback"){
+        final reportID = myDataFromMessage['reportID'];
+        LocalNotificationService._navKey.currentState!.pushNamed(
+            RoutePath.customerReportDetailPage,
+            arguments: int.parse(reportID));
+      } else if (typeOfMessage == "Trainer Undo Apply") {
+        final campaignID = myDataFromMessage['campaignID'];
+        LocalNotificationService._navKey.currentState!.pushNamed(
+            RoutePath.customerAppliedPackagePage,
+            arguments: int.parse(campaignID));
+      } else if (typeOfMessage == "Customer Remove Package") {
+        final campaignID = myDataFromMessage['campaignID'];
+        LocalNotificationService._navKey.currentState!.pushNamed(
+            RoutePath.trainerViewCampaignDetailPage,
+            arguments: int.parse(campaignID));
+      } else if (typeOfMessage == "Update Package") {
+        print("Update package");
       }
     });
   }
@@ -44,7 +68,7 @@ class LocalNotificationService {
     try {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-      final NotificationDetails notificationDetails = NotificationDetails(
+      const NotificationDetails notificationDetails = NotificationDetails(
           android: AndroidNotificationDetails(
         "default_id",
         "default_id_channel",
@@ -57,6 +81,7 @@ class LocalNotificationService {
       myDataFromMessage['type'] = message.data["type"];
       myDataFromMessage['campaignID'] = message.data["campaignID"];
       myDataFromMessage['packageID'] = message.data["packageID"];
+      myDataFromMessage['reportID'] = message.data["reportID"];
       await _notificationsPlugin.show(
         id,
         message.notification!.title,

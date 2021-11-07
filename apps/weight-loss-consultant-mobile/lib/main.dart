@@ -8,8 +8,8 @@ import 'package:weight_loss_consultant_mobile/services/local_notification_servic
 
 //Receive message when app is in background solution for on message
 Future<void> backgroundHandler(RemoteMessage message) async {
-  print(message.data.toString());
   print(message.notification!.title);
+  print(message.notification!.body);
 }
 
 void main() async {
@@ -21,7 +21,7 @@ void main() async {
   ]);
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-  runApp(App());
+  runApp(const App());
 }
 
 class App extends StatefulWidget {
@@ -53,16 +53,17 @@ class _AppState extends State<App> {
 
         ///gives you the message on which user taps
         ///and it opened the app from terminated state
+
+
         FirebaseMessaging.instance.getInitialMessage().then((message) {
-          print("getInitialMessage");
           if (message != null) {
             final typeOfMessage = message.data["type"];
             if (typeOfMessage == 'Apply Package') {
               final packageID = message.data["packageID"];
               final campaignID = message.data["campaignID"];
               Map<String, dynamic> mapData = {};
-              mapData["packageID"] = packageID;
-              mapData["campaignID"] = campaignID;
+              mapData["packageID"] = int.parse(packageID);
+              mapData["campaignID"] = int.parse(campaignID);
               _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
                   arguments: mapData);
             } else if (typeOfMessage == 'Apply Campaign') {
@@ -70,22 +71,40 @@ class _AppState extends State<App> {
               _navKey.currentState!.pushNamed(
                   RoutePath.trainerViewCampaignDetailPage,
                   arguments: int.parse(campaignID));
+            } else if (typeOfMessage == "Update Campaign"){
+              print("Update Campaign");
+            } else if (typeOfMessage == "Customer Report"){
+              final packageID = message.data['packageID'];
+              _navKey.currentState!.pushNamed(
+                  RoutePath.trainerFeedbackReportPage,
+                  arguments: int.parse(packageID));
+            } else if (typeOfMessage == "Trainer Feedback"){
+              final reportID = message.data['reportID'];
+              _navKey.currentState!.pushNamed(
+                  RoutePath.customerReportDetailPage,
+                  arguments: int.parse(reportID));
+            } else if (typeOfMessage == "Trainer Undo Apply") {
+              final campaignID = message.data['campaignID'];
+              _navKey.currentState!.pushNamed(
+                  RoutePath.customerAppliedPackagePage,
+                  arguments: int.parse(campaignID));
+            } else if (typeOfMessage == "Customer Remove Package") {
+              final campaignID = message.data['campaignID'];
+              _navKey.currentState!.pushNamed(
+                  RoutePath.trainerViewCampaignDetailPage,
+                  arguments: int.parse(campaignID));
+            } else if (typeOfMessage == "Update Package") {
+              print("Update package");
             }
           }
         });
         //Foreground message
         FirebaseMessaging.onMessage.listen((message) {
-          print("onMessage");
-          if (message.notification != null) {
-            print(message.notification!.body);
-            print(message.notification!.title);
-          }
           LocalNotificationService.display(message);
         });
 
         //When the app is in background but opened and user taps on message
         FirebaseMessaging.onMessageOpenedApp.listen((message) {
-          print("onMessageOpenedApp");
           final typeOfMessage = message.data["type"];
           if (typeOfMessage == 'Apply Package') {
             final packageID = message.data["packageID"];
@@ -96,10 +115,34 @@ class _AppState extends State<App> {
             _navKey.currentState!.pushNamed(RoutePath.customerPackageDetailPage,
                 arguments: mapData);
           } else if (typeOfMessage == 'Apply Campaign') {
+            final packageID = message.data['packageID'];
+            _navKey.currentState!.pushNamed(
+                RoutePath.trainerOnGoingPackageDetailPage,
+                arguments: int.parse(packageID));
+          } else if (typeOfMessage == "Update Campaign"){
+            print("Update Campaign");
+          } else if (typeOfMessage == "Customer Report"){
+            final packageID = message.data['packageID'];
+            _navKey.currentState!.pushNamed(
+                RoutePath.trainerFeedbackReportPage,
+                arguments: int.parse(packageID));
+          } else if (typeOfMessage == "Trainer Feedback"){
+            final reportID = message.data['reportID'];
+            _navKey.currentState!.pushNamed(
+                RoutePath.customerReportDetailPage,
+                arguments: int.parse(reportID));
+          } else if (typeOfMessage == "Trainer Undo Apply") {
+            final campaignID = message.data['campaignID'];
+            _navKey.currentState!.pushNamed(
+                RoutePath.customerAppliedPackagePage,
+                arguments: int.parse(campaignID));
+          } else if (typeOfMessage == "Customer Remove Package") {
             final campaignID = message.data['campaignID'];
             _navKey.currentState!.pushNamed(
                 RoutePath.trainerViewCampaignDetailPage,
                 arguments: int.parse(campaignID));
+          } else if (typeOfMessage == "Update Package") {
+            print("Update package");
           }
         });
 

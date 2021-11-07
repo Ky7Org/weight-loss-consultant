@@ -118,6 +118,30 @@ export class ApplyController {
     }
   }
 
+  @Delete('/deleteByCampaignId/:id')
+  @UseGuards(JwtAuthGuard)
+  async deleteByCampaignId(@Param('id') id: number, @Res() res) {
+    try {
+      const result = await this.appliedService.deleteByCampaignId(id);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
+  @Delete('/deleteByPackageId/:id')
+  @UseGuards(JwtAuthGuard)
+  async deleteByPackageId(@Param('id') id: number, @Res() res) {
+    try {
+      const result = await this.appliedService.deleteByPackageId(id);
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
+  }
+
     @Get('/getAppliedPackages/:campaignId')
     @UseGuards(JwtAuthGuard)
     async getPackagesByCampaignID(@Res() res, @Param('campaignId') campaignId: number) {
@@ -129,6 +153,19 @@ export class ApplyController {
         this.logger.error(error);
         res.status(error.statusCode).send(error);
       }
+  }
+
+  @Get('/getAppliedCampaigns/:packageId')
+  @UseGuards(JwtAuthGuard)
+  async getCampaignByPackageID(@Res() res, @Param('packageId') packageId: number) {
+    try {
+      let result = await this.appliedService.getAppliedCampaignsByPackageID(packageId);
+      result = result.map(e => e.campaign)
+      res.status(HttpStatus.OK).send(result);
+    } catch ({error}) {
+      this.logger.error(error);
+      res.status(error.statusCode).send(error);
+    }
   }
 
   @Post('/approved')

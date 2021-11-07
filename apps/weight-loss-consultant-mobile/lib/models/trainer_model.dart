@@ -17,6 +17,7 @@ class TrainerModel{
   String? dob;
   double? yearOfExp;
   double? rating;
+  String? deviceID;
 
   TrainerModel();
 
@@ -26,6 +27,6 @@ class TrainerModel{
 
   @override
   String toString() {
-    return 'TrainerModel{email: $email, password: $password, fullname: $fullname, address: $address, phone: $phone, gender: $gender, status: $status, profileImage: $profileImage, dob: $dob, yearOfExp: $yearOfExp, rating: $rating}';
+    return 'TrainerModel{email: $email, password: $password, fullname: $fullname, address: $address, phone: $phone, gender: $gender, status: $status, profileImage: $profileImage, dob: $dob, yearOfExp: $yearOfExp, rating: $rating, device: $deviceID}';
   }
 }

@@ -24,6 +24,7 @@ export class CampaignMapper {
     entity.currentWeight = dto.currentWeight;
     entity.spendTimeForTraining = dto.spendTimeForTraining;
     entity.createDate = createDate;
+    entity.sessionLength = dto.sessionLength ?? 0;
     entity.customer = customer;
 
     return entity;
@@ -44,6 +45,7 @@ export class CampaignMapper {
     entity.targetWeight = dto.targetWeight;
     entity.currentWeight = dto.currentWeight;
     entity.spendTimeForTraining = dto.spendTimeForTraining;
+    entity.sessionLength = dto.sessionLength ?? 0;
     return entity;
   }
 }

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {Column} from "typeorm";
 
 export class CreateCampaignDto {
   @ApiProperty()
@@ -17,4 +18,6 @@ export class CreateCampaignDto {
   currentWeight?: number;
   @ApiProperty()
   spendTimeForTraining?: number;
+  @ApiProperty()
+  sessionLength?: number;
 }

@@ -173,11 +173,34 @@ export class AppliedService {
     return query;
   }
 
+  async getAppliedCampaignsByPackageId(packageID: number) : Promise<any> {
+    const query = await this.repository.createQueryBuilder("applied")
+      .where("applied.packageID = :id", {id : packageID})
+      .leftJoinAndSelect("applied.campaign", "campaign")
+      .leftJoinAndSelect("campaign.customer", "customer")
+      .getMany()
+    return query;
+  }
+
   async approvePackageByCustomer(payload: ApprovePayload): Promise<any> {
     // : Promise<ApproveResponse>{
     const campaignID: number = payload.campaignID;
     const packageID: number = payload.packageID;
 
+    const validateCampaign : CampaignEntity  = await this.validateCampaign(campaignID).toPromise();
+    if (!validateCampaign) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found campaign with id: ${campaignID}`
+      } as RpcExceptionModel);
+    }
+    const validatePackage : PackageEntity  = await this.validatePackage(packageID).toPromise();
+    if (!validatePackage) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found package with id: ${packageID}`
+      } as RpcExceptionModel);
+    }
     //1: get packages that have campaign id
     const packages = await this.getAppliedPackagesByCampaignID(campaignID);
     //2: find in array package matched with packageID
@@ -190,7 +213,7 @@ export class AppliedService {
     const updateStatusPackageResult: boolean = await this.updatePackageStatus(updateApprovePackagePayload).toPromise();
     //4: update status packages (=> DECLINED) for those got decline in package list
     const declinePackages = packages.filter(p => p.package.id !== packageID);
-    const updateDeclineResult = declinePackages.forEach(async (p) => {
+    declinePackages.forEach(async (p) => {
       const updateDeclinePackagePayload = {
         id: p.package.id,
         status: PACKAGE_STATUS.DECLINED
@@ -208,7 +231,7 @@ export class AppliedService {
     const p = await this.validatePackage(packageID).toPromise();
     const contractPayload = {
       totalPrice: p.price,
-      timeOfExpired: p.endDate??0,
+      timeOfExpired: p.endDate ?? 0,
       timeOfCreate: new Date().getTime(),
       status: CONTRACT_STATUS.ONGOING,
       campaignID: campaignID,
@@ -222,6 +245,59 @@ export class AppliedService {
     }
   }
 
+  async deleteApplyByPackageId(packageId: number): Promise<DeleteResult> {
+    //validate packageId
+    const validate = await this.validatePackage(packageId).toPromise();
+    if (!validate) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found package with id: ${packageId}`
+      } as RpcExceptionModel);
+    }
+    //1: Change package status => ACTIVE
+    const packagePayload = {
+      id: packageId,
+      status: PACKAGE_STATUS.ACTIVE
+    } as UpdateStatusPackagePayload
+    const updatePackageResult = await this.updatePackageStatus(packagePayload).toPromise();
+    if (updatePackageResult) {
+      //2: Delete apply with packageId
+      const result = await this.repository.createQueryBuilder()
+        .delete()
+        .from(AppliedEntity)
+        .where("packageID = :id", {id: packageId})
+        .execute();
+      return result;
+    }
+  }
+  async deleteApplyByCampaignId(campaignId: number): Promise<DeleteResult> {
+    //validate campaignId
+    const validate = await this.validateCampaign(campaignId).toPromise();
+    if (!validate) {
+      throw new RpcException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Not found campaign with id: ${campaignId}`
+      } as RpcExceptionModel);
+    }
+    // Chuyển tất cả những package đang apply campaign này thành CLOSED
+    //list packages
+    const packages = await this.getAppliedPackagesByCampaignID(campaignId);
+    //update status of packages
+    packages.forEach((p) => {
+      const updateDeclinePackagePayload = {
+        id: p.package.id,
+        status: PACKAGE_STATUS.DECLINED
+      } as UpdateStatusPackagePayload;
+      return this.updatePackageStatus(updateDeclinePackagePayload).toPromise();
+    })
+    //delete apply with campaignId
+    const result = await this.repository.createQueryBuilder()
+      .delete()
+      .from(AppliedEntity)
+      .where("campaignID = :id", {id: campaignId})
+      .execute();
+    return result;
+  }
 
 
 }

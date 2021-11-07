@@ -6,8 +6,12 @@ import 'package:weight_loss_consultant_mobile/constants/enums.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/contract_model.dart';
 import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
 import 'package:weight_loss_consultant_mobile/models/package_model.dart';
+import 'package:weight_loss_consultant_mobile/models/report_media_model.dart';
+import 'package:weight_loss_consultant_mobile/models/report_model.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 
 
 class TrainerService{
@@ -104,7 +108,7 @@ class TrainerService{
   }
 
   Future<List<PackageModel>> getAppliedPackage(int campaignId, AccountModel user) async{
-    var url = Uri.parse(ApiConstant.getAppliedPackageApi + "/$campaignId}");
+    var url = Uri.parse(ApiConstant.getAppliedPackageApi + "/$campaignId");
     List<PackageModel> models = [];
     var response = await http.get(
       url,
@@ -138,6 +142,8 @@ class TrainerService{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 201){
       return true;
     }
@@ -151,7 +157,10 @@ class TrainerService{
     int status = 0,
     String dietPlan = "",
     int spendTimeToTraining = 0,
+    int spendTimePerSession = 0,
     String name = "",
+    int endDate = 0,
+    int startDate = 0,
     AccountModel? user,
   }) async {
     Map<String, dynamic> data = {};
@@ -163,6 +172,9 @@ class TrainerService{
     data["spendTimeToTraining"] = spendTimeToTraining;
     data["name"] = name;
     data["trainerEmail"] = user!.email ?? "";
+    data["endDate"] = endDate;
+    data["startDate"] = startDate;
+    data["sessionLength"] = spendTimePerSession;
     var url = Uri.parse(ApiConstant.createPackageApi);
     var response = await http.post(
       url,
@@ -186,6 +198,7 @@ class TrainerService{
     data["status"] = package.status ;
     data["dietPlan"] = package.dietPlan;
     data["spendTimeToTraining"] = package.spendTimeToTraining;
+    data["sessionLength"] = package.sessionLength;
     data["name"] = package.name;
     data["trainerEmail"] = user.email ?? "";
     data["id"] = package.id;
@@ -233,4 +246,126 @@ class TrainerService{
     return false;
   }
 
+  Future<ReportModel?> getTodayReport(int packageId, AccountModel user) async {
+    CustomerService customerService = CustomerService();
+    ContractModel? contractModel = await customerService.getContractByPackageId(packageId, user);
+    if (contractModel == null) return null;
+
+    var url = Uri.parse(ApiConstant.getReportsByContractIDApi + "/${contractModel.id}");
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200){
+      Iterable list = json.decode(response.body);
+      for (var item in list){
+        ReportModel model = ReportModel.fromJson(item);
+        if (model.createDate == null) continue;
+        DateTime createDate = DateTime.fromMillisecondsSinceEpoch(int.parse(model.createDate as String));
+        if (createDate.day == DateTime.now().day
+            && createDate.month == DateTime.now().month
+            && createDate.year == DateTime.now().year){
+          return model;
+        }
+      }
+    }
+  }
+
+  Future<List<ReportMediaModel>> getAllMediaReport(AccountModel user) async {
+    var url = Uri.parse(ApiConstant.getAllMediaReportApi);
+    List<ReportMediaModel> models = [];
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      Iterable list = json.decode(response.body);
+      for (var item in list){
+        ReportMediaModel model = ReportMediaModel.fromJson(item);
+        models.add(model);
+      }
+    }
+    return models;
+  }
+
+  Future<List<ReportMediaModel>> getExerciseReportMediaModelByReportId(int reportID, AccountModel user) async{
+    List<ReportMediaModel> models = [];
+    List<ReportMediaModel> allModels = await getAllMediaReport(user);
+    for (ReportMediaModel model in allModels){
+      if (model.report!.id == reportID && model.type == 0){
+        models.add(model);
+      }
+    }
+    return models;
+  }
+
+  Future<List<ReportMediaModel>> getDietReportMediaModelByReportId(int reportID, AccountModel user) async{
+    List<ReportMediaModel> models = [];
+    List<ReportMediaModel> allModels = await getAllMediaReport(user);
+    for (ReportMediaModel model in allModels){
+      if (model.report!.id == reportID && model.type == 1){
+        models.add(model);
+      }
+    }
+    return models;
+  }
+
+  Future<bool> sendFeedBack(int reportID, String trainerFeedback, int trainerApproval, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.trainerFeedbackApi);
+    var response = await http.put(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode({
+        "reportID" : reportID,
+        "trainerFeedback" : trainerFeedback,
+        "trainerApproval" : trainerApproval
+      })
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> undoApplyPackage(int packageId, AccountModel user) async {
+    var url = Uri.parse(ApiConstant.deleteApplyByPackageId + "/$packageId");
+    var response = await http.delete(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
+
+  Future<CustomerCampaignModel?> getAppliedCampaignByPackageID(int packageID, AccountModel user) async{
+    print(packageID);
+    var url = Uri.parse(ApiConstant.getAppliedCampaignApi + "/$packageID");
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200){
+      CustomerCampaignModel model = CustomerCampaignModel.fromJson(jsonDecode(response.body)[0]);
+      return model;
+    }
+  }
 }

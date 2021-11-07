@@ -47,7 +47,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
   }
 
   Future pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
     _imageFile = File(pickedFile!.path);
   }
 

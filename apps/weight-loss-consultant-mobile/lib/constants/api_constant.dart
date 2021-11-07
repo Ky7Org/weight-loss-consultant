@@ -1,5 +1,5 @@
 class ApiConstant{
-  static const String routePath = "http://10.0.2.2:5000";
+  static const String routePath = "http://34.134.0.168";
   static const String loginApi = routePath + "/api/v1/auth/login";
   static const String loginWithFirebaseApi = routePath + "/api/v1/auth/login/firebase";
   static const String updateTrainerApi = routePath + "/api/v1/trainers";
@@ -20,4 +20,17 @@ class ApiConstant{
   static const String updatePackageApi = routePath + "/api/v1/packages";
   static const String deletePackageApi = routePath + "/api/v1/packages";
   static const String approvePackageApi = routePath + "/api/v1/applies/approved";
+  static const String firebaseMessagingApi = "https://fcm.googleapis.com/fcm/send";
+  static const String updateDeviceIDApi = routePath + "/api/v1/updateDeviceID";
+  static const String getContractByPackageIDorCampaignIDApi = routePath + "/api/v1/contracts/getContract/byPackageOrCampaignId";
+  static const String customerCreateProjectApi = routePath + "/api/v1/reports";
+  static const String getReportsByContractIDApi = routePath + "/api/v1/reports/findReportByContractID";
+  static const String customerCreateMediaReportApi = routePath + "/api/v1/medias";
+  static const String getAllMediaReportApi = routePath + "/api/v1/medias";
+  static const String trainerFeedbackApi = routePath + "/api/v1/reports/trainerApproval";
+  static const String getReportById = routePath + "/api/v1/reports";
+  static const String getAnotherId = routePath + "/api/v1/contracts/getAnother";
+  static const String deleteApplyByPackageId = routePath + "/api/v1/applies/deleteByPackageId";
+  static const String deleteApplyByCampaignId = routePath + "/api/v1/applies/deleteByCampaignId";
+  static const String getAppliedCampaignApi = routePath + "/api/v1/applies/getAppliedCampaigns";
 }

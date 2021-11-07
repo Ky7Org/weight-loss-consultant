@@ -6,10 +6,6 @@ import {ReportMediaEntity} from "./report-media.entity";
 export class ReportEntity extends BaseEntity{
   @PrimaryGeneratedColumn()
   id: number;
-  // @Column({type: 'int'})
-  // contractID: number;
-  @Column({type: 'bigint'})
-  date: number;
   @Column({type: 'varchar'})
   exerciseDescription: string;
   @Column({type: 'varchar'})

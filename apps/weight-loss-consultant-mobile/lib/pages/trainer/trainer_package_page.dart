@@ -13,6 +13,7 @@ import 'package:weight_loss_consultant_mobile/models/package_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
 import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class TrainerPackagePage extends StatefulWidget {
@@ -26,8 +27,25 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
 
   Future<List<PackageModel>>? listPackage;
   AccountModel user = AccountModel(email: "", fullname: "");
-  TrainerService service = TrainerService();
+  TrainerService trainerService = TrainerService();
   late TabController _tabController;
+
+  List<PackageModel>? fullList;
+
+  Icon icon = Icon(
+    Icons.search,
+    color: AppColors.PRIMARY_WORD_COLOR,
+  );
+
+  Widget appBarTitle = Text(
+    "Your Package List",
+    style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR),
+  );
+
+  final TextEditingController _controller = TextEditingController();
+  bool _isSearching = false;
+  String _searchText = "";
+  final globalKey = GlobalKey<ScaffoldState>();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -47,15 +65,264 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
   void initState() {
     _tabController = TabController(length: 4, vsync: this);
     super.initState();
+    _controller.addListener(() {
+      if (_controller.text.isEmpty) {
+        setState(() {
+          _isSearching = false;
+          _searchText = "";
+        });
+      } else {
+        setState(() {
+          _isSearching = true;
+          _searchText = _controller.text;
+        });
+      }
+    });
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        listPackage = service.getTrainerPackage(user);
+        listPackage = trainerService.getTrainerPackage(user);
+        listPackage!.then((value){
+          fullList = value;
+        });
         setState(() {});
       });
     });
   }
 
-  Widget _package(PackageModel model) {
+  Future _showConfirmDeleteDialog() async{
+    return showDialog(
+        context: context,
+        builder: (ctx) => Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                SizedBox(
+                  height: 180,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+                    child: Column(children: [
+                      const Center(
+                          child: Text(
+                            "Are you sure to delete this package?",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                            ),
+                          )),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RaisedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            color: Colors.redAccent,
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(width: 20,),
+                          RaisedButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop(true);
+                            },
+                            color: Colors.redAccent,
+                            child: const Text(
+                              'Okay',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ]),
+                  ),
+                ),
+                const Positioned(
+                    top: -35,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.redAccent,
+                      radius: 40,
+                      child: Icon(
+                        Icons.warning,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    )),
+              ],
+            )));
+  }
+
+  Future _showConfirmUndoDialog(int packageID) async{
+    return showDialog(
+        context: context,
+        builder: (ctx) => Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                SizedBox(
+                  height: 180,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+                    child: Column(children: [
+                      const Center(
+                          child: Text(
+                            "Are you sure to unapply this package?",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                            ),
+                          )),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RaisedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            color: Colors.redAccent,
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(width: 20,),
+                          RaisedButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop(true);
+                            },
+                            color: Colors.redAccent,
+                            child: const Text(
+                              'Okay',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ]),
+                  ),
+                ),
+                const Positioned(
+                    top: -35,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.redAccent,
+                      radius: 40,
+                      child: Icon(
+                        Icons.warning,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    )),
+              ],
+            )));
+  }
+
+  Widget _editButtonGroup(PackageModel model){
+    if (model.status == 0){
+      //Active package
+      return Row(
+        children: [
+          IconButton(
+              onPressed: () async {
+                Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
+                  listPackage = trainerService.getTrainerPackage(user);
+                  listPackage!.then((value){
+                    fullList = value;
+                  });
+                  setState(() {});
+                });
+              },
+              icon: Icon(
+                Icons.edit,
+                color: HexColor("#FF3939"),
+              )
+          ),
+          IconButton(
+              onPressed: () async {
+                _showConfirmDeleteDialog().then((value) async{
+                  if (value){
+                    bool result = await trainerService.deletePackage(model.id ?? 0, user);
+                    if (result){
+                      CustomToast.makeToast("Delete successfully");
+                    } else {
+                      CustomToast.makeToast("Some thing went wrong! Try again");
+                    }
+                    setState(() {
+                      listPackage = trainerService.getTrainerPackage(user);
+                    });
+                  }
+                });
+              },
+              icon: Icon(
+                Icons.highlight_remove_outlined,
+                color: HexColor("#FF3939"),
+              )
+          ),
+        ],
+      );
+    } else if (model.status == 1){
+      //Applied package
+      return Row(
+        children: [
+          IconButton(
+              onPressed: () async {
+                Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
+                  listPackage = trainerService.getTrainerPackage(user);
+                  listPackage!.then((value){
+                    fullList = value;
+                  });
+                  setState(() {});
+                });
+              },
+              icon: Icon(
+                Icons.edit,
+                color: HexColor("#FF3939"),
+              )
+          ),
+          IconButton(
+              onPressed: () async {
+                bool confirmResult = await _showConfirmUndoDialog(model.id as int);
+                if (confirmResult){
+                  CustomerCampaignModel? campaignModel = await trainerService.getAppliedCampaignByPackageID(model.id as int, user);
+                  bool result = await trainerService.undoApplyPackage(model.id as int, user);
+                  if (result){
+                    NotificationService notificationService = NotificationService();
+                    await notificationService.trainerUnapply(campaignModel!.customer!.deviceID ?? "", campaignModel.id as int);
+                    CustomToast.makeToast("Undo apply successfully");
+                  } else {
+                    CustomToast.makeToast("Some thing went wrong! Try again");
+                  }
+                  setState(() {
+                    listPackage = trainerService.getTrainerPackage(user);
+                  });
+                }
+              },
+              icon: Icon(
+                Icons.undo_rounded,
+                color: HexColor("#FF3939"),
+              )
+          ),
+        ],
+      );
+    }
+    return Container();
+  }
+
+  Widget _activePackage(PackageModel model) {
     return GestureDetector(
       onTap: () {
       },
@@ -80,35 +347,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                         fontSize: 19),
                   ),
                   const Spacer(),
-                  IconButton(
-                      onPressed: () async {
-                        Navigator.pushNamed(context, RoutePath.trainerUpdatePackagePage, arguments: model.id).then((value){
-                          listPackage = service.getTrainerPackage(user);
-                          setState(() {});
-                        });
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        color: HexColor("#FF3939"),
-                      )
-                  ),
-                  IconButton(
-                      onPressed: () async {
-                        bool result = await service.deletePackage(model.id ?? 0, user);
-                        if (result){
-                          CustomToast.makeToast("Delete successfully");
-                        } else {
-                          CustomToast.makeToast("Some thing went wrong! Try again");
-                        }
-                        setState(() {
-                          listPackage = service.getTrainerPackage(user);
-                        });
-                      },
-                      icon: Icon(
-                        Icons.highlight_remove_outlined,
-                        color: HexColor("#FF3939"),
-                      )
-                  ),
+                  _editButtonGroup(model),
                 ],
               ),
               RichText(
@@ -194,7 +433,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                             fontSize: 15),
                       ),
                       TextSpan(
-                        text: "45 minutes",
+                        text: "${model.sessionLength} minutes",
                         style: TextStyle(
                             color: AppColors.PRIMARY_WORD_COLOR,
                             fontWeight: FontWeight.w400,
@@ -237,55 +476,48 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     );
   }
 
+
   Widget _buildEmptyCampaignList(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(
-          height: 60,
-        ),
-        Center(
-          child:
-          SvgPicture.asset("assets/fake-image/no-package.svg"),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        Center(
-          child: Text(
-            'No Campaign',
-            style: TextStyle(
-                color: AppColors.PRIMARY_WORD_COLOR,
-                fontSize: 36,
-                fontWeight: FontWeight.w700
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 60,
+          ),
+          Center(
+            child:
+            SvgPicture.asset("assets/fake-image/no-package.svg"),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Center(
+            child: Text(
+              'No Package',
+              style: TextStyle(
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w700
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        Center(
-          child: Text(
-            "You don't have any campaign.",
-            style: TextStyle(
-                color: AppColors.PRIMARY_WORD_COLOR,
-                fontSize: 15,
-                fontWeight: FontWeight.w400
+          const SizedBox(
+            height: 30,
+          ),
+          Center(
+            child: Text(
+              "You don't have any Package.",
+              style: TextStyle(
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400
+              ),
             ),
           ),
-        ),
-        Center(
-          child: Text(
-            'Create one?',
-            style: TextStyle(
-                color: AppColors.PRIMARY_WORD_COLOR,
-                fontSize: 15,
-                fontWeight: FontWeight.w400
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -293,7 +525,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     List<Widget> widgets = [];
     for (PackageModel model in data){
       if (model.status != 0) continue;
-      var widget = _package(model);
+      var widget = _activePackage(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 60,));
@@ -304,7 +536,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     List<Widget> widgets = [];
     for (PackageModel model in data){
       if (model.status != 1) continue;
-      var widget = _package(model);
+      var widget = _activePackage(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 60,));
@@ -315,7 +547,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     List<Widget> widgets = [];
     for (PackageModel model in data){
       if (model.status != 2) continue;
-      var widget = _package(model);
+      var widget = _activePackage(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 60,));
@@ -326,25 +558,113 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
     List<Widget> widgets = [];
     for (PackageModel model in data){
       if (model.status != 3) continue;
-      var widget = _package(model);
+      var widget = _activePackage(model);
       widgets.add(widget);
     }
     widgets.add(const SizedBox(height: 60,));
     return widgets;
   }
 
+  void _handleSearchStart() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _handleSearchEnd() {
+    setState(() {
+      icon = Icon(
+        Icons.search,
+        color: AppColors.PRIMARY_WORD_COLOR,
+      );
+      appBarTitle = Text(
+        "Your Package List",
+        style: TextStyle(color: AppColors.PRIMARY_WORD_COLOR,),
+      );
+      _isSearching = false;
+      _controller.clear();
+    });
+  }
+
+  Future<List<PackageModel>> updateAndGetList(String searchText) async{
+    List<PackageModel> searchresult = [];
+    for (int i = 0; i < fullList!.length; i++) {
+      PackageModel data = fullList![i];
+      if (data.name!.toLowerCase().contains(searchText.toLowerCase())) {
+        searchresult.add(data);
+      }
+    }
+    return searchresult;
+  }
+
+  void searchOperation(String searchText) {
+    setState(() {
+      listPackage = updateAndGetList(searchText);
+    });
+  }
+
+  AppBar _buildAppBar(){
+    return AppBar(
+      centerTitle: false,
+      titleSpacing: 0,
+      title: appBarTitle,
+      shadowColor: Colors.grey,
+      backgroundColor: Colors.white,
+      iconTheme: IconThemeData(
+        color: AppColors.PRIMARY_WORD_COLOR,
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
+      actions: [
+        IconButton(
+            onPressed: () {
+              setState(() {
+                if (icon.icon == Icons.search) {
+                  icon = Icon(
+                    Icons.close,
+                    color: AppColors.PRIMARY_WORD_COLOR,
+                  );
+                  appBarTitle = TextField(
+                    controller: _controller,
+                    style: TextStyle(
+                      color: AppColors.PRIMARY_WORD_COLOR,
+                    ),
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search, color: AppColors.PRIMARY_WORD_COLOR),
+                        hintText: "Search...",
+                        hintStyle: TextStyle(color: AppColors.PRIMARY_WORD_COLOR)),
+                    onChanged: searchOperation,
+                  );
+                  _handleSearchStart();
+                } else {
+                  _handleSearchEnd();
+                }
+              });
+            },
+            icon: icon
+        )
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("List Packages"),
+      key: globalKey,
+      appBar: _buildAppBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
 
         backgroundColor: Colors.white,
         onPressed: (){
           Navigator.pushNamed(context, RoutePath.createPackagesPage).then((value) {
-            listPackage = service.getTrainerPackage(user);
+            listPackage = trainerService.getTrainerPackage(user);
+            listPackage!.then((value){
+              fullList = value;
+            });
             setState(() {
 
             });
@@ -398,13 +718,15 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                           Tab(
                             child: Text(
                               'Active',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w700),
                             ),
                           ),
                           Tab(
                             child: Text(
-                              'Applied',
+                              'Applying',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w700),
                             ),
@@ -412,6 +734,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                           Tab(
                             child: Text(
                               'Approve',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w700),
                             ),
@@ -419,6 +742,7 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                           Tab(
                             child: Text(
                               'Decline',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w700),
                             ),
@@ -449,7 +773,9 @@ class _TrainerPackagePageState extends State<TrainerPackagePage> with SingleTick
                   ],
                 );
               }
-              return const CircularProgressIndicator();
+              return const Center(
+                child: CircularProgressIndicator()
+              );
             }
         ),
       ),

@@ -5,11 +5,14 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/report_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
 import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
 
 class CustomerReportHistoryPage extends StatefulWidget {
-  const CustomerReportHistoryPage({Key? key}) : super(key: key);
+  int? packageId;
+  CustomerReportHistoryPage({Key? key, this.packageId}) : super(key: key);
 
   @override
   _CustomerReportHistoryPageState createState() => _CustomerReportHistoryPageState();
@@ -17,7 +20,7 @@ class CustomerReportHistoryPage extends StatefulWidget {
 
 class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
   AccountModel user = AccountModel(email: "", fullname: "");
-  Future<List<String>?>? listReport;
+  Future<List<ReportModel>?>? listReport;
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -33,29 +36,52 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
     prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
   }
 
-  Future<List<String>> _generateFakeList() async{
-    List<String> list = ["tien", "truong", "tran"];
-    return list;
-  }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_){
       initAccount().then((value){
-        listReport = _generateFakeList();
+        CustomerService service = CustomerService();
+        listReport = service.getReportsByPackageId(widget.packageId as int, user);
         setState(() {});
       });
     });
   }
 
-  Widget _buildReportCard(String data){
+  Widget _buildReportCard(ReportModel data){
+    String status = "Not yet";
+    if (data.trainerApproval != null){
+      if (data.trainerApproval == 0){
+        status = "Approve";
+      } else {
+        status = "Decline";
+      }
+    }
+
     return GestureDetector(
       onTap: (){
-        Navigator.pushNamed(context, RoutePath.customerReportDetailPage);
+        Navigator.pushNamed(context, RoutePath.customerReportDetailPage, arguments: data.id);
       },
       child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 10),
         child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,15 +99,14 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 7),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    decoration: BoxDecoration(
+                      color: status == "Approve" ? Colors.green : Colors.red,
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
                     ),
-                    child: const Text(
-                      "Status",
-                      style: TextStyle(
+                    child: Text(
+                      status,
+                      style: const TextStyle(
                         color: Colors.white,
-
                       ),
                     )
                   ),
@@ -97,7 +122,7 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
                 ),
               ),
               Text(
-                "Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 ",
+                data.dietDescription ?? "",
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 style: TextStyle(
@@ -115,7 +140,7 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
                 ),
               ),
               Text(
-                "Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 ",
+                data.exerciseDescription ?? "",
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 style: TextStyle(
@@ -133,7 +158,7 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
                 ),
               ),
               Text(
-                "Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 Tien truong 123 ",
+                data.trainerFeedback ?? "Trainer has not yet feedback this report",
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 style: TextStyle(
@@ -148,9 +173,21 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
     );
   }
 
-  List<Widget> _generateReportCardList(List<String>? data){
+  List<Widget> _generateReportCardList(List<ReportModel>? data){
     List<Widget> widgetList = [];
-    for (String reportString in data!){
+    if (data!.isEmpty){
+      widgetList.add(Center(
+        child: Text(
+          "There is no report yet",
+          style: TextStyle(
+              color: AppColors.PRIMARY_WORD_COLOR,
+              fontSize: 17,
+              fontWeight: FontWeight.bold
+          ),
+        ),
+      ));
+    }
+    for (ReportModel reportString in data){
       Widget widget = _buildReportCard(reportString);
       widgetList.add(widget);
     }
@@ -163,12 +200,12 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GenericAppBar.builder("Package detail"),
+      appBar: GenericAppBar.builder("Report History"),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         margin: const EdgeInsets.only(top: 20),
         child: SingleChildScrollView(
-          child: FutureBuilder<List<String>?>(
+          child: FutureBuilder<List<ReportModel>?>(
               future: listReport,
               builder: (context, snapshot) {
                 if (snapshot.hasData){
@@ -179,7 +216,9 @@ class _CustomerReportHistoryPageState extends State<CustomerReportHistoryPage> {
                     ],
                   );
                 }
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
           ),
         ),

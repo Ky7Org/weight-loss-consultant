@@ -4,8 +4,10 @@ import 'package:weight_loss_consultant_mobile/routings/route_paths.dart';
 import 'package:flutter/material.dart';
 
 class CategoryPanel extends StatelessWidget {
+  Function? callBackAfterPop;
   CategoryPanel({
-    Key? key
+    Key? key,
+    this.callBackAfterPop
   }) : super(key: key);
   final List<Map> categories = [
     {
@@ -59,7 +61,11 @@ class CategoryPanel extends StatelessWidget {
             for (var items in categories)
               GestureDetector(
                 onTap: (){
-                  Navigator.pushNamed(context, items["route"]);
+                  Navigator.pushNamed(context, items["route"]).then((value){
+                    if (callBackAfterPop != null){
+                      callBackAfterPop!.call();
+                    }
+                  });
                 },
                 child: SizedBox(
                   height: 118,

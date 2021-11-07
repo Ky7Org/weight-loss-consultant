@@ -1,29 +1,43 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weight_loss_consultant_mobile/constants/app_colors.dart';
 import 'package:weight_loss_consultant_mobile/models/account_model.dart';
+import 'package:weight_loss_consultant_mobile/models/campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/customer_campaign_model.dart';
+import 'package:weight_loss_consultant_mobile/models/report_model.dart';
 import 'package:weight_loss_consultant_mobile/pages/components/generic_app_bar.dart';
+import 'package:weight_loss_consultant_mobile/pages/components/toast.dart';
+import 'package:weight_loss_consultant_mobile/services/customer_service.dart';
+import 'package:weight_loss_consultant_mobile/services/notification_service.dart';
+import 'package:weight_loss_consultant_mobile/services/trainer_service.dart';
 
 class TrainerFeedbackReportPage extends StatefulWidget {
-  const TrainerFeedbackReportPage({Key? key}) : super(key: key);
+  int? packageId;
+
+  TrainerFeedbackReportPage({Key? key, this.packageId}) : super(key: key);
 
   @override
-  _TrainerFeedbackReportPageState createState() => _TrainerFeedbackReportPageState();
+  _TrainerFeedbackReportPageState createState() =>
+      _TrainerFeedbackReportPageState();
 }
 
 class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
+  Future<ReportModel?>? reportModel;
+
   AccountModel user = AccountModel(email: "", fullname: "");
-  List<String> dietImages = ["assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png"];
-  List<String> exerciseImages = ["assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png", "assets/fake-image/miku-avatar.png"];
+  List<String> dietImages = [];
+  List<String> exerciseImages = [];
   final TextEditingController _feedback = TextEditingController();
+  int trainerApproval = 0;
+  CustomerService customerService = CustomerService();
+  TrainerService trainerService = TrainerService();
 
   Future<void> initAccount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userJSON = prefs.getString('ACCOUNT');
-    if (userJSON is String){
+    if (userJSON is String) {
       Map<String, dynamic> userMap = jsonDecode(userJSON);
       user = AccountModel.fromJson(userMap);
     }
@@ -34,17 +48,17 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
     prefs.setString("ACCOUNT", jsonEncode(user.toJson()));
   }
 
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_){
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       initAccount().then((value) {
-          setState(() {});
-        });
+        TrainerService service = TrainerService();
+        reportModel = service.getTodayReport(widget.packageId! as int, user);
+        setState(() {});
+      });
     });
   }
-
 
   Widget _title(String title) {
     return Align(
@@ -59,8 +73,8 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
     );
   }
 
-  Widget _multiInput(
-      String label, String hint, TextEditingController controller) {
+  Widget _multiInput(String label, String hint,
+      TextEditingController controller, ReportModel report) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -70,6 +84,7 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
       child: Column(
         children: [
           TextFormField(
+            enabled: report.trainerFeedback?.isEmpty ?? true,
             controller: controller,
             keyboardType: TextInputType.text,
             style: const TextStyle(fontSize: 15),
@@ -103,11 +118,23 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
     );
   }
 
-  Widget _buildImages(List<String> images){
+  Widget _buildImages(List<String> images) {
     List<Widget> listWidget = [];
-    for (String file in images){
-      Widget image = Image.asset(file);
-      listWidget.add(image);
+    for (String file in images) {
+      Widget image;
+
+      try {
+        image = Image.network(
+          file,
+          height: 100,
+          width: 100,
+        );
+      } catch (e) {
+        image = Image.asset("assets/fake-image/miku-avatar.png");
+      }
+      if(file.contains('https://')){
+        listWidget.add(image);
+      }
     }
 
     return Row(
@@ -117,72 +144,16 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
     );
   }
 
-  Widget _buildDietCard(){
+  Widget _buildDietCard(ReportModel reportModel) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
       child: Container(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
-        child: Column(
-          children: [
-            _buildImages(dietImages),
-            const SizedBox(height: 20,),
-            _title('Customer Diet'),
-            const SizedBox(height: 10,),
-            Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-              style: TextStyle(
-                fontSize: 17,
-                color: AppColors.PRIMARY_WORD_COLOR,
-              )
-            ),
-            //_pickUpImageCard(),
-            /*_multiInput(
-                "What did you eat today?", "Egg and Fish...", _todayDiet),*/
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExerciseCard(){
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: Container(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
-        child: Column(
-          children: [
-            _buildImages(exerciseImages),
-            const SizedBox(height: 20,),
-            _title('Customer Exercise'),
-            const SizedBox(height: 10,),
-            Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                style: TextStyle(
-                  fontSize: 17,
-                  color: AppColors.PRIMARY_WORD_COLOR,
-                )
-            ),
-            //_pickUpImageCard(),
-            /*_multiInput(
-                "What did you eat today?", "Egg and Fish...", _todayDiet),*/
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatusSlider(){
-    return DefaultTabController(
-      length: 2,
-      child: Container(
-        margin: const EdgeInsets.only(top: 20),
-        height: 48,
+        padding:
+        const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
         decoration: BoxDecoration(
-            color: const Color(0xFFF0F3F6),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
@@ -192,30 +163,22 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
                 offset: const Offset(0, 3),
               )
             ]),
-        child: TabBar(
-          indicator: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            color: Colors.white,
-          ),
-          labelColor: const Color(0xFF0D3F67),
-          unselectedLabelColor: const Color(0xFFB6C5D1),
-          onTap: (index){
-
-          },
-          tabs: const [
-            Tab(
-              child: Text("Approved", style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold
-              ),
-              ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildImages(dietImages),
+            const SizedBox(
+              height: 20,
             ),
-            Tab(
-              child: Text("Deny",
-                style: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold
-                ),
+            _title('Diet Description'),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              reportModel.dietDescription as String,
+              style: TextStyle(
+                fontSize: 17,
+                color: AppColors.PRIMARY_WORD_COLOR,
               ),
             ),
           ],
@@ -224,47 +187,219 @@ class _TrainerFeedbackReportPageState extends State<TrainerFeedbackReportPage> {
     );
   }
 
-  Widget _buildFeedbackButton(){
-    return FlatButton(
-      height: 64,
-      color: AppColors.PRIMARY_COLOR,
-      onPressed: () async {},
-      minWidth: double.infinity,
-      child: const Text(
-        'Send feedback',
-        style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-            fontSize: 15),
-      ),
+  Widget _buildExerciseCard(ReportModel reportModel) {
+    return Card(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18)),
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Container(
+        padding:
+        const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3),
+              )
+            ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildImages(exerciseImages),
+            const SizedBox(
+              height: 20,
+            ),
+            _title('Exercise Description'),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(reportModel.exerciseDescription as String,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: AppColors.PRIMARY_WORD_COLOR,
+                )),
+          ],
+        ),
+      ),
     );
   }
+
+  Widget _buildApprovedAndDenyButton(ReportModel report) {
+    if (report.trainerFeedback?.isNotEmpty ?? false){
+      return Container();
+    }
+    return Row(
+      children: [
+        Expanded(
+          flex: 4,
+          child: FlatButton(
+            height: 64,
+            color: Colors.white,
+            onPressed: () async {
+              int reportId = report.id as int;
+              String trainerFeedback = _feedback.text;
+              TrainerService service = TrainerService();
+              bool result = await service.sendFeedBack(reportId, trainerFeedback, 1, user);
+              if (result) {
+                CustomerService customerService = CustomerService();
+                int? campaignID = await customerService.getCampaignIdByPackageIdWithSameContract(widget.packageId as int, user);
+                CustomerCampaignModel? campaignModel = await trainerService.getCampaignById(campaignID as int, user);
+                NotificationService notificationService = NotificationService();
+                await notificationService.trainerFeedbackReport(campaignModel?.customer?.deviceID ?? "", report.id as int);
+                Navigator.pop(context);
+                CustomToast.makeToast("Feedback successfully");
+              } else {
+                CustomToast.makeToast("Some thing went wrong! Try again");
+              }
+            },
+            minWidth: double.infinity,
+            child: Text(
+              'Deny',
+              style: TextStyle(
+                  color: AppColors.PRIMARY_COLOR,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15),
+            ),
+            shape:
+            RoundedRectangleBorder(
+                side: BorderSide(
+                  color: AppColors.PRIMARY_COLOR,
+                  width: 1,
+                  style: BorderStyle.solid
+                ), borderRadius: BorderRadius.circular(18)),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: SizedBox(),
+        ),
+        Expanded(
+          flex: 4,
+          child: FlatButton(
+            height: 64,
+            color: AppColors.PRIMARY_COLOR,
+            onPressed: () async {
+              int reportId = report.id as int;
+              String trainerFeedback = _feedback.text;
+              TrainerService service = TrainerService();
+              bool result = await service.sendFeedBack(reportId, trainerFeedback, 0, user);
+              if (result) {
+                CustomerService customerService = CustomerService();
+                int? campaignID = await customerService.getCampaignIdByPackageIdWithSameContract(widget.packageId as int, user);
+                CustomerCampaignModel? campaignModel = await trainerService.getCampaignById(campaignID as int, user);
+                NotificationService notificationService = NotificationService();
+                await notificationService.trainerFeedbackReport(campaignModel?.customer?.deviceID ?? "", report.id as int);
+                Navigator.pop(context);
+                CustomToast.makeToast("Feedback successfully");
+              } else {
+                CustomToast.makeToast("Some thing went wrong! Try again");
+              }
+            },
+            minWidth: double.infinity,
+            child: const Text(
+              'Approved',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15),
+            ),
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHasReportContainer(ReportModel model){
+    if (model.trainerFeedback?.isNotEmpty ?? false){
+      return Column(
+        children: [
+          Text(
+              "You have feedbacked this report. You cannot edit your feedback yet",
+            style: TextStyle(
+                color: AppColors.PRIMARY_WORD_COLOR,
+                fontWeight: FontWeight.w700,
+                fontSize: 20
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 10,),
+        ],
+      );
+    }
+    return Container();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GenericAppBar.builder('Daily Report'),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          children: [
-            Column(
-              children: [
-                _buildDietCard(),
-                const SizedBox(height: 15,),
-                _buildExerciseCard(),
-                const SizedBox(height: 30,),
-                _multiInput("Your feedback", "Noice", _feedback),
-                _buildStatusSlider(),
-                const SizedBox(height: 30,),
-                _buildFeedbackButton(),
-              ],
-            )
-          ],
-        ),
-      ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: FutureBuilder<ReportModel?>(
+              future: reportModel,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done){
+                  print("AAAA");
+                  if (snapshot.hasData) {
+                    print(snapshot.requireData);
+                    TrainerService service = TrainerService();
+                    ReportModel report = snapshot.requireData as ReportModel;
+                    service
+                        .getExerciseReportMediaModelByReportId(
+                        report.id as int, user)
+                        .then((value) {
+                      exerciseImages = value.map((e) => e.url ?? "").toList();
+                      service
+                          .getDietReportMediaModelByReportId(
+                          report.id as int, user)
+                          .then((value) {
+                        dietImages = value.map((e) => e.url ?? "").toList();
+                        setState(() {});
+                      });
+                    });
+                    if (report.trainerFeedback?.isNotEmpty ?? false){
+                      _feedback.text = report.trainerFeedback ?? "";
+                    }
+                    return Column(
+                      children: [
+                        Column(
+                          children: [
+                            _buildHasReportContainer(report),
+                            _buildDietCard(snapshot.requireData as ReportModel),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            _buildExerciseCard(
+                                snapshot.requireData as ReportModel),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            _multiInput("Your feedback", "Noice", _feedback, report),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            // const SizedBox(
+                            //   height: 30,
+                            // ),
+                            // _buildFeedbackButton(report),
+                            _buildApprovedAndDenyButton(report)
+                          ],
+                        )
+                      ],
+                    );
+                  }
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              })),
     );
   }
 }
