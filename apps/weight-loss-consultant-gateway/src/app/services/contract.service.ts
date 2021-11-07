@@ -10,7 +10,7 @@ import {
   DELETE_CONTRACT_BY_ID,
   EXPIRE_CONTRACT,
   FIND_ALL_CONTRACT,
-  FIND_CONTRACT_BY_ID,
+  FIND_CONTRACT_BY_ID, GET_ALL_CONTRACT,
   GET_ANOTHER_IN_THE_SAME_CONTRACT,
   GET_CONTRACT_BY_CAMPAIGN_ID_OR_PACKAGE_ID,
   TRAINER_CANCEL_ONGOING_CONTRACT,
@@ -34,6 +34,12 @@ export class ContractService {
   async getHealthInfosWithCustomer(): Promise<ContractEntity[]> {
     return this.contractManagementServiceProxy
       .send<ContractEntity[], Record<string, unknown>>({cmd: FIND_ALL_CONTRACT}, {})
+      .toPromise();
+  }
+
+  async getAllContract(): Promise<ContractEntity[]> {
+    return this.contractManagementServiceProxy
+      .send<ContractEntity[], Record<string, unknown>>({cmd: GET_ALL_CONTRACT}, {})
       .toPromise();
   }
 
