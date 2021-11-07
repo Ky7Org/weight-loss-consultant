@@ -13,37 +13,66 @@ import { SmileTwoTone } from '@ant-design/icons';
 import moment from 'moment';
 import ListItem from './components/listItem/ListItem';
 import ResetPassword from './components/resetPassword/ResetPassword';
+import {
+  getAdminByEmail,
+  getTrainerByEmail,
+  getUserByEmail,
+} from '../../services/admin';
+import { transDateFormatYearFirst } from '../../utils/commom';
 const Profile = () => {
   const dateFormat = 'YYYY/MM/DD';
   const [currentSearchRole, setcurrentSearchRole] = useState();
   const location = useLocation();
   const [isEditing, setIsEditing] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
-  const initValueForm = {
-    fullname: 'BanhsBao',
-    address: 'Ho Chi Minh City',
-    phone: '',
+  const [loading, setLoading] = useState(false);
+  const [initValue, setInitValue] = useState();
+  const fetchApiGetUser = (role, email) => {
+    console.log(role + email);
+    var api;
+    if (role == 'customer') {
+      console.log('customer');
+      api = getUserByEmail(email);
+    }
+    if (role == 'admin') {
+      console.log('admin');
+      api = getAdminByEmail(email);
+    }
+    if (role == 'trainer') {
+      console.log('trainer');
+      api = getTrainerByEmail(email);
+    }
+    api
+      .then(({ data }) => {
+        setLoading(true);
+        setInitValue(data);
+      })
+      .finally(setLoading(false));
   };
   const validateForm = Yup.object({
     fullname: Yup.string().required('Fullname is required'),
     address: Yup.string().required('Address is required'),
   });
-  const mockData = {
-    email: 'chaubao.work@gmail.com',
-    password: '$2b$07$bduxf4eUUn1K/UtM/jP0ReyRsZ6P6alXytUzcq30w4/owJ42cMaXu',
-    fullname: 'BanhsBao',
-    address: 'Ho Chi Minh City',
-    phone: '0956251254',
-    gender: '1',
-    status: '1',
-    profileImage: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-    dob: '19091999',
-  };
   const handleUpdate = () => (setIsEditing(false), setIsSaved(true));
   useEffect(() => {
-    console.log(location);
+    fetchApiGetUser(
+      location.state?.currentSearchRole,
+      location.pathname.substring(location.pathname.lastIndexOf('/') + 1)
+    );
     setcurrentSearchRole(location.state);
   }, [location]);
+  useEffect(() => {
+    console.log('Test');
+    console.log(initValue);
+  }, [initValue]);
+  const [phoneNumber, setPhoneNumber] = useState();
+  const initPhoneValue = () => {
+    if (phoneNumber == null) {
+      return '+12133734253';
+    } else {
+      return '+12133734253';
+    }
+  };
   return (
     <div>
       <Row justify="center">
@@ -55,8 +84,8 @@ const Profile = () => {
                   <Paper elevation={2}>
                     <div style={{ padding: '50px' }}>
                       <Avatar
-                        alt={mockData.fullname}
-                        src={mockData.profileImage}
+                        alt={initValue?.fullname}
+                        src={initValue?.profileImage}
                         sx={{ width: 200, height: 200 }}
                       />
                       <Typography
@@ -64,14 +93,14 @@ const Profile = () => {
                         align="right"
                         style={{ textAlign: 'center', fontWeight: 'bold' }}
                       >
-                        {mockData.fullname}
+                        {initValue?.fullname}
                       </Typography>
                       <Typography
                         variant="h6"
                         align="right"
                         style={{ textAlign: 'center', fontSize: '1rem' }}
                       >
-                        {mockData.address}
+                        {initValue?.address}
                       </Typography>
                     </div>
                   </Paper>
@@ -81,7 +110,7 @@ const Profile = () => {
                         User Profiles
                       </Typography>
                       <Formik
-                        initialValues={initValueForm}
+                        initialValues={initValue}
                         validationSchema={validateForm}
                       >
                         {() => (
@@ -123,7 +152,7 @@ const Profile = () => {
                                 <div className="label"> {'Date Of Birth'} </div>
                                 <DatePicker
                                   defaultValue={moment(
-                                    '2015/01/01',
+                                    transDateFormatYearFirst(initValue?.dob),
                                     dateFormat
                                   )}
                                   format={dateFormat}
@@ -138,7 +167,10 @@ const Profile = () => {
                               {'Phone Number'}
                             </div>
                             <ConfigProvider locale={en}>
-                              <CountryPhoneInput disabled={isEditing} />
+                              <CountryPhoneInput
+                                disabled={isEditing}
+                                value={initPhoneValue}
+                              />
                             </ConfigProvider>
                             <div style={{ marginTop: '10px' }}>
                               <Button
@@ -167,7 +199,7 @@ const Profile = () => {
                 </div>
               </Row>
               <div style={{ marginTop: '20px' }}>
-                <ResetPassword data={mockData} />
+                <ResetPassword data={initValue} />
               </div>
             </div>
             <div style={{ marginLeft: '20px' }}>

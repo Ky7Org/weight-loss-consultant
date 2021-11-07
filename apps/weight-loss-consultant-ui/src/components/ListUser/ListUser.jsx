@@ -57,8 +57,10 @@ const ListUser = () => {
   };
   useEffect(() => {
     setDataFilter({ ...dataFilter, roleFilter: searchRole });
-    fetchAPIGetUser(dataFilter);
   }, [searchRole]);
+  useEffect(() => {
+    fetchAPIGetUser(dataFilter);
+  }, [dataFilter]);
   const onNavigation = (id) => {
     history.push(`/admin/user/update/${id}`);
   };
@@ -127,7 +129,7 @@ const ListUser = () => {
               fontSize: '300%',
             }}
           >
-            {searchRole} manage
+            {searchRole} manager
           </h1>
 
           <div style={{ display: 'flex', width: '33%', paddingBottom: '10px' }}>

@@ -32,3 +32,11 @@ export const transDateFormat = (data) => {
   var result = day + '/' + month + '/' + year;
   return result;
 };
+export const transDateFormatYearFirst = (data) => {
+  var cdate = new Date(data);
+  var month = cdate.getUTCMonth() + 1;
+  var day = cdate.getUTCDate();
+  var year = cdate.getUTCFullYear();
+  var result = year + '/' + month + '/' + day;
+  return result;
+};

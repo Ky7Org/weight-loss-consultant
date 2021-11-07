@@ -1,28 +1,23 @@
 .sider-ant {
   height: 100%;
 }
-
-.sider {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: var(--sider-bg-color);
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
 .sider__logo {
   padding-top: 30px;
   cursor: pointer;
 }
-
+.sider {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 .sider__logo-img {
   display: block;
   margin: 0 auto;
   width: 10rem;
 }
-
 .sider__logo-imgRound {
   width: 50px;
   height: 50px;
@@ -31,7 +26,6 @@
   display: block;
   margin: 0 auto;
 }
-
 .sider__menu {
   flex: 1;
 }
@@ -42,69 +36,33 @@
   min-height: 35%;
   background: none;
 }
-
-/* header */
-
 .sider__header {
   background-color: var(--primary-btn-text-color);
   position: fixed;
   z-index: 1;
   width: 100%;
 }
-
-/* divider */
-
 .sider__lineDivider {
   margin: 30px 28px 10px;
   border-width: 0 0 1px 0;
   border-style: solid;
   border-color: white;
 }
-
 .site-layout-sub-header-background {
   background: var(--primary-btn-text-color);
 }
-
 .site-layout-background {
   background: var(--primary-btn-text-color);
 }
-
-/* menu antd */
-
 .ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left {
   border-right: none;
 }
-
-.ant-menu-inline, .ant-menu-submenu, .ant-menu>.ant-menu-item, .ant-menu-submenu .ant-menu-submenu-inline:hover {
-  background-color: #19253b;
-  color: var(--primary-btn-text-color);
-}
-
-/* bg color menu item selected */
-
-.sider__menu .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-  background-color: rgba(255, 255, 255, 0.103);
-}
-
-.ant-menu>.ant-menu-item:hover, .ant-menu>.ant-menu-submenu:hover, .ant-menu>.ant-menu-item-active, .ant-menu>.ant-menu-submenu-active, .ant-menu>.ant-menu-item-open, .ant-menu>.ant-menu-submenu-open, .ant-menu>.ant-menu-item-selected, .ant-menu>.ant-menu-submenu-selected {
-  color: var(--primary-btn-text-color);
-  background-color: rgba(255, 255, 255, 0.103);
-}
-
-/* border right menu item*/
-
 .sider__menu .ant-menu-inline .ant-menu-item::after {
   border-right: var(--primary-btn-bg-color) 5px solid;
 }
-
-/* hover menu a */
-
 .ant-menu-item a, .ant-menu-item a:hover {
   color: var(--primary-btn-text-color);
 }
-
-/* sub menu */
-
 .ant-menu-submenu-popup>.ant-menu {
   background-color: var(--sider-bg-color);
 }

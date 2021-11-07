@@ -25,7 +25,7 @@ const ResetPassword = (props) => {
             </Typography>
 
             <Typography variant="h6" align="left">
-              Email: <a>{data.email}</a>
+              Email: <a>{data?.email}</a>
             </Typography>
           </Space>
           <Formik initialValues={initValueForm} validationSchema={validateForm}>
@@ -65,7 +65,7 @@ const ResetPassword = (props) => {
             )}
           </Formik>
           <div className="label"> {'Account Status'} </div>
-          <Radio.Group defaultValue={data.status}>
+          <Radio.Group defaultValue={data?.status}>
             <Radio.Button value="1">Active</Radio.Button>
             <Radio.Button value="2">InActive</Radio.Button>
             <Radio.Button value="3">Locked</Radio.Button>

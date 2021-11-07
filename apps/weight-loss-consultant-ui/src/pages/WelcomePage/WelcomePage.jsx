@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import AppHeader from '../../components/header/AppHeader/AppHeader';
 import useWindowDimensions from '../../components/hook-custom/useWindowDimensions';
 import './styles.css';
+const { SubMenu } = Menu;
 const { Sider } = Layout;
 const WelcomePage = (props) => {
   const history = useHistory();
@@ -63,6 +64,7 @@ const WelcomePage = (props) => {
                   mode="inline"
                   selectedKeys={[location.pathname]}
                   defaultSelectedKeys={['1']}
+                  theme="dark"
                 >
                   <Menu.Item key="/" icon={<UserOutlined />}>
                     <NavLink to="/">
@@ -74,29 +76,30 @@ const WelcomePage = (props) => {
                       <a style={{ color: 'white' }}> Home Page </a>
                     </NavLink>
                   </Menu.Item>
-                  <Menu.Item key="/user/customer" icon={<TableOutlined />}>
-                    <NavLink to="/user/customer">
-                      <a style={{ color: 'white' }}>Customer </a>
-                    </NavLink>
-                  </Menu.Item>
-                  <Menu.Item key="/user/trainer" icon={<TableOutlined />}>
-                    <NavLink to="/user/trainer">
-                      <a style={{ color: 'white' }}>Trainer </a>
-                    </NavLink>
-                  </Menu.Item>
-                  <Menu.Item key="/user/admin" icon={<TableOutlined />}>
-                    <NavLink to="/user/admin">
-                      <a style={{ color: 'white' }}>Admin </a>
-                    </NavLink>
-                  </Menu.Item>
+                  <SubMenu
+                    key="sub1"
+                    title="User Manager"
+                    icon={<TableOutlined />}
+                  >
+                    <Menu.Item key="/user/customer" icon={<TableOutlined />}>
+                      <NavLink to="/user/customer">
+                        <a style={{ color: 'white' }}>Customer </a>
+                      </NavLink>
+                    </Menu.Item>
+                    <Menu.Item key="/user/trainer" icon={<TableOutlined />}>
+                      <NavLink to="/user/trainer">
+                        <a style={{ color: 'white' }}>Trainer </a>
+                      </NavLink>
+                    </Menu.Item>
+                    <Menu.Item key="/user/admin" icon={<TableOutlined />}>
+                      <NavLink to="/user/admin">
+                        <a style={{ color: 'white' }}>Admin </a>
+                      </NavLink>
+                    </Menu.Item>
+                  </SubMenu>
                   <Menu.Item key="/user/contract" icon={<SolutionOutlined />}>
                     <NavLink to="/user/contract">
-                      <a style={{ color: 'white' }}>Contract </a>
-                    </NavLink>
-                  </Menu.Item>
-                  <Menu.Item key="/user/payment" icon={<CreditCardOutlined />}>
-                    <NavLink to="/user/payment">
-                      <a style={{ color: 'white' }}>Payment</a>
+                      <a style={{ color: 'white' }}>Contract Manager</a>
                     </NavLink>
                   </Menu.Item>
                   <Menu.Item
