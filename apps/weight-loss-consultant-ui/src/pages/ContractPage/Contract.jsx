@@ -35,42 +35,42 @@ const Contract = () => {
       key: 'id',
       render: (text, row) => (
         <Typography variant="h6" align="left">
-          {row.id}
+          {row.contract_id}
         </Typography>
       ),
     },
     {
-      title: 'Time Of Create',
-      dataIndex: 'timeOfCreate',
-      key: 'timeOfCreate',
+      title: 'Customer',
+      dataIndex: 'campaign_fullname',
+      key: 'campaign_fullname',
       render(text, row) {
         return (
-          <Tag icon={<ClockCircleOutlined />} color="processing">
-            {transDateFormat(row.timeOfCreate)}
-          </Tag>
+          <Typography variant="h6" align="left">
+            {row.campaign_fullname}
+          </Typography>
         );
       },
     },
     {
-      title: 'Time Of Approved',
+      title: 'Trainer',
       dataIndex: 'timeOfApproved',
       key: 'timeOfApproved',
       render(text, row) {
         return (
-          <Tag icon={<ClockCircleOutlined />} color="success">
-            {transDateFormat(row.timeOfCreate)}
-          </Tag>
+          <Typography variant="h6" align="left">
+            {row.package_fullname}
+          </Typography>
         );
       },
     },
     {
-      title: 'Time Of Expired',
+      title: 'Time Of Create',
       dataIndex: 'timeOfExpired',
       key: 'timeOfExpired',
       render(text, row) {
         return (
-          <Tag icon={<ClockCircleOutlined />} color="warning">
-            {transDateFormat(row.timeOfExpired)}
+          <Tag icon={<ClockCircleOutlined />} color="success">
+            {transDateFormat(row.contract_timeOfCreate)}
           </Tag>
         );
       },
@@ -118,7 +118,7 @@ const Contract = () => {
       render(text, row) {
         return (
           <Tag icon={<DollarCircleOutlined />} color="#87d068">
-            {row.totalPrice} $
+            {row.contract_totalPrice} $
           </Tag>
         );
       },
@@ -167,7 +167,7 @@ const Contract = () => {
           style={{ marginTop: '20px' }}
         >
           <Descriptions.Item label="Contract ID">
-            {dataModalIsShowing?.id}
+            {dataModalIsShowing?.contract_id}
           </Descriptions.Item>
           <Descriptions.Item label="Total Price">
             <Tag icon={<DollarCircleOutlined />} color="#87d068">
@@ -218,13 +218,13 @@ const Contract = () => {
           style={{ marginTop: '20px' }}
         >
           <Descriptions.Item label="Campaign ID">
-            {dataModalIsShowing?.campaign.id}
+            {dataModalIsShowing?.campaign_id}
           </Descriptions.Item>
           <Descriptions.Item label="Description">
-            {dataModalIsShowing?.campaign.description}
+            {dataModalIsShowing?.campaign_description}
           </Descriptions.Item>
           <Descriptions.Item label="Status">
-            {dataModalIsShowing?.campaign.status == 1 ? (
+            {dataModalIsShowing?.campaign_status == 1 ? (
               <div style={{ display: 'flex' }}>
                 <div>
                   <CheckCircleFilled
@@ -250,37 +250,30 @@ const Contract = () => {
               </div>
             )}
           </Descriptions.Item>
-          <Descriptions.Item label="Create Date">
-            <Tag icon={<ClockCircleOutlined />} color="success">
-              {transDateFormat(dataModalIsShowing?.campaign.createDate)}
-            </Tag>
-          </Descriptions.Item>
           <Descriptions.Item label="Start Date">
             <Tag icon={<ClockCircleOutlined />} color="success">
-              {transDateFormat(dataModalIsShowing?.campaign.startDate)}
+              {transDateFormat(dataModalIsShowing?.campaign_startDate)}
             </Tag>
           </Descriptions.Item>
           <Descriptions.Item label="End Date">
             <Tag icon={<ClockCircleOutlined />} color="warning">
-              {transDateFormat(dataModalIsShowing?.campaign.endDate)}
+              {transDateFormat(dataModalIsShowing?.campaign_endDate)}
             </Tag>
           </Descriptions.Item>
           <Descriptions.Item label="Feedback">
             <Empty description={false} />
           </Descriptions.Item>
           <Descriptions.Item label="Target Weight ">
-            <Tag color="gold">
-              {dataModalIsShowing?.campaign.targetWeight} kg
-            </Tag>
+            <Tag color="gold">{dataModalIsShowing?.campaign_feedbackt} kg</Tag>
           </Descriptions.Item>
           <Descriptions.Item label="Current Weight ">
             <Tag color="gold">
-              {dataModalIsShowing?.campaign.currentWeight} kg
+              {dataModalIsShowing?.campaign_currentWeight} kg
             </Tag>
           </Descriptions.Item>
           <Descriptions.Item label="Spend Time For Training ">
             <Tag color="gold">
-              {dataModalIsShowing?.campaign.spendTimeForTraining}day per week
+              {dataModalIsShowing?.campaign_spendTimeForTraining}day per week
             </Tag>
           </Descriptions.Item>
         </Descriptions>
@@ -291,13 +284,13 @@ const Contract = () => {
           style={{ marginTop: '20px' }}
         >
           <Descriptions.Item label="Package ID">
-            {dataModalIsShowing?.package.id}
+            {dataModalIsShowing?.package_id}
           </Descriptions.Item>
-          <Descriptions.Item label="Trainer Email">
-            {dataModalIsShowing?.package.trainerEmail}
+          <Descriptions.Item label="Trainer Name">
+            {dataModalIsShowing?.package_fullname}
           </Descriptions.Item>
           <Descriptions.Item label="Status">
-            {dataModalIsShowing?.package.status == 1 ? (
+            {dataModalIsShowing?.package_status == 1 ? (
               <div style={{ display: 'flex' }}>
                 <div>
                   <CheckCircleFilled
@@ -325,35 +318,35 @@ const Contract = () => {
           </Descriptions.Item>
           <Descriptions.Item label="Create Date">
             <Tag icon={<ClockCircleOutlined />} color="success">
-              {transDateFormat(dataModalIsShowing?.package.createDate)}
+              {transDateFormat(dataModalIsShowing?.package_createDate)}
             </Tag>
           </Descriptions.Item>
           <Descriptions.Item label="Start Date">
             <Tag icon={<ClockCircleOutlined />} color="success">
-              {transDateFormat(dataModalIsShowing?.package.startDate)}
+              {transDateFormat(dataModalIsShowing?.package_startDate)}
             </Tag>
           </Descriptions.Item>
           <Descriptions.Item label="End Date">
             <Tag icon={<ClockCircleOutlined />} color="warning">
-              {transDateFormat(dataModalIsShowing?.package.endDate)}
+              {transDateFormat(dataModalIsShowing?.package_endDate)}
             </Tag>
           </Descriptions.Item>
           <Descriptions.Item label="Schedule ">
-            <Tag color="gold">{dataModalIsShowing?.package.schedule} kg</Tag>
+            <Tag color="gold">{dataModalIsShowing?.package_schedule} kg</Tag>
           </Descriptions.Item>
           <Descriptions.Item label="Diet Plan ">
-            {dataModalIsShowing?.package.dietPlan}
+            {dataModalIsShowing?.package_dietPlan}
           </Descriptions.Item>
           <Descriptions.Item label="Exercise Plan ">
-            {dataModalIsShowing?.package.exercisePlan}
+            {dataModalIsShowing?.package_exercisePlan}
           </Descriptions.Item>
           <Descriptions.Item label="Spend Time For Training ">
             <Tag color="gold">
-              {dataModalIsShowing?.package.spendTimeToTraining} day/week
+              {dataModalIsShowing?.ackage_spendTimeToTraining} day/week
             </Tag>
           </Descriptions.Item>
           <Descriptions.Item label="Session Length ">
-            {dataModalIsShowing?.package.sessionLength}
+            {dataModalIsShowing?.package_sessionLength}
           </Descriptions.Item>
         </Descriptions>
       </Modal>

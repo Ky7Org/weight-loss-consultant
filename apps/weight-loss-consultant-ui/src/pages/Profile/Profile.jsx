@@ -1,6 +1,6 @@
 import { useHistory, useLocation } from 'react-router';
 import { useEffect, useState } from 'react';
-import { Row, Col, Radio, DatePicker, Button } from 'antd';
+import { Row, Col, Radio, DatePicker, Button, Spin } from 'antd';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@material-ui/core/Typography';
@@ -28,18 +28,14 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [initValue, setInitValue] = useState();
   const fetchApiGetUser = (role, email) => {
-    console.log(role + email);
     var api;
     if (role == 'customer') {
-      console.log('customer');
       api = getUserByEmail(email);
     }
     if (role == 'admin') {
-      console.log('admin');
       api = getAdminByEmail(email);
     }
     if (role == 'trainer') {
-      console.log('trainer');
       api = getTrainerByEmail(email);
     }
     api
@@ -47,12 +43,17 @@ const Profile = () => {
         setLoading(true);
         setInitValue(data);
       })
-      .finally(setLoading(false));
+      .finally((x) => {
+        setLoading(false);
+      });
   };
   const validateForm = Yup.object({
     fullname: Yup.string().required('Fullname is required'),
     address: Yup.string().required('Address is required'),
   });
+  useEffect(() => {
+    console.log(initValue);
+  }, [loading]);
   const handleUpdate = () => (setIsEditing(false), setIsSaved(true));
   useEffect(() => {
     fetchApiGetUser(
@@ -60,11 +61,7 @@ const Profile = () => {
       location.pathname.substring(location.pathname.lastIndexOf('/') + 1)
     );
     setcurrentSearchRole(location.state);
-  }, [location]);
-  useEffect(() => {
-    console.log('Test');
-    console.log(initValue);
-  }, [initValue]);
+  }, []);
   const [phoneNumber, setPhoneNumber] = useState();
   const initPhoneValue = () => {
     if (phoneNumber == null) {
@@ -104,102 +101,112 @@ const Profile = () => {
                       </Typography>
                     </div>
                   </Paper>
-                  <Paper elevation={2}>
-                    <div style={{ padding: '20px' }}>
-                      <Typography variant="h4" align="left">
-                        User Profiles
-                      </Typography>
-                      <Formik
-                        initialValues={initValue}
-                        validationSchema={validateForm}
-                      >
-                        {() => (
-                          <Form className="form" style={{ width: '20rem' }}>
-                            <div className="label"> {'Fullname'}* </div>
-                            <FormItem name="fullname">
-                              <Input
-                                name="fullname"
-                                placeholder={'Email'}
-                                disabled={isEditing}
-                              />
-                            </FormItem>
-                            <div className="label"> {'Address'} </div>
-                            <FormItem name="address">
-                              <Input
-                                name="address"
-                                placeholder={'Address'}
-                                disabled={isEditing}
-                              />
-                            </FormItem>
-                            <div
-                              style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                              }}
-                            >
-                              <div>
-                                <div className="label"> {'Gender'} </div>
-                                <Radio.Group
-                                  defaultValue="1"
-                                  buttonStyle="solid"
-                                  disabled={isEditing}
-                                >
-                                  <Radio.Button value="1">Male</Radio.Button>
-                                  <Radio.Button value="2">Female</Radio.Button>
-                                </Radio.Group>
-                              </div>
-                              <div>
-                                <div className="label"> {'Date Of Birth'} </div>
-                                <DatePicker
-                                  defaultValue={moment(
-                                    transDateFormatYearFirst(initValue?.dob),
-                                    dateFormat
-                                  )}
-                                  format={dateFormat}
+                  <Spin spinning={loading}>
+                    <Paper elevation={2}>
+                      <div style={{ padding: '20px' }}>
+                        <Typography variant="h4" align="left">
+                          User Profile
+                        </Typography>
+                        <Formik
+                          initialValues={initValue}
+                          validationSchema={validateForm}
+                        >
+                          {() => (
+                            <Form className="form" style={{ width: '20rem' }}>
+                              <div className="label"> {'Fullname'}* </div>
+                              <FormItem name="fullname">
+                                <Input
+                                  name="fullname"
+                                  placeholder={'Email'}
                                   disabled={isEditing}
                                 />
-                              </div>
-                            </div>
-                            <div
-                              className="label"
-                              style={{ marginTop: '10px' }}
-                            >
-                              {'Phone Number'}
-                            </div>
-                            <ConfigProvider locale={en}>
-                              <CountryPhoneInput
-                                disabled={isEditing}
-                                value={initPhoneValue}
-                              />
-                            </ConfigProvider>
-                            <div style={{ marginTop: '10px' }}>
-                              <Button
-                                type="primary"
-                                style={{ marginRight: '10px' }}
-                                onClick={handleUpdate}
-                                disabled={isSaved}
-                              >
-                                Update Infor
-                              </Button>
-                              <Button.Group>
-                                <SubmitButton
-                                  block
-                                  className="main-button"
+                              </FormItem>
+                              <div className="label"> {'Address'} </div>
+                              <FormItem name="address">
+                                <Input
+                                  name="address"
+                                  placeholder={'Address'}
                                   disabled={isEditing}
+                                />
+                              </FormItem>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                }}
+                              >
+                                <div>
+                                  <div className="label"> {'Gender'} </div>
+                                  <Radio.Group
+                                    defaultValue="1"
+                                    buttonStyle="solid"
+                                    disabled={isEditing}
+                                  >
+                                    <Radio.Button value="1">Male</Radio.Button>
+                                    <Radio.Button value="2">
+                                      Female
+                                    </Radio.Button>
+                                  </Radio.Group>
+                                </div>
+                                <div>
+                                  <div className="label">
+                                    {' '}
+                                    {'Date Of Birth'}{' '}
+                                  </div>
+                                  <DatePicker
+                                    defaultValue={moment(
+                                      transDateFormatYearFirst(initValue?.dob),
+                                      dateFormat
+                                    )}
+                                    format={dateFormat}
+                                    disabled={isEditing}
+                                  />
+                                </div>
+                              </div>
+                              <div
+                                className="label"
+                                style={{ marginTop: '10px' }}
+                              >
+                                {'Phone Number'}
+                              </div>
+                              <ConfigProvider locale={en}>
+                                <CountryPhoneInput
+                                  disabled={isEditing}
+                                  value={initPhoneValue}
+                                />
+                              </ConfigProvider>
+                              <div style={{ marginTop: '10px' }}>
+                                <Button
+                                  type="primary"
+                                  style={{ marginRight: '10px' }}
+                                  onClick={handleUpdate}
+                                  disabled={isSaved}
                                 >
-                                  {'Save'}
-                                </SubmitButton>
-                              </Button.Group>
-                            </div>
-                          </Form>
-                        )}
-                      </Formik>
-                    </div>
-                  </Paper>
+                                  Update Infor
+                                </Button>
+                                <Button.Group>
+                                  <SubmitButton
+                                    block
+                                    className="main-button"
+                                    disabled={isEditing}
+                                  >
+                                    {'Save'}
+                                  </SubmitButton>
+                                </Button.Group>
+                              </div>
+                            </Form>
+                          )}
+                        </Formik>
+                      </div>
+                    </Paper>
+                  </Spin>
                 </div>
               </Row>
               <div style={{ marginTop: '20px' }}>
-                <ResetPassword data={initValue} />
+                <ResetPassword
+                  data={initValue}
+                  currentSearchRole={currentSearchRole}
+                />
               </div>
             </div>
             <div style={{ marginLeft: '20px' }}>

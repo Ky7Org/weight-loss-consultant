@@ -55,7 +55,9 @@ const Signin = (props) => {
         actions.setSubmitting(false);
       });
   };
-
+  const data = {
+    fullname: 'banhsbao',
+  };
   return (
     <Container className="sign-in">
       <Row className="auth-wrapper" gutter={20}>
@@ -64,7 +66,7 @@ const Signin = (props) => {
         </Col>
         <Col xs={24} md={24} lg={12} xl={12}>
           <Formik
-            initialValues={initValueForm}
+            initialValues={data}
             validationSchema={validateForm}
             onSubmit={onSubmit}
           >

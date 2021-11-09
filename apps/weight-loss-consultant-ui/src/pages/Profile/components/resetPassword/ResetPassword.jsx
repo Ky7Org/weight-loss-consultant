@@ -11,6 +11,7 @@ const ResetPassword = (props) => {
     repassword: 'Ho Chi Minh City',
   };
   const { data } = props;
+  const { currentSearchRole } = props;
   const validateForm = Yup.object({
     fullname: Yup.string().required('Fullname is required'),
     address: Yup.string().required('Address is required'),
@@ -21,54 +22,18 @@ const ResetPassword = (props) => {
         <div style={{ padding: '20px' }}>
           <Space direction="vertical">
             <Typography variant="h4" align="left">
-              Account Managerment
+              Account Manager
             </Typography>
 
             <Typography variant="h6" align="left">
               Email: <a>{data?.email}</a>
             </Typography>
           </Space>
-          <Formik initialValues={initValueForm} validationSchema={validateForm}>
-            {() => (
-              <Form className="form">
-                <div
-                  style={{ display: 'flex', justifyContent: 'space-between' }}
-                >
-                  <div>
-                    <div className="label"> {'New Password'}* </div>
-                    <FormItem name="password">
-                      <Input.Password
-                        name="password"
-                        placeholder={'Password'}
-                      />
-                    </FormItem>
-                  </div>
-                  <div>
-                    <div className="label"> {'Re-New Password'}* </div>
-                    <FormItem name="password">
-                      <Input.Password
-                        name="password"
-                        placeholder={'Password'}
-                      />
-                    </FormItem>
-                  </div>
-                  <div>
-                    <div className="label"> {'Action'} </div>
-                    <Button.Group>
-                      <SubmitButton block className="main-button">
-                        {'Change Password'}
-                      </SubmitButton>
-                    </Button.Group>
-                  </div>
-                </div>
-              </Form>
-            )}
-          </Formik>
           <div className="label"> {'Account Status'} </div>
           <Radio.Group defaultValue={data?.status}>
-            <Radio.Button value="1">Active</Radio.Button>
-            <Radio.Button value="2">InActive</Radio.Button>
-            <Radio.Button value="3">Locked</Radio.Button>
+            <Radio.Button value={1}>Active</Radio.Button>
+            <Radio.Button value={2}>InActive</Radio.Button>
+            <Radio.Button value={3}>Locked</Radio.Button>
           </Radio.Group>
         </div>
       </Paper>

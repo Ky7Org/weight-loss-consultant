@@ -23,55 +23,23 @@ import Typography from '@material-ui/core/Typography';
 import { EyeTwoTone } from '@ant-design/icons';
 
 import { useState, useCallback } from 'react';
-import { transDateFormat } from 'apps/weight-loss-consultant-ui/src/utils/commom';
+import { transDateFormat } from '../../../../utils/commom';
 const ListItem = () => {
   const dataMockup = [
     {
       id: 1,
-      description: 'i want to lose 10kg in 10days',
+      description: 'i want to lose 10kg in 1 month',
       status: 2,
-      startDate: '1632070800000',
-      endDate: '1640883600000',
+      startDate: '1635790000000',
+      endDate: '1635790000000',
       feedback: 'I want to meet a trainer at U30',
     },
     {
       id: 2,
-      description: 'i want to lose 10kg in 10days',
+      description: 'i want to lose 2kg in 10days',
       status: 1,
-      startDate: '1632070800000',
-      endDate: '1640883600000',
-      feedback: 'I want to meet a trainer at U30',
-    },
-    {
-      id: 3,
-      description: 'i want to lose 10kg in 10days',
-      status: 1,
-      startDate: '1632070800000',
-      endDate: '1640883600000',
-      feedback: 'I want to meet a trainer at U30',
-    },
-    {
-      id: 4,
-      description: 'i want to lose 10kg in 10days',
-      status: 1,
-      startDate: '1632070800000',
-      endDate: '1640883600000',
-      feedback: 'I want to meet a trainer at U30',
-    },
-    {
-      id: 5,
-      description: 'i want to lose 10kg in 10days',
-      status: 1,
-      startDate: '1632070800000',
-      endDate: '1640883600000',
-      feedback: 'I want to meet a trainer at U30',
-    },
-    {
-      id: 6,
-      description: 'i want to lose 10kg in 10days',
-      status: 1,
-      startDate: '1632070800000',
-      endDate: '1640883600000',
+      startDate: '1635790000000',
+      endDate: '11635790000000',
       feedback: 'I want to meet a trainer at U30',
     },
   ];
@@ -131,6 +99,9 @@ const ListItem = () => {
       title: 'Feedback',
       dataIndex: 'feedback',
       key: 'feedback',
+      render(text, row) {
+        return <Empty description={false} />;
+      },
     },
     {
       title: 'Action',
@@ -138,7 +109,6 @@ const ListItem = () => {
       render: (text, row) => (
         <Space size="middle">
           <EyeTwoTone onClick={() => handleOnShowModal(row)} />
-          <a>Delete</a>
         </Space>
       ),
     },
@@ -159,7 +129,7 @@ const ListItem = () => {
   return (
     <div>
       <Typography variant="h4" align="left" style={{ fontWeight: 'bold' }}>
-        Campaigns Managerment
+        Campaigns Manager
       </Typography>
       <Table
         columns={columns}
